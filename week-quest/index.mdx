@@ -1,0 +1,199 @@
+import * as React from 'react'
+import '@fontsource/press-start-2p/400.css'
+
+{/* Week Quest: Sam's week as a turn-based pixel battle. The three bosses are what gave Sam trouble this week: a bug, the inbox, Monday. */}
+
+export const HERO = 'Sam'
+
+export const C = { night: '#120f2a', deep: '#1f1a45', ink: '#f6f1ff', dim: '#a59fd6', gold: '#ffd23f', red: '#ff4d6d', green: '#3ddc97', blue: '#4cc9f0', pink: '#f72585' }
+
+{/* Pixel maps: one character per pixel; '.' is empty. */}
+export const SPRITES = {
+  hero: ['....kkkk....', '...kyyyyk...', '...kysysk...', '...kyyyyk...', '....kkkk....', '..kbbbbbbk..', '.kbbwbbwbbk.', '.kbbbbbbbbk.', '..kbbbbbbk..', '..kbk..kbk..', '..kk....kk..', '............'],
+  bug: ['..k......k..', '...k....k...', '..kkkkkkkk..', '.kggggggggk.', 'kgwkggggwkgk', 'kggggggggggk', 'kgrrggggrrgk', '.kggggggggk.', 'k.kggggggk.k', '.k.k.kk.k.k.', '............', '............'],
+  inbox: ['.kkkkkkkkkk.', 'kwwwwwwwwwwk', 'kwkkkkkkkkwk', 'kwkpppppkkwk', 'kwkpwpwpkkwk', 'kwkpppppkkwk', 'kwkkkkkkkkwk', 'kwwwwwwwwwwk', 'kbbbbbbbbbbk', 'kbrrbbbbrrbk', '.kkkkkkkkkk.', '............'],
+  monday: ['....kkkk....', '..kkooookk..', '.kooooooook.', 'kookoookoook', 'koowkoowkook', 'kooooooooook', 'koookkkkoook', 'kookrrrrkook', '.koookkoook.', '..kkooookk..', '....kkkk....', '............'],
+}
+export const PALETTE = { k: '#0b0820', y: '#ffd6a5', s: '#120f2a', b: C.blue, w: '#ffffff', g: C.green, r: C.red, p: C.pink, o: '#ff9f1c' }
+
+export const BOSSES = [
+  { id: 'bug', name: 'The Heisenbug', hp: 40, hits: ['vanishes when observed', 'reappears in production'] },
+  { id: 'inbox', name: 'Inbox Hydra', hp: 55, hits: ['grows two threads', 'replies all'] },
+  { id: 'monday', name: 'Monday, Again', hp: 70, hits: ['casts 9 AM meeting', 'drains your coffee'] },
+]
+
+export const MOVES = [
+  { id: 'fix', label: 'Hotfix', power: [10, 16], text: 'pushes a hotfix' },
+  { id: 'coffee', label: 'Coffee', heal: 18, text: 'drinks a coffee' },
+  { id: 'mute', label: 'Mute', power: [6, 10], text: 'mutes the channel' },
+  { id: 'ship', label: 'Ship it', power: [18, 26], miss: 0.35, text: 'ships it on Friday' },
+]
+
+export const Sprite = ({ map, size = 8, flash = false }) => (
+  <svg width={map[0].length * size} height={map.length * size} viewBox={`0 0 ${map[0].length} ${map.length}`} shapeRendering="crispEdges" style={{ filter: flash ? 'brightness(3)' : 'none', imageRendering: 'pixelated' }}>
+    {map.flatMap((row, y) => [...row].map((c, x) => (c === '.' ? null : <rect key={`${x}-${y}`} x={x} y={y} width="1" height="1" fill={PALETTE[c] ?? c} />)))}
+  </svg>
+)
+
+export const Bar = ({ value, max, color }) => (
+  <div style={{ width: 180, height: 12, background: C.night, border: `3px solid ${C.ink}`, boxSizing: 'content-box' }}>
+    <div style={{ width: `${Math.max(0, (value / max) * 100)}%`, height: '100%', background: color, transition: 'width .4s steps(8)' }} />
+  </div>
+)
+
+export const blip = (ctx, freq, dur = 0.08, type = 'square') => {
+  if (!ctx) return
+  const o = ctx.createOscillator()
+  const g = ctx.createGain()
+  o.type = type
+  o.frequency.value = freq
+  g.gain.setValueAtTime(0.06, ctx.currentTime)
+  g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + dur)
+  o.connect(g).connect(ctx.destination)
+  o.start()
+  o.stop(ctx.currentTime + dur)
+}
+
+export const WeekQuest = () => {
+  const { useState, useRef } = React
+  const audio = useRef(null)
+  const [stage, setStage] = useState(0)
+  const [hero, setHero] = useState(60)
+  const [boss, setBoss] = useState(BOSSES[0].hp)
+  const [log, setLog] = useState(`${BOSSES[0].name} appears!`)
+  const [busy, setBusy] = useState(false)
+  const [hit, setHit] = useState(null)
+  const [pop, setPop] = useState(null)
+  const [won, setWon] = useState(false)
+  const foe = BOSSES[Math.min(stage, BOSSES.length - 1)]
+  const sfx = (f, d, t) => {
+    if (!audio.current) audio.current = new (window.AudioContext || window.webkitAudioContext)()
+    blip(audio.current, f, d, t)
+  }
+  const wait = (ms) => new Promise((r) => setTimeout(r, ms))
+  const roll = ([a, b]) => a + Math.floor(Math.random() * (b - a + 1))
+
+  const act = async (move) => {
+    if (busy || won) return
+    setBusy(true)
+    let left = boss
+    if (move.heal) {
+      setHero((h) => Math.min(60, h + move.heal))
+      setLog(`${HERO} ${move.text}. +${move.heal} HP!`)
+      setPop({ who: 'hero', text: `+${move.heal}`, color: C.green })
+      sfx(660, 0.15, 'triangle')
+    } else if (move.miss && Math.random() < move.miss) {
+      setLog(`${HERO} ${move.text}... it breaks the build. Miss!`)
+      sfx(110, 0.25, 'sawtooth')
+    } else {
+      const dmg = roll(move.power)
+      left = Math.max(0, boss - dmg)
+      setBoss(left)
+      setHit('boss')
+      setPop({ who: 'boss', text: `-${dmg}`, color: C.gold })
+      setLog(`${HERO} ${move.text}! ${dmg} damage.`)
+      sfx(880, 0.06)
+      setTimeout(() => sfx(990, 0.08), 70)
+    }
+    await wait(650)
+    setHit(null)
+    setPop(null)
+    if (left <= 0) {
+      sfx(523, 0.1, 'triangle')
+      setTimeout(() => sfx(659, 0.1, 'triangle'), 110)
+      setTimeout(() => sfx(784, 0.2, 'triangle'), 220)
+      if (stage + 1 >= BOSSES.length) {
+        setLog(`${foe.name} is defeated. The week is over!`)
+        await wait(900)
+        setWon(true)
+      } else {
+        setLog(`${foe.name} is defeated! Next: ${BOSSES[stage + 1].name}`)
+        await wait(1100)
+        setStage(stage + 1)
+        setBoss(BOSSES[stage + 1].hp)
+      }
+      setBusy(false)
+      return
+    }
+    const dmg = roll([5, 11])
+    setLog(`${foe.name} ${foe.hits[Math.floor(Math.random() * foe.hits.length)]}! ${dmg} damage.`)
+    setHero((h) => Math.max(1, h - dmg))
+    setHit('hero')
+    setPop({ who: 'hero', text: `-${dmg}`, color: C.red })
+    sfx(180, 0.12, 'sawtooth')
+    await wait(650)
+    setHit(null)
+    setPop(null)
+    setBusy(false)
+  }
+
+  const restart = () => {
+    setStage(0)
+    setHero(60)
+    setBoss(BOSSES[0].hp)
+    setWon(false)
+    setLog(`${BOSSES[0].name} appears!`)
+  }
+
+  return (
+    <div className="wq">
+      <style>{`
+        .wq { font-family: 'Press Start 2P', monospace; color: ${C.ink}; background: linear-gradient(${C.deep}, ${C.night}); padding: 22px; border-radius: 14px; max-width: 760px; margin: 0 auto; image-rendering: pixelated; position: relative; overflow: hidden; }
+        .wq h1 { font-size: 16px; margin: 0 0 18px; color: ${C.gold}; letter-spacing: 1px; }
+        .wq .field { position: relative; height: 230px; background: repeating-linear-gradient(0deg, #2a2360 0 8px, #241e55 8px 16px); border: 4px solid ${C.ink}; }
+        .wq .slot { position: absolute; display: flex; flex-direction: column; gap: 8px; font-size: 10px; }
+        .wq .foe { right: 26px; top: 18px; align-items: flex-end; }
+        .wq .me { left: 26px; bottom: 16px; }
+        .wq .shake { animation: wq-shake .35s steps(4); }
+        .wq .bob { animation: wq-bob 1.2s steps(2) infinite; }
+        .wq .pop { position: absolute; font-size: 14px; animation: wq-pop .65s steps(6) forwards; text-shadow: 2px 2px 0 #000; }
+        .wq .log { margin-top: 14px; min-height: 44px; border: 4px solid ${C.ink}; background: ${C.night}; padding: 12px; font-size: 10px; line-height: 1.7; }
+        .wq .moves { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+        .wq button { font: inherit; font-size: 11px; color: ${C.night}; background: ${C.ink}; border: none; padding: 12px; cursor: pointer; box-shadow: 0 4px 0 ${C.dim}; text-align: left; }
+        .wq button:hover:not(:disabled) { background: ${C.gold}; }
+        .wq button:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 1px 0 ${C.dim}; }
+        .wq button:disabled { opacity: .45; cursor: default; }
+        .wq .win { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; background: rgba(18,15,42,.92); animation: wq-in .4s steps(4); }
+        .wq .win h2 { color: ${C.gold}; font-size: 22px; margin: 0 0 14px; }
+        .wq .stars span { display: inline-block; animation: wq-bob .8s steps(2) infinite; }
+        @keyframes wq-shake { 25% { transform: translateX(-6px) } 75% { transform: translateX(6px) } }
+        @keyframes wq-bob { 50% { transform: translateY(-4px) } }
+        @keyframes wq-pop { from { opacity: 1; transform: translateY(0) } to { opacity: 0; transform: translateY(-34px) } }
+        @keyframes wq-in { from { opacity: 0 } }
+      `}</style>
+      <h1>WEEK QUEST · {HERO.toUpperCase()} VS THE WEEK</h1>
+      <div className="field">
+        <div className={`slot foe ${hit === 'boss' ? 'shake' : 'bob'}`}>
+          <span>{foe.name} · {stage + 1}/3</span>
+          <Bar value={boss} max={foe.hp} color={C.red} />
+          <Sprite map={SPRITES[foe.id]} size={10} flash={hit === 'boss'} />
+          {pop?.who === 'boss' ? <span className="pop" style={{ color: pop.color, right: 40, top: 40 }}>{pop.text}</span> : null}
+        </div>
+        <div className={`slot me ${hit === 'hero' ? 'shake' : ''}`}>
+          <Sprite map={SPRITES.hero} size={8} flash={hit === 'hero'} />
+          <span>{HERO} · HP {hero}/60</span>
+          <Bar value={hero} max={60} color={C.green} />
+          {pop?.who === 'hero' ? <span className="pop" style={{ color: pop.color, left: 110, top: 0 }}>{pop.text}</span> : null}
+        </div>
+      </div>
+      <div className="log">{log}</div>
+      <div className="moves">
+        {MOVES.map((m) => (
+          <button key={m.id} type="button" disabled={busy || won} onClick={() => act(m)}>▶ {m.label}</button>
+        ))}
+      </div>
+      {won ? (
+        <div className="win">
+          <div>
+            <h2>YOU SURVIVED THE WEEK!</h2>
+            <p className="stars" style={{ fontSize: 18 }}>{[...'★★★'].map((s, i) => <span key={i} style={{ animationDelay: `${i * 0.2}s`, color: C.gold }}>{s}</span>)}</p>
+            <p style={{ fontSize: 10, color: C.dim, margin: '14px 0 20px' }}>{HERO} · LEVEL UP · WEEKEND UNLOCKED</p>
+            <button type="button" onClick={restart} style={{ textAlign: 'center' }}>▶ Play again</button>
+          </div>
+        </div>
+      ) : null}
+    </div>
+  )
+}
+
+<WeekQuest />

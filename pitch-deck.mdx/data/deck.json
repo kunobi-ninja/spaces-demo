@@ -1,0 +1,230 @@
+{
+  "company": "Pedal Club",
+  "round": "Seed · €1.2M",
+  "date": "November 2026",
+  "problem": [
+    {
+      "value": "1 in 3",
+      "label": "city bikes sit unused because something needs fixing"
+    },
+    {
+      "value": "9 days",
+      "label": "average wait for a repair slot at a local shop"
+    },
+    {
+      "value": "€0",
+      "label": "what most riders spend on upkeep until the bike breaks"
+    }
+  ],
+  "steps": [
+    {
+      "title": "Subscribe",
+      "label": "€14 a month, cancel any time"
+    },
+    {
+      "title": "We come to you",
+      "label": "A van at your door or your office"
+    },
+    {
+      "title": "Ride",
+      "label": "Tuned every quarter, fixed within 48 hours"
+    }
+  ],
+  "product": {
+    "visit": "Tue 18:30",
+    "status": "Van on the way · 12 min",
+    "plans": [
+      {
+        "name": "City",
+        "price": "€14",
+        "note": "1 bike"
+      },
+      {
+        "name": "Family",
+        "price": "€29",
+        "note": "Up to 4 bikes"
+      },
+      {
+        "name": "Office",
+        "price": "€9",
+        "note": "Per bike, 20+"
+      }
+    ],
+    "checks": [
+      "Brakes",
+      "Chain",
+      "Gears",
+      "Tyres"
+    ]
+  },
+  "market": [
+    {
+      "label": "Adults who ride weekly in our 6 target cities",
+      "value": "2.4M"
+    },
+    {
+      "label": "Who would pay for upkeep",
+      "value": "610k"
+    },
+    {
+      "label": "Our 2028 goal",
+      "value": "60k"
+    }
+  ],
+  "traction": {
+    "unit": "Paying subscribers",
+    "months": [
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct"
+    ],
+    "values": [
+      120,
+      210,
+      340,
+      470,
+      610,
+      760,
+      880,
+      1010,
+      1190,
+      1400,
+      1660,
+      1980,
+      2350,
+      2790,
+      3240,
+      3710,
+      4260,
+      4880
+    ],
+    "chips": [
+      {
+        "value": "4,880",
+        "label": "subscribers"
+      },
+      {
+        "value": "2.1%",
+        "label": "monthly churn"
+      },
+      {
+        "value": "71",
+        "label": "NPS"
+      }
+    ]
+  },
+  "economics": {
+    "price": 14,
+    "parts": [
+      {
+        "label": "Mechanic time",
+        "value": 3.4
+      },
+      {
+        "label": "Parts",
+        "value": 1.6
+      },
+      {
+        "label": "Van and fuel",
+        "value": 0.9
+      }
+    ],
+    "chips": [
+      {
+        "value": "58%",
+        "label": "gross margin"
+      },
+      {
+        "value": "5 months",
+        "label": "payback"
+      },
+      {
+        "value": "€38",
+        "label": "cost to win a rider"
+      }
+    ],
+    "priceLabel": "Per rider, per month: €14",
+    "marginLabel": "What we keep"
+  },
+  "team": [
+    {
+      "name": "Inés Ortega",
+      "role": "CEO",
+      "note": "Ran operations for a 40-van delivery fleet"
+    },
+    {
+      "name": "Tom Akers",
+      "role": "Head mechanic",
+      "note": "12 years, two bike shops of his own"
+    },
+    {
+      "name": "Mei Lin",
+      "role": "Product",
+      "note": "Built the booking app riders use"
+    },
+    {
+      "name": "Omar Haddad",
+      "role": "Growth",
+      "note": "Grew a city scooter service to 30k users"
+    }
+  ],
+  "plan": [
+    {
+      "when": "Q1 2027",
+      "what": "Lyon and Bordeaux",
+      "vans": 12
+    },
+    {
+      "when": "Q3 2027",
+      "what": "Office plans in all cities",
+      "vans": 18
+    },
+    {
+      "when": "Q1 2028",
+      "what": "Marseille and Lille",
+      "vans": 26
+    },
+    {
+      "when": "Q3 2028",
+      "what": "60k subscribers",
+      "vans": 30
+    }
+  ],
+  "ask": {
+    "amount": "€1.2M",
+    "uses": [
+      {
+        "label": "Vans and tools",
+        "value": 45
+      },
+      {
+        "label": "Mechanics",
+        "value": 30
+      },
+      {
+        "label": "Marketing",
+        "value": 15
+      },
+      {
+        "label": "Buffer",
+        "value": 10
+      }
+    ],
+    "contact": "hello@pedalclub.example"
+  }
+}

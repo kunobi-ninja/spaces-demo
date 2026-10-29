@@ -1,0 +1,36 @@
+---
+title: Spectral core
+presentation: timeline
+size: 960x540
+fps: 30
+targets:
+  landscape: { width: 960, height: 540 }
+  portrait: { width: 540, height: 960, safeArea: { top: 30, bottom: 60 } }
+  square: { width: 640, height: 640 }
+---
+
+import { SpectralCore } from './src/visual'
+
+<Scene id="spectral-core" duration="12s">
+
+# Light, contained.
+
+The surface bends it. The inside comes alive.
+
+<Mark name="glass_in" at="0.2s" />
+<Mark name="glass_ready" at="1.4s" />
+<Mark name="dispersion_in" at="2.2s" />
+<Mark name="spectrum_ready" at="4.6s" />
+<Mark name="cutaway_in" at="5.4s" />
+<Mark name="core_exposed" at="7.8s" />
+<Mark name="seal_in" at="9s" />
+<Mark name="shell_closed" at="10.8s" />
+
+<SpectralCore
+  edition="OPTICAL STUDY / 002"
+  phases={['01 / FOLLOW THE LIGHT', '02 / LOOK INSIDE', '03 / CLOSE THE SHELL']}
+  appear="@glass_in" visible="@glass_ready" disperse="@dispersion_in" spectrum="@spectrum_ready"
+  open="@cutaway_in" exposed="@core_exposed" close="@seal_in" closed="@shell_closed"
+/>
+
+</Scene>

@@ -1,0 +1,4 @@
+# Kunobi keeps its own space state here.
+.kunobi/
+**/*.status.json
+.DS_Store

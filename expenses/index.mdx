@@ -1,0 +1,430 @@
+---
+title: Flat 4B · October
+description: "Four housemates, one month: rent by room size, bills and groceries, and the fewest payments that settle it."
+kunobi:
+  page-layout: wide
+---
+
+import * as React from 'react'
+import '@fontsource/parkinsans/600.css'
+import '@fontsource/parkinsans/800.css'
+import '@fontsource/figtree/400.css'
+import '@fontsource/figtree/600.css'
+import table from './data/expenses.md?raw'
+import group from './data/group.json'
+import { buildLedger } from './src/ledger'
+
+{/* Interface words per language. The page follows the system language and falls back to English. The expenses themselves live in the table in data/expenses.md. */}
+
+export const WORDS = {
+  en: {
+    kind: 'Shared costs',
+    people: 'people', spent: 'spent', perHead: 'per person',
+    settleTitle: (n) => (n === 0 ? 'Everyone is square.' : n === 1 ? 'One payment and everyone is square.' : `${['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six'][n] ?? n} payments and everyone is square.`),
+    settleLine: 'The fewest payments that settle every balance.',
+    pays: 'pays',
+    paid: 'Paid', share: 'Share', getsBack: 'gets back', owes: 'owes', even: 'even',
+    byCategory: 'Where it went', byDay: 'Day by day', byWeek: 'Week by week', weekOf: 'from',
+    list: 'Every expense', everyone: 'Everyone', all: 'All',
+    paidBy: 'paid by', splitWith: 'split with', theirShare: 'share',
+    shown: (n, total) => `${n} expenses · ${total}`,
+    none: 'Nothing matches these filters.',
+    change: 'How to change this',
+    changeLine: 'This page reads the table in data/expenses.md. Add a row, or ask your AI:',
+    prompts: ['“Add $23.40 of groceries on the 31st, paid by Mei, split between everyone.”', '“Diego was out for curry night: take him out of that split.”'],
+    problems: 'Lines that could not be read',
+  },
+  es: {
+    kind: 'Gastos compartidos',
+    people: 'personas', spent: 'gastado', perHead: 'por persona',
+    settleTitle: (n) => (n === 0 ? 'Todos están en paz.' : n === 1 ? 'Un pago y todos en paz.' : `${['', 'Un', 'Dos', 'Tres', 'Cuatro', 'Cinco', 'Seis'][n] ?? n} pagos y todos en paz.`),
+    settleLine: 'Los pagos mínimos que saldan todas las cuentas.',
+    pays: 'paga a',
+    paid: 'Pagó', share: 'Le toca', getsBack: 'recibe', owes: 'debe', even: 'en paz',
+    byCategory: 'En qué se fue', byDay: 'Día a día', byWeek: 'Semana a semana', weekOf: 'desde',
+    list: 'Todos los gastos', everyone: 'Todos', all: 'Todo',
+    paidBy: 'pagó', splitWith: 'entre', theirShare: 'le toca',
+    shown: (n, total) => `${n} gastos · ${total}`,
+    none: 'Nada coincide con estos filtros.',
+    change: 'Cómo cambiarlo',
+    changeLine: 'Esta página lee la tabla de data/expenses.md. Añade una fila o pídele a tu IA:',
+    prompts: ['“Añade 23,40 $ de compra el día 31, pagado por Mei, entre todos.”', '“Diego no estuvo en la noche de curry: quítalo de ese gasto.”'],
+    problems: 'Líneas que no se pudieron leer',
+  },
+}
+
+export const lang = () => {
+  const tag = ((typeof navigator !== 'undefined' && navigator.language) || 'en').toLowerCase().split('-')[0]
+  return WORDS[tag] ? tag : 'en'
+}
+
+export const formatters = (code) => {
+  const locale = code === 'es' ? 'es-ES' : 'en-GB'
+  const money = new Intl.NumberFormat(locale, { style: 'currency', currency: group.currency })
+  const day = new Intl.DateTimeFormat(locale, { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' })
+  const short = new Intl.DateTimeFormat(locale, { weekday: 'short', timeZone: 'UTC' })
+  const range = new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'long', timeZone: 'UTC' })
+  const date = (iso) => new Date(`${iso}T12:00:00Z`)
+  return {
+    money: (cents) => money.format(cents / 100),
+    whole: (cents) => new Intl.NumberFormat(locale, { style: 'currency', currency: group.currency, maximumFractionDigits: 0 }).format(Math.round(cents / 100)),
+    original: (amount, currency) => new Intl.NumberFormat(locale, { style: 'currency', currency }).format(amount),
+    day: (iso) => day.format(date(iso)),
+    short: (iso) => short.format(date(iso)),
+    num: (iso) => date(iso).getUTCDate(),
+    dm: (iso) => new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short', timeZone: 'UTC' }).format(date(iso)),
+    range: (a, b) => `${range.format(date(a))} – ${range.format(date(b))}`,
+  }
+}
+
+export const COLOR = Object.fromEntries(group.people.map((p) => [p.name, p.color]))
+export const CAT = Object.fromEntries(group.categories.map((c) => [c.name, c.color]))
+
+export const Face = ({ name, size = 32, ring }) => (
+  <span className="face" style={{ width: size, height: size, background: COLOR[name] ?? '#94a3b8', fontSize: size * 0.42, boxShadow: ring ? `0 0 0 3px ${ring}` : undefined }} title={name}>
+    {name.slice(0, 1)}
+  </span>
+)
+
+export const Settle = ({ ledger, w, f }) => (
+  <section className="settle">
+    <div className="settle-head">
+      <div className="settle-kicker">{w.settleLine}</div>
+      <h2>{w.settleTitle(ledger.transfers.length)}</h2>
+    </div>
+    <ol className="transfers">
+      {ledger.transfers.map((t) => (
+        <li key={`${t.from}-${t.to}`}>
+          <span className="who"><Face name={t.from} size={44} /><b>{t.from}</b></span>
+          <span className="flow" aria-label={w.pays}>
+            <span className="flow-word">{w.pays}</span>
+            <svg viewBox="0 0 120 14" aria-hidden="true">
+              <line x1="2" y1="7" x2="104" y2="7" />
+              <path d="M104 1.5 L118 7 L104 12.5 Z" />
+            </svg>
+          </span>
+          <span className="who"><Face name={t.to} size={44} /><b>{t.to}</b></span>
+          <span className="amount">{f.money(t.cents)}</span>
+        </li>
+      ))}
+    </ol>
+  </section>
+)
+
+export const Balances = ({ ledger, w, f }) => {
+  const max = Math.max(...Object.values(ledger.balance).map(Math.abs), 1)
+  return (
+    <section className="balances">
+      {group.people.map(({ name }) => {
+        const b = ledger.balance[name]
+        const pct = (Math.abs(b) / max) * 50
+        return (
+          <div className="balance" key={name}>
+            <div className="balance-top">
+              <Face name={name} size={36} />
+              <div>
+                <div className="balance-name">{name}</div>
+                <div className="balance-sub">{w.paid} {f.money(ledger.paid[name])} · {w.share} {f.money(ledger.owed[name])}</div>
+              </div>
+            </div>
+            <div className="meter" aria-hidden="true">
+              <span className="zero" />
+              <span className={`fill ${b >= 0 ? 'up' : 'down'}`} style={b >= 0 ? { left: '50%', width: `${pct}%` } : { right: '50%', width: `${pct}%` }} />
+            </div>
+            <div className={`balance-value ${b > 0 ? 'up' : b < 0 ? 'down' : ''}`}>
+              {b === 0 ? w.even : `${b > 0 ? w.getsBack : w.owes} ${f.money(Math.abs(b))}`}
+            </div>
+          </div>
+        )
+      })}
+    </section>
+  )
+}
+
+export const ByCategory = ({ ledger, w, f }) => {
+  const rows = group.categories
+    .map((c) => ({ ...c, cents: ledger.expenses.filter((e) => e.category === c.name).reduce((s, e) => s + e.cents, 0) }))
+    .filter((c) => c.cents > 0)
+    .sort((a, b) => b.cents - a.cents)
+  const max = Math.max(...rows.map((r) => r.cents), 1)
+  return (
+    <section className="panel">
+      <h3>{w.byCategory}</h3>
+      <div className="bars">
+        {rows.map((r) => (
+          <div className="bar-row" key={r.name}>
+            <span className="bar-label"><i style={{ background: r.color }} />{r.name}</span>
+            <span className="bar-track"><span className="bar-fill" style={{ width: `${(r.cents / max) * 100}%`, background: r.color }} /></span>
+            <span className="bar-value">{f.money(r.cents)}<small>{Math.round((r.cents / ledger.total) * 100)}%</small></span>
+          </div>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+export const ByDay = ({ ledger, w, f }) => {
+  const days = []
+  for (let d = new Date(`${group.from}T12:00:00Z`); d <= new Date(`${group.to}T12:00:00Z`); d.setUTCDate(d.getUTCDate() + 1)) days.push(d.toISOString().slice(0, 10))
+  // A short stay shows each day; a month shows weeks, counted from the first day.
+  const weekly = days.length > 10
+  const buckets = weekly
+    ? days.filter((_, i) => i % 7 === 0).map((iso, k) => ({ iso, set: new Set(days.slice(k * 7, k * 7 + 7)) }))
+    : days.map((iso) => ({ iso, set: new Set([iso]) }))
+  const totals = buckets.map((b) => ({ iso: b.iso, cents: ledger.expenses.filter((e) => b.set.has(e.date)).reduce((s, e) => s + e.cents, 0) }))
+  const max = Math.max(...totals.map((t) => t.cents), 1)
+  const [hover, setHover] = React.useState(null)
+  return (
+    <section className="panel">
+      <h3>{weekly ? w.byWeek : w.byDay}</h3>
+      <div className="columns" onMouseLeave={() => setHover(null)}>
+        {totals.map((t) => (
+          <div className={`col${hover === t.iso ? ' on' : ''}`} key={t.iso} onMouseEnter={() => setHover(t.iso)}>
+            <span className="col-value">{f.whole(t.cents)}</span>
+            <span className="col-track"><span className="col-fill" style={{ height: `${Math.max(2, (t.cents / max) * 100)}%` }} /></span>
+            <span className="col-day">{weekly ? w.weekOf : f.short(t.iso)}<b>{weekly ? f.dm(t.iso) : f.num(t.iso)}</b></span>
+          </div>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+export const List = ({ ledger, w, f }) => {
+  const [who, setWho] = React.useState(null)
+  const [cat, setCat] = React.useState(null)
+  const cats = group.categories.filter((c) => ledger.expenses.some((e) => e.category === c.name))
+  const rows = ledger.expenses.filter((e) => (!who || e.shares[who] !== undefined || e.paidBy === who) && (!cat || e.category === cat))
+  const shownTotal = rows.reduce((s, e) => s + (who ? e.shares[who] ?? 0 : e.cents), 0)
+  const byDay = rows.reduce((acc, e) => ((acc[e.date] ??= []).push(e), acc), {})
+  return (
+    <section className="list">
+      <div className="list-head">
+        <h3>{w.list}</h3>
+        <span className="list-count">{w.shown(rows.length, who ? `${who} · ${w.theirShare} ${f.money(shownTotal)}` : f.money(shownTotal))}</span>
+      </div>
+      <div className="filters">
+        <button className={`chip${!who ? ' on' : ''}`} onClick={() => setWho(null)} aria-pressed={!who}>{w.everyone}</button>
+        {group.people.map(({ name }) => (
+          <button key={name} className={`chip${who === name ? ' on' : ''}`} onClick={() => setWho(who === name ? null : name)} aria-pressed={who === name}>
+            <Face name={name} size={18} />{name}
+          </button>
+        ))}
+        <span className="sep" />
+        <button className={`chip${!cat ? ' on' : ''}`} onClick={() => setCat(null)} aria-pressed={!cat}>{w.all}</button>
+        {cats.map((c) => (
+          <button key={c.name} className={`chip${cat === c.name ? ' on' : ''}`} onClick={() => setCat(cat === c.name ? null : c.name)} aria-pressed={cat === c.name}>
+            <i className="dot" style={{ background: c.color }} />{c.name}
+          </button>
+        ))}
+      </div>
+      {rows.length === 0 && <div className="empty">{w.none}</div>}
+      <div className="days">
+      {Object.entries(byDay).map(([iso, items]) => (
+        <div className="day" key={iso}>
+          <div className="day-head">
+            <span>{f.day(iso)}</span>
+            <span>{f.money(items.reduce((s, e) => s + (who ? e.shares[who] ?? 0 : e.cents), 0))}</span>
+          </div>
+          {items.map((e, i) => {
+            const names = Object.keys(e.shares)
+            const all = names.length === group.people.length && names.every((n) => e.weights[n] === 1)
+            return (
+              <div className="row" key={`${iso}-${i}`}>
+                <i className="row-cat" style={{ background: CAT[e.category] ?? '#94a3b8' }} />
+                <div className="row-main">
+                  <div className="row-what">{e.what}</div>
+                  <div className="row-meta">
+                    <span>{e.category}</span>
+                    <span className="row-pay"><Face name={e.paidBy} size={16} />{w.paidBy} {e.paidBy}</span>
+                    {!all && (
+                      <span className="row-split">
+                        {w.splitWith}
+                        {names.map((n) => <span key={n} className="mini"><Face name={n} size={16} />{e.weights[n] > 1 ? `×${e.weights[n]}` : ''}</span>)}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <div className="row-amount">
+                  <b>{f.money(who ? e.shares[who] ?? 0 : e.cents)}</b>
+                  <small>{who ? `${w.theirShare} · ${f.money(e.cents)}` : e.currency !== group.currency ? f.original(e.amount, e.currency) : ''}</small>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      ))}
+      </div>
+    </section>
+  )
+}
+
+export const Expenses = () => {
+  const code = lang()
+  const w = WORDS[code]
+  const f = formatters(code)
+  const ledger = React.useMemo(() => buildLedger(table, group), [])
+  return (
+    <div className="exp">
+      <style>{`
+        .exp { --ink: hsl(var(--foreground)); --soft: hsl(var(--muted-foreground)); --up: #1a9aa3; --down: #c97a0a; width: min(var(--kunobi-prose-width, 1200px), 100%); box-sizing: border-box; margin: 0 auto; padding: 16px 24px 56px; container-type: inline-size; font-family: Figtree, system-ui, sans-serif; color: var(--ink); }
+        .exp h1, .exp h2, .exp h3 { font-family: Parkinsans, Figtree, sans-serif; letter-spacing: -0.02em; margin: 0; }
+        .face { display: inline-grid; place-items: center; flex: none; border-radius: 999px; color: #06213f; font-family: Parkinsans, sans-serif; font-weight: 800; line-height: 1; }
+        .top { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px 24px; margin: 8px 0 20px; }
+        .kind { display: inline-flex; align-items: center; gap: 8px; padding: 5px 12px; border-radius: 999px; background: hsl(var(--muted)); font: 600 13px Figtree, sans-serif; color: var(--soft); margin-bottom: 12px; }
+        .kind i { width: 8px; height: 8px; border-radius: 99px; background: #f3aa08; }
+        .top h1 { font-weight: 800; font-size: clamp(30px, 4.4cqw, 48px); line-height: 1.02; }
+        .top-meta { margin-top: 8px; color: var(--soft); font-size: 16px; }
+        .stats { display: flex; gap: 10px; flex-wrap: wrap; }
+        .stat { padding: 12px 16px; border-radius: 18px; background: hsl(var(--card)); border: 1px solid hsl(var(--border)); min-width: 120px; }
+        .stat b { display: block; font: 800 22px Parkinsans, sans-serif; letter-spacing: -0.02em; }
+        .stat span { font-size: 13px; color: var(--soft); }
+        .faces { display: flex; margin-top: 12px; }
+        .faces .face + .face { margin-left: -8px; }
+        .faces .face { box-shadow: 0 0 0 3px hsl(var(--background)); }
+
+        .settle { position: relative; overflow: hidden; border-radius: 28px; padding: clamp(22px, 3.4cqw, 36px); color: #fff; background: radial-gradient(120% 160% at 0% 0%, #0b2d52 0%, #06213f 55%, #031426 100%); box-shadow: 0 18px 50px rgba(6,33,63,0.22); }
+        .settle::after { content: ''; position: absolute; right: -80px; top: -80px; width: 260px; height: 260px; border-radius: 50%; background: radial-gradient(circle, rgba(243,170,8,0.35), transparent 70%); }
+        .settle-kicker { color: rgba(255,255,255,0.7); font-size: 15px; margin-bottom: 6px; }
+        .settle h2 { font-weight: 800; font-size: clamp(24px, 3.4cqw, 38px); line-height: 1.08; max-width: 22ch; }
+        .transfers { list-style: none; margin: 22px 0 0; padding: 0; display: grid; gap: 10px; position: relative; z-index: 1; }
+        .transfers li { display: grid; grid-template-columns: minmax(0, 190px) 132px minmax(0, 1fr) auto; align-items: center; gap: 14px; padding: 14px 18px; border-radius: 20px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.08); }
+        .who { display: flex; align-items: center; gap: 12px; min-width: 0; }
+        .who b { font: 600 18px Figtree, sans-serif; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .flow { display: grid; justify-items: center; gap: 2px; color: rgba(255,255,255,0.55); font-size: 12px; }
+        .flow svg { width: 120px; height: 14px; overflow: visible; }
+        .flow line { stroke: #f3aa08; stroke-width: 2.5; stroke-linecap: round; stroke-dasharray: 5 7; animation: dash 1.4s linear infinite; }
+        .flow path { fill: #f3aa08; }
+        .amount { font: 800 clamp(20px, 2.6cqw, 28px) Parkinsans, sans-serif; letter-spacing: -0.02em; color: #f3aa08; text-align: right; }
+
+        .balances { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 14px; }
+        .balance { padding: 16px; border-radius: 22px; background: hsl(var(--card)); border: 1px solid hsl(var(--border)); }
+        .balance-top { display: flex; gap: 10px; align-items: center; }
+        .balance-name { font: 700 16px Parkinsans, sans-serif; }
+        .balance-sub { font-size: 12.5px; color: var(--soft); }
+        .meter { position: relative; height: 8px; margin: 14px 0 10px; border-radius: 99px; background: hsl(var(--muted)); }
+        .meter .zero { position: absolute; left: 50%; top: -3px; bottom: -3px; width: 2px; margin-left: -1px; background: hsl(var(--border)); }
+        .meter .fill { position: absolute; top: 0; bottom: 0; border-radius: 99px; }
+        .meter .fill.up { background: #30ccd5; }
+        .meter .fill.down { background: #f3aa08; }
+        .balance-value { font: 700 15px Figtree, sans-serif; }
+        .balance-value.up { color: var(--up); }
+        .balance-value.down { color: var(--down); }
+
+        .charts { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 14px; }
+        .panel { display: flex; flex-direction: column; padding: 20px; border-radius: 22px; background: hsl(var(--card)); border: 1px solid hsl(var(--border)); }
+        .panel h3, .list h3 { font-weight: 800; font-size: 20px; margin-bottom: 14px; }
+        .bars { flex: 1; display: grid; gap: 10px; align-content: space-around; }
+        .bar-row { display: grid; grid-template-columns: 96px 1fr auto; align-items: center; gap: 12px; font-size: 14px; }
+        .bar-label { display: flex; align-items: center; gap: 8px; font-weight: 600; }
+        .bar-label i, .dot { width: 9px; height: 9px; border-radius: 99px; display: inline-block; flex: none; }
+        .bar-track { height: 12px; border-radius: 99px; background: hsl(var(--muted)); overflow: hidden; }
+        .bar-fill { display: block; height: 100%; border-radius: 99px; }
+        .bar-value { font-weight: 600; font-variant-numeric: tabular-nums; text-align: right; min-width: 104px; }
+        .bar-value small { margin-left: 8px; color: var(--soft); font-weight: 400; }
+        .columns { display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; height: 200px; align-items: end; }
+        .col { display: grid; grid-template-rows: auto 1fr auto; height: 100%; gap: 6px; text-align: center; cursor: default; }
+        .col-value { font-size: 11.5px; color: var(--soft); font-variant-numeric: tabular-nums; white-space: nowrap; opacity: 0.85; }
+        .col.on .col-value { color: var(--ink); opacity: 1; font-weight: 600; }
+        .col-track { position: relative; border-radius: 12px; background: hsl(var(--muted)); overflow: hidden; }
+        .col-fill { position: absolute; left: 0; right: 0; bottom: 0; border-radius: 12px; background: linear-gradient(180deg, #5bcbf9, #0984c8); }
+        .col.on .col-fill { background: linear-gradient(180deg, #ffc94a, #f3aa08); }
+        .col-day { font-size: 12px; color: var(--soft); display: grid; }
+        .col-day b { font: 700 15px Parkinsans, sans-serif; color: var(--ink); }
+
+        .list { margin-top: 26px; }
+        .list-head { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px; }
+        .list-count { color: var(--soft); font-size: 14px; }
+        .filters { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 4px 0 14px; }
+        .chip { all: unset; cursor: pointer; display: inline-flex; align-items: center; gap: 7px; padding: 7px 13px; border-radius: 999px; background: hsl(var(--muted)); font: 600 14px Figtree, sans-serif; color: var(--ink); transition: background .2s, color .2s; }
+        .chip.on { background: #06213f; color: #fff; }
+        .chip:focus-visible { outline: 2px solid #0984c8; outline-offset: 2px; }
+        .sep { width: 1px; height: 22px; background: hsl(var(--border)); margin: 0 4px; }
+        .days { columns: 2; column-gap: 12px; }
+        .day { break-inside: avoid; border-radius: 22px; background: hsl(var(--card)); border: 1px solid hsl(var(--border)); margin-bottom: 10px; overflow: hidden; }
+        .day-head { display: flex; justify-content: space-between; padding: 10px 18px; font: 600 13px Figtree, sans-serif; color: var(--soft); background: hsl(var(--muted) / 0.5); text-transform: capitalize; }
+        .row { display: grid; grid-template-columns: 4px 1fr auto; gap: 12px; align-items: center; padding: 10px 16px; border-top: 1px solid hsl(var(--border)); }
+        .day-head + .row { border-top: none; }
+        .row-cat { align-self: stretch; border-radius: 4px; }
+        .row-what { font-weight: 600; font-size: 15px; }
+        .row-meta { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 3px; font-size: 13px; color: var(--soft); align-items: center; }
+        .row-pay, .row-split { display: inline-flex; align-items: center; gap: 6px; }
+        .mini { display: inline-flex; align-items: center; gap: 2px; font-weight: 600; }
+        .row-amount { text-align: right; font-variant-numeric: tabular-nums; }
+        .row-amount b { font: 700 16px Figtree, sans-serif; }
+        .row-amount small { display: block; font-size: 12px; color: var(--soft); }
+        .empty { padding: 28px; text-align: center; color: var(--soft); border-radius: 22px; border: 1px dashed hsl(var(--border)); }
+
+        .change { margin-top: 26px; padding: 18px 20px; border-radius: 22px; background: hsl(var(--muted) / 0.6); display: grid; gap: 8px; }
+        .change b { font: 700 15px Parkinsans, sans-serif; }
+        .change p { margin: 0; color: var(--soft); font-size: 14.5px; }
+        .change ul { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 8px; }
+        .change li { padding: 7px 12px; border-radius: 14px; background: hsl(var(--card)); border: 1px solid hsl(var(--border)); font-size: 14px; }
+        .problems { margin-top: 14px; padding: 14px 18px; border-radius: 18px; border: 1px solid #f3aa08; font-size: 14px; }
+
+        @keyframes dash { to { stroke-dashoffset: -20; } }
+        @media (prefers-reduced-motion: reduce) { .flow line { animation: none; } }
+
+        @container (max-width: 860px) {
+          .balances { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+          .charts { grid-template-columns: 1fr; }
+          .days { columns: 1; }
+        }
+        @container (max-width: 560px) {
+          .exp { padding: 12px 14px 40px; }
+          .transfers li { grid-template-columns: auto 64px auto 1fr; grid-template-areas: 'a f b .' 'm m m m'; row-gap: 8px; gap: 10px; padding: 12px 14px; }
+          .flow svg { width: 56px; }
+          .flow-word { display: none; }
+          .transfers li > .who:first-child { grid-area: a; }
+          .transfers li > .flow { grid-area: f; }
+          .transfers li > .who:nth-child(3) { grid-area: b; }
+          .transfers li > .amount { grid-area: m; text-align: left; }
+          .who b { font-size: 16px; }
+          .balances { grid-template-columns: 1fr 1fr; gap: 10px; }
+          .balance { padding: 14px; }
+          .balance-sub { display: none; }
+          .bar-row { grid-template-columns: 76px 1fr auto; gap: 8px; }
+          .bar-value { min-width: 0; font-size: 13px; }
+          .bar-value small { display: none; }
+          .columns { gap: 4px; height: 170px; }
+          .col-value { visibility: hidden; font-size: 10.5px; }
+          .col.on .col-value { visibility: visible; }
+          .sep { display: none; }
+        }
+      `}</style>
+
+      <header className="top">
+        <div>
+          <div className="kind"><i />{w.kind}</div>
+          <h1>{group.title}</h1>
+          <div className="top-meta">{f.range(group.from, group.to)}</div>
+          <div className="faces">{group.people.map((p) => <Face key={p.name} name={p.name} size={30} />)}</div>
+        </div>
+        <div className="stats">
+          <div className="stat"><b>{f.money(ledger.total)}</b><span>{w.spent}</span></div>
+          <div className="stat"><b>{f.money(Math.round(ledger.total / group.people.length))}</b><span>{w.perHead}</span></div>
+        </div>
+      </header>
+
+      <Settle ledger={ledger} w={w} f={f} />
+      <Balances ledger={ledger} w={w} f={f} />
+      <div className="charts">
+        <ByCategory ledger={ledger} w={w} f={f} />
+        <ByDay ledger={ledger} w={w} f={f} />
+      </div>
+      <List ledger={ledger} w={w} f={f} />
+
+      {ledger.errors.length > 0 && (
+        <div className="problems"><b>{w.problems}</b><ul>{ledger.errors.map((e) => <li key={e}>{e}</li>)}</ul></div>
+      )}
+
+      <aside className="change">
+        <b>{w.change}</b>
+        <p>{w.changeLine}</p>
+        <ul>{w.prompts.map((p) => <li key={p}>{p}</li>)}</ul>
+      </aside>
+    </div>
+  )
+}
+
+<Expenses />

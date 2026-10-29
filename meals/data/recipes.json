@@ -1,0 +1,115 @@
+{
+  "aisles": ["Produce", "Meat and fish", "Dairy and eggs", "Bakery", "Pantry", "Frozen"],
+  "recipes": [
+    {
+      "id": "lentil-soup", "name": "Red lentil soup", "minutes": 35, "serves": 4, "icon": "pot", "tags": ["veggie", "kid-friendly"],
+      "ingredients": [
+        { "name": "Red lentils", "qty": 300, "unit": "g", "aisle": "Pantry" },
+        { "name": "Carrots", "qty": 3, "unit": "pcs", "aisle": "Produce" },
+        { "name": "Onion", "qty": 1, "unit": "pcs", "aisle": "Produce" },
+        { "name": "Garlic", "qty": 2, "unit": "cloves", "aisle": "Produce" },
+        { "name": "Chopped tomatoes", "qty": 1, "unit": "tin", "aisle": "Pantry" },
+        { "name": "Vegetable stock", "qty": 1000, "unit": "ml", "aisle": "Pantry" },
+        { "name": "Crusty bread", "qty": 1, "unit": "loaf", "aisle": "Bakery" }
+      ]
+    },
+    {
+      "id": "chicken-traybake", "name": "Lemon chicken traybake", "minutes": 50, "serves": 4, "icon": "tray", "tags": ["kid-friendly"],
+      "ingredients": [
+        { "name": "Chicken thighs", "qty": 800, "unit": "g", "aisle": "Meat and fish" },
+        { "name": "New potatoes", "qty": 750, "unit": "g", "aisle": "Produce" },
+        { "name": "Lemons", "qty": 2, "unit": "pcs", "aisle": "Produce" },
+        { "name": "Red onion", "qty": 2, "unit": "pcs", "aisle": "Produce" },
+        { "name": "Garlic", "qty": 4, "unit": "cloves", "aisle": "Produce" },
+        { "name": "Olive oil", "qty": 3, "unit": "tbsp", "aisle": "Pantry" }
+      ]
+    },
+    {
+      "id": "veggie-tacos", "name": "Black bean tacos", "minutes": 25, "serves": 4, "icon": "taco", "tags": ["veggie", "quick"],
+      "ingredients": [
+        { "name": "Black beans", "qty": 2, "unit": "tins", "aisle": "Pantry" },
+        { "name": "Corn tortillas", "qty": 12, "unit": "pcs", "aisle": "Bakery" },
+        { "name": "Avocados", "qty": 2, "unit": "pcs", "aisle": "Produce" },
+        { "name": "Limes", "qty": 2, "unit": "pcs", "aisle": "Produce" },
+        { "name": "Red onion", "qty": 1, "unit": "pcs", "aisle": "Produce" },
+        { "name": "Feta", "qty": 150, "unit": "g", "aisle": "Dairy and eggs" },
+        { "name": "Sweetcorn", "qty": 200, "unit": "g", "aisle": "Frozen" }
+      ]
+    },
+    {
+      "id": "salmon-rice", "name": "Teriyaki salmon and rice", "minutes": 30, "serves": 4, "icon": "bowl", "tags": ["quick"],
+      "ingredients": [
+        { "name": "Salmon fillets", "qty": 4, "unit": "pcs", "aisle": "Meat and fish" },
+        { "name": "Jasmine rice", "qty": 300, "unit": "g", "aisle": "Pantry" },
+        { "name": "Broccoli", "qty": 1, "unit": "head", "aisle": "Produce" },
+        { "name": "Soy sauce", "qty": 4, "unit": "tbsp", "aisle": "Pantry" },
+        { "name": "Honey", "qty": 2, "unit": "tbsp", "aisle": "Pantry" },
+        { "name": "Spring onions", "qty": 1, "unit": "bunch", "aisle": "Produce" }
+      ]
+    },
+    {
+      "id": "homemade-pizza", "name": "Homemade pizza night", "minutes": 45, "serves": 4, "icon": "pizza", "tags": ["veggie", "kid-friendly"],
+      "ingredients": [
+        { "name": "Pizza dough balls", "qty": 4, "unit": "pcs", "aisle": "Bakery" },
+        { "name": "Passata", "qty": 500, "unit": "ml", "aisle": "Pantry" },
+        { "name": "Mozzarella", "qty": 2, "unit": "balls", "aisle": "Dairy and eggs" },
+        { "name": "Cherry tomatoes", "qty": 250, "unit": "g", "aisle": "Produce" },
+        { "name": "Basil", "qty": 1, "unit": "bunch", "aisle": "Produce" },
+        { "name": "Peppers", "qty": 2, "unit": "pcs", "aisle": "Produce" }
+      ]
+    },
+    {
+      "id": "mushroom-risotto", "name": "Mushroom risotto", "minutes": 40, "serves": 4, "icon": "pan", "tags": ["veggie"],
+      "ingredients": [
+        { "name": "Arborio rice", "qty": 320, "unit": "g", "aisle": "Pantry" },
+        { "name": "Chestnut mushrooms", "qty": 400, "unit": "g", "aisle": "Produce" },
+        { "name": "Onion", "qty": 1, "unit": "pcs", "aisle": "Produce" },
+        { "name": "Vegetable stock", "qty": 1200, "unit": "ml", "aisle": "Pantry" },
+        { "name": "Parmesan", "qty": 80, "unit": "g", "aisle": "Dairy and eggs" },
+        { "name": "Butter", "qty": 40, "unit": "g", "aisle": "Dairy and eggs" },
+        { "name": "Garlic", "qty": 2, "unit": "cloves", "aisle": "Produce" }
+      ]
+    },
+    {
+      "id": "roast-chicken", "name": "Sunday roast chicken", "minutes": 95, "serves": 5, "icon": "roast", "tags": ["family"],
+      "ingredients": [
+        { "name": "Whole chicken", "qty": 1, "unit": "pcs", "aisle": "Meat and fish" },
+        { "name": "Potatoes", "qty": 1200, "unit": "g", "aisle": "Produce" },
+        { "name": "Carrots", "qty": 4, "unit": "pcs", "aisle": "Produce" },
+        { "name": "Green beans", "qty": 300, "unit": "g", "aisle": "Produce" },
+        { "name": "Gravy granules", "qty": 1, "unit": "jar", "aisle": "Pantry" },
+        { "name": "Lemons", "qty": 1, "unit": "pcs", "aisle": "Produce" }
+      ]
+    },
+    {
+      "id": "pesto-pasta", "name": "Pesto pasta with peas", "minutes": 15, "serves": 4, "icon": "bowl", "tags": ["veggie", "quick", "kid-friendly"],
+      "ingredients": [
+        { "name": "Penne", "qty": 400, "unit": "g", "aisle": "Pantry" },
+        { "name": "Green pesto", "qty": 1, "unit": "jar", "aisle": "Pantry" },
+        { "name": "Peas", "qty": 300, "unit": "g", "aisle": "Frozen" },
+        { "name": "Parmesan", "qty": 50, "unit": "g", "aisle": "Dairy and eggs" }
+      ]
+    },
+    {
+      "id": "chickpea-curry", "name": "Chickpea and spinach curry", "minutes": 30, "serves": 4, "icon": "pot", "tags": ["veggie"],
+      "ingredients": [
+        { "name": "Chickpeas", "qty": 2, "unit": "tins", "aisle": "Pantry" },
+        { "name": "Coconut milk", "qty": 1, "unit": "tin", "aisle": "Pantry" },
+        { "name": "Spinach", "qty": 200, "unit": "g", "aisle": "Produce" },
+        { "name": "Curry paste", "qty": 3, "unit": "tbsp", "aisle": "Pantry" },
+        { "name": "Basmati rice", "qty": 300, "unit": "g", "aisle": "Pantry" },
+        { "name": "Naan breads", "qty": 4, "unit": "pcs", "aisle": "Bakery" }
+      ]
+    },
+    {
+      "id": "fish-tacos", "name": "Crispy fish tacos", "minutes": 30, "serves": 4, "icon": "taco", "tags": ["quick"],
+      "ingredients": [
+        { "name": "White fish fillets", "qty": 500, "unit": "g", "aisle": "Meat and fish" },
+        { "name": "Flour tortillas", "qty": 8, "unit": "pcs", "aisle": "Bakery" },
+        { "name": "Red cabbage", "qty": 0.5, "unit": "head", "aisle": "Produce" },
+        { "name": "Greek yoghurt", "qty": 200, "unit": "g", "aisle": "Dairy and eggs" },
+        { "name": "Limes", "qty": 2, "unit": "pcs", "aisle": "Produce" }
+      ]
+    }
+  ]
+}

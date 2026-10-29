@@ -1,0 +1,54 @@
+{
+  "title": "Friday Quiz Night",
+  "host": "Mum",
+  "seconds": 20,
+  "players": [
+    { "name": "Mum", "color": "#f3aa08" },
+    { "name": "Dad", "color": "#5bcbf9" },
+    { "name": "Lucía", "color": "#30ccd5" },
+    { "name": "Noah", "color": "#ff7a59" },
+    { "name": "Grandma Rosa", "color": "#b69cff" }
+  ],
+  "rounds": [
+    {
+      "theme": "Around the world",
+      "color": "#5bcbf9",
+      "questions": [
+        { "q": "What is the capital of Australia?", "options": ["Sydney", "Melbourne", "Canberra", "Perth"], "answer": 2, "fact": "Canberra was built as a compromise between Sydney and Melbourne. Parliament moved there in 1927." },
+        { "q": "Which country has the most natural lakes?", "options": ["Russia", "Canada", "Finland", "United States"], "answer": 1, "fact": "Canada holds roughly 60% of the world's natural lakes." },
+        { "q": "The Atacama, one of the driest deserts on Earth, is mostly in which country?", "options": ["Peru", "Mexico", "Egypt", "Chile"], "answer": 3, "fact": "Some weather stations in the Atacama have never recorded rain." },
+        { "q": "Counting its overseas territories, how many time zones does France use?", "options": ["1", "3", "12", "24"], "answer": 2, "fact": "From French Polynesia to New Caledonia, France spans 12 time zones, more than any other country." }
+      ]
+    },
+    {
+      "theme": "Food and drink",
+      "color": "#f3aa08",
+      "questions": [
+        { "q": "Which nut is the main ingredient of marzipan?", "options": ["Almond", "Hazelnut", "Cashew", "Pistachio"], "answer": 0, "fact": "Marzipan is ground almonds and sugar. Lübeck in Germany and Toledo in Spain both claim it." },
+        { "q": "Which country grows the most coffee?", "options": ["Colombia", "Vietnam", "Brazil", "Ethiopia"], "answer": 2, "fact": "Brazil grows about a third of the world's coffee." },
+        { "q": "Saffron comes from which part of a plant?", "options": ["The seeds", "The flower's stigmas", "The bark", "The roots"], "answer": 1, "fact": "Each crocus flower gives three stigmas, picked by hand. A kilo needs around 150,000 flowers." },
+        { "q": "Which of these is not a type of pasta?", "options": ["Orecchiette", "Farfalle", "Arancini", "Paccheri"], "answer": 2, "fact": "Arancini are fried, stuffed rice balls from Sicily." }
+      ]
+    },
+    {
+      "theme": "Science and nature",
+      "color": "#30ccd5",
+      "questions": [
+        { "q": "What is the largest organ of the human body?", "options": ["The liver", "The brain", "The lungs", "The skin"], "answer": 3, "fact": "An adult's skin weighs around 4 kilograms." },
+        { "q": "How long does sunlight take to reach Earth?", "options": ["About 8 seconds", "About 8 minutes", "About 8 hours", "About a day"], "answer": 1, "fact": "Sunlight travels for about 8 minutes and 20 seconds, so you always see the Sun as it was." },
+        { "q": "Which animal has three hearts?", "options": ["Octopus", "Shark", "Frog", "Starfish"], "answer": 0, "fact": "Two hearts pump blood through the gills; the third pumps it round the body." },
+        { "q": "What is the chemical symbol for gold?", "options": ["Go", "Gd", "Ag", "Au"], "answer": 3, "fact": "Au comes from aurum, the Latin word for gold. Ag, from argentum, is silver." }
+      ]
+    },
+    {
+      "theme": "Music and film",
+      "color": "#b69cff",
+      "questions": [
+        { "q": "How many keys does a standard piano have?", "options": ["76", "88", "92", "100"], "answer": 1, "fact": "52 white keys and 36 black ones, spanning just over seven octaves." },
+        { "q": "Which band released the album Abbey Road?", "options": ["The Rolling Stones", "Queen", "The Beatles", "Pink Floyd"], "answer": 2, "fact": "It is named after the London street where the band recorded, and came out in 1969." },
+        { "q": "Which film won the first Academy Award for Best Picture?", "options": ["Wings", "Casablanca", "Metropolis", "Gone with the Wind"], "answer": 0, "fact": "Wings, a silent film about First World War pilots, won at the first ceremony in 1929." },
+        { "q": "In sheet music, what does forte tell you to do?", "options": ["Play slowly", "Play softly", "Play loudly", "Repeat the bar"], "answer": 2, "fact": "Forte is Italian for strong. Its opposite, piano, gave the instrument its name." }
+      ]
+    }
+  ]
+}

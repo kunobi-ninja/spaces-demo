@@ -1,0 +1,157 @@
+{
+  "title": "Elena turns 40",
+  "kind": "40th birthday party",
+  "host": "Elena and Sam Marsh",
+  "date": "2026-11-21",
+  "today": "2026-10-29",
+  "venue": "Riverside Community Hall",
+  "address": "14 Quay Street",
+  "currency": "USD",
+  "sides": [
+    {
+      "id": "Family",
+      "color": "#f3aa08"
+    },
+    {
+      "id": "Friends",
+      "color": "#30ccd5"
+    },
+    {
+      "id": "Work",
+      "color": "#0984c8"
+    },
+    {
+      "id": "School",
+      "color": "#8a6cf0"
+    }
+  ],
+  "tables": [
+    {
+      "id": "Head",
+      "name": "Head table",
+      "seats": 10,
+      "shape": "long"
+    },
+    {
+      "id": "A",
+      "name": "Table A",
+      "seats": 8,
+      "shape": "round"
+    },
+    {
+      "id": "B",
+      "name": "Table B",
+      "seats": 8,
+      "shape": "round"
+    },
+    {
+      "id": "C",
+      "name": "Table C",
+      "seats": 8,
+      "shape": "round"
+    },
+    {
+      "id": "D",
+      "name": "Table D",
+      "seats": 8,
+      "shape": "round"
+    }
+  ],
+  "schedule": [
+    {
+      "time": "17:00",
+      "what": "Set up the hall",
+      "detail": "Tables, bunting and the playlist; anyone early helps",
+      "who": "Laia, Owen"
+    },
+    {
+      "time": "18:30",
+      "what": "Guests arrive",
+      "detail": "Juice, tea and soft drinks by the door",
+      "who": "Sam"
+    },
+    {
+      "time": "19:15",
+      "what": "Everyone seated",
+      "detail": "Place cards on every table",
+      "who": "Laia"
+    },
+    {
+      "time": "19:30",
+      "what": "Dinner",
+      "detail": "Buffet: jollof rice, roast chicken, vegetable curry, salads (vegan and gluten-free labelled)",
+      "who": "Rosa, Ama, and a local caterer"
+    },
+    {
+      "time": "20:15",
+      "what": "Speech",
+      "detail": "Sam, then a short toast from Owen",
+      "who": "Sam, Owen"
+    },
+    {
+      "time": "21:00",
+      "what": "Cake and candles",
+      "detail": "Homemade orange cake, enough for everyone",
+      "who": "Rosa brings the candles"
+    },
+    {
+      "time": "21:30",
+      "what": "Music and dancing",
+      "detail": "Owen's playlist on the hall speakers",
+      "who": "Owen"
+    },
+    {
+      "time": "23:00",
+      "what": "Clear up together",
+      "detail": "Hall keys back by 23:30",
+      "who": "Everyone who can stay"
+    }
+  ],
+  "budget": {
+    "total": 900,
+    "items": [
+      {
+        "item": "Hall hire",
+        "planned": 180,
+        "paid": 60,
+        "note": "Evening rate, deposit paid"
+      },
+      {
+        "item": "Buffet food",
+        "planned": 320,
+        "paid": 100,
+        "note": "Rice and curry from a local caterer; the rest homemade"
+      },
+      {
+        "item": "Soft drinks and juice",
+        "planned": 90,
+        "paid": 0,
+        "note": "Bought on the day"
+      },
+      {
+        "item": "Cake ingredients",
+        "planned": 35,
+        "paid": 35,
+        "note": "Rosa bakes it"
+      },
+      {
+        "item": "Plates, cups and napkins",
+        "planned": 40,
+        "paid": 40,
+        "note": "Compostable"
+      },
+      {
+        "item": "Decorations",
+        "planned": 45,
+        "paid": 25,
+        "note": "Bunting reused from the summer fair"
+      },
+      {
+        "item": "Small gifts for the kids",
+        "planned": 30,
+        "paid": 0,
+        "note": "One each, 8 children"
+      }
+    ]
+  }
+}

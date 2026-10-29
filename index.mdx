@@ -1,0 +1,355 @@
+---
+title: Made in Kunobi Spaces
+description: "Plans, tools and games for life and work, made in Kunobi spaces. Open one, then ask your AI to make it yours."
+kunobi:
+  page-layout: wide
+---
+
+import * as React from 'react'
+import '@fontsource/parkinsans/600.css'
+import '@fontsource/parkinsans/800.css'
+import '@fontsource/figtree/400.css'
+import '@fontsource/figtree/600.css'
+import teamCover from './assets/covers/team.jpg'
+import projectsCover from './assets/covers/projects.jpg'
+import calendarCover from './assets/covers/content-calendar.jpg'
+import tripCover from './assets/covers/trip.jpg'
+import expensesCover from './assets/covers/expenses.jpg'
+import mealsCover from './assets/covers/meals.jpg'
+import eventCover from './assets/covers/event.jpg'
+import homeCover from './assets/covers/home-hunt.jpg'
+import hiringCover from './assets/covers/hiring.jpg'
+import pitchCover from './assets/covers/pitch-deck.jpg'
+import birthdayCover from './assets/covers/birthday-film.jpg'
+import reportCover from './assets/covers/monthly-report.jpg'
+import dinoCover from './assets/covers/dino-snack.jpg'
+import quizCover from './assets/covers/quiz-night.jpg'
+import questCover from './assets/covers/week-quest.jpg'
+import glassCover from './assets/covers/spectral-core.jpg'
+import paperCover from './assets/covers/paper-explainer.jpg'
+import splatCover from './assets/covers/scan-viewer.jpg'
+
+{/* The words on this page, per language. The page follows the system language and falls back to English. */}
+
+export const WORDS = {
+  en: {
+    eyebrow: 'Kunobi Spaces',
+    title: ['Made in', 'a space.'],
+    lede: 'Plans, tools and games for life and work. Open one, then ask your AI to make it yours.',
+    all: 'All', life: 'Everyday', work: 'Work', play: 'Play', film: 'Films', study: 'Studies',
+    sizes: { large: 'Large tiles', medium: 'Medium tiles', compact: 'Compact tiles' },
+    previews: 'Previews',
+    needs: { experiment: 'Experiment', 'shared-state': 'Needs shared state' },
+    open: 'Open',
+    steps: ['Open an example', 'Ask your AI to change it', 'Share it with someone'],
+    items: {
+      'trip': ['A weekend in Lisbon', 'Two friends plan three days on a real map.'],
+      'team': ['Sol Bakery', 'A team home: this week, decisions and the wiki.'],
+      'expenses': ['Shared house costs', 'Rent, bills and groceries for four housemates, settled in three payments.'],
+      'home-hunt': ['Finding a home, together', 'Two people, their must-haves, and the homes that fit both.'],
+      'hiring': ['Hiring, side by side', 'Where the interviewers disagree, so the team can talk.'],
+      'birthday-film': ['A birthday film', '30 seconds for a friend, with your memories and an original song.'],
+      'pitch-deck': ['Seed pitch', 'Ten slides that build, pause and fit a phone.'],
+      'event': ['A 40th birthday party', 'A community hall, a small budget and a seating plan that spots problems.'],
+      'monthly-report': ['Monthly report', "A small shop's month, explained by its numbers."],
+      'meals': ['Dinners this week', 'Seven dinners and the shopping list they add up to.'],
+      'projects': ['Opening board', 'One tasks file as a board, a table and a timeline.'],
+      'dino-snack': ['Dino Snack', 'A 3D game for a kid who loves dinosaurs.'],
+      'content-calendar': ['Content calendar', "A café's month of posts, from idea to published."],
+      'quiz-night': ['Quiz Night', 'Your questions, everyone on one screen.'],
+      'week-quest': ['Week Quest', 'Your week as a retro RPG.'],
+      'spectral-core': ['Light, contained', 'Glass, light and a custom shader.'],
+      'paper-explainer': ['A stencil, explained', 'Paper, ink and a lifted cutout.'],
+      'scan-viewer': ['Felipe, in 3D', 'A 1.7-million-point scan you can turn and zoom.'],
+    },
+  },
+  es: {
+    eyebrow: 'Kunobi Spaces',
+    title: ['Hecho en', 'un espacio.'],
+    lede: 'Planes, herramientas y juegos para la vida y el trabajo. Abre uno y pide a tu IA que lo haga tuyo.',
+    all: 'Todo', life: 'Día a día', work: 'Trabajo', play: 'Jugar', film: 'Películas', study: 'Estudios',
+    sizes: { large: 'Mosaicos grandes', medium: 'Mosaicos medianos', compact: 'Mosaicos compactos' },
+    previews: 'Avances',
+    needs: { experiment: 'Experimento', 'shared-state': 'Necesita estado compartido' },
+    open: 'Abrir',
+    steps: ['Abre un ejemplo', 'Pide a tu IA que lo cambie', 'Compártelo con alguien'],
+    items: {
+      'trip': ['Un fin de semana en Lisboa', 'Dos amigos planean tres días en un mapa real.'],
+      'team': ['Sol Bakery', 'La casa del equipo: la semana, las decisiones y la wiki.'],
+      'expenses': ['Gastos de la casa', 'Alquiler, facturas y compra entre cuatro compañeros, saldados en tres pagos.'],
+      'home-hunt': ['Buscar casa, juntos', 'Dos personas, lo que cada una necesita y las casas que encajan.'],
+      'hiring': ['Contratar, lado a lado', 'Dónde no coinciden los entrevistadores, para hablarlo.'],
+      'birthday-film': ['Una película de cumpleaños', '30 segundos para un amigo, con vuestros recuerdos y una canción original.'],
+      'pitch-deck': ['Pitch semilla', 'Diez diapositivas que se construyen, pausan y caben en un móvil.'],
+      'event': ['Una fiesta de 40 cumpleaños', 'Un salón del barrio, poco presupuesto y un plano de mesas que detecta problemas.'],
+      'monthly-report': ['Informe mensual', 'El mes de una pequeña tienda, explicado por sus números.'],
+      'meals': ['Cenas de la semana', 'Siete cenas y la lista de la compra que suman.'],
+      'projects': ['Tablero de apertura', 'Un archivo de tareas como tablero, tabla y cronograma.'],
+      'dino-snack': ['Dino Snack', 'Un juego 3D para un niño que ama los dinosaurios.'],
+      'content-calendar': ['Calendario de contenidos', 'Un mes de publicaciones de un café.'],
+      'quiz-night': ['Noche de preguntas', 'Tus preguntas, todos frente a una pantalla.'],
+      'week-quest': ['Week Quest', 'Tu semana como un RPG retro.'],
+      'spectral-core': ['Luz contenida', 'Vidrio, luz y un shader propio.'],
+      'paper-explainer': ['Un esténcil, explicado', 'Papel, tinta y un recorte.'],
+      'scan-viewer': ['Felipe, en 3D', 'Un escaneo de 1,7 millones de puntos que puedes girar.'],
+    },
+  },
+}
+
+export const words = () => {
+  const tag = (typeof navigator !== 'undefined' && navigator.language) || 'en'
+  return WORDS[tag.toLowerCase().split('-')[0]] ?? WORDS.en
+}
+
+{/* `status`: leave it out when an example is ready; 'preview' shows it only with Previews on, with a badge for `needs`; 'hidden' keeps it out of the gallery. */}
+
+{/* The examples, in gallery order. `size` is the tile's footprint on a wide screen: feature 4×3, tall 2×3, half 3×2, base 2×2. */}
+
+export const EXAMPLES = [
+  { id: 'home-hunt', href: 'home-hunt/', cover: homeCover, kind: 'life', size: 'feature', tags: ['Map', 'Two people', 'Shortlist'] },
+  { id: 'team', href: 'team/', cover: teamCover, kind: 'work', size: 'tall', tags: ['Wiki', 'Decisions'] },
+  { id: 'trip', href: 'trip/', cover: tripCover, kind: 'life', size: 'half', focus: '0% 50%', tags: ['Map', 'Itinerary', 'Budget'] },
+  { id: 'event', href: 'event/', cover: eventCover, kind: 'life', size: 'half', tags: ['Seating', 'RSVP', 'Budget'] },
+  { id: 'expenses', href: 'expenses/', cover: expensesCover, kind: 'life', size: 'base', tags: ['Rent by room', 'Settle up'] },
+  { id: 'meals', href: 'meals/', cover: mealsCover, kind: 'life', size: 'base', tags: ['Shopping list', 'Recipes'] },
+  { id: 'dino-snack', href: 'dino-snack/', cover: dinoCover, kind: 'play', size: 'base', tags: ['three.js', 'Touch', 'Sound'] },
+  { id: 'monthly-report', href: 'monthly-report/', cover: reportCover, kind: 'work', size: 'half', tags: ['Charts', 'KPIs'] },
+  { id: 'hiring', href: 'hiring/', cover: hiringCover, kind: 'work', size: 'half', tags: ['Scorecards', 'Pipeline'] },
+  { id: 'content-calendar', href: 'content-calendar/', cover: calendarCover, kind: 'work', size: 'half', tags: ['Calendar', 'Board'] },
+  { id: 'projects', href: 'team/projects.mdx', cover: projectsCover, kind: 'work', size: 'half', tags: ['Board', 'Timeline'] },
+  { id: 'quiz-night', href: 'quiz-night/', cover: quizCover, kind: 'play', size: 'half', tags: ['Players', 'Timer', 'Sound'] },
+  { id: 'pitch-deck', href: 'pitch-deck.mdx/', cover: pitchCover, kind: 'film', size: 'half', tags: ['Slides', '2 formats', '2 looks'] },
+  { id: 'scan-viewer', href: 'scan-viewer/', cover: splatCover, kind: 'study', size: 'half', tags: ['3D scan', 'Orbit', 'Zoom'] },
+  { id: 'birthday-film', href: 'birthday-film.mdx/', cover: birthdayCover, kind: 'film', size: 'half', tags: ['Music', '3 formats'] },
+  { id: 'week-quest', href: 'week-quest/', cover: questCover, kind: 'play', size: 'base', status: 'preview', needs: 'experiment', focus: '0% 35%', tags: ['Pixel art', 'Sound'] },
+  { id: 'spectral-core', href: 'spectral-core.mdx/', cover: glassCover, kind: 'study', size: 'base', status: 'preview', needs: 'experiment', tags: ['GLSL', '3 formats'] },
+  { id: 'paper-explainer', href: 'paper-explainer.mdx/', cover: paperCover, kind: 'study', size: 'base', status: 'preview', needs: 'experiment', tags: ['Motion', '3 formats'] },
+]
+
+export const COLORS = { midnight: '#06213f', deep: '#0b2d52', sun: '#f3aa08', ocean: '#5bcbf9', tide: '#30ccd5', horizon: '#0984c8' }
+export const KIND_COLOR = { life: COLORS.tide, work: COLORS.ocean, play: COLORS.sun, film: COLORS.horizon, study: '#9aa9bb' }
+
+export const Waves = () => {
+  const ref = React.useRef(null)
+  React.useEffect(() => {
+    const canvas = ref.current
+    const ctx = canvas.getContext('2d')
+    const still = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches
+    const lines = [
+      { color: COLORS.sun, amp: 0.13, freq: 1.3, speed: 0.22, y: 0.62, alpha: 0.55 },
+      { color: COLORS.ocean, amp: 0.1, freq: 1.8, speed: -0.17, y: 0.66, alpha: 0.45 },
+      { color: COLORS.tide, amp: 0.16, freq: 0.9, speed: 0.12, y: 0.72, alpha: 0.4 },
+      { color: COLORS.horizon, amp: 0.08, freq: 2.4, speed: 0.28, y: 0.58, alpha: 0.5 },
+    ]
+    let w = 0
+    let h = 0
+    const size = () => {
+      const r = canvas.getBoundingClientRect()
+      const dpr = Math.min(2, globalThis.devicePixelRatio || 1)
+      w = r.width
+      h = r.height
+      canvas.width = Math.round(w * dpr)
+      canvas.height = Math.round(h * dpr)
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+    }
+    const draw = (t) => {
+      ctx.clearRect(0, 0, w, h)
+      ctx.globalCompositeOperation = 'lighter'
+      for (const l of lines) {
+        for (let k = 0; k < 14; k++) {
+          ctx.beginPath()
+          const off = k * 0.012
+          for (let x = 0; x <= w; x += 6) {
+            const u = x / w
+            const y = h * (l.y + off) + Math.sin(u * Math.PI * 2 * l.freq + t * l.speed + k * 0.18) * h * l.amp * (0.6 + 0.4 * Math.sin(u * Math.PI))
+            x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y)
+          }
+          ctx.strokeStyle = l.color
+          ctx.globalAlpha = l.alpha * (1 - k / 14) * 0.5
+          ctx.lineWidth = 1.2
+          ctx.stroke()
+        }
+      }
+      ctx.globalAlpha = 1
+      ctx.globalCompositeOperation = 'source-over'
+    }
+    const start = performance.now() / 1000
+    size()
+    const watch = new ResizeObserver(() => { size(); draw(still ? 4 : performance.now() / 1000) })
+    watch.observe(canvas)
+    let raf = 0
+    if (still) draw(4)
+    else {
+      const frame = (now) => { draw(now / 1000); raf = requestAnimationFrame(frame) }
+      raf = requestAnimationFrame(frame)
+    }
+    return () => { cancelAnimationFrame(raf); watch.disconnect() }
+  }, [])
+  return <canvas ref={ref} className="waves" aria-hidden="true" />
+}
+
+export const Arrow = () => (
+  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M5 12h14M13 6l6 6-6 6" />
+  </svg>
+)
+
+export const Card = ({ item, w }) => {
+  const [title, line] = w.items[item.id]
+  return (
+    <a className={`card ${item.size}`} href={item.href} style={{ '--kind': KIND_COLOR[item.kind] }}>
+      <img src={item.cover} alt="" style={{ objectPosition: item.focus ?? '50% 50%' }} />
+      <span className="scrim" />
+      <span className="kind"><i />{w[item.kind]}</span>
+      {item.status === 'preview' && <span className="preview">{w.needs[item.needs] ?? w.previews}</span>}
+      <span className="go"><Arrow /></span>
+      <span className="text">
+        <span className="card-title">{title}</span>
+        <span className="card-line">{line}</span>
+        <span className="tags">{item.tags.map((t) => <span key={t}>{t}</span>)}</span>
+      </span>
+    </a>
+  )
+}
+
+export const SIZE_ICONS = {
+  large: <path d="M3 3h11v11H3zM16 3h5v11h-5zM3 16h8v5H3zM13 16h8v5h-8z" />,
+  medium: <path d="M3 3h5v8H3zM9.5 3h5v8h-5zM16 3h5v8h-5zM3 13h5v8H3zM9.5 13h5v8h-5zM16 13h5v8h-5z" />,
+  compact: <path d="M3 3h3.5v3.5H3zM8 3h3.5v3.5H8zM13 3h3.5v3.5H13zM18 3h3v3.5h-3zM3 8.5h3.5V12H3zM8 8.5h3.5V12H8zM13 8.5h3.5V12H13zM18 8.5h3V12h-3zM3 14h3.5v3.5H3zM8 14h3.5v3.5H8zM13 14h3.5v3.5H13zM18 14h3v3.5h-3zM3 19.5h3.5V21H3zM8 19.5h3.5V21H8zM13 19.5h3.5V21H13zM18 19.5h3V21h-3z" />,
+}
+
+export const Gallery = () => {
+  const w = words()
+  const [filter, setFilter] = React.useState('all')
+  const [size, setSize] = React.useState('large')
+  const [previews, setPreviews] = React.useState(false)
+  const listed = EXAMPLES.filter((e) => e.status !== 'hidden')
+  const visible = listed.filter((e) => previews || e.status !== 'preview')
+  const previewCount = listed.filter((e) => e.status === 'preview').length
+  const kinds = ['all', 'life', 'work', 'play', 'film', 'study']
+  const count = (k) => (k === 'all' ? visible.length : visible.filter((e) => e.kind === k).length)
+  const shown = visible.filter((e) => filter === 'all' || e.kind === filter)
+  return (
+    <div className="gallery">
+      <style>{`
+        .gallery { --ink: hsl(var(--foreground)); --soft: hsl(var(--muted-foreground)); font-family: Figtree, system-ui, sans-serif; color: var(--ink); width: min(var(--kunobi-prose-width, 1200px), 100%); box-sizing: border-box; margin: 0 auto; padding: 16px 24px 48px; container-type: inline-size; }
+        .hero { position: relative; overflow: hidden; border-radius: 28px; background: radial-gradient(120% 140% at 15% 0%, ${COLORS.deep} 0%, ${COLORS.midnight} 55%, #031426 100%); color: #fff; padding: clamp(28px, 4.5cqw, 52px) clamp(22px, 4.5cqw, 52px) clamp(24px, 3.2cqw, 36px); min-height: clamp(200px, 20cqw, 260px); display: flex; flex-direction: column; justify-content: flex-end; }
+        .waves { position: absolute; inset: 0; width: 100%; height: 100%; }
+        .hero > *:not(.waves) { position: relative; }
+        .eyebrow { display: inline-flex; align-items: center; gap: 10px; font: 600 14px Figtree, sans-serif; letter-spacing: 0.04em; color: rgba(255,255,255,0.72); margin-bottom: 14px; }
+        .mark { font: 800 16px Parkinsans, sans-serif; color: #fff; }
+        .mark b { color: ${COLORS.sun}; }
+        .mark em { color: ${COLORS.ocean}; font-style: normal; }
+        .hero h1 { font-family: Parkinsans, Figtree, sans-serif; font-weight: 800; font-size: clamp(34px, 5.4cqw, 64px); line-height: 1; letter-spacing: -0.035em; margin: 0; }
+        .hero h1 span { white-space: nowrap; }
+        .hero h1 span + span { color: ${COLORS.sun}; }
+        .lede { margin: 14px 0 0; max-width: 62ch; font-size: clamp(16px, 1.6cqw, 18px); line-height: 1.45; color: rgba(255,255,255,0.78); }
+        .bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin: 22px 0 14px; }
+        .filters { display: flex; flex-wrap: wrap; gap: 8px; }
+        .sizes { display: inline-flex; gap: 2px; padding: 3px; border-radius: 999px; background: hsl(var(--muted)); }
+        .size { all: unset; cursor: pointer; width: 34px; height: 30px; border-radius: 999px; display: grid; place-items: center; color: hsl(var(--muted-foreground)); transition: background .2s, color .2s; }
+        .size svg { width: 17px; height: 17px; fill: currentColor; }
+        .size.on { background: ${COLORS.midnight}; color: #fff; }
+        .size:focus-visible { outline: 2px solid ${COLORS.horizon}; outline-offset: 2px; }
+        .chip { all: unset; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border-radius: 999px; font: 600 15px Figtree, sans-serif; color: var(--ink); background: hsl(var(--muted)); transition: background .2s, color .2s, transform .2s; }
+        .chip:hover { transform: translateY(-1px); }
+        .chip small { font-size: 12px; opacity: 0.6; }
+        .chip.on { background: ${COLORS.midnight}; color: #fff; }
+        .chip:focus-visible { outline: 2px solid ${COLORS.horizon}; outline-offset: 2px; }
+        .grid { display: grid; grid-template-columns: repeat(6, 1fr); grid-auto-rows: clamp(124px, 12.5cqw, 164px); grid-auto-flow: dense; gap: 14px; }
+        .card { position: relative; overflow: hidden; border-radius: 24px; background: ${COLORS.midnight}; color: #fff; text-decoration: none; grid-column: span 2; grid-row: span 2; box-shadow: 0 1px 0 rgba(255,255,255,0.04) inset, 0 12px 30px rgba(6, 33, 63, 0.14); transform: translateZ(0); transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s; }
+        .card.feature { grid-column: span 4; grid-row: span 3; }
+        .card.half { grid-column: span 3; grid-row: span 2; }
+        .card.tall { grid-column: span 2; grid-row: span 3; }
+                .card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .6s cubic-bezier(.2,.8,.2,1); }
+        .card:hover { transform: translateY(-4px); box-shadow: 0 22px 50px rgba(6, 33, 63, 0.28); }
+        .card:hover img { transform: scale(1.045); }
+        .card:focus-visible { outline: 3px solid var(--kind); outline-offset: 3px; }
+        .scrim { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(3,20,38,0) 38%, rgba(3,20,38,0.55) 68%, rgba(3,20,38,0.92) 100%); }
+        .kind { position: absolute; top: 14px; left: 14px; display: inline-flex; align-items: center; gap: 7px; padding: 6px 12px 6px 10px; border-radius: 999px; background: rgba(3,20,38,0.62); backdrop-filter: blur(8px); font: 600 13px Figtree, sans-serif; }
+        .kind i { width: 8px; height: 8px; border-radius: 99px; background: var(--kind); }
+        .preview { position: absolute; top: 48px; left: 14px; padding: 4px 10px; border-radius: 999px; background: rgba(243,170,8,0.92); color: ${COLORS.midnight}; font: 700 11px Figtree, sans-serif; letter-spacing: 0.02em; }
+        .grid.compact .preview { top: 38px; left: 10px; font-size: 10px; padding: 3px 8px; }
+        .chip.toggle { background: transparent; box-shadow: inset 0 0 0 1.5px hsl(var(--border)); }
+        .chip.toggle.on { background: ${COLORS.sun}; color: ${COLORS.midnight}; box-shadow: none; }
+        .go { position: absolute; top: 12px; right: 12px; width: 38px; height: 38px; border-radius: 99px; display: grid; place-items: center; background: var(--kind); color: ${COLORS.midnight}; opacity: 0; transform: translateX(-6px); transition: opacity .3s, transform .3s; }
+        .card:hover .go, .card:focus-visible .go { opacity: 1; transform: none; }
+        .text { position: absolute; left: 0; right: 0; bottom: 0; padding: 18px 20px 18px; display: flex; flex-direction: column; gap: 4px; }
+        .card-title { font: 800 clamp(18px, 1.9cqw, 22px)/1.1 Parkinsans, sans-serif; letter-spacing: -0.02em; }
+        .card.feature .card-title { font-size: clamp(24px, 3cqw, 36px); }
+        .card-line { font-size: 14px; color: rgba(255,255,255,0.82); }
+        .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+        .tags span { font: 600 12px Figtree, sans-serif; padding: 4px 9px; border-radius: 99px; background: rgba(255,255,255,0.14); color: rgba(255,255,255,0.92); }
+        .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 32px; }
+        .step { display: flex; align-items: center; gap: 14px; padding: 18px 20px; border-radius: 20px; background: hsl(var(--card)); border: 1px solid hsl(var(--border)); }
+        .step b { flex: none; width: 36px; height: 36px; border-radius: 99px; display: grid; place-items: center; font: 800 16px Parkinsans, sans-serif; color: ${COLORS.midnight}; }
+        .step span { font: 600 16px Figtree, sans-serif; }
+        .grid.medium { grid-template-columns: repeat(3, 1fr); grid-auto-rows: clamp(170px, 19cqw, 230px); }
+        .grid.compact { grid-template-columns: repeat(auto-fill, minmax(clamp(150px, 17cqw, 200px), 1fr)); grid-auto-rows: clamp(120px, 12cqw, 150px); gap: 10px; }
+        .grid.medium .card, .grid.compact .card { grid-column: span 1; grid-row: span 1; }
+        .grid.compact .card { border-radius: 18px; }
+        .grid.compact .text { padding: 12px 14px; }
+        .grid.compact .card-title, .grid.compact .card.feature .card-title { font-size: 16px; }
+        .grid.compact .card-line, .grid.compact .tags, .grid.medium .tags { display: none; }
+        .grid.compact .kind { top: 10px; left: 10px; padding: 4px 9px 4px 8px; font-size: 11px; }
+        .grid.compact .go { width: 30px; height: 30px; top: 8px; right: 8px; }
+        .grid.medium .card.feature .card-title { font-size: clamp(18px, 1.9cqw, 22px); }
+        @container (max-width: 900px) {
+          .grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 160px; }
+          .card, .card.tall, .card.half { grid-column: span 1; grid-row: span 2; }
+          .card.feature { grid-column: span 2; grid-row: span 2; }
+          .grid.medium { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 180px; }
+          .steps { grid-template-columns: 1fr; }
+        }
+        @container (max-width: 560px) {
+          .grid { grid-template-columns: 1fr; grid-auto-rows: 200px; }
+          .card, .card.feature, .card.tall, .card.half { grid-column: span 1; grid-row: span 1; }
+          .card-line { display: none; }
+          .grid.medium { grid-template-columns: 1fr; grid-auto-rows: 200px; }
+          .grid.compact { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 130px; }
+        }
+        @media (prefers-reduced-motion: reduce) { .card, .card img, .go, .chip { transition: none; } }
+      `}</style>
+      <header className="hero">
+        <Waves />
+        <div className="eyebrow"><span className="mark">/<b>·</b><em>·</em>/</span>{w.eyebrow}</div>
+        <h1><span>{w.title[0]}</span> <span>{w.title[1]}</span></h1>
+        <p className="lede">{w.lede}</p>
+      </header>
+      <div className="bar">
+      <nav className="filters" aria-label="Filter">
+        {kinds.map((k) => (
+          <button key={k} className={`chip${filter === k ? ' on' : ''}`} onClick={() => setFilter(k)} aria-pressed={filter === k}>
+            {w[k]} <small>{count(k)}</small>
+          </button>
+        ))}
+        {previewCount > 0 && (
+          <button className={`chip toggle${previews ? ' on' : ''}`} onClick={() => setPreviews((v) => !v)} aria-pressed={previews}>
+            {w.previews} <small>{previewCount}</small>
+          </button>
+        )}
+      </nav>
+      <div className="sizes" role="group">
+        {['large', 'medium', 'compact'].map((k) => (
+          <button key={k} className={`size${size === k ? ' on' : ''}`} onClick={() => setSize(k)} aria-pressed={size === k} aria-label={w.sizes[k]} title={w.sizes[k]}>
+            <svg viewBox="0 0 24 24" aria-hidden="true">{SIZE_ICONS[k]}</svg>
+          </button>
+        ))}
+      </div>
+      </div>
+      <div className={`grid ${size}`}>
+        {shown.map((item) => <Card key={`${filter}-${item.id}`} item={item} w={w} />)}
+      </div>
+      <div className="steps">
+        {w.steps.map((s, i) => (
+          <div className="step" key={s}>
+            <b style={{ background: [COLORS.sun, COLORS.ocean, COLORS.tide][i] }}>{i + 1}</b>
+            <span>{s}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+<Gallery />

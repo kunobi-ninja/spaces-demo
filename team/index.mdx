@@ -1,0 +1,374 @@
+---
+title: Sol Bakery
+description: "The team home for opening Sol Bakery's Riverside shop: who is doing what this week, how each project is going, and what we decided."
+kunobi:
+  page-layout: wide
+---
+
+import * as React from 'react'
+import '@fontsource/parkinsans/600.css'
+import '@fontsource/parkinsans/800.css'
+import '@fontsource/figtree/400.css'
+import '@fontsource/figtree/600.css'
+import TEAM from './data/team.json'
+import TASKS_CSV from './data/tasks.csv?raw'
+import DECISIONS_MD from './wiki/decisions.md?raw'
+
+{/* Interface words per language. The team's own content lives in data/ and wiki/. */}
+
+export const WORDS = {
+  en: {
+    eyebrow: 'Team space',
+    daysTo: 'days to opening',
+    done: 'done',
+    team: 'The team',
+    with: 'with',
+    week: 'This week',
+    weekNote: 'Due in the next 7 days, or waiting on someone',
+    doing: 'In progress',
+    nothing: 'Nothing due this week.',
+    waiting: 'Waiting',
+    due: 'Due',
+    projects: 'Projects',
+    board: 'Open the board',
+    boardLine: 'Every task as a board, a table and a timeline.',
+    decisions: 'Recent decisions',
+    allDecisions: 'All decisions',
+    wiki: 'Wiki',
+    allPages: 'All pages',
+    pages: {
+      'how-we-work': ['How we work', 'Shifts, who decides what, and how we use our AIs.'],
+      'menu': ['Opening menu', 'Twelve items with prices and allergens.'],
+      'suppliers': ['Suppliers', 'Flour, dairy, coffee, and the oven quotes.'],
+      'people': ['People', 'Roles, and who we are still hiring.'],
+      'opening-checklist': ['Opening checklist', 'Everything that has to happen before 12 December.'],
+      'decisions': ['Decisions', 'What we decided, who decided, and why.'],
+    },
+    ask: 'Try asking your AI',
+    prompts: ['Move the oven order to Done.', 'What is still waiting on someone?', 'Add a decision: we open at 7:00.'],
+  },
+  es: {
+    eyebrow: 'Espacio del equipo',
+    daysTo: 'días para abrir',
+    done: 'hecho',
+    team: 'El equipo',
+    with: 'con',
+    week: 'Esta semana',
+    weekNote: 'Vence en los próximos 7 días o espera a alguien',
+    doing: 'En curso',
+    nothing: 'Nada vence esta semana.',
+    waiting: 'Esperando',
+    due: 'Vence',
+    projects: 'Proyectos',
+    board: 'Abrir el tablero',
+    boardLine: 'Todas las tareas como tablero, tabla y línea de tiempo.',
+    decisions: 'Decisiones recientes',
+    allDecisions: 'Todas las decisiones',
+    wiki: 'Wiki',
+    allPages: 'Todas las páginas',
+    pages: {
+      'how-we-work': ['Cómo trabajamos', 'Turnos, quién decide qué y cómo usamos nuestras IA.'],
+      'menu': ['Menú de apertura', 'Doce productos con precios y alérgenos.'],
+      'suppliers': ['Proveedores', 'Harina, lácteos, café y los presupuestos del horno.'],
+      'people': ['Personas', 'Roles y a quién seguimos buscando.'],
+      'opening-checklist': ['Lista de apertura', 'Todo lo que tiene que pasar antes del 12 de diciembre.'],
+      'decisions': ['Decisiones', 'Qué decidimos, quién y por qué.'],
+    },
+    ask: 'Prueba a pedirle a tu IA',
+    prompts: ['Pasa el pedido del horno a Hecho.', '¿Qué está esperando a alguien?', 'Añade una decisión: abrimos a las 7:00.'],
+  },
+}
+
+export const lang = () => {
+  const tag = (typeof navigator !== 'undefined' && navigator.language) || 'en'
+  const short = tag.toLowerCase().split('-')[0]
+  return WORDS[short] ? short : 'en'
+}
+
+export const parseCsv = (text) => {
+  const rows = []
+  let row = []
+  let cell = ''
+  let quoted = false
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i]
+    if (quoted) {
+      if (c === '"' && text[i + 1] === '"') { cell += '"'; i++ }
+      else if (c === '"') quoted = false
+      else cell += c
+    } else if (c === '"') quoted = true
+    else if (c === ',') { row.push(cell); cell = '' }
+    else if (c === '\n' || c === '\r') {
+      if (c === '\r' && text[i + 1] === '\n') i++
+      row.push(cell); cell = ''
+      if (row.some((v) => v !== '')) rows.push(row)
+      row = []
+    } else cell += c
+  }
+  row.push(cell)
+  if (row.some((v) => v !== '')) rows.push(row)
+  const [head, ...body] = rows
+  return body.map((r) => Object.fromEntries(head.map((h, i) => [h.trim(), (r[i] ?? '').trim()])))
+}
+
+export const parseDecisions = (md) =>
+  md.split('\n')
+    .filter((line) => /^\|\s*\d{4}-\d{2}-\d{2}/.test(line))
+    .map((line) => {
+      const [date, decision, who, why, task] = line.split('|').slice(1, -1).map((s) => s.trim())
+      return { date, decision, who, why, task }
+    })
+
+{/* A `.csv?raw` import arrives as a file link, not text, so read it. Text is used as is. */}
+
+export const useText = (source) => {
+  const isLink = /^(blob|data|https?):/.test(source)
+  const [text, setText] = React.useState(isLink ? null : source)
+  React.useEffect(() => {
+    if (!isLink) return
+    let live = true
+    fetch(source).then((r) => r.text()).then((t) => live && setText(t)).catch(() => live && setText(''))
+    return () => { live = false }
+  }, [source])
+  return text
+}
+
+export const DAY = 86400000
+export const toDate = (iso) => new Date(`${iso}T12:00:00`)
+
+export const inkOn = (hex = '#999999') => {
+  const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255)
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b > 0.55 ? '#06213f' : '#ffffff'
+}
+
+export const Avatar = ({ person, size = 28 }) => (
+  <span className="avatar" style={{ width: size, height: size, fontSize: size * 0.42, background: person?.color ?? '#999', color: inkOn(person?.color) }} title={person?.id}>
+    {person?.id?.[0] ?? '?'}
+  </span>
+)
+
+export const TeamHome = () => {
+  const code = lang()
+  const w = WORDS[code]
+  const csv = useText(TASKS_CSV)
+  const tasks = csv ? parseCsv(csv) : []
+  const loading = csv === null
+  const decisions = parseDecisions(DECISIONS_MD).slice(0, 3)
+  const people = Object.fromEntries(TEAM.people.map((p) => [p.id, p]))
+  const projectColor = Object.fromEntries(TEAM.projects.map((p) => [p.id, p.color]))
+  const today = toDate(TEAM.today)
+  const opening = toDate(TEAM.opening)
+  const daysLeft = Math.round((opening - today) / DAY)
+  const fmt = new Intl.DateTimeFormat(code, { weekday: 'short', day: 'numeric', month: 'short' })
+  const fmtShort = new Intl.DateTimeFormat(code, { day: 'numeric', month: 'short' })
+  const doneCount = tasks.filter((t) => t.status === 'Done').length
+  const share = tasks.length ? Math.round((doneCount / tasks.length) * 100) : 0
+
+  const open = tasks.filter((t) => t.status !== 'Done')
+  const soon = open
+    .filter((t) => t.due && (toDate(t.due) - today) / DAY <= 7 || t.status === 'Waiting')
+    .sort((a, b) => (a.due || '9').localeCompare(b.due || '9'))
+  const doing = open
+    .filter((t) => t.status === 'Doing' && !soon.includes(t))
+    .sort((a, b) => (a.due || '9').localeCompare(b.due || '9'))
+
+  const progress = TEAM.projects.map((p) => {
+    const mine = tasks.filter((t) => t.project === p.id)
+    const done = mine.filter((t) => t.status === 'Done').length
+    return { ...p, total: mine.length, done }
+  }).filter((p) => p.total > 0)
+
+  const ring = 2 * Math.PI * 34
+
+  const TaskRow = ({ t }) => {
+    const late = t.due && toDate(t.due) < today
+    const days = t.due ? Math.round((toDate(t.due) - today) / DAY) : null
+    return (
+      <a className="task" href={`projects.mdx#${t.id}`}>
+        <span className="pdot" style={{ background: projectColor[t.project] }} title={t.project} />
+        <span className="ttitle">{t.title}</span>
+        {t.status === 'Waiting' ? <span className="pill warn">{w.waiting}</span> : null}
+        {t.ai ? <span className="pill ai"><i />{t.ai}</span> : null}
+        <span className={`when${late ? ' late' : days !== null && days <= 3 ? ' near' : ''}`}>{t.due ? fmt.format(toDate(t.due)) : ''}</span>
+        <Avatar person={people[t.owner]} size={26} />
+      </a>
+    )
+  }
+
+  return (
+    <div className="home">
+      <style>{`
+        .home { --ink: hsl(var(--foreground)); --soft: hsl(var(--muted-foreground)); --line: hsl(var(--border)); --panel: hsl(var(--card)); font-family: Figtree, system-ui, sans-serif; color: var(--ink); width: min(var(--kunobi-prose-width, 1200px), 100%); box-sizing: border-box; margin: 0 auto; padding: 16px 24px 48px; container-type: inline-size; }
+        .home h1, .home h2, .home .big { font-family: Parkinsans, Figtree, sans-serif; letter-spacing: -0.02em; }
+        .home a { color: inherit; text-decoration: none; }
+        .top { display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: center; padding: 28px 30px; border-radius: 26px; background: linear-gradient(135deg, rgba(243,170,8,0.16), rgba(91,203,249,0.10) 60%, rgba(48,204,213,0.08)), var(--panel); border: 1px solid var(--line); }
+        .eyebrow { font: 600 13px Figtree, sans-serif; letter-spacing: 0.06em; text-transform: uppercase; color: var(--soft); }
+        .top h1 { font-size: clamp(32px, 5cqw, 52px); font-weight: 800; margin: 6px 0 4px; line-height: 1; }
+        .goal { font-size: 18px; color: var(--soft); margin: 0; }
+        .bar { margin-top: 16px; height: 8px; border-radius: 99px; background: hsl(var(--muted)); overflow: hidden; max-width: 420px; }
+        .bar > i { display: block; height: 100%; border-radius: 99px; background: #f3aa08; }
+        .barnote { margin-top: 8px; font-size: 14px; color: var(--soft); }
+        .count { position: relative; width: 132px; height: 132px; display: grid; place-items: center; text-align: center; }
+        .count svg { position: absolute; inset: 0; transform: rotate(-90deg); }
+        .count .big { font-size: 40px; font-weight: 800; line-height: 1; }
+        .count small { display: block; font-size: 12px; color: var(--soft); margin-top: 4px; max-width: 80px; }
+        .people { display: flex; flex-wrap: wrap; gap: 10px; margin: 18px 0 26px; }
+        .person { display: flex; align-items: center; gap: 10px; padding: 8px 14px 8px 8px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); }
+        .person b { font-weight: 600; font-size: 15px; display: block; }
+        .person span.role { font-size: 13px; color: var(--soft); }
+        .avatar { flex: none; display: inline-grid; place-items: center; border-radius: 99px; color: #06213f; font-family: Parkinsans, sans-serif; font-weight: 800; }
+        .pill { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 99px; font-size: 12px; font-weight: 600; white-space: nowrap; background: hsl(var(--muted)); color: var(--soft); }
+        .pill.ai i { width: 6px; height: 6px; border-radius: 99px; background: #5bcbf9; }
+        .pill.warn { background: rgba(243,170,8,0.18); color: #9a6a00; }
+        .grid { display: grid; grid-template-columns: 1.55fr 1fr; gap: 20px; align-items: start; }
+        .grid > div { min-width: 0; }
+        .dec p { overflow-wrap: anywhere; }
+        .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 22px; padding: 20px 22px; box-shadow: 0 8px 24px rgba(6,33,63,0.05); }
+        .panel + .panel { margin-top: 20px; }
+        .panel h2 { font-size: 20px; font-weight: 600; margin: 0; display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+        .panel h2 a, .panel h2 small { font: 600 13px Figtree, sans-serif; color: var(--soft); }
+        .panel h2 a:hover { color: #0984c8; }
+        .note { margin: 4px 0 12px; font-size: 14px; color: var(--soft); }
+        .sub { margin: 18px 0 6px; font: 600 13px Figtree, sans-serif; letter-spacing: 0.06em; text-transform: uppercase; color: var(--soft); }
+        .task { display: flex; align-items: center; gap: 10px; padding: 10px 8px; border-radius: 12px; border-top: 1px solid var(--line); }
+        .task:first-of-type { border-top: 0; }
+        .task:hover { background: hsl(var(--muted)); }
+        .pdot { flex: none; width: 10px; height: 10px; border-radius: 3px; }
+        .ttitle { flex: 1; min-width: 0; font-size: 15px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .when { font-size: 13px; color: var(--soft); white-space: nowrap; min-width: 82px; text-align: right; }
+        .when.near { color: #b37c00; font-weight: 600; }
+        .when.late { color: #c2410c; font-weight: 600; }
+        .empty { color: var(--soft); font-size: 15px; padding: 8px 0; }
+        .proj { display: grid; grid-template-columns: 92px 1fr 44px; align-items: center; gap: 12px; padding: 7px 0; font-size: 14px; }
+        .proj b { font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .proj .track { height: 8px; border-radius: 99px; background: hsl(var(--muted)); overflow: hidden; }
+        .proj .track i { display: block; height: 100%; border-radius: 99px; }
+        .proj span { color: var(--soft); text-align: right; font-variant-numeric: tabular-nums; }
+        .boardcard { display: flex; align-items: center; gap: 16px; margin-top: 16px; padding: 16px 18px; border-radius: 18px; background: #06213f; color: #fff !important; transition: transform .2s; }
+        .boardcard:hover { transform: translateY(-2px); }
+        .boardcard .mini { flex: none; display: grid; grid-template-columns: repeat(3, 14px); gap: 4px; }
+        .boardcard .mini i { display: block; height: 14px; border-radius: 4px; }
+        .boardcard b { font-family: Parkinsans, sans-serif; font-size: 17px; display: block; }
+        .boardcard span { font-size: 13px; color: rgba(255,255,255,0.75); }
+        .dec { padding: 12px 0; border-top: 1px solid var(--line); }
+        .dec:first-of-type { border-top: 0; }
+        .dec .meta { font-size: 12px; color: var(--soft); display: flex; gap: 8px; align-items: center; }
+        .dec p { margin: 4px 0 0; font-size: 15px; font-weight: 600; line-height: 1.35; }
+        .pages { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 14px; }
+        .page { display: block; padding: 16px 18px; border-radius: 18px; background: var(--panel); border: 1px solid var(--line); transition: transform .2s, box-shadow .2s; }
+        .page:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(6,33,63,0.10); }
+        .page b { display: flex; align-items: center; gap: 10px; font-family: Parkinsans, sans-serif; font-weight: 600; font-size: 17px; }
+        .page b i { width: 26px; height: 26px; border-radius: 8px; display: grid; place-items: center; font-style: normal; font-size: 14px; }
+        .page span { display: block; margin-top: 6px; font-size: 14px; color: var(--soft); line-height: 1.4; }
+        .wikihead { display: flex; align-items: baseline; justify-content: space-between; margin-top: 30px; }
+        .wikihead h2 { font-size: 22px; font-weight: 600; margin: 0; }
+        .wikihead a { font: 600 14px Figtree, sans-serif; color: var(--soft); }
+        .ask { margin-top: 26px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: 14px; color: var(--soft); }
+        .ask q { quotes: none; padding: 6px 12px; border-radius: 99px; border: 1px dashed var(--line); color: var(--ink); }
+        @container (max-width: 860px) {
+          .grid { grid-template-columns: 1fr; }
+          .pages { grid-template-columns: repeat(2, 1fr); }
+        }
+        @container (max-width: 520px) {
+          .top { grid-template-columns: 1fr; padding: 22px; }
+          .count { width: 104px; height: 104px; }
+          .count .big { font-size: 32px; }
+          .pages { grid-template-columns: 1fr; }
+          .pill.ai, .person span.role { display: none; }
+          .panel { padding: 18px 16px; }
+          .proj { grid-template-columns: 76px 1fr 36px; }
+          .top { gap: 8px; }
+          .when { min-width: 0; }
+        }
+      `}</style>
+
+      <header className="top">
+        <div>
+          <div className="eyebrow">{w.eyebrow}</div>
+          <h1>{TEAM.name}</h1>
+          <p className="goal">{TEAM.goal} · {fmt.format(opening)}</p>
+          <div className="bar"><i style={{ width: `${share}%` }} /></div>
+          <div className="barnote">{doneCount} / {tasks.length} {w.done} · {share}%</div>
+        </div>
+        <div className="count">
+          <svg viewBox="0 0 80 80" width="100%" height="100%" aria-hidden="true">
+            <circle cx="40" cy="40" r="34" fill="none" stroke="hsl(var(--muted))" strokeWidth="7" />
+            <circle cx="40" cy="40" r="34" fill="none" stroke="#f3aa08" strokeWidth="7" strokeLinecap="round"
+              strokeDasharray={ring} strokeDashoffset={ring * Math.min(1, daysLeft / 60)} />
+          </svg>
+          <div><div className="big">{daysLeft}</div><small>{w.daysTo}</small></div>
+        </div>
+      </header>
+
+      <div className="people" aria-label={w.team}>
+        {TEAM.people.map((p) => (
+          <div className="person" key={p.id}>
+            <Avatar person={p} size={36} />
+            <div><b>{p.id}</b><span className="role">{p.role} · {w.with} {p.ai}</span></div>
+          </div>
+        ))}
+      </div>
+
+      <div className="grid">
+        <div>
+          <section className="panel">
+            <h2>{w.week} <small>{fmtShort.format(today)} – {fmtShort.format(new Date(today.getTime() + 7 * DAY))}</small></h2>
+            <p className="note">{w.weekNote}</p>
+            {soon.length ? soon.map((t) => <TaskRow t={t} key={t.id} />) : loading ? null : <div className="empty">{w.nothing}</div>}
+            {doing.length ? <div className="sub">{w.doing}</div> : null}
+            {doing.map((t) => <TaskRow t={t} key={t.id} />)}
+          </section>
+        </div>
+        <div>
+          <section className="panel">
+            <h2>{w.projects}</h2>
+            <div style={{ marginTop: 10 }}>
+              {progress.map((p) => (
+                <div className="proj" key={p.id}>
+                  <b><span className="pdot" style={{ background: p.color }} />{p.id}</b>
+                  <div className="track"><i style={{ width: `${(p.done / p.total) * 100}%`, background: p.color }} /></div>
+                  <span>{p.done}/{p.total}</span>
+                </div>
+              ))}
+            </div>
+            <a className="boardcard" href="projects.mdx">
+              <span className="mini" aria-hidden="true">
+                {['#f3aa08', '#5bcbf9', '#30ccd5', '#f3aa08', '#5bcbf9', '#0984c8'].map((c, i) => <i key={i} style={{ background: c, opacity: i > 2 ? 0.55 : 1 }} />)}
+              </span>
+              <div><b>{w.board} →</b><span>{w.boardLine}</span></div>
+            </a>
+          </section>
+          <section className="panel">
+            <h2>{w.decisions} <a href="wiki/decisions.md">{w.allDecisions} →</a></h2>
+            {decisions.map((d) => (
+              <div className="dec" key={d.date + d.decision}>
+                <div className="meta">{fmt.format(toDate(d.date))} · {d.who}{d.task ? <span className="pill">{d.task}</span> : null}</div>
+                <p>{d.decision}</p>
+              </div>
+            ))}
+          </section>
+        </div>
+      </div>
+
+      <div className="wikihead">
+        <h2>{w.wiki}</h2>
+        <a href="wiki/">{w.allPages} →</a>
+      </div>
+      <div className="pages">
+        {Object.entries(w.pages).map(([slug, [title, line]], i) => (
+          <a className="page" href={`wiki/${slug}.md`} key={slug}>
+            <b><i style={{ background: ['rgba(243,170,8,0.2)', 'rgba(232,121,74,0.2)', 'rgba(91,203,249,0.22)', 'rgba(48,204,213,0.22)', 'rgba(9,132,200,0.18)', 'rgba(138,108,240,0.18)'][i] }}>{['◷', '✶', '⛟', '☺', '✓', '⚑'][i]}</i>{title}</b>
+            <span>{line}</span>
+          </a>
+        ))}
+      </div>
+
+      <div className="ask">
+        <span>{w.ask}:</span>
+        {w.prompts.map((p) => <q key={p}>{p}</q>)}
+      </div>
+    </div>
+  )
+}
+
+<TeamHome />

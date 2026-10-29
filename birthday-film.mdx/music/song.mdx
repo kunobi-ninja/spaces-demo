@@ -1,0 +1,69 @@
+import { song } from "../src/song"
+
+# Birthday song
+
+A bright 120 bpm tune in C major. A glockenspiel carries the hook over a soft
+pad, a bouncing bass and a light clap beat that grows from the opening card to
+the last memory, steps back for the cake, and lands on a warm C chord as the
+final card opens.
+
+<Tempo bpm={120} range={[110, 132]} swing={0} />
+<Key root="C" scale="major" />
+<Harmony voicing="E3 G4"
+  a="C2: C E G, A1: A C E, F1: F A C, G1: G B D"
+  b="F1: F A C, G1: G B D, E1: E G B, A1: A C E"
+  turn="G1: G B D F" approach="G1: G B D" end="C2: C E G C" />
+
+## Sound
+
+<Mix reverb={2.2} preDelay={0.02} delay={0.375} feedback={0.18} pump={0.12} level={-3} />
+
+{/* A glockenspiel: a bright FM strike with a short metallic shimmer on top. */}
+<Instrument name="bell" volume={-12} reverb={0.35} delay={0.12} pan={0.1} highpass={300}>
+  <Layer kind="fm" harmonicity={3.5} index={1.4} decay={0.9} sustain={0.001} bright={0.25} release={0.9} />
+  <Layer kind="fm" harmonicity={7} index={0.6} decay={0.18} sustain={0.001} bright={0.1} release={0.3} volume={-20} />
+</Instrument>
+<Instrument name="pluck" kind="tone" type="triangle" decay={0.22} sustain={0.001} release={0.08} volume={-16} pan={-0.25} delay={0.18} highpass={180} />
+<Instrument name="bass" kind="tone" type="sine" decay={0.35} sustain={0.6} release={0.06} volume={-9} pump highpass={30} />
+<Instrument name="pad" kind="pad" type="fatsawtooth" cutoff={[600, 1800]} attack={0.3} release={0.6} count={3} spread={14} volume={-25} pump chorus={0.4} reverb={0.4} highpass={200} />
+
+<Kit>
+  <Drum name="kick" kind="kick" pitch={52} octaves={3} sweep={0.03} decay={0.16} click={0.25} volume={-4} />
+  <Drum name="clap" kind="noise" filter="bandpass" frequency={1800} q={0.9} decay={0.09} volume={-10} reverb={0.15} />
+  <Drum name="hat" kind="noise" filter="highpass" frequency={8200} decay={0.02} volume={-14} pan={0.2} />
+  <Drum name="shaker" kind="noise" filter="highpass" frequency={6000} decay={0.04} volume={-19} pan={-0.3} />
+  <Drum name="crash" kind="noise" filter="highpass" frequency={4500} decay={1.1} volume={-15} reverb={0.25} />
+</Kit>
+
+## Grooves
+
+<Groove name="body">
+  <Steps drum="kick" steps="x.......x......." />
+  <Steps drum="clap" steps="....x.......x..." />
+  <Steps drum="hat" steps="..x...x...x...x." gain={0.8} />
+</Groove>
+
+<Groove name="peak">
+  <Steps drum="kick" steps="x.......x.x....." />
+  <Steps drum="clap" steps="....x.......x..." />
+  <Steps drum="hat" steps="x.x.x.x.x.x.x.x." gain={0.7} />
+  <Steps drum="shaker" steps="-o-o-o-o-o-o-o-o" gain={0.8} />
+</Groove>
+
+## The hook
+
+One line per chord of the harmony, sixteen steps to a bar: a note name starts
+a note, `-` holds it, `.` rests.
+
+<Line name="a1" steps="E5 - - - G5 - C6 - - - B5 - G5 - - -" />
+<Line name="a2" steps="A5 - - - C6 - E6 - - - D6 - C6 - - -" />
+<Line name="a3" steps="F5 - - - A5 - C6 - - - D6 - C6 - A5 -" />
+<Line name="a4" steps="G5 - - - - - B5 - D6 - - - . . . ." />
+<Line name="b1" steps="A5 - A5 - C6 - A5 - G5 - - - F5 - - -" />
+<Line name="b2" steps="G5 - G5 - B5 - G5 - D6 - - - B5 - - -" />
+<Line name="b3" steps="E5 - G5 - B5 - - - E6 - D6 - B5 - G5 -" />
+<Line name="b4" steps="A5 - - - - - - - C6 - B5 - A5 - G5 -" />
+
+## Arrangement
+
+<Arrangement use={song} />

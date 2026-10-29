@@ -1,0 +1,145 @@
+---
+title: Pedal Club · Seed deck
+description: "A ten-slide seed deck for a bike-repair subscription, presented slide by slide."
+presentation: timeline
+size: 1920x1080
+fps: 30
+stops: scenes
+targets:
+  landscape: landscape
+  portrait:
+    width: 1080
+    height: 1920
+    safeArea: { top: 80, bottom: 120, left: 0, right: 0 }
+---
+
+export { createCut } from "./src/index"
+import { Slide } from "./src/slide"
+import deck from "./data/deck.json"
+
+export const variants = ["cloud", "midnight"]
+export const OF = 10
+
+{/*
+  One scene is one slide. Presenting pauses at the end of each scene (stops: scenes);
+  the exported video plays straight through. The words are written here; the
+  figures read data/deck.json. Change either and the slide follows.
+*/}
+
+<Scene id="title" duration="6s">
+
+## Seed round
+
+# Pedal Club
+
+Bike repair by subscription. We come to you.
+
+<Slide kind="title" n={1} of={OF} company={deck.company} round={`${deck.round} · ${deck.date}`} />
+
+</Scene>
+
+<Scene id="problem" duration="6s">
+
+## The problem
+
+# Bikes break. Fixing them is a chore.
+
+City riders lose their bike for days every time something goes wrong, so most just stop riding.
+
+<Slide kind="problem" n={2} of={OF} company={deck.company} data={deck.problem} />
+
+</Scene>
+
+<Scene id="solution" duration="6s">
+
+## Our answer
+
+# Upkeep that comes to the bike.
+
+One monthly price covers regular tune-ups and fast repairs where the bike already is.
+
+<Slide kind="solution" n={3} of={OF} company={deck.company} data={deck.steps} />
+
+</Scene>
+
+<Scene id="product" duration="6.5s">
+
+## The product
+
+# Book in ten seconds. Watch the van arrive.
+
+- Pick a slot that suits you
+- Follow the van on the map
+- See what was checked and fixed
+
+<Slide kind="product" n={4} of={OF} company={deck.company} data={deck.product} />
+
+</Scene>
+
+<Scene id="market" duration="6s">
+
+## The market
+
+# Six cities, 610,000 riders who would pay.
+
+We start where people already commute by bike and repair shops are full.
+
+<Slide kind="market" n={5} of={OF} company={deck.company} data={deck.market} />
+
+</Scene>
+
+<Scene id="traction" duration="7s">
+
+## Traction
+
+# 4,880 riders in 18 months.
+
+Grown in Lyon and Bordeaux with word of mouth and office plans.
+
+<Slide kind="traction" n={6} of={OF} company={deck.company} data={deck.traction} />
+
+</Scene>
+
+<Scene id="model" duration="6s">
+
+## Business model
+
+# Each rider pays for themselves in five months.
+
+Visits are planned in routes, so one van serves a neighbourhood a day.
+
+<Slide kind="economics" n={7} of={OF} company={deck.company} data={deck.economics} />
+
+</Scene>
+
+<Scene id="team" duration="6s">
+
+## The team
+
+# People who have run vans and fixed bikes.
+
+<Slide kind="team" n={8} of={OF} company={deck.company} data={deck.team} />
+
+</Scene>
+
+<Scene id="plan" duration="6s">
+
+## The plan
+
+# From two cities to six by 2028.
+
+<Slide kind="plan" n={9} of={OF} company={deck.company} data={deck.plan} vansLabel="vans" />
+
+</Scene>
+
+<Scene id="ask" duration="6.5s">
+
+## The ask
+
+# We are raising €1.2M.
+
+Enough for 18 more vans, the mechanics to run them, and 24 months of runway.
+
+<Slide kind="ask" n={10} of={OF} company={deck.company} data={deck.ask} />
+
+</Scene>

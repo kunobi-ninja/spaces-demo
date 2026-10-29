@@ -1,0 +1,89 @@
+---
+title: Hiring at Linden & Co
+description: "Two open roles, three interviewers: the pipeline, the scorecards side by side with where they disagree, and what happens this week."
+kunobi:
+  page-layout: wide
+---
+
+import '@fontsource/parkinsans/600.css'
+import '@fontsource/parkinsans/800.css'
+import '@fontsource/figtree/400.css'
+import '@fontsource/figtree/600.css'
+import data from './data/hiring.json'
+import { Hiring } from './src/Hiring'
+
+{/* Interface words per language. The page follows the system language and falls back to English. Roles, candidates and scorecards live in data/hiring.json. */}
+
+export const WORDS = {
+  en: {
+    locale: 'en-GB',
+    hiring: 'Hiring',
+    title: 'Two roles, one team deciding',
+    openings: (n) => `${n} ${n === 1 ? 'opening' : 'openings'}`,
+    inProcess: 'in process', thisWeekShort: 'talks this week', offersOut: 'offers out', toDiscuss: 'to discuss',
+    role: 'Role', allRoles: 'Both roles',
+    boardHint: 'Click a candidate with scorecards to compare them above.',
+    stage: { applied: 'Applied', screen: 'Screen', interview: 'Interview', offer: 'Offer', hired: 'Hired', declined: 'Closed' },
+    daysIn: (n) => (n === 0 ? 'today' : `${n}d in stage`),
+    theyDeclined: 'They declined', weDeclined: 'We declined',
+    cards: (n) => `${n} ${n === 1 ? 'scorecard' : 'scorecards'}`,
+    discuss: (n) => `${n} to discuss`,
+    compareTitle: 'Where the interviewers differ',
+    compareHint: 'Scores 1 to 4. Rows two or more points apart are marked so the team talks about them.',
+    applied: 'applied',
+    splitVerdict: 'Verdicts split',
+    verdictAgreeButScores: 'Same verdict, different scores',
+    agree: 'Interviewers agree',
+    criterion: 'Criterion', gap: 'Gap', talk: 'Talk about it:', vs: 'vs', close: 'Close',
+    recommends: 'Recommends',
+    rec: { 'strong yes': 'Strong yes', yes: 'Yes', unsure: 'Unsure', no: 'No' },
+    notYet: 'Not yet',
+    pending: (names) => `Still waiting for ${names.join(' and ')}'s scorecard.`,
+    pipeline: 'Pipeline', by: 'By', reviews: (n) => `Review ${n} new ${n === 1 ? 'application' : 'applications'}`,
+    funnel: 'How far candidates get', movedOn: 'moved on',
+    thisWeek: 'This week', nothingThisWeek: 'Nothing booked this week.',
+    change: 'How to change this',
+    changeLine: 'This page reads data/hiring.json. Edit it, or ask your AI:',
+    prompts: ['“Add Marco’s scorecard for Lucas Moreau: craft 4, product 2, communication 3, collaboration 3, recommend yes.”', '“Move Kenji Watanabe to interview and book him with Marco on Monday.”'],
+    sample: 'Sample data: the company, people and scores are made up.',
+  },
+  es: {
+    locale: 'es-ES',
+    hiring: 'Contratación',
+    title: 'Dos puestos, un equipo que decide',
+    openings: (n) => `${n} ${n === 1 ? 'vacante' : 'vacantes'}`,
+    inProcess: 'en proceso', thisWeekShort: 'charlas esta semana', offersOut: 'ofertas enviadas', toDiscuss: 'por hablar',
+    role: 'Puesto', allRoles: 'Ambos puestos',
+    boardHint: 'Haz clic en un candidato con valoraciones para compararlas arriba.',
+    stage: { applied: 'Recibidos', screen: 'Filtro', interview: 'Entrevista', offer: 'Oferta', hired: 'Contratado', declined: 'Cerrado' },
+    daysIn: (n) => (n === 0 ? 'hoy' : `${n} d en la etapa`),
+    theyDeclined: 'Rechazó', weDeclined: 'Descartado',
+    cards: (n) => `${n} ${n === 1 ? 'valoración' : 'valoraciones'}`,
+    discuss: (n) => `${n} por hablar`,
+    compareTitle: 'Dónde difieren los entrevistadores',
+    compareHint: 'Puntuaciones de 1 a 4. Las filas con dos o más puntos de diferencia se marcan para hablarlas en equipo.',
+    applied: 'solicitó el',
+    splitVerdict: 'Veredictos divididos',
+    verdictAgreeButScores: 'Mismo veredicto, notas distintas',
+    agree: 'Los entrevistadores coinciden',
+    criterion: 'Criterio', gap: 'Diferencia', talk: 'Hablarlo:', vs: 'vs', close: 'Parecidas',
+    recommends: 'Recomienda',
+    rec: { 'strong yes': 'Sí, claro', yes: 'Sí', unsure: 'No sé', no: 'No' },
+    notYet: 'Pendiente',
+    pending: (names) => `Falta la valoración de ${names.join(' y ')}.`,
+    pipeline: 'Proceso', by: 'Hasta', reviews: (n) => `Revisar ${n} ${n === 1 ? 'solicitud nueva' : 'solicitudes nuevas'}`,
+    funnel: 'Hasta dónde llegan', movedOn: 'avanzan',
+    thisWeek: 'Esta semana', nothingThisWeek: 'Nada previsto esta semana.',
+    change: 'Cómo cambiar esto',
+    changeLine: 'Esta página lee data/hiring.json. Edítalo o pídeselo a tu IA:',
+    prompts: ['“Añade la valoración de Marco para Lucas Moreau: oficio 4, producto 2, comunicación 3, colaboración 3, recomienda sí.”', '“Pasa a Kenji Watanabe a entrevista y agéndalo con Marco el lunes.”'],
+    sample: 'Datos de ejemplo: la empresa, las personas y las notas son inventadas.',
+  },
+}
+
+export const pickWords = () => {
+  const tag = (typeof navigator !== 'undefined' && navigator.language) || 'en'
+  return WORDS[tag.toLowerCase().split('-')[0]] ?? WORDS.en
+}
+
+<Hiring data={data} w={pickWords()} />

@@ -1,0 +1,59 @@
+---
+title: Lisbon weekend
+description: "Two friends plan three days in Lisbon on a map: where to go each day, what still needs booking, and what it costs each."
+kunobi:
+  page-layout: wide
+---
+
+import '@fontsource/parkinsans/600.css'
+import '@fontsource/parkinsans/800.css'
+import '@fontsource/figtree/400.css'
+import '@fontsource/figtree/600.css'
+import places from './data/places.csv?raw'
+import { TripPlanner } from './src/trip'
+
+{/* The places live in data/places.csv. The trip's frame and the page's words are below. */}
+
+export const TRIP = {
+  city: 'Lisbon',
+  friends: [
+    { name: 'Maya', color: '#f3aa08' },
+    { name: 'Leo', color: '#5bcbf9' },
+  ],
+}
+
+export const WORDS = {
+  en: {
+    eyebrow: 'Weekend trip',
+    dates: 'Friday 13 to Sunday 15 November',
+    days: ['Fri 13', 'Sat 14', 'Sun 15'],
+    all: 'All days', map: 'Map of the trip',
+    places: 'places', each: 'each', toBook: 'to book', pp: 'each',
+    booked: 'Booked', notBooked: 'Not booked yet', addedBy: 'Added by', close: 'Close', free: 'Free',
+    stillToBook: 'Still to book', allBooked: 'Everything is booked.', budget: 'Budget per person',
+    kinds: { stay: 'Stay', food: 'Food', see: 'See', coffee: 'Coffee', viewpoint: 'Viewpoint' },
+    how: ['This page shows', 'Edit the file, or ask your AI:'],
+    prompts: ['Add the Oceanário on Sunday at 15:00, added by Leo', 'Mark the Jerónimos tickets as booked'],
+  },
+  es: {
+    eyebrow: 'Fin de semana',
+    dates: 'Del viernes 13 al domingo 15 de noviembre',
+    days: ['Vie 13', 'Sáb 14', 'Dom 15'],
+    all: 'Todos los días', map: 'Mapa del viaje',
+    places: 'lugares', each: 'por persona', toBook: 'por reservar', pp: 'por persona',
+    booked: 'Reservado', notBooked: 'Sin reservar', addedBy: 'Añadido por', close: 'Cerrar', free: 'Gratis',
+    stillToBook: 'Falta reservar', allBooked: 'Todo está reservado.', budget: 'Presupuesto por persona',
+    kinds: { stay: 'Alojamiento', food: 'Comida', see: 'Visitar', coffee: 'Café', viewpoint: 'Mirador' },
+    how: ['Esta página muestra', 'Edita el archivo o pide a tu IA:'],
+    prompts: ['Añade el Oceanário el domingo a las 15:00, de parte de Leo', 'Marca las entradas de los Jerónimos como reservadas'],
+  },
+}
+
+export const Lisbon = () => {
+  const tag = (typeof navigator !== 'undefined' && navigator.language) || 'en'
+  const w = WORDS[tag.toLowerCase().split('-')[0]] ?? WORDS.en
+  const trip = { ...TRIP, days: w.days.map((label, i) => ({ day: i + 1, label })) }
+  return <TripPlanner csv={places} trip={trip} words={w} />
+}
+
+<Lisbon />

@@ -1,0 +1,21 @@
+{
+  "name": "Sol Bakery",
+  "goal": "Open the Riverside shop",
+  "opening": "2026-12-12",
+  "today": "2026-10-29",
+  "people": [
+    { "id": "Ana", "role": "Owner", "color": "#f3aa08", "ai": "Claude" },
+    { "id": "Ben", "role": "Head baker", "color": "#0984c8", "ai": "ChatGPT" },
+    { "id": "Chloe", "role": "Shop and social", "color": "#30ccd5", "ai": "Gemini" },
+    { "id": "Dev", "role": "Money and orders", "color": "#5bcbf9", "ai": "Claude" }
+  ],
+  "projects": [
+    { "id": "Shop", "color": "#f3aa08" },
+    { "id": "Menu", "color": "#e8794a" },
+    { "id": "Hiring", "color": "#30ccd5" },
+    { "id": "Online", "color": "#5bcbf9" },
+    { "id": "Opening", "color": "#0984c8" },
+    { "id": "Money", "color": "#8a6cf0" }
+  ],
+  "statuses": ["Idea", "To do", "Doing", "Waiting", "Done"]
+}

@@ -1,0 +1,94 @@
+---
+title: Quiz Night
+description: "A family quiz on one screen: your own questions, everyone in the room playing, four rounds and a podium."
+kunobi:
+  page-layout: wide
+---
+
+import '@fontsource/parkinsans/600.css'
+import '@fontsource/parkinsans/800.css'
+import '@fontsource/figtree/400.css'
+import '@fontsource/figtree/600.css'
+import quiz from './data/quiz.json'
+import { QuizNight } from './src/QuizNight'
+
+{/* The questions and players are in data/quiz.json. These are only the page's own words. */}
+
+export const WORDS = {
+  en: {
+    quizNight: 'Quiz night',
+    summary: '{rounds} rounds · {questions} questions',
+    hostedBy: 'hosted by {host}',
+    start: 'Start the quiz',
+    pressEnter: 'or press Enter',
+    howToPlay: 'How to play',
+    how: [
+      'The host reads each question out loud.',
+      'Everyone answers on this screen: tap your colours, or press 1–4 when your name is highlighted.',
+      'Right answers score 500, and up to 500 more for being quick.',
+    ],
+    roundOf: 'Round {n} of {total}',
+    questionOf: 'Question {n} of {total}',
+    questionsInRound: '{n} questions',
+    locked: 'Locked in',
+    yourTurn: 'Press 1–4',
+    correct: 'Correct answer',
+    didYouKnow: 'Did you know?',
+    inSeconds: 'in {s}s',
+    noAnswer: 'No answer',
+    nextQuestion: 'Next question',
+    seeScores: 'See the scores',
+    finalResults: 'Final results',
+    afterRound: 'After round {n}',
+    nextRound: 'Round {n}: {theme}',
+    winnerIs: 'And the winner is',
+    playAgain: 'Play again',
+    mute: 'Mute',
+    unmute: 'Sound on',
+    scoresTitle: 'Scores stay on this screen.',
+    scoresBody: 'They reset when you close the page.',
+    changeTitle: 'Make it yours.',
+    changeBody: 'The questions, rounds and players are in',
+    askYourAi: 'Edit it, or ask your AI:',
+    prompts: ['Replace round 3 with four questions about the 90s', 'Add Uncle Tom as a player in green'],
+  },
+  es: {
+    quizNight: 'Noche de preguntas',
+    summary: '{rounds} rondas · {questions} preguntas',
+    hostedBy: 'presenta {host}',
+    start: 'Empezar',
+    pressEnter: 'o pulsa Intro',
+    howToPlay: 'Cómo se juega',
+    how: [
+      'Quien presenta lee cada pregunta en voz alta.',
+      'Todos responden en esta pantalla: toca tus colores o pulsa 1–4 cuando tu nombre esté resaltado.',
+      'Cada acierto vale 500, y hasta 500 más por rapidez.',
+    ],
+    roundOf: 'Ronda {n} de {total}',
+    questionOf: 'Pregunta {n} de {total}',
+    questionsInRound: '{n} preguntas',
+    locked: 'Respondido',
+    yourTurn: 'Pulsa 1–4',
+    correct: 'Respuesta correcta',
+    didYouKnow: '¿Sabías que…?',
+    inSeconds: 'en {s} s',
+    noAnswer: 'Sin respuesta',
+    nextQuestion: 'Siguiente pregunta',
+    seeScores: 'Ver puntos',
+    finalResults: 'Resultado final',
+    afterRound: 'Tras la ronda {n}',
+    nextRound: 'Ronda {n}: {theme}',
+    winnerIs: 'Y gana',
+    playAgain: 'Jugar otra vez',
+    mute: 'Silenciar',
+    unmute: 'Activar sonido',
+    scoresTitle: 'Los puntos se quedan en esta pantalla.',
+    scoresBody: 'Se borran al cerrar la página.',
+    changeTitle: 'Hazlo tuyo.',
+    changeBody: 'Las preguntas, rondas y jugadores están en',
+    askYourAi: 'Edítalo o pide a tu IA:',
+    prompts: ['Cambia la ronda 3 por cuatro preguntas sobre los 90', 'Añade al tío Tom como jugador en verde'],
+  },
+}
+
+<QuizNight quiz={quiz} words={WORDS} preview={props.initial} />

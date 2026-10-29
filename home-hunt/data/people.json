@@ -1,0 +1,38 @@
+{
+  "city": "Bristol",
+  "currency": "£",
+  "places": [
+    { "id": "clinic", "name": "Maya's clinic", "lat": 51.4583, "lon": -2.5967, "person": "maya" },
+    { "id": "m32", "name": "M32, junction 2", "lat": 51.4768, "lon": -2.5642, "person": "alex" }
+  ],
+  "people": [
+    {
+      "id": "maya",
+      "name": "Maya",
+      "color": "#30ccd5",
+      "role": "Physio, paints at home",
+      "ai": "Claude",
+      "criteria": [
+        { "id": "light", "must": true, "label": "Natural light for her studio" },
+        { "id": "quiet", "must": true, "label": "A quiet street" },
+        { "id": "cycle", "must": true, "max": 20, "label": "At most 20 min by bike to the clinic" },
+        { "id": "park", "must": false, "label": "A park within a short walk" },
+        { "id": "studioRoom", "must": false, "label": "A room just for painting" }
+      ]
+    },
+    {
+      "id": "alex",
+      "name": "Alex",
+      "color": "#f3aa08",
+      "role": "Carpenter, visits his parents in Cardiff",
+      "ai": "ChatGPT",
+      "criteria": [
+        { "id": "workshop", "must": true, "label": "Space for a workshop" },
+        { "id": "motorway", "must": true, "max": 10, "label": "At most 10 min to the motorway" },
+        { "id": "cost", "must": true, "max": 1500, "label": "At most £1,500 a month" },
+        { "id": "parking", "must": false, "label": "Off-street parking for the van" },
+        { "id": "garden", "must": false, "label": "A garden" }
+      ]
+    }
+  ]
+}

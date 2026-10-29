@@ -1,0 +1,36 @@
+{
+  "to": "Elena",
+  "age": 40,
+  "from": "Sam",
+  "intro": "A little film for",
+  "memories": [
+    {
+      "icon": "tent",
+      "when": "Summer 2009",
+      "title": "The tent that flooded",
+      "line": "Two days of rain on Skye. You still called it the best trip ever."
+    },
+    {
+      "icon": "bike",
+      "when": "Spring 2014",
+      "title": "Amsterdam by bike",
+      "line": "You promised it was flat. Our legs remember otherwise."
+    },
+    {
+      "icon": "pasta",
+      "when": "Every Sunday since",
+      "title": "Sunday pasta club",
+      "line": "Fourteen years, one recipe, and the same argument about garlic."
+    }
+  ],
+  "wish": "Make a wish",
+  "colors": {
+    "sky": "#fff1dc",
+    "paper": "#fffaf2",
+    "warm": "#ff8a5c",
+    "sun": "#f3aa08",
+    "cool": "#30ccd5",
+    "deep": "#0b3a5b",
+    "ink": "#06213f"
+  }
+}

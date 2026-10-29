@@ -1,0 +1,48 @@
+---
+title: Projects
+description: "Every task for opening the Riverside shop, from one file: a board, a table and a timeline."
+kunobi:
+  page-layout: wide
+---
+
+import '@fontsource/parkinsans/600.css'
+import '@fontsource/parkinsans/800.css'
+import '@fontsource/figtree/400.css'
+import '@fontsource/figtree/600.css'
+import tasks from './data/tasks.csv?raw'
+import team from './data/team.json'
+import { Projects } from './projects/ProjectsView'
+
+{/* The tasks live in data/tasks.csv and the team in data/team.json. This page only shows them. The words below are the page's own; add a language by adding a key. */}
+
+export const WORDS = {
+  en: {
+    projects: 'Projects', daysToOpening: 'days to opening', done: 'done',
+    board: 'Board', table: 'Table', timeline: 'Timeline', clear: 'Clear',
+    empty: 'Nothing here', today: 'Today', opening: 'Opening', late: 'late', dShort: 'd',
+    high: 'High priority', aiHelps: 'An AI helps with this',
+    id: 'ID', task: 'Task', project: 'Project', owner: 'Owner', status: 'Status', due: 'Due', priority: 'Priority', ai: 'AI help',
+    howTitle: 'How to change this',
+    howBody: 'This page shows',
+    prompt1: 'Move T3 to Done',
+    prompt2: 'Add a task for Chloe: order paper bags, due Nov 20',
+  },
+  es: {
+    projects: 'Proyectos', daysToOpening: 'días para abrir', done: 'hechas',
+    board: 'Tablero', table: 'Tabla', timeline: 'Cronograma', clear: 'Quitar filtros',
+    empty: 'Nada aquí', today: 'Hoy', opening: 'Apertura', late: 'tarde', dShort: 'd',
+    high: 'Prioridad alta', aiHelps: 'Una IA ayuda con esto',
+    id: 'ID', task: 'Tarea', project: 'Proyecto', owner: 'Responsable', status: 'Estado', due: 'Fecha', priority: 'Prioridad', ai: 'Ayuda de IA',
+    howTitle: 'Cómo cambiarlo',
+    howBody: 'Esta página muestra',
+    prompt1: 'Pasa T3 a Done',
+    prompt2: 'Añade una tarea para Chloe: pedir bolsas de papel, para el 20 de noviembre',
+  },
+}
+
+export const words = () => {
+  const tag = (typeof navigator !== 'undefined' && navigator.language) || 'en'
+  return WORDS[tag.toLowerCase().split('-')[0]] ?? WORDS.en
+}
+
+<Projects csv={tasks} team={team} w={words()} />

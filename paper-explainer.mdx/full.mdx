@@ -1,0 +1,269 @@
+---
+title: The shape stays
+presentation: timeline
+round: 1
+size: 960x540
+fps: 30
+targets:
+  landscape: { width: 960, height: 540 }
+  portrait: { width: 540, height: 960, safeArea: { top: 30, bottom: 60, left: 12, right: 12 } }
+  square: { width: 640, height: 640 }
+---
+
+import { Scene, Mark, Sound, defineVisual } from '@vixi/vx'
+import { rng, clamp, progress, readingTime } from '@vixi/core'
+import { Container, Graphics } from 'pixi.js'
+import { fitText, keyframes, safeArea, spring, text } from '@vixi/helpers'
+
+export const StencilPress = defineVisual({
+  name: 'StencilPress',
+  times: {
+    paperAt: 'at', cutAt: 'at', cutSpan: 'span',
+    inkAt: 'at', inkSpan: 'span', rollerAway: 'at', rollerSpan: 'span',
+    liftAt: 'at', liftSpan: 'span', resultAt: 'at',
+  },
+  create(p, ctx) {
+    const colors = p.palette
+    const unit = Math.min(ctx.width, ctx.height, 540) / 540
+    const insets = ctx.target?.safeArea ?? {}
+    const safe = safeArea(ctx.width, ctx.height, {
+      top: (insets.top ?? 0) + 36 * unit,
+      bottom: (insets.bottom ?? 0) + 32 * unit,
+      left: (insets.left ?? 0) + 36 * unit,
+      right: (insets.right ?? 0) + 36 * unit,
+    })
+    const wide = ctx.width / ctx.height > 1.35
+    const root = new Container({ label: 'stencil-print' })
+    // Four opacity bands keep the seeded texture without a stroke per fiber.
+    const strokeGrain = (g, paths, color, width, minAlpha, alphaSpan) => {
+      for (let shade = 0; shade < paths.length; shade++) {
+        if (!paths[shade].length) continue
+        for (const [x, y, endX, endY] of paths[shade]) {
+          g.moveTo(x, y).lineTo(endX, endY)
+        }
+        g.stroke({ color, width, alpha: minAlpha + alphaSpan * (shade + 0.5) / paths.length })
+      }
+      return g
+    }
+    const background = new Graphics({ label: 'paper-ground' })
+    background.rect(0, 0, ctx.width, ctx.height).fill(colors.ground)
+    const grain = rng(p.seed)
+    const groundPaths = [[], [], [], []]
+    for (let i = 0; i < 850; i++) {
+      const x = grain() * ctx.width
+      const y = grain() * ctx.height
+      const length = (1 + grain() * 3) * unit
+      groundPaths[Math.floor(grain() * groundPaths.length)]
+        .push([x, y, Math.min(ctx.width, x + length), y + 0.3 * unit])
+    }
+    strokeGrain(background, groundPaths, colors.ink, 0.5 * unit, 0.045, 0.04)
+    root.addChild(background)
+
+    const heading = ctx.scene.blocks.find(block => block.tag === 'h1')?.text ?? ''
+    const copy = ctx.scene.blocks.filter(block => block.tag === 'p').map(block => block.text)
+    const textWidth = wide ? safe.width * 0.35 : safe.width
+    const type = new Container({ label: 'print-heading' })
+    type.position.set(safe.x, safe.y)
+    const edition = text(p.edition, { font: 'sans-serif', size: 11 * unit, weight: '600', tracking: 2.4 * unit, color: colors.ink })
+    const title = fitText(heading, {
+      font: 'serif', size: 47 * unit, minSize: 35 * unit, weight: '700', color: colors.ink,
+      width: textWidth, height: (wide ? 170 : 135) * unit, maxLines: wide ? 3 : 2,
+    })
+    title.y = 36 * unit
+    type.addChild(edition, title)
+    root.addChild(type)
+
+    const explanations = copy.map((line, i) => {
+      const label = fitText(line, {
+        font: 'sans-serif', size: 23 * unit, minSize: 18 * unit, color: colors.ink,
+        width: textWidth, height: 74 * unit, maxLines: 2,
+      })
+      label.label = `explanation:${i}`
+      label.position.set(safe.x, safe.y + (wide ? 272 : 190) * unit)
+      root.addChild(label)
+      return label
+    })
+    const step = text(p.steps[0], { font: 'sans-serif', size: 12 * unit, weight: '600', tracking: 1.7 * unit, color: colors.ink })
+    step.label = 'print-step'
+    step.position.set(safe.x, safe.y + (wide ? 238 : 158) * unit)
+    root.addChild(step)
+
+    const board = new Container({ label: 'print-table' })
+    const boardWidth = wide ? safe.width * 0.61 : safe.width
+    const boardTop = safe.y + (wide ? 34 : ctx.height / ctx.width > 1.35 ? 280 : 244) * unit
+    const boardBottom = safe.y + safe.height - 30 * unit
+    const boardHeight = boardBottom - boardTop
+    const boardScale = Math.min(boardWidth / 540, boardHeight / 394)
+    board.scale.set(boardScale)
+    board.position.set(wide ? safe.x + safe.width * 0.695 : safe.x + safe.width / 2, (boardTop + boardBottom) / 2)
+    root.addChild(board)
+
+    const leaf = g => g.moveTo(-66, 74)
+      .bezierCurveTo(-115, 18, -92, -58, 83, -92)
+      .bezierCurveTo(92, 37, 39, 108, -66, 74)
+      .closePath()
+    const sheetOutline = [-176, -132, -111, -136, 83, -133, 175, -130, 179, 9, 174, 135, 56, 137, -177, 132, -179, -23]
+    const stencilOutline = [-151, -113, -49, -116, 154, -112, 158, -5, 152, 116, 59, 113, -156, 118, -153, 32]
+    const fibers = (g, seed, width, height, count, color, alpha, accepts = () => true) => {
+      const random = rng(seed)
+      const paths = [[], [], [], []]
+      for (let i = 0; i < count; i++) {
+        const x = (random() - 0.5) * width
+        const y = (random() - 0.5) * height
+        const endX = x + 0.4 + random() * 2.5
+        const endY = y + (random() - 0.5) * 0.9
+        if (!accepts(x, y) || !accepts(endX, endY)) continue
+        paths[Math.floor(random() * paths.length)].push([x, y, endX, endY])
+      }
+      return strokeGrain(g, paths, color, 0.45, alpha * 0.5, alpha)
+    }
+    const substrate = new Container({ label: 'receiving-sheet' })
+    const substrateShadow = new Graphics().poly(sheetOutline).fill({ color: colors.ink, alpha: 0.13 })
+    substrateShadow.position.set(4, 7)
+    const sheet = new Graphics().poly(sheetOutline).fill(colors.sheet)
+      .stroke({ color: colors.ink, width: 0.7, alpha: 0.17 })
+    fibers(sheet, p.seed + 1, 342, 250, 280, colors.ink, 0.055)
+    substrate.addChild(substrateShadow, sheet)
+    board.addChild(substrate)
+
+    const print = new Container({ label: 'ink-on-sheet' })
+    const printShape = leaf(new Graphics()).fill(colors.pigment)
+    const printGrain = fibers(new Graphics(), p.seed + 2, 186, 194, 350, colors.sheet, 0.28,
+      (x, y) => printShape.context.containsPoint({ x, y }))
+    print.addChild(printShape, printGrain)
+    const printReveal = new Graphics().rect(0, -123, 326, 246).fill(0xffffff)
+    // A moving mask first drawn at zero scale needs its current transform on every frame.
+    printReveal.context.batchMode = 'no-batch'
+    printReveal.x = -163
+    print.mask = printReveal
+    board.addChild(print, printReveal)
+
+    const stencil = new Container({ label: 'liftable-stencil' })
+    const stencilShadow = new Graphics().poly(stencilOutline).fill({ color: colors.ink, alpha: 0.18 })
+    leaf(stencilShadow).cut()
+    stencilShadow.position.set(4, 5)
+    const stencilBody = new Graphics().poly(stencilOutline).fill(colors.stencil)
+    leaf(stencilBody).cut()
+    const stencilFibers = fibers(new Graphics(), p.seed + 3, 294, 214, 250, colors.ink, 0.10,
+      (x, y) => stencilBody.context.containsPoint({ x, y }))
+    stencil.addChild(stencilShadow, stencilBody, stencilFibers)
+
+    const surfaceInk = new Graphics().rect(-152, -111, 304, 226).fill({ color: colors.pigment, alpha: 0.83 })
+    leaf(surfaceInk).cut()
+    const surfaceReveal = new Graphics().rect(0, -123, 326, 246).fill(0xffffff)
+    surfaceReveal.context.batchMode = 'no-batch'
+    surfaceReveal.x = -163
+    surfaceInk.mask = surfaceReveal
+    stencil.addChild(surfaceInk, surfaceReveal)
+    const rim = new Graphics().poly(stencilOutline).stroke({ color: colors.ink, width: 0.8, alpha: 0.27 })
+    stencil.addChild(rim)
+    board.addChild(stencil)
+
+    const cutout = new Container({ label: 'removed-leaf' })
+    const cutShadow = leaf(new Graphics()).fill({ color: colors.ink, alpha: 0.14 })
+    cutShadow.position.set(2, 3)
+    const cutPaper = leaf(new Graphics()).fill(colors.stencil)
+    const cutFibers = fibers(new Graphics(), p.seed + 4, 180, 180, 180, colors.ink, 0.10,
+      (x, y) => cutPaper.context.containsPoint({ x, y }))
+    const cutEdge = leaf(new Graphics()).stroke({ color: colors.ink, width: 1, alpha: 0.3 })
+    cutout.addChild(cutShadow, cutPaper, cutFibers, cutEdge)
+    board.addChild(cutout)
+
+    const roller = new Container({ label: 'ink-roller' })
+    const rollerShadow = new Graphics().roundRect(-18, -113, 38, 226, 13).fill({ color: colors.ink, alpha: 0.17 })
+    rollerShadow.position.set(6, 5)
+    const rollerBody = new Graphics().roundRect(-19, -114, 38, 228, 14).fill(colors.ink)
+    rollerBody.roundRect(-13, -109, 9, 218, 4).fill({ color: colors.pigment, alpha: 0.74 })
+    fibers(rollerBody, p.seed + 5, 24, 211, 140, colors.sheet, 0.075)
+    const handle = new Graphics().moveTo(0, -121).lineTo(0, -150).lineTo(47, -150)
+      .stroke({ color: colors.ink, width: 4, cap: 'round', join: 'round' })
+    handle.roundRect(42, -157, 52, 15, 6).fill(colors.handle)
+    handle.moveTo(46, -155).lineTo(88, -155).stroke({ color: colors.sheet, width: 1, alpha: 0.3 })
+    roller.addChild(rollerShadow, rollerBody, handle)
+    board.addChild(roller)
+
+    const resultRule = new Graphics().rect(0, 0, 70 * unit, 2 * unit).fill(colors.pigment)
+    resultRule.position.set(safe.x, safe.y + safe.height - 9 * unit)
+    const imprint = text(p.imprint, { font: 'sans-serif', size: 10 * unit, tracking: 1.3 * unit, color: colors.ink })
+    imprint.anchor.set(1, 1)
+    imprint.position.set(safe.x + safe.width, safe.y + safe.height)
+    root.addChild(resultRule, imprint)
+
+    const ease = value => value * value * (3 - 2 * value)
+    const inkTravel = keyframes([
+      { at: p.inkAt, value: 0 },
+      { at: p.inkAt + p.inkSpan, value: 1, ease },
+    ])
+    const settle = t => clamp(spring(t - p.paperAt, { stiffness: 90, damping: 19 }))
+    const cut = t => clamp(spring((t - p.cutAt) / p.cutSpan, { stiffness: 45, damping: 14 }))
+    return {
+      root,
+      seek(t) {
+        const placed = settle(t)
+        board.y = (boardTop + boardBottom) / 2 + (1 - placed) * 20 * boardScale
+        board.alpha = placed
+        const removed = cut(t)
+        cutout.position.set(removed ? -138 * removed : 0, 105 * removed)
+        cutout.rotation = removed ? -0.34 * removed : 0
+        cutout.scale.set(1 - 0.31 * removed)
+        cutout.alpha = 1 - 0.13 * removed
+        const rolled = inkTravel(t)
+        print.visible = t >= p.inkAt
+        surfaceInk.visible = t >= p.inkAt
+        printReveal.scale.x = rolled
+        surfaceReveal.scale.x = rolled
+        const rollerExit = ease(progress(t, p.rollerAway, p.rollerSpan))
+        roller.position.set(-163 + 326 * rolled + 40 * rollerExit, rollerExit ? -25 * rollerExit : 0)
+        roller.rotation = rollerExit ? -0.17 * rollerExit : 0
+        roller.alpha = (t >= p.inkAt ? 1 : 0) * (1 - rollerExit)
+        const lifted = ease(progress(t, p.liftAt, p.liftSpan))
+        stencil.position.set(28 * lifted, lifted ? -62 * lifted : 0)
+        stencil.rotation = lifted ? -0.13 * lifted : 0
+        stencil.scale.set(1 - 0.14 * lifted)
+        stencil.alpha = 1 - lifted
+        const active = t >= p.resultAt ? 3 : t >= p.liftAt ? 2 : t >= p.inkAt ? 1 : 0
+        explanations.forEach((label, i) => { label.visible = i === active })
+        step.text = p.steps[Math.min(active, p.steps.length - 1)]
+        resultRule.scale.x = t >= p.resultAt ? 1 : 0.32
+        resultRule.alpha = t >= p.resultAt ? 1 : 0.35
+      },
+      destroy() { root.destroy({ children: true }) },
+    }
+  },
+})
+
+<Scene id="stencil" duration={11 + readingTime('The shape stays.') + 1}>
+
+# A stencil controls the shape.
+
+Cut an opening.
+
+Roll ink through it.
+
+Lift the stencil.
+
+The shape stays.
+
+<Mark name="paper_down" at="0.2s" />
+<Mark name="cut_open" at="2.1s" />
+<Mark name="ink_roll" at="4.4s" />
+<Mark name="roller_clear" at="7.5s" />
+<Mark name="stencil_lift" at="8.7s" />
+<Mark name="print_revealed" at="11s" />
+<Sound name="click" at="@cut_open" gain={0.13} pitch={0.8} />
+<Sound name="whoosh" at="@ink_roll" until="@roller_clear" gain={0.08} pitch={0.55} />
+<Sound name="whoosh" at="@stencil_lift" gain={0.09} pitch={0.8} length={1.2} />
+<StencilPress
+  paperAt="@paper_down"
+  cutAt="@cut_open" cutSpan="1.3s"
+  inkAt="@ink_roll" inkSpan="3.1s"
+  rollerAway="@roller_clear" rollerSpan="0.8s"
+  liftAt="@stencil_lift" liftSpan="1.8s" resultAt="@print_revealed"
+  edition="PRINT STUDY / 01"
+  steps={['01 / CUT', '02 / INK', '03 / REVEAL']}
+  imprint="ONE OPENING. ONE PRINT."
+  seed={5177}
+  palette={{ ground: 0xf1e7d3, sheet: 0xfff9e9, ink: 0x31362f, stencil: 0xd9904e, pigment: 0x316f66, handle: 0x9d4e37 }}
+/>
+
+</Scene>
