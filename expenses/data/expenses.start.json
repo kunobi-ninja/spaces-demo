@@ -1,0 +1,173 @@
+{
+  "expenses": {
+    "e01": {
+      "amount": 160000,
+      "category": "Rent",
+      "date": "2026-10-01",
+      "paid_by": "Amara",
+      "split": "Amara*4;Diego*4;Mei*3;Rohan*3",
+      "what": "Rent for October"
+    },
+    "e02": {
+      "amount": 4500,
+      "category": "Bills",
+      "date": "2026-10-02",
+      "paid_by": "Rohan",
+      "split": "everyone",
+      "what": "Internet"
+    },
+    "e03": {
+      "amount": 12840,
+      "category": "Groceries",
+      "date": "2026-10-03",
+      "paid_by": "Mei",
+      "split": "everyone",
+      "what": "Big grocery run"
+    },
+    "e04": {
+      "amount": 2360,
+      "category": "Household",
+      "date": "2026-10-04",
+      "paid_by": "Diego",
+      "split": "everyone",
+      "what": "Cleaning supplies"
+    },
+    "e05": {
+      "amount": 1485,
+      "category": "Household",
+      "date": "2026-10-05",
+      "paid_by": "Amara",
+      "split": "everyone",
+      "what": "Toilet paper and hand soap"
+    },
+    "e06": {
+      "amount": 3120,
+      "category": "Groceries",
+      "date": "2026-10-07",
+      "paid_by": "Rohan",
+      "split": "everyone",
+      "what": "Vegetables from the market"
+    },
+    "e07": {
+      "amount": 5280,
+      "category": "Takeaway",
+      "date": "2026-10-09",
+      "paid_by": "Diego",
+      "split": "Amara;Diego;Rohan",
+      "what": "Takeaway night (Mei was away)"
+    },
+    "e08": {
+      "amount": 9630,
+      "category": "Bills",
+      "date": "2026-10-10",
+      "paid_by": "Mei",
+      "split": "everyone",
+      "what": "Electricity (September bill)"
+    },
+    "e09": {
+      "amount": 3875,
+      "category": "Groceries",
+      "date": "2026-10-12",
+      "paid_by": "Amara",
+      "split": "everyone",
+      "what": "Rice, oil and spices"
+    },
+    "e10": {
+      "amount": 3410,
+      "category": "Bills",
+      "date": "2026-10-14",
+      "paid_by": "Diego",
+      "split": "everyone",
+      "what": "Water"
+    },
+    "e11": {
+      "amount": 7465,
+      "category": "Groceries",
+      "date": "2026-10-16",
+      "paid_by": "Mei",
+      "split": "everyone",
+      "what": "Groceries"
+    },
+    "e12": {
+      "amount": 999,
+      "category": "Household",
+      "date": "2026-10-17",
+      "paid_by": "Rohan",
+      "split": "everyone",
+      "what": "New mop head"
+    },
+    "e13": {
+      "amount": 4100,
+      "category": "Takeaway",
+      "date": "2026-10-18",
+      "paid_by": "Amara",
+      "split": "Amara;Mei;Rohan",
+      "what": "Pizza for Diego's birthday"
+    },
+    "e14": {
+      "amount": 1840,
+      "category": "Groceries",
+      "date": "2026-10-20",
+      "paid_by": "Diego",
+      "split": "everyone",
+      "what": "Bread, eggs and milk"
+    },
+    "e15": {
+      "amount": 2750,
+      "category": "Bills",
+      "date": "2026-10-21",
+      "paid_by": "Rohan",
+      "split": "everyone",
+      "what": "Cooking gas refill"
+    },
+    "e16": {
+      "amount": 1230,
+      "category": "Household",
+      "date": "2026-10-23",
+      "paid_by": "Mei",
+      "split": "everyone",
+      "what": "Laundry detergent"
+    },
+    "e17": {
+      "amount": 11285,
+      "category": "Groceries",
+      "date": "2026-10-24",
+      "paid_by": "Rohan",
+      "split": "everyone",
+      "what": "Big grocery run"
+    },
+    "e18": {
+      "amount": 6000,
+      "category": "Household",
+      "date": "2026-10-26",
+      "paid_by": "Amara",
+      "split": "everyone",
+      "what": "Plumber for the shower drain"
+    },
+    "e19": {
+      "amount": 4720,
+      "category": "Takeaway",
+      "date": "2026-10-28",
+      "paid_by": "Mei",
+      "split": "everyone",
+      "what": "Curry night"
+    },
+    "e20": {
+      "amount": 2215,
+      "category": "Groceries",
+      "date": "2026-10-29",
+      "paid_by": "Diego",
+      "split": "everyone",
+      "what": "Fruit and coffee"
+    },
+    "e21": {
+      "amount": 1140,
+      "category": "Household",
+      "date": "2026-10-30",
+      "paid_by": "Amara",
+      "split": "everyone",
+      "what": "Bin bags and dish soap"
+    }
+  },
+  "payments": {}
+}

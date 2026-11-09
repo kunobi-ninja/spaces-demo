@@ -1,0 +1,66 @@
+{
+  "fields": {
+    "tasks": {
+      "fields": {
+        "ai": {
+          "kind": "text"
+        },
+        "due": {
+          "kind": "text"
+        },
+        "owner": {
+          "kind": "enum",
+          "values": [
+            "Ana",
+            "Ben",
+            "Chloe",
+            "Dev"
+          ]
+        },
+        "page": {
+          "kind": "text"
+        },
+        "priority": {
+          "kind": "enum",
+          "values": [
+            "High",
+            "Medium",
+            "Low"
+          ]
+        },
+        "project": {
+          "kind": "enum",
+          "values": [
+            "Shop",
+            "Menu",
+            "Hiring",
+            "Online",
+            "Opening",
+            "Money"
+          ]
+        },
+        "start": {
+          "kind": "text"
+        },
+        "status": {
+          "kind": "enum",
+          "values": [
+            "Idea",
+            "To do",
+            "Doing",
+            "Waiting",
+            "Done"
+          ]
+        },
+        "title": {
+          "kind": "text"
+        }
+      },
+      "kind": "ordered"
+    }
+  },
+  "types": "team/types/team-tasks.store.d.ts",
+  "version": 2,
+  "view": "team/data/tasks.json",
+  "data": "team/data/tasks.start.json"
+}

@@ -1,5 +1,8 @@
 import * as React from 'react'
-import { TileMap } from 'kunobi'
+import { TileMap, edit, useStore, useStoreStatus } from 'kunobi'
+import type { TripPlacesStore } from '../types/trip-places.store'
+
+export const STORE = 'trip-places'
 
 export type Kind = 'stay' | 'food' | 'see' | 'coffee' | 'viewpoint'
 
@@ -12,7 +15,7 @@ export interface Place {
   lat: number
   lon: number
   price: number
-  booked: '' | 'yes' | 'no'
+  booking: 'none' | 'to-book' | 'booked'
   note: string
   addedBy: string
 }
@@ -31,51 +34,20 @@ export const KIND_COLOR: Record<Kind, string> = {
   viewpoint: '#8a6cf0',
 }
 
-/** Rows of a CSV file, with quoted fields that may hold commas. */
-export function parseCsv(text: string): Record<string, string>[] {
-  const rows: string[][] = []
-  let row: string[] = []
-  let field = ''
-  let quoted = false
-  for (let i = 0; i < text.length; i++) {
-    const c = text[i]
-    if (quoted) {
-      if (c === '"' && text[i + 1] === '"') {
-        field += '"'
-        i++
-      } else if (c === '"') quoted = false
-      else field += c
-    } else if (c === '"') quoted = true
-    else if (c === ',') {
-      row.push(field)
-      field = ''
-    } else if (c === '\n' || c === '\r') {
-      if (c === '\r' && text[i + 1] === '\n') i++
-      row.push(field)
-      if (row.some((cell) => cell !== '')) rows.push(row)
-      row = []
-      field = ''
-    } else field += c
-  }
-  row.push(field)
-  if (row.some((cell) => cell !== '')) rows.push(row)
-  const [head, ...body] = rows
-  return body.map((cells) => Object.fromEntries(head.map((key, i) => [key.trim(), (cells[i] ?? '').trim()])))
-}
-
-export function toPlaces(csv: string): Place[] {
-  return parseCsv(csv).map((r) => ({
-    id: r.id,
-    name: r.name,
-    kind: (r.kind || 'see') as Kind,
-    day: Number(r.day) || 1,
-    time: r.time,
+/** One place as the page draws it. */
+export function toPlaces(data: TripPlacesStore | undefined): Place[] {
+  return Object.entries(data?.places ?? {}).map(([id, r]) => ({
+    id,
+    name: r.name ?? '',
+    kind: (r.kind ?? 'see') as Kind,
+    day: r.day ?? 1,
+    time: r.time ?? '',
     lat: Number(r.lat),
     lon: Number(r.lng),
-    price: Number(r.price) || 0,
-    booked: (r.booked || '') as Place['booked'],
-    note: r.note,
-    addedBy: r.added_by,
+    price: (r.price ?? 0) / 100,
+    booking: r.booking ?? 'none',
+    note: r.note ?? '',
+    addedBy: r.addedBy ?? '',
   }))
 }
 
@@ -116,29 +88,17 @@ function useWidth(ref: React.RefObject<HTMLElement | null>) {
 
 const euro = (n: number) => `€${Math.round(n)}`
 
-/**
- * The text of an imported data file. Kunobi hands a `.csv` import to the page as a `blob:`
- * URL, even with `?raw`, so read it; a bundler that inlines the text passes it straight on.
- */
-export function useFileText(source: string): string | null {
-  const isUrl = /^(blob|data|https?):/.test(source)
-  const [text, setText] = React.useState<string | null>(isUrl ? null : source)
-  React.useEffect(() => {
-    if (!isUrl) return setText(source)
-    let live = true
-    fetch(source)
-      .then((r) => r.text())
-      .then((t) => live && setText(t), () => live && setText(''))
-    return () => {
-      live = false
-    }
-  }, [source, isUrl])
-  return text
-}
-
-export function TripPlanner({ csv: source, trip, words: w }: { csv: string; trip: Trip; words: Record<string, any> }) {
-  const csv = useFileText(source)
-  const places = React.useMemo(() => (csv ? toPlaces(csv) : []), [csv])
+export function TripPlanner({ start, trip, words: w }: { start: TripPlacesStore; trip: Trip; words: Record<string, any> }) {
+  const live = useStore(STORE) as TripPlacesStore | undefined
+  const status = useStoreStatus(STORE)
+  // Without the store (other builds, previews), show the last saved copy, read-only.
+  const open = (status?.status === 'open' || status?.status === 'paused') && live !== undefined
+  const canEdit = open && status?.status === 'open' && Boolean(status?.canEdit)
+  const places = React.useMemo(() => toPlaces(open ? live : start), [open, live, start])
+  const setBooking = (id: string, booking: Place['booking']) =>
+    edit(STORE, (d: TripPlacesStore) => {
+      d.places[id].booking = booking
+    })
   const [day, setDay] = React.useState<number>(1)
   const [selected, setSelected] = React.useState<string | null>(null)
   const mapBox = React.useRef<HTMLDivElement>(null)
@@ -149,7 +109,7 @@ export function TripPlanner({ csv: source, trip, words: w }: { csv: string; trip
   const { center, zoom } = fit(shown, width, height)
   const order = new Map(shown.map((p, i) => [p.id, i + 1]))
   const active = places.find((p) => p.id === selected) ?? null
-  const toBook = places.filter((p) => p.booked === 'no')
+  const toBook = places.filter((p) => p.booking === 'to-book').sort((a, b) => a.day - b.day || a.time.localeCompare(b.time))
   const perPerson = places.reduce((sum, p) => sum + p.price, 0)
   const byKind = (Object.keys(KIND_COLOR) as Kind[])
     .map((k) => ({ kind: k, total: places.filter((p) => p.kind === k).reduce((s, p) => s + p.price, 0) }))
@@ -157,7 +117,6 @@ export function TripPlanner({ csv: source, trip, words: w }: { csv: string; trip
     .sort((a, b) => b.total - a.total)
 
   const pick = (id: string) => setSelected((cur) => (cur === id ? null : id))
-  const loading = csv === null
 
   const markers = shown.map((p) => ({
     lat: p.lat,
@@ -229,11 +188,18 @@ export function TripPlanner({ csv: source, trip, words: w }: { csv: string; trip
         .total { display: flex; align-items: baseline; gap: 8px; }
         .total b { font: 800 30px Parkinsans, sans-serif; }
         .total small { color: hsl(var(--muted-foreground)); }
+        .book { all: unset; cursor: pointer; margin-top: 10px; display: inline-block; padding: 7px 14px; border-radius: 99px; background: #06213f; color: #fff; font: 600 13px Figtree, sans-serif; }
+        .book.undo { background: hsl(var(--muted)); color: hsl(var(--foreground)); }
+        .book:focus-visible { outline: 2px solid #0984c8; outline-offset: 2px; }
+        .row .book { margin: 0 0 0 10px; padding: 4px 11px; font-size: 12px; }
+        .when { display: inline-flex; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+        .saving { margin-left: 10px; font: 600 13px Figtree, sans-serif; color: hsl(var(--muted-foreground)); }
         .legend { display: inline-flex; align-items: center; gap: 8px; }
         .legend i { width: 10px; height: 10px; border-radius: 99px; display: inline-block; }
         .how { margin-top: 22px; padding: 16px 20px; border-radius: 18px; background: hsl(var(--muted)); color: hsl(var(--muted-foreground)); font-size: 14px; line-height: 1.5; }
         .how code { font: 600 13px ui-monospace, Menlo, monospace; color: hsl(var(--foreground)); }
-        .how q { color: hsl(var(--foreground)); font-weight: 600; quotes: '“' '”'; }
+        .how q { color: hsl(var(--foreground)); font-weight: 600; quotes: none; }
+        .how q::before, .how q::after { content: none; }
         @container (max-width: 860px) {
           .main, .below { grid-template-columns: 1fr; }
           .map { position: relative; top: 0; }
@@ -322,12 +288,20 @@ export function TripPlanner({ csv: source, trip, words: w }: { csv: string; trip
                   </span>
                   <span className="chip">{w.kinds[active.kind]}</span>
                   {active.price > 0 && <span className="chip">{euro(active.price)} {w.pp}</span>}
-                  {active.booked === 'yes' && <span className="chip ok">{w.booked}</span>}
-                  {active.booked === 'no' && <span className="chip warn">{w.notBooked}</span>}
+                  {active.booking === 'booked' && <span className="chip ok">{w.booked}</span>}
+                  {active.booking === 'to-book' && <span className="chip warn">{w.notBooked}</span>}
                   <span className="chip">
                     {w.addedBy} {active.addedBy}
                   </span>
                 </div>
+                {canEdit && active.booking !== 'none' && (
+                  <button
+                    className={`book${active.booking === 'booked' ? ' undo' : ''}`}
+                    onClick={() => setBooking(active.id, active.booking === 'booked' ? 'to-book' : 'booked')}
+                  >
+                    {active.booking === 'booked' ? w.unbook : w.markBooked}
+                  </button>
+                )}
               </div>
               <button className="close" aria-label={w.close} onClick={() => setSelected(null)}>
                 ×
@@ -354,7 +328,8 @@ export function TripPlanner({ csv: source, trip, words: w }: { csv: string; trip
                         <div className="t-name">{p.name}</div>
                         <div className="sub">
                           {w.kinds[p.kind]}
-                          {p.booked === 'no' ? ` · ${w.notBooked}` : ''}
+                          {p.booking === 'to-book' ? ` · ${w.notBooked}` : ''}
+                          {p.booking === 'booked' ? ` · ${w.booked}` : ''}
                         </div>
                       </span>
                       <span className="price">{p.price > 0 ? euro(p.price) : w.free}</span>
@@ -365,9 +340,12 @@ export function TripPlanner({ csv: source, trip, words: w }: { csv: string; trip
         </div>
       </div>
 
-      {!loading && <div className="below">
+      <div className="below">
         <section className="panel">
-          <h2>{w.stillToBook}</h2>
+          <h2>
+            {w.stillToBook}
+            {open && !status?.saved && <small className="saving">{w.saving}</small>}
+          </h2>
           {toBook.length === 0 && <div className="row">{w.allBooked}</div>}
           {toBook.map((p) => (
             <div className="row" key={p.id}>
@@ -377,8 +355,13 @@ export function TripPlanner({ csv: source, trip, words: w }: { csv: string; trip
                   {p.name}
                 </span>
               </span>
-              <span>
+              <span className="when">
                 {trip.days.find((d) => d.day === p.day)?.label} {p.time} · {euro(p.price)}
+                {canEdit && (
+                  <button className="book" onClick={() => setBooking(p.id, 'booked')}>
+                    {w.markBooked}
+                  </button>
+                )}
               </span>
             </div>
           ))}
@@ -404,10 +387,10 @@ export function TripPlanner({ csv: source, trip, words: w }: { csv: string; trip
             </div>
           ))}
         </section>
-      </div>}
+      </div>
 
       <div className="how">
-        {w.how[0]} <code>trip/data/places.csv</code>. {w.how[1]} <q>{w.prompts[0]}</q> · <q>{w.prompts[1]}</q>
+        {w.how[0]} <code>trip/data/places.json</code>. {canEdit ? w.how[1] : w.how[2]} <q>“{w.prompts[0]}”</q> · <q>“{w.prompts[1]}”</q>
       </div>
     </div>
   )

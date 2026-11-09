@@ -1,19 +1,20 @@
 ---
 title: Projects
-description: "Every task for opening the Riverside shop, from one file: a board, a table and a timeline."
+description: "Every task for opening the Riverside shop on one shared board: drag cards between columns, change who owns them, add new ones. Also as a table and a timeline."
 kunobi:
   page-layout: wide
+  stores: [team-tasks]
 ---
 
 import '@fontsource/parkinsans/600.css'
 import '@fontsource/parkinsans/800.css'
 import '@fontsource/figtree/400.css'
 import '@fontsource/figtree/600.css'
-import tasks from './data/tasks.csv?raw'
+import tasks from './data/tasks.json'
 import team from './data/team.json'
 import { Projects } from './projects/ProjectsView'
 
-{/* The tasks live in data/tasks.csv and the team in data/team.json. This page only shows them. The words below are the page's own; add a language by adding a key. */}
+{/* The tasks live in the team-tasks store; Kunobi keeps a readable copy in data/tasks.json, which this page shows read-only where the store cannot open. The team is in data/team.json. The words below are the page's own; add a language by adding a key. */}
 
 export const WORDS = {
   en: {
@@ -22,10 +23,15 @@ export const WORDS = {
     empty: 'Nothing here', today: 'Today', opening: 'Opening', late: 'late', dShort: 'd',
     high: 'High priority', aiHelps: 'An AI helps with this',
     id: 'ID', task: 'Task', project: 'Project', owner: 'Owner', status: 'Status', due: 'Due', priority: 'Priority', ai: 'AI help',
+    moveTo: 'Move to', addTask: 'Add task', newTask: 'What needs doing?', add: 'Add', cancel: 'Cancel',
+    saving: 'Saving…', notSaved: 'Not saved',
+    keys: 'Arrow keys move it: left and right between columns, up and down within one.',
+    hint: 'Drag a card to move it, or use ‹ › on the card. On a selected card, the arrow keys move it too.',
     howTitle: 'How to change this',
-    howBody: 'This page shows',
-    prompt1: 'Move T3 to Done',
-    prompt2: 'Add a task for Chloe: order paper bags, due Nov 20',
+    howBody: 'The team shares one board, saved with this space. A readable copy is in',
+    prompt1: "Move 'Order the deck oven' to Done",
+    prompt2: "Give 'Set up the second till' to Chloe",
+    prompt3: 'Add a task for Chloe: order paper bags, due Nov 20',
   },
   es: {
     projects: 'Proyectos', daysToOpening: 'días para abrir', done: 'hechas',
@@ -33,10 +39,15 @@ export const WORDS = {
     empty: 'Nada aquí', today: 'Hoy', opening: 'Apertura', late: 'tarde', dShort: 'd',
     high: 'Prioridad alta', aiHelps: 'Una IA ayuda con esto',
     id: 'ID', task: 'Tarea', project: 'Proyecto', owner: 'Responsable', status: 'Estado', due: 'Fecha', priority: 'Prioridad', ai: 'Ayuda de IA',
+    moveTo: 'Mover a', addTask: 'Añadir tarea', newTask: '¿Qué hay que hacer?', add: 'Añadir', cancel: 'Cancelar',
+    saving: 'Guardando…', notSaved: 'No guardado',
+    keys: 'Las flechas la mueven: izquierda y derecha entre columnas, arriba y abajo dentro de una.',
+    hint: 'Arrastra una tarjeta para moverla, o usa ‹ › en la tarjeta. Con una tarjeta seleccionada, las flechas también la mueven.',
     howTitle: 'Cómo cambiarlo',
-    howBody: 'Esta página muestra',
-    prompt1: 'Pasa T3 a Done',
-    prompt2: 'Añade una tarea para Chloe: pedir bolsas de papel, para el 20 de noviembre',
+    howBody: 'El equipo comparte un solo tablero, guardado con este espacio. Hay una copia legible en',
+    prompt1: "Pasa 'Order the deck oven' a Done",
+    prompt2: "Dale 'Set up the second till' a Chloe",
+    prompt3: 'Añade una tarea para Chloe: pedir bolsas de papel, para el 20 de noviembre',
   },
 }
 
@@ -45,4 +56,4 @@ export const words = () => {
   return WORDS[tag.toLowerCase().split('-')[0]] ?? WORDS.en
 }
 
-<Projects csv={tasks} team={team} w={words()} />
+<Projects seed={tasks} team={team} w={words()} />

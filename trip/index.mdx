@@ -3,16 +3,17 @@ title: Lisbon weekend
 description: "Two friends plan three days in Lisbon on a map: where to go each day, what still needs booking, and what it costs each."
 kunobi:
   page-layout: wide
+  stores: [trip-places]
 ---
 
 import '@fontsource/parkinsans/600.css'
 import '@fontsource/parkinsans/800.css'
 import '@fontsource/figtree/400.css'
 import '@fontsource/figtree/600.css'
-import places from './data/places.csv?raw'
+import places from './data/places.json'
 import { TripPlanner } from './src/trip'
 
-{/* The places live in data/places.csv. The trip's frame and the page's words are below. */}
+{/* The places live in the trip-places store; data/places.json is its saved copy. The trip's frame and the page's words are below. */}
 
 export const TRIP = {
   city: 'Lisbon',
@@ -29,10 +30,10 @@ export const WORDS = {
     days: ['Fri 13', 'Sat 14', 'Sun 15'],
     all: 'All days', map: 'Map of the trip',
     places: 'places', each: 'each', toBook: 'to book', pp: 'each',
-    booked: 'Booked', notBooked: 'Not booked yet', addedBy: 'Added by', close: 'Close', free: 'Free',
+    booked: 'Booked', notBooked: 'Not booked yet', markBooked: 'Mark booked', unbook: 'Not booked', saving: 'Saving…', addedBy: 'Added by', close: 'Close', free: 'Free',
     stillToBook: 'Still to book', allBooked: 'Everything is booked.', budget: 'Budget per person',
     kinds: { stay: 'Stay', food: 'Food', see: 'See', coffee: 'Coffee', viewpoint: 'Viewpoint' },
-    how: ['This page shows', 'Edit the file, or ask your AI:'],
+    how: ['The plan is saved in', 'Tap a place to mark it booked, or ask your AI:', 'Ask your AI:'],
     prompts: ['Add the Oceanário on Sunday at 15:00, added by Leo', 'Mark the Jerónimos tickets as booked'],
   },
   es: {
@@ -41,10 +42,10 @@ export const WORDS = {
     days: ['Vie 13', 'Sáb 14', 'Dom 15'],
     all: 'Todos los días', map: 'Mapa del viaje',
     places: 'lugares', each: 'por persona', toBook: 'por reservar', pp: 'por persona',
-    booked: 'Reservado', notBooked: 'Sin reservar', addedBy: 'Añadido por', close: 'Cerrar', free: 'Gratis',
+    booked: 'Reservado', notBooked: 'Sin reservar', markBooked: 'Marcar reservado', unbook: 'Sin reservar', saving: 'Guardando…', addedBy: 'Añadido por', close: 'Cerrar', free: 'Gratis',
     stillToBook: 'Falta reservar', allBooked: 'Todo está reservado.', budget: 'Presupuesto por persona',
     kinds: { stay: 'Alojamiento', food: 'Comida', see: 'Visitar', coffee: 'Café', viewpoint: 'Mirador' },
-    how: ['Esta página muestra', 'Edita el archivo o pide a tu IA:'],
+    how: ['El plan se guarda en', 'Toca un lugar para marcarlo reservado o pide a tu IA:', 'Pide a tu IA:'],
     prompts: ['Añade el Oceanário el domingo a las 15:00, de parte de Leo', 'Marca las entradas de los Jerónimos como reservadas'],
   },
 }
@@ -53,7 +54,7 @@ export const Lisbon = () => {
   const tag = (typeof navigator !== 'undefined' && navigator.language) || 'en'
   const w = WORDS[tag.toLowerCase().split('-')[0]] ?? WORDS.en
   const trip = { ...TRIP, days: w.days.map((label, i) => ({ day: i + 1, label })) }
-  return <TripPlanner csv={places} trip={trip} words={w} />
+  return <TripPlanner start={places} trip={trip} words={w} />
 }
 
 <Lisbon />

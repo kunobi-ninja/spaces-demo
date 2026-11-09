@@ -1,0 +1,58 @@
+{
+  "fields": {
+    "places": {
+      "fields": {
+        "addedBy": {
+          "kind": "text"
+        },
+        "booking": {
+          "kind": "enum",
+          "values": [
+            "none",
+            "to-book",
+            "booked"
+          ]
+        },
+        "day": {
+          "kind": "int",
+          "max": 3,
+          "min": 1
+        },
+        "kind": {
+          "kind": "enum",
+          "values": [
+            "stay",
+            "food",
+            "see",
+            "coffee",
+            "viewpoint"
+          ]
+        },
+        "lat": {
+          "kind": "text"
+        },
+        "lng": {
+          "kind": "text"
+        },
+        "name": {
+          "kind": "text"
+        },
+        "note": {
+          "kind": "text"
+        },
+        "price": {
+          "currency": "EUR",
+          "kind": "money"
+        },
+        "time": {
+          "kind": "text"
+        }
+      },
+      "kind": "rows"
+    }
+  },
+  "types": "trip/types/trip-places.store.d.ts",
+  "view": "trip/data/places.json",
+  "data": "trip/data/places.start.json",
+  "version": 2
+}

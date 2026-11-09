@@ -1,451 +1,499 @@
-[
-  {
-    "id": "G01",
-    "name": "Elena Marsh",
-    "household": "Marsh",
-    "side": "Family",
-    "rsvp": "yes",
-    "table": "Head",
-    "diet": [],
-    "note": "Turns 40 on the day"
-  },
-  {
-    "id": "G02",
-    "name": "Sam Marsh",
-    "household": "Marsh",
-    "side": "Family",
-    "rsvp": "yes",
-    "table": "Head",
-    "diet": [],
-    "note": "Host. Gives the speech at 20:15"
-  },
-  {
-    "id": "G03",
-    "name": "Rosa Ferrer",
-    "household": "Ferrer",
-    "side": "Family",
-    "rsvp": "yes",
-    "table": "Head",
-    "diet": [],
-    "note": "Elena's mum. Brings the candles"
-  },
-  {
-    "id": "G04",
-    "name": "Jordi Ferrer",
-    "household": "Ferrer",
-    "side": "Family",
-    "rsvp": "yes",
-    "table": "Head",
-    "diet": [],
-    "note": "Elena's dad. Needs a seat near the door (hip)"
-  },
-  {
-    "id": "G05",
-    "name": "Margaret Marsh",
-    "household": "Marsh senior",
-    "side": "Family",
-    "rsvp": "yes",
-    "table": "Head",
-    "diet": [
-      "Gluten-free"
-    ],
-    "note": "Sam's mum. Coeliac, tell the cooks"
-  },
-  {
-    "id": "G06",
-    "name": "David Marsh",
-    "household": "Marsh senior",
-    "side": "Family",
-    "rsvp": "yes",
-    "table": "Head",
-    "diet": [],
-    "note": "Sam's dad"
-  },
-  {
-    "id": "G07",
-    "name": "Laia Ferrer",
-    "household": "Ferrer-Okafor",
-    "side": "Family",
-    "rsvp": "yes",
-    "table": "Head",
-    "diet": [
-      "Vegetarian"
-    ],
-    "note": "Elena's sister. Doing the place cards"
-  },
-  {
-    "id": "G08",
-    "name": "Tom Okafor",
-    "household": "Ferrer-Okafor",
-    "side": "Family",
-    "rsvp": "yes",
-    "table": "Head",
-    "diet": []
-  },
-  {
-    "id": "G09",
-    "name": "Owen Marsh",
-    "household": "Marsh-Shah",
-    "side": "Family",
-    "rsvp": "yes",
-    "table": "Head",
-    "diet": [],
-    "note": "Sam's brother. Short toast after the speech"
-  },
-  {
-    "id": "G10",
-    "name": "Priya Shah",
-    "household": "Marsh-Shah",
-    "side": "Family",
-    "rsvp": "yes",
-    "diet": [
-      "Vegetarian"
-    ],
-    "note": "Owen's partner. Said yes on 27 October, no seat yet"
-  },
-  {
-    "id": "G11",
-    "name": "Montse Ferrer",
-    "household": "Montse Ferrer",
-    "side": "Family",
-    "rsvp": "yes",
-    "table": "Head",
-    "diet": [],
-    "note": "Elena's aunt, flying in from Girona"
-  },
-  {
-    "id": "G12",
-    "name": "Pau Ferrer",
-    "household": "Ferrer-Ito",
-    "side": "Family",
-    "rsvp": "yes",
-    "table": "A",
-    "diet": [],
-    "note": "Elena's cousin"
-  },
-  {
-    "id": "G13",
-    "name": "Hana Ito",
-    "household": "Ferrer-Ito",
-    "side": "Family",
-    "rsvp": "yes",
-    "table": "A",
-    "diet": [
-      "Pescatarian"
-    ]
-  },
-  {
-    "id": "G14",
-    "name": "Nadia Brooks",
-    "household": "Brooks",
-    "side": "Friends",
-    "rsvp": "yes",
-    "table": "B",
-    "diet": []
-  },
-  {
-    "id": "G15",
-    "name": "Leo Brooks",
-    "household": "Brooks",
-    "side": "Friends",
-    "rsvp": "yes",
-    "table": "B",
-    "diet": [
-      "Nut allergy"
-    ],
-    "note": "Severe. Carries an EpiPen, the cooks know"
-  },
-  {
-    "id": "G16",
-    "name": "Grace Liu",
-    "household": "Liu",
-    "side": "Friends",
-    "rsvp": "yes",
-    "table": "B",
-    "diet": [
-      "Vegetarian"
-    ]
-  },
-  {
-    "id": "G17",
-    "name": "Marcus Liu",
-    "household": "Liu",
-    "side": "Friends",
-    "rsvp": "yes",
-    "table": "B",
-    "diet": []
-  },
-  {
-    "id": "G18",
-    "name": "Ines Duarte",
-    "household": "Duarte-Costa",
-    "side": "Friends",
-    "rsvp": "yes",
-    "table": "B",
-    "diet": [
-      "Vegan"
-    ]
-  },
-  {
-    "id": "G19",
-    "name": "Raf Costa",
-    "household": "Duarte-Costa",
-    "side": "Friends",
-    "rsvp": "yes",
-    "diet": [],
-    "note": "Ines's plus-one, confirmed late",
-    "plusOneOf": "Ines Duarte"
-  },
-  {
-    "id": "G20",
-    "name": "Ben Carter",
-    "household": "Carter",
-    "side": "Friends",
-    "rsvp": "yes",
-    "table": "B",
-    "diet": []
-  },
-  {
-    "id": "G21",
-    "name": "Chloe Carter",
-    "household": "Carter",
-    "side": "Friends",
-    "rsvp": "yes",
-    "table": "D",
-    "diet": [
-      "Gluten-free"
-    ]
-  },
-  {
-    "id": "G22",
-    "name": "Ama Mensah",
-    "household": "Mensah",
-    "side": "Friends",
-    "rsvp": "yes",
-    "table": "C",
-    "diet": []
-  },
-  {
-    "id": "G23",
-    "name": "Kwame Mensah",
-    "household": "Mensah",
-    "side": "Friends",
-    "rsvp": "no",
-    "diet": [],
-    "note": "Away for work that weekend"
-  },
-  {
-    "id": "G24",
-    "name": "Hannah Weiss",
-    "household": "Weiss",
-    "side": "Friends",
-    "rsvp": "yes",
-    "table": "A",
-    "diet": [
-      "Vegetarian"
-    ]
-  },
-  {
-    "id": "G25",
-    "name": "Joe Patel",
-    "household": "Patel",
-    "side": "Friends",
-    "rsvp": "yes",
-    "table": "D",
-    "diet": []
-  },
-  {
-    "id": "G26",
-    "name": "Maya Patel",
-    "household": "Patel",
-    "side": "Friends",
-    "rsvp": "yes",
-    "table": "D",
-    "diet": []
-  },
-  {
-    "id": "G27",
-    "name": "Lena Brandt",
-    "household": "Brandt",
-    "side": "Friends",
-    "rsvp": "no",
-    "table": "A",
-    "diet": [],
-    "note": "Can't come after all (moved to Berlin)"
-  },
-  {
-    "id": "G28",
-    "name": "Sofia Russo",
-    "household": "Russo",
-    "side": "Friends",
-    "rsvp": "yes",
-    "table": "C",
-    "diet": [
-      "Gluten-free"
-    ]
-  },
-  {
-    "id": "G29",
-    "name": "Matteo Russo",
-    "household": "Russo",
-    "side": "Friends",
-    "rsvp": "yes",
-    "table": "C",
-    "diet": []
-  },
-  {
-    "id": "G30",
-    "name": "Erin Walsh",
-    "household": "Walsh",
-    "side": "Friends",
-    "rsvp": "maybe",
-    "diet": [],
-    "note": "Waiting on a babysitter"
-  },
-  {
-    "id": "G31",
-    "name": "Tariq Aziz",
-    "household": "Aziz",
-    "side": "Friends",
-    "rsvp": "yes",
-    "table": "D",
-    "diet": [
-      "Halal"
-    ]
-  },
-  {
-    "id": "G32",
-    "name": "Noor Aziz",
-    "household": "Aziz",
-    "side": "Friends",
-    "rsvp": "yes",
-    "table": "D",
-    "diet": [
-      "Vegan"
-    ]
-  },
-  {
-    "id": "G33",
-    "name": "Rachel Kim",
-    "household": "Kim",
-    "side": "Work",
-    "rsvp": "yes",
-    "table": "C",
-    "diet": []
-  },
-  {
-    "id": "G34",
-    "name": "Daniel Ortiz",
-    "household": "Ortiz",
-    "side": "Work",
-    "rsvp": "yes",
-    "table": "C",
-    "diet": []
-  },
-  {
-    "id": "G35",
-    "name": "Ana Ortiz",
-    "household": "Ortiz",
-    "side": "Work",
-    "rsvp": "yes",
-    "table": "C",
-    "diet": [],
-    "plusOneOf": "Daniel Ortiz"
-  },
-  {
-    "id": "G36",
-    "name": "Fiona Byrne",
-    "household": "Byrne",
-    "side": "Work",
-    "rsvp": "none",
-    "diet": []
-  },
-  {
-    "id": "G37",
-    "name": "Sunil Rao",
-    "household": "Rao",
-    "side": "Work",
-    "rsvp": "none",
-    "diet": []
-  },
-  {
-    "id": "G38",
-    "name": "Megan Cole",
-    "household": "Cole",
-    "side": "Work",
-    "rsvp": "yes",
-    "table": "C",
-    "diet": [
-      "Vegetarian"
-    ]
-  },
-  {
-    "id": "G39",
-    "name": "Oliver Grant",
-    "household": "Grant",
-    "side": "Work",
-    "rsvp": "maybe",
-    "diet": [],
-    "note": "Might be travelling back from Lisbon"
-  },
-  {
-    "id": "G40",
-    "name": "Zoe Turner",
-    "household": "Turner-Bianchi",
-    "side": "Work",
-    "rsvp": "yes",
-    "table": "C",
-    "diet": [
-      "Pescatarian"
-    ]
-  },
-  {
-    "id": "G41",
-    "name": "Luca Bianchi",
-    "household": "Turner-Bianchi",
-    "side": "Work",
-    "rsvp": "yes",
-    "table": "C",
-    "diet": [],
-    "plusOneOf": "Zoe Turner"
-  },
-  {
-    "id": "G42",
-    "name": "Clara Novak",
-    "household": "Novak",
-    "side": "School",
-    "rsvp": "yes",
-    "table": "A",
-    "diet": [
-      "Vegetarian"
-    ]
-  },
-  {
-    "id": "G43",
-    "name": "Petr Novak",
-    "household": "Novak",
-    "side": "School",
-    "rsvp": "yes",
-    "table": "A",
-    "diet": [
-      "Lactose-free"
-    ]
-  },
-  {
-    "id": "G44",
-    "name": "Isla Murray",
-    "household": "Murray",
-    "side": "School",
-    "rsvp": "none",
-    "diet": []
-  },
-  {
-    "id": "G45",
-    "name": "Hugo Lambert",
-    "household": "Lambert",
-    "side": "School",
-    "rsvp": "no",
-    "diet": [],
-    "note": "In Montréal until December"
+{
+  "guests": {
+    "G01": {
+      "diet": "",
+      "household": "Marsh",
+      "name": "Elena Marsh",
+      "note": "Turns 40 on the day",
+      "party": 1,
+      "plusOneOf": "",
+      "rsvp": "yes",
+      "side": "Family",
+      "table": "Head"
+    },
+    "G02": {
+      "diet": "",
+      "household": "Marsh",
+      "name": "Sam Marsh",
+      "note": "Host. Gives the speech at 20:15",
+      "party": 1,
+      "plusOneOf": "",
+      "rsvp": "yes",
+      "side": "Family",
+      "table": "Head"
+    },
+    "G03": {
+      "diet": "",
+      "household": "Ferrer",
+      "name": "Rosa Ferrer",
+      "note": "Elena's mum. Brings the candles",
+      "party": 1,
+      "plusOneOf": "",
+      "rsvp": "yes",
+      "side": "Family",
+      "table": "Head"
+    },
+    "G04": {
+      "diet": "",
+      "household": "Ferrer",
+      "name": "Jordi Ferrer",
+      "note": "Elena's dad. Needs a seat near the door (hip)",
+      "party": 1,
+      "plusOneOf": "",
+      "rsvp": "yes",
+      "side": "Family",
+      "table": "Head"
+    },
+    "G05": {
+      "diet": "Gluten-free",
+      "household": "Marsh senior",
+      "name": "Margaret Marsh",
+      "note": "Sam's mum. Coeliac, tell the cooks",
+      "party": 1,
+      "plusOneOf": "",
+      "rsvp": "yes",
+      "side": "Family",
+      "table": "Head"
+    },
+    "G06": {
+      "diet": "",
+      "household": "Marsh senior",
+      "name": "David Marsh",
+      "note": "Sam's dad",
+      "party": 1,
+      "plusOneOf": "",
+      "rsvp": "yes",
+      "side": "Family",
+      "table": "Head"
+    },
+    "G07": {
+      "diet": "Vegetarian",
+      "household": "Ferrer-Okafor",
+      "name": "Laia Ferrer",
+      "note": "Elena's sister. Doing the place cards",
+      "party": 1,
+      "plusOneOf": "",
+      "rsvp": "yes",
+      "side": "Family",
+      "table": "Head"
+    },
+    "G08": {
+      "diet": "",
+      "household": "Ferrer-Okafor",
+      "name": "Tom Okafor",
+      "note": "",
+      "party": 1,
+      "plusOneOf": "",
+      "rsvp": "yes",
+      "side": "Family",
+      "table": "Head"
+    },
+    "G09": {
+      "diet": "",
+      "household": "Marsh-Shah",
+      "name": "Owen Marsh",
+      "note": "Sam's brother. Short toast after the speech",
+      "party": 1,
+      "plusOneOf": "",
+      "rsvp": "yes",
+      "side": "Family",
+      "table": "Head"
+    },
+    "G10": {
+      "diet": "Vegetarian",
+      "household": "Marsh-Shah",
+      "name": "Priya Shah",
+      "note": "Owen's partner. Said yes on 27 October, no seat yet",
+      "party": 1,
+      "plusOneOf": "",
+      "rsvp": "yes",
+      "side": "Family",
+      "table": ""
+    },
+    "G11": {
+      "diet": "",
+      "household": "Montse Ferrer",
+      "name": "Montse Ferrer",
+      "note": "Elena's aunt, flying in from Girona",
+      "party": 1,
+      "plusOneOf": "",
+      "rsvp": "yes",
+      "side": "Family",
+      "table": "Head"
+    },
+    "G12": {
+      "diet": "",
+      "household": "Ferrer-Ito",
+      "name": "Pau Ferrer",
+      "note": "Elena's cousin",
+      "party": 1,
+      "plusOneOf": "",
+      "rsvp": "yes",
+      "side": "Family",
+      "table": "A"
+    },
+    "G13": {
+      "diet": "Pescatarian",
+      "household": "Ferrer-Ito",
+      "name": "Hana Ito",
+      "note": "",
+      "party": 1,
+      "plusOneOf": "",
+      "rsvp": "yes",
+      "side": "Family",
+      "table": "A"
+    },
+    "G14": {
+      "diet": "",
+      "household": "Brooks",
+      "name": "Nadia Brooks",
+      "note": "",
+      "party": 1,
+      "plusOneOf": "",
+      "rsvp": "yes",
+      "side": "Friends",
+      "table": "B"
+    },
+    "G15": {
+      "diet": "Nut allergy",
+      "household": "Brooks",
+      "name": "Leo Brooks",
+      "note": "Severe. Carries an EpiPen, the cooks know",
+      "party": 1,
+      "plusOneOf": "",
+      "rsvp": "yes",
+      "side": "Friends",
+      "table": "B"
+    },
+    "G16": {
+      "diet": "Vegetarian",
+      "household": "Liu",
+      "name": "Grace Liu",
+      "note": "",
+      "party": 1,
+      "plusOneOf": "",
+      "rsvp": "yes",
+      "side": "Friends",
+      "table": "B"
+    },
+    "G17": {
+      "diet": "",
+      "household": "Liu",
+      "name": "Marcus Liu",
+      "note": "",
+      "party": 1,
+      "plusOneOf": "",
+      "rsvp": "yes",
+      "side": "Friends",
+      "table": "B"
+    },
+    "G18": {
+      "diet": "Vegan",
+      "household": "Duarte-Costa",
+      "name": "Ines Duarte",
+      "note": "",
+      "party": 1,
+      "plusOneOf": "",
+      "rsvp": "yes",
+      "side": "Friends",
+      "table": "B"
+    },
+    "G19": {
+      "diet": "",
+      "household": "Duarte-Costa",
+      "name": "Raf Costa",
+      "note": "Ines's plus-one, confirmed late",
+      "party": 1,
+      "plusOneOf": "Ines Duarte",
+      "rsvp": "yes",
+      "side": "Friends",
+      "table": ""
+    },
+    "G20": {
+      "diet": "",
+      "household": "Carter",
+      "name": "Ben Carter",
+      "note": "",
+      "party": 1,
+      "plusOneOf": "",
+      "rsvp": "yes",
+      "side": "Friends",
+      "table": "B"
+    },
+    "G21": {
+      "diet": "Gluten-free",
+      "household": "Carter",
+      "name": "Chloe Carter",
+      "note": "",
+      "party": 1,
+      "plusOneOf": "",
+      "rsvp": "yes",
+      "side": "Friends",
+      "table": "D"
+    },
+    "G22": {
+      "diet": "",
+      "household": "Mensah",
+      "name": "Ama Mensah",
+      "note": "",
+      "party": 1,
+      "plusOneOf": "",
+      "rsvp": "yes",
+      "side": "Friends",
+      "table": "C"
+    },
+    "G23": {
+      "diet": "",
+      "household": "Mensah",
+      "name": "Kwame Mensah",
+      "note": "Away for work that weekend",
+      "party": 1,
+      "plusOneOf": "",
+      "rsvp": "no",
+      "side": "Friends",
+      "table": ""
+    },
+    "G24": {
+      "diet": "Vegetarian",
+      "household": "Weiss",
+      "name": "Hannah Weiss",
+      "note": "",
+      "party": 1,
+      "plusOneOf": "",
+      "rsvp": "yes",
+      "side": "Friends",
+      "table": "A"
+    },
+    "G25": {
+      "diet": "",
+      "household": "Patel",
+      "name": "Joe Patel",
+      "note": "Bringing their two kids, 6 and 9",
+      "party": 3,
+      "plusOneOf": "",
+      "rsvp": "yes",
+      "side": "Friends",
+      "table": "D"
+    },
+    "G26": {
+      "diet": "",
+      "household": "Patel",
+      "name": "Maya Patel",
+      "note": "",
+      "party": 1,
+      "plusOneOf": "",
+      "rsvp": "yes",
+      "side": "Friends",
+      "table": "D"
+    },
+    "G27": {
+      "diet": "",
+      "household": "Brandt",
+      "name": "Lena Brandt",
+      "note": "Can't come after all (moved to Berlin)",
+      "party": 1,
+      "plusOneOf": "",
+      "rsvp": "no",
+      "side": "Friends",
+      "table": "A"
+    },
+    "G28": {
+      "diet": "Gluten-free",
+      "household": "Russo",
+      "name": "Sofia Russo",
+      "note": "",
+      "party": 1,
+      "plusOneOf": "",
+      "rsvp": "yes",
+      "side": "Friends",
+      "table": "C"
+    },
+    "G29": {
+      "diet": "",
+      "household": "Russo",
+      "name": "Matteo Russo",
+      "note": "",
+      "party": 1,
+      "plusOneOf": "",
+      "rsvp": "yes",
+      "side": "Friends",
+      "table": "C"
+    },
+    "G30": {
+      "diet": "",
+      "household": "Walsh",
+      "name": "Erin Walsh",
+      "note": "Waiting on a babysitter",
+      "party": 1,
+      "plusOneOf": "",
+      "rsvp": "maybe",
+      "side": "Friends",
+      "table": ""
+    },
+    "G31": {
+      "diet": "Halal",
+      "household": "Aziz",
+      "name": "Tariq Aziz",
+      "note": "",
+      "party": 1,
+      "plusOneOf": "",
+      "rsvp": "yes",
+      "side": "Friends",
+      "table": "D"
+    },
+    "G32": {
+      "diet": "Vegan",
+      "household": "Aziz",
+      "name": "Noor Aziz",
+      "note": "",
+      "party": 1,
+      "plusOneOf": "",
+      "rsvp": "yes",
+      "side": "Friends",
+      "table": "D"
+    },
+    "G33": {
+      "diet": "",
+      "household": "Kim",
+      "name": "Rachel Kim",
+      "note": "",
+      "party": 1,
+      "plusOneOf": "",
+      "rsvp": "yes",
+      "side": "Work",
+      "table": "C"
+    },
+    "G34": {
+      "diet": "",
+      "household": "Ortiz",
+      "name": "Daniel Ortiz",
+      "note": "",
+      "party": 1,
+      "plusOneOf": "",
+      "rsvp": "yes",
+      "side": "Work",
+      "table": "C"
+    },
+    "G35": {
+      "diet": "",
+      "household": "Ortiz",
+      "name": "Ana Ortiz",
+      "note": "",
+      "party": 1,
+      "plusOneOf": "Daniel Ortiz",
+      "rsvp": "yes",
+      "side": "Work",
+      "table": "C"
+    },
+    "G36": {
+      "diet": "",
+      "household": "Byrne",
+      "name": "Fiona Byrne",
+      "note": "",
+      "party": 1,
+      "plusOneOf": "",
+      "rsvp": "none",
+      "side": "Work",
+      "table": ""
+    },
+    "G37": {
+      "diet": "",
+      "household": "Rao",
+      "name": "Sunil Rao",
+      "note": "",
+      "party": 1,
+      "plusOneOf": "",
+      "rsvp": "none",
+      "side": "Work",
+      "table": ""
+    },
+    "G38": {
+      "diet": "Vegetarian",
+      "household": "Cole",
+      "name": "Megan Cole",
+      "note": "",
+      "party": 1,
+      "plusOneOf": "",
+      "rsvp": "yes",
+      "side": "Work",
+      "table": "C"
+    },
+    "G39": {
+      "diet": "",
+      "household": "Grant",
+      "name": "Oliver Grant",
+      "note": "Might be travelling back from Lisbon",
+      "party": 1,
+      "plusOneOf": "",
+      "rsvp": "maybe",
+      "side": "Work",
+      "table": ""
+    },
+    "G40": {
+      "diet": "Pescatarian",
+      "household": "Turner-Bianchi",
+      "name": "Zoe Turner",
+      "note": "",
+      "party": 1,
+      "plusOneOf": "",
+      "rsvp": "yes",
+      "side": "Work",
+      "table": "C"
+    },
+    "G41": {
+      "diet": "",
+      "household": "Turner-Bianchi",
+      "name": "Luca Bianchi",
+      "note": "",
+      "party": 1,
+      "plusOneOf": "Zoe Turner",
+      "rsvp": "yes",
+      "side": "Work",
+      "table": "C"
+    },
+    "G42": {
+      "diet": "Vegetarian",
+      "household": "Novak",
+      "name": "Clara Novak",
+      "note": "",
+      "party": 1,
+      "plusOneOf": "",
+      "rsvp": "yes",
+      "side": "School",
+      "table": "A"
+    },
+    "G43": {
+      "diet": "Lactose-free",
+      "household": "Novak",
+      "name": "Petr Novak",
+      "note": "",
+      "party": 1,
+      "plusOneOf": "",
+      "rsvp": "yes",
+      "side": "School",
+      "table": "A"
+    },
+    "G44": {
+      "diet": "",
+      "household": "Murray",
+      "name": "Isla Murray",
+      "note": "",
+      "party": 1,
+      "plusOneOf": "",
+      "rsvp": "none",
+      "side": "School",
+      "table": ""
+    },
+    "G45": {
+      "diet": "",
+      "household": "Lambert",
+      "name": "Hugo Lambert",
+      "note": "In Montréal until December",
+      "party": 1,
+      "plusOneOf": "",
+      "rsvp": "no",
+      "side": "School",
+      "table": ""
+    }
   }
-]
+}

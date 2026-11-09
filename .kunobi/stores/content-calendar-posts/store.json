@@ -1,0 +1,54 @@
+{
+  "fields": {
+    "posts": {
+      "fields": {
+        "campaign": {
+          "kind": "text"
+        },
+        "channel": {
+          "kind": "enum",
+          "values": [
+            "instagram",
+            "blog",
+            "newsletter",
+            "linkedin",
+            "video"
+          ]
+        },
+        "date": {
+          "kind": "text"
+        },
+        "link": {
+          "kind": "text"
+        },
+        "owner": {
+          "kind": "enum",
+          "values": [
+            "Lucía",
+            "Tom",
+            "Priya",
+            "Marco"
+          ]
+        },
+        "status": {
+          "kind": "enum",
+          "values": [
+            "idea",
+            "drafting",
+            "review",
+            "scheduled",
+            "published"
+          ]
+        },
+        "title": {
+          "kind": "text"
+        }
+      },
+      "kind": "rows"
+    }
+  },
+  "types": "content-calendar/types/content-calendar-posts.store.d.ts",
+  "version": 3,
+  "view": "content-calendar/data/posts.json",
+  "data": "content-calendar/data/posts.start.json"
+}

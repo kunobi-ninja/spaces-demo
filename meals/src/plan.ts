@@ -1,44 +1,32 @@
 // Turns the week and the recipes into day cards and a shopping list.
+// The week and the list's ticks live in the `meals-week` and `meals-shopping` stores.
 
 export interface Ingredient { name: string; qty: number; unit: string; aisle: string }
 export interface Recipe { id: string; name: string; minutes: number; serves: number; icon: string; tags: string[]; ingredients: Ingredient[] }
 export interface Night { day: string; recipe: Recipe; cook: string; servings: number }
+export type Slot = Night | { day: string; recipe: null; cook: string; servings: number }
 export interface Line { key: string; name: string; unit: string; qty: number; aisle: string; days: string[] }
 
-/** Parses CSV with a header row; quoted fields may hold commas and doubled quotes. */
-export function parseCsv(text: string): Record<string, string>[] {
-  const rows: string[][] = []
-  let row: string[] = []
-  let field = ''
-  let quoted = false
-  for (let i = 0; i < text.length; i++) {
-    const c = text[i]
-    if (quoted) {
-      if (c === '"' && text[i + 1] === '"') { field += '"'; i++ }
-      else if (c === '"') quoted = false
-      else field += c
-    } else if (c === '"') quoted = true
-    else if (c === ',') { row.push(field); field = '' }
-    else if (c === '\n' || c === '\r') {
-      if (c === '\r' && text[i + 1] === '\n') i++
-      row.push(field); field = ''
-      if (row.some((cell) => cell.trim() !== '')) rows.push(row)
-      row = []
-    } else field += c
-  }
-  row.push(field)
-  if (row.some((cell) => cell.trim() !== '')) rows.push(row)
-  const [head = [], ...body] = rows
-  return body.map((cells) => Object.fromEntries(head.map((h, i) => [h.trim(), (cells[i] ?? '').trim()])))
+/** The week as the `meals-week` store holds it: one row per day. */
+export interface WeekData { nights: Record<string, { recipe: string | null; cook: string | null; servings: number | null }> }
+
+export const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+
+/** The planned nights in day order; a day without a known recipe has none. */
+export function nights(week: WeekData | undefined, recipes: Recipe[]): Slot[] {
+  const byId = new Map(recipes.map((r) => [r.id, r]))
+  return DAYS.map((day) => {
+    const row = week?.nights?.[day]
+    const recipe = (row?.recipe && byId.get(row.recipe)) || null
+    const cook = row?.cook ?? ''
+    if (!recipe) return { day, recipe: null, cook, servings: 0 }
+    return { day, recipe, cook, servings: row?.servings || recipe.serves }
+  })
 }
 
-export function nights(weekCsv: string, recipes: Recipe[]): Night[] {
-  const byId = new Map(recipes.map((r) => [r.id, r]))
-  return parseCsv(weekCsv).flatMap((row) => {
-    const recipe = byId.get(row.recipe)
-    if (!recipe) return []
-    return [{ day: row.day, recipe, cook: row.cook, servings: Number(row.servings) || recipe.serves }]
-  })
+/** A stable id for a list line, usable as a store row id: "olive-oil-tbsp". */
+export function slug(text: string): string {
+  return text.toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
 }
 
 // Units counted in whole things, by their singular name.
@@ -55,7 +43,7 @@ export function shopping(week: Night[]): Line[] {
     const scale = night.servings / night.recipe.serves
     for (const ing of night.recipe.ingredients) {
       const unit = unitKey(ing.unit)
-      const key = `${ing.name.toLowerCase()}|${unit}`
+      const key = slug(`${ing.name} ${unit}`)
       const line = lines.get(key) ?? { key, name: ing.name, unit, qty: 0, aisle: ing.aisle, days: [] }
       line.qty += ing.qty * scale
       if (!line.days.includes(night.day)) line.days.push(night.day)
@@ -70,7 +58,7 @@ export function scaled(night: Night): Line[] {
   const scale = night.servings / night.recipe.serves
   return night.recipe.ingredients.map((ing) => {
     const unit = unitKey(ing.unit)
-    return { key: `${ing.name.toLowerCase()}|${unit}`, name: ing.name, unit, qty: ing.qty * scale, aisle: ing.aisle, days: [night.day] }
+    return { key: slug(`${ing.name} ${unit}`), name: ing.name, unit, qty: ing.qty * scale, aisle: ing.aisle, days: [night.day] }
   })
 }
 

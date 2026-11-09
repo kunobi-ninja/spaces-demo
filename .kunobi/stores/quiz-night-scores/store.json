@@ -1,0 +1,29 @@
+{
+  "fields": {
+    "nights": {
+      "fields": {
+        "date": {
+          "kind": "text"
+        },
+        "points": {
+          "kind": "int",
+          "min": 0
+        },
+        "winner": {
+          "kind": "text"
+        }
+      },
+      "kind": "rows"
+    },
+    "tonight": {
+      "kind": "counters"
+    },
+    "total": {
+      "kind": "counters"
+    }
+  },
+  "types": "quiz-night/types/quiz-night-scores.store.d.ts",
+  "view": "quiz-night/data/scores.json",
+  "data": "quiz-night/data/scores.start.json",
+  "version": 2
+}

@@ -1,0 +1,34 @@
+{
+  "fields": {
+    "takes": {
+      "fields": {
+        "home": {
+          "kind": "text"
+        },
+        "note": {
+          "kind": "text"
+        },
+        "person": {
+          "kind": "enum",
+          "values": [
+            "maya",
+            "alex"
+          ]
+        },
+        "verdict": {
+          "kind": "enum",
+          "values": [
+            "keen",
+            "maybe",
+            "no"
+          ]
+        }
+      },
+      "kind": "rows"
+    }
+  },
+  "types": "home-hunt/types/home-hunt-takes.store.d.ts",
+  "view": "home-hunt/data/takes.json",
+  "data": "home-hunt/data/takes.start.json",
+  "version": 2
+}

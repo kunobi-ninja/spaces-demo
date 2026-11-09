@@ -1,0 +1,12 @@
+{
+  "ticks": {
+    "olive-oil-tbsp": { "got": "yes" },
+    "soy-sauce-tbsp": { "got": "yes" },
+    "garlic-clove": { "got": "yes" }
+  },
+  "extras": [
+    { "id": "bananas", "name": "Bananas", "qty": "6", "aisle": "Produce", "got": "no" },
+    { "id": "coffee", "name": "Coffee", "qty": "500 g", "aisle": "Pantry", "got": "no" },
+    { "id": "dish-soap", "name": "Dish soap", "qty": "1", "aisle": "Other", "got": "yes" }
+  ]
+}

@@ -1,6 +1,11 @@
 import * as React from 'react'
+import { edit, useStore, useStoreStatus } from 'kunobi'
+import type { ContentCalendarPostsStore } from '../types/content-calendar-posts.store'
 
-/** One planned post: an entry of `data/posts.json`. */
+/** The posts live in this store; `data/posts.json` is its saved, readable copy. */
+export const STORE = 'content-calendar-posts'
+
+/** One planned post, as the page draws it. */
 export interface Post {
   id: string
   date: string
@@ -43,12 +48,37 @@ const weekNumber = (d: Date) => {
 
 const lang = () => (typeof navigator !== 'undefined' && navigator.language) || 'en'
 
-export function ContentCalendar({ posts, settings, words, initial }: { posts: Post[]; settings: Settings; words: Words; initial?: string }) {
+/** The store's posts as a list, oldest first. */
+export const toPosts = (data: ContentCalendarPostsStore | undefined): Post[] =>
+  Object.entries(data?.posts ?? {}).map(([id, p]) => ({
+    id,
+    date: p.date ?? '',
+    channel: p.channel ?? '',
+    title: p.title ?? '',
+    owner: p.owner ?? '',
+    status: p.status ?? 'idea',
+    campaign: p.campaign ?? '',
+    link: p.link ?? '',
+  }))
+
+export function ContentCalendar({ posts: saved, settings, words, initial }: { posts: ContentCalendarPostsStore; settings: Settings; words: Words; initial?: string }) {
+  const stored = useStore(STORE) as ContentCalendarPostsStore | undefined
+  const store = useStoreStatus(STORE)
+  // Without the store (other builds, previews), show the last saved copy, read-only.
+  const live = (store?.status === 'open' || store?.status === 'paused') && stored !== undefined
+  const canEdit = live && store?.status === 'open' && Boolean(store?.canEdit)
+  const posts = React.useMemo(() => toPosts(live ? stored : saved), [live, stored, saved])
+  const change = (id: string, values: Partial<Pick<Post, 'date' | 'status'>>) =>
+    edit(STORE, (d: ContentCalendarPostsStore) => {
+      Object.assign(d.posts[id], values)
+    })
   const [start, startPost] = (initial ?? '').split(':')
   const [view, setView] = React.useState<View>((['month', 'weeks', 'board'] as string[]).includes(start) ? (start as View) : 'month')
   const [channels, setChannels] = React.useState<Set<string>>(new Set())
   const [owners, setOwners] = React.useState<Set<string>>(new Set())
-  const [open, setOpen] = React.useState<Post | null>(() => posts.find((p) => p.id === startPost) ?? null)
+  const [openId, setOpenId] = React.useState<string | null>(startPost || null)
+  const open = posts.find((p) => p.id === openId) ?? null
+  const setOpen = (post: Post | null) => setOpenId(post?.id ?? null)
   const [picked, setPicked] = React.useState<string>(settings.today)
 
   const channel = Object.fromEntries(settings.channels.map((c) => [c.id, c]))
@@ -56,6 +86,7 @@ export function ContentCalendar({ posts, settings, words, initial }: { posts: Po
   const status = Object.fromEntries(settings.statuses.map((s) => [s.id, s]))
   const today = day(settings.today)
   const monthStart = day(`${settings.month}-01`)
+  const monthEnd = iso(new Date(monthStart.getFullYear(), monthStart.getMonth() + 1, 0))
   const fmt = (opts: Intl.DateTimeFormatOptions, d: Date) => new Intl.DateTimeFormat(lang(), opts).format(d)
 
   const shown = posts
@@ -260,12 +291,47 @@ export function ContentCalendar({ posts, settings, words, initial }: { posts: Po
             <span className="cc-tag big" style={{ background: channel[open.channel]?.color }}>{channel[open.channel]?.label}</span>
             <h2>{open.title}</h2>
             <dl>
-              <dt>{words.date}</dt><dd>{fmt({ weekday: 'long', day: 'numeric', month: 'long' }, day(open.date))}</dd>
+              <dt>{words.date}</dt>
+              <dd>
+                {canEdit ? (
+                  <input
+                    type="date"
+                    className="cc-date-input"
+                    value={open.date}
+                    min={`${settings.month}-01`}
+                    max={monthEnd}
+                    aria-label={words.date}
+                    onChange={(e) => e.currentTarget.value && change(open.id, { date: e.currentTarget.value })}
+                  />
+                ) : (
+                  fmt({ weekday: 'long', day: 'numeric', month: 'long' }, day(open.date))
+                )}
+              </dd>
               <dt>{words.owner}</dt><dd className="cc-owner"><Avatar id={open.owner} /> {open.owner} <small>{person[open.owner]?.role}</small></dd>
-              <dt>{words.state}</dt><dd><StatusPill id={open.status} /></dd>
+              <dt>{words.state}</dt>
+              <dd>
+                {canEdit ? (
+                  <span className="cc-states" role="group" aria-label={words.state}>
+                    {settings.statuses.map((s) => (
+                      <button
+                        key={s.id}
+                        className={`cc-state${open.status === s.id ? ' on' : ''}`}
+                        style={{ '--st': s.color } as React.CSSProperties}
+                        aria-pressed={open.status === s.id}
+                        onClick={() => change(open.id, { status: s.id })}
+                      >
+                        <i />{words.status[s.id]}
+                      </button>
+                    ))}
+                  </span>
+                ) : (
+                  <StatusPill id={open.status} />
+                )}
+              </dd>
               {open.campaign && <><dt>{words.campaign}</dt><dd>{open.campaign}</dd></>}
               <dt>{words.id}</dt><dd className="cc-mono">{open.id}</dd>
             </dl>
+            {live && !store?.saved && <p className="cc-hint">{words.saving}</p>}
             {open.link
               ? <a className="cc-open" href={open.link}>{words.openDraft} →</a>
               : <p className="cc-hint">{words.noDraft}</p>}
@@ -360,6 +426,12 @@ const CSS = `
 .cc-panel dd { margin: 0; display: flex; align-items: center; gap: 8px; }
 .cc-owner small { color: hsl(var(--muted-foreground)); }
 .cc-mono { font-family: ui-monospace, monospace; font-size: 13px; }
+.cc-states { display: flex; flex-wrap: wrap; gap: 6px; }
+.cc-state { all: unset; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; font: 600 12px Figtree, sans-serif; padding: 4px 10px; border-radius: 99px; border: 1px solid hsl(var(--border)); }
+.cc-state i { width: 8px; height: 8px; border-radius: 99px; background: var(--st); }
+.cc-state.on { background: color-mix(in srgb, var(--st) 22%, transparent); border-color: var(--st); }
+.cc-state:focus-visible, .cc-date-input:focus-visible { outline: 2px solid #0984c8; outline-offset: 2px; }
+.cc-date-input { box-sizing: border-box; font: 600 14px Figtree, sans-serif; padding: 5px 10px; border-radius: 10px; border: 1px solid hsl(var(--border)); background: hsl(var(--background)); color: hsl(var(--foreground)); }
 .cc-close { all: unset; cursor: pointer; position: absolute; top: 14px; right: 16px; width: 34px; height: 34px; border-radius: 99px; display: grid; place-items: center; font-size: 22px; background: hsl(var(--muted)); }
 .cc-open { display: inline-flex; padding: 10px 18px; border-radius: 999px; background: #f3aa08; color: #06213f; font: 700 14px Figtree, sans-serif; text-decoration: none; }
 .cc-hint { color: hsl(var(--muted-foreground)); font-size: 14px; margin: 0; }

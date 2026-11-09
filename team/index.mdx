@@ -3,18 +3,20 @@ title: Sol Bakery
 description: "The team home for opening Sol Bakery's Riverside shop: who is doing what this week, how each project is going, and what we decided."
 kunobi:
   page-layout: wide
+  stores: [team-tasks]
 ---
 
 import * as React from 'react'
+import { useStore, useStoreStatus } from 'kunobi'
 import '@fontsource/parkinsans/600.css'
 import '@fontsource/parkinsans/800.css'
 import '@fontsource/figtree/400.css'
 import '@fontsource/figtree/600.css'
 import TEAM from './data/team.json'
-import TASKS_CSV from './data/tasks.csv?raw'
+import SEED from './data/tasks.json'
 import DECISIONS_MD from './wiki/decisions.md?raw'
 
-{/* Interface words per language. The team's own content lives in data/ and wiki/. */}
+{/* Interface words per language. The team's own content lives in the team-tasks store (readable copy: data/tasks.json), data/team.json and wiki/. */}
 
 export const WORDS = {
   en: {
@@ -45,7 +47,7 @@ export const WORDS = {
       'decisions': ['Decisions', 'What we decided, who decided, and why.'],
     },
     ask: 'Try asking your AI',
-    prompts: ['Move the oven order to Done.', 'What is still waiting on someone?', 'Add a decision: we open at 7:00.'],
+    prompts: ["Move 'Order the deck oven' to Done.", 'What is still waiting on someone?', 'Add a decision: we open at 7:00.'],
   },
   es: {
     eyebrow: 'Espacio del equipo',
@@ -75,7 +77,7 @@ export const WORDS = {
       'decisions': ['Decisiones', 'Qué decidimos, quién y por qué.'],
     },
     ask: 'Prueba a pedirle a tu IA',
-    prompts: ['Pasa el pedido del horno a Hecho.', '¿Qué está esperando a alguien?', 'Añade una decisión: abrimos a las 7:00.'],
+    prompts: ["Pasa 'Order the deck oven' a Done.", '¿Qué está esperando a alguien?', 'Añade una decisión: abrimos a las 7:00.'],
   },
 }
 
@@ -85,32 +87,6 @@ export const lang = () => {
   return WORDS[short] ? short : 'en'
 }
 
-export const parseCsv = (text) => {
-  const rows = []
-  let row = []
-  let cell = ''
-  let quoted = false
-  for (let i = 0; i < text.length; i++) {
-    const c = text[i]
-    if (quoted) {
-      if (c === '"' && text[i + 1] === '"') { cell += '"'; i++ }
-      else if (c === '"') quoted = false
-      else cell += c
-    } else if (c === '"') quoted = true
-    else if (c === ',') { row.push(cell); cell = '' }
-    else if (c === '\n' || c === '\r') {
-      if (c === '\r' && text[i + 1] === '\n') i++
-      row.push(cell); cell = ''
-      if (row.some((v) => v !== '')) rows.push(row)
-      row = []
-    } else cell += c
-  }
-  row.push(cell)
-  if (row.some((v) => v !== '')) rows.push(row)
-  const [head, ...body] = rows
-  return body.map((r) => Object.fromEntries(head.map((h, i) => [h.trim(), (r[i] ?? '').trim()])))
-}
-
 export const parseDecisions = (md) =>
   md.split('\n')
     .filter((line) => /^\|\s*\d{4}-\d{2}-\d{2}/.test(line))
@@ -118,20 +94,6 @@ export const parseDecisions = (md) =>
       const [date, decision, who, why, task] = line.split('|').slice(1, -1).map((s) => s.trim())
       return { date, decision, who, why, task }
     })
-
-{/* A `.csv?raw` import arrives as a file link, not text, so read it. Text is used as is. */}
-
-export const useText = (source) => {
-  const isLink = /^(blob|data|https?):/.test(source)
-  const [text, setText] = React.useState(isLink ? null : source)
-  React.useEffect(() => {
-    if (!isLink) return
-    let live = true
-    fetch(source).then((r) => r.text()).then((t) => live && setText(t)).catch(() => live && setText(''))
-    return () => { live = false }
-  }, [source])
-  return text
-}
 
 export const DAY = 86400000
 export const toDate = (iso) => new Date(`${iso}T12:00:00`)
@@ -150,9 +112,10 @@ export const Avatar = ({ person, size = 28 }) => (
 export const TeamHome = () => {
   const code = lang()
   const w = WORDS[code]
-  const csv = useText(TASKS_CSV)
-  const tasks = csv ? parseCsv(csv) : []
-  const loading = csv === null
+  // The shared board's tasks; where the store cannot open, the readable copy Kunobi keeps of it.
+  const live = useStore('team-tasks')
+  const shared = useStoreStatus('team-tasks')?.status === 'open'
+  const tasks = (shared && live?.tasks ? live.tasks : SEED.tasks).map((t) => Object.fromEntries(Object.entries(t).map(([k, v]) => [k, v ?? ''])))
   const decisions = parseDecisions(DECISIONS_MD).slice(0, 3)
   const people = Object.fromEntries(TEAM.people.map((p) => [p.id, p]))
   const projectColor = Object.fromEntries(TEAM.projects.map((p) => [p.id, p.color]))
@@ -314,7 +277,7 @@ export const TeamHome = () => {
           <section className="panel">
             <h2>{w.week} <small>{fmtShort.format(today)} – {fmtShort.format(new Date(today.getTime() + 7 * DAY))}</small></h2>
             <p className="note">{w.weekNote}</p>
-            {soon.length ? soon.map((t) => <TaskRow t={t} key={t.id} />) : loading ? null : <div className="empty">{w.nothing}</div>}
+            {soon.length ? soon.map((t) => <TaskRow t={t} key={t.id} />) : <div className="empty">{w.nothing}</div>}
             {doing.length ? <div className="sub">{w.doing}</div> : null}
             {doing.map((t) => <TaskRow t={t} key={t.id} />)}
           </section>

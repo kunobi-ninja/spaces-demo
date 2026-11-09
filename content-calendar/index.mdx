@@ -3,6 +3,7 @@ title: Content calendar
 description: "A café's November posts in one place: a month view, a week list and a board, all from one file."
 kunobi:
   page-layout: wide
+  stores: [content-calendar-posts]
 ---
 
 import '@fontsource/parkinsans/600.css'
@@ -11,9 +12,10 @@ import '@fontsource/figtree/400.css'
 import '@fontsource/figtree/600.css'
 import posts from './data/posts.json'
 import settings from './data/calendar.json'
-import { ContentCalendar } from './src/calendar'
+import { useStoreStatus } from 'kunobi'
+import { ContentCalendar, STORE } from './src/calendar'
 
-{/* Every post lives in data/posts.json; the team, colours and today's date in data/calendar.json. */}
+{/* Every post lives in the content-calendar-posts store, saved to data/posts.json; the team, colours and today's date in data/calendar.json. */}
 
 export const WORDS = {
   en: {
@@ -21,7 +23,9 @@ export const WORDS = {
     today: 'Today', week: 'Week', nothing: 'Nothing planned.', close: 'Close',
     date: 'Date', owner: 'Owner', state: 'Status', campaign: 'Campaign', id: 'ID',
     openDraft: 'Open the draft', noDraft: 'No draft yet.',
-    change: 'This page shows data/posts.json. To change it, edit the file or ask your AI:',
+    change: 'This page shows data/posts.json. Ask your AI:',
+    changeEdit: 'Open a post to move it to another day or change its status, or ask your AI:',
+    saving: 'Saving…',
     prompts: ['“Move P14 to Saturday and mark it in review.”', '“Plan three Instagram posts for the gift boxes in the last week.”'],
     status: { idea: 'Idea', drafting: 'Drafting', review: 'In review', scheduled: 'Scheduled', published: 'Published' },
   },
@@ -30,7 +34,9 @@ export const WORDS = {
     today: 'Hoy', week: 'Semana', nothing: 'Nada planeado.', close: 'Cerrar',
     date: 'Fecha', owner: 'Responsable', state: 'Estado', campaign: 'Campaña', id: 'ID',
     openDraft: 'Abrir el borrador', noDraft: 'Todavía no hay borrador.',
-    change: 'Esta página muestra data/posts.json. Para cambiarla, edita el archivo o pídeselo a tu IA:',
+    change: 'Esta página muestra data/posts.json. Pídeselo a tu IA:',
+    changeEdit: 'Abre un post para moverlo a otro día o cambiar su estado, o pídeselo a tu IA:',
+    saving: 'Guardando…',
     prompts: ['“Mueve P14 al sábado y márcalo en revisión.”', '“Planea tres posts de Instagram para las cajas de regalo en la última semana.”'],
     status: { idea: 'Idea', drafting: 'Borrador', review: 'En revisión', scheduled: 'Programado', published: 'Publicado' },
   },
@@ -43,6 +49,8 @@ export const words = () => {
 
 export const Page = ({ view }) => {
   const w = words()
+  const store = useStoreStatus(STORE)
+  const canEdit = store?.status === 'open' && Boolean(store?.canEdit)
   return (
     <>
       <ContentCalendar posts={posts} settings={settings} words={w} initial={view} />
@@ -51,9 +59,10 @@ export const Page = ({ view }) => {
           .cc-how { width: min(var(--kunobi-prose-width, 1200px), 100%); margin: 0 auto; box-sizing: border-box; padding: 0 24px 40px; font-family: Figtree, system-ui, sans-serif; color: hsl(var(--muted-foreground)); font-size: 14px; line-height: 1.5; }
           .cc-how div { border-top: 1px solid hsl(var(--border)); padding-top: 16px; display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: baseline; }
           .cc-how q { quotes: none; color: hsl(var(--foreground)); font-weight: 600; }
+          .cc-how q::before, .cc-how q::after { content: none; }
         `}</style>
         <div>
-          <span>{w.change}</span>
+          <span>{canEdit ? w.changeEdit : w.change}</span>
           {w.prompts.map((p) => <q key={p}>{p}</q>)}
         </div>
       </div>

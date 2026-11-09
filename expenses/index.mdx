@@ -3,18 +3,22 @@ title: Flat 4B · October
 description: "Four housemates, one month: rent by room size, bills and groceries, and the fewest payments that settle it."
 kunobi:
   page-layout: wide
+  stores: [expenses-ledger]
 ---
 
 import * as React from 'react'
+import { edit, useStore, useStoreStatus } from 'kunobi'
 import '@fontsource/parkinsans/600.css'
 import '@fontsource/parkinsans/800.css'
 import '@fontsource/figtree/400.css'
 import '@fontsource/figtree/600.css'
-import table from './data/expenses.md?raw'
+import saved from './data/expenses.json'
 import group from './data/group.json'
-import { buildLedger } from './src/ledger'
+import { buildLedger, formatSplit, parseSplit } from './src/ledger'
 
-{/* Interface words per language. The page follows the system language and falls back to English. The expenses themselves live in the table in data/expenses.md. */}
+{/* Interface words per language. The page follows the system language and falls back to English. Expenses and payments live in the expenses-ledger store; data/expenses.json is its readable copy. */}
+
+export const STORE = 'expenses-ledger'
 
 export const WORDS = {
   en: {
@@ -22,34 +26,44 @@ export const WORDS = {
     people: 'people', spent: 'spent', perHead: 'per person',
     settleTitle: (n) => (n === 0 ? 'Everyone is square.' : n === 1 ? 'One payment and everyone is square.' : `${['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six'][n] ?? n} payments and everyone is square.`),
     settleLine: 'The fewest payments that settle every balance.',
-    pays: 'pays',
+    pays: 'pays', markPaid: 'Mark paid', paidBack: 'Paid back', paidTo: 'paid', undo: 'Undo',
     paid: 'Paid', share: 'Share', getsBack: 'gets back', owes: 'owes', even: 'even',
     byCategory: 'Where it went', byDay: 'Day by day', byWeek: 'Week by week', weekOf: 'from',
     list: 'Every expense', everyone: 'Everyone', all: 'All',
     paidBy: 'paid by', splitWith: 'split with', theirShare: 'share',
     shown: (n, total) => `${n} expenses · ${total}`,
     none: 'Nothing matches these filters.',
+    add: 'Add expense', newTitle: 'New expense', editTitle: 'Fix this expense',
+    fWhat: 'What for', fAmount: 'Amount', fDate: 'Date', fPaidBy: 'Paid by', fCategory: 'Category', fSplit: 'Split between',
+    whatHint: 'Groceries', save: 'Save', cancel: 'Cancel', edit: 'Edit', del: 'Delete', sure: 'Delete it?', keep: 'Keep',
+    incomplete: 'Add what it was for, an amount and at least one person.',
+    notSaved: 'Not saved', saving: 'Saving…', readOnly: 'Saved copy · read only',
     change: 'How to change this',
-    changeLine: 'This page reads the table in data/expenses.md. Add a row, or ask your AI:',
-    prompts: ['“Add $23.40 of groceries on the 31st, paid by Mei, split between everyone.”', '“Diego was out for curry night: take him out of that split.”'],
-    problems: 'Lines that could not be read',
+    changeLine: 'Expenses and payments are kept in the expenses-ledger store; data/expenses.json is a readable copy. Use the form, or ask your AI:',
+    prompts: ['“Add 18.50 for groceries paid by Amara, split between everyone.”', '“Diego was out for curry night: take him out of that split.”', '“Mei paid Amara back 150 today.”'],
+    problems: 'Entries that could not be read',
   },
   es: {
     kind: 'Gastos compartidos',
     people: 'personas', spent: 'gastado', perHead: 'por persona',
     settleTitle: (n) => (n === 0 ? 'Todos están en paz.' : n === 1 ? 'Un pago y todos en paz.' : `${['', 'Un', 'Dos', 'Tres', 'Cuatro', 'Cinco', 'Seis'][n] ?? n} pagos y todos en paz.`),
     settleLine: 'Los pagos mínimos que saldan todas las cuentas.',
-    pays: 'paga a',
+    pays: 'paga a', markPaid: 'Ya pagó', paidBack: 'Devuelto', paidTo: 'pagó a', undo: 'Deshacer',
     paid: 'Pagó', share: 'Le toca', getsBack: 'recibe', owes: 'debe', even: 'en paz',
     byCategory: 'En qué se fue', byDay: 'Día a día', byWeek: 'Semana a semana', weekOf: 'desde',
     list: 'Todos los gastos', everyone: 'Todos', all: 'Todo',
     paidBy: 'pagó', splitWith: 'entre', theirShare: 'le toca',
     shown: (n, total) => `${n} gastos · ${total}`,
     none: 'Nada coincide con estos filtros.',
+    add: 'Añadir gasto', newTitle: 'Nuevo gasto', editTitle: 'Corregir gasto',
+    fWhat: 'Concepto', fAmount: 'Importe', fDate: 'Fecha', fPaidBy: 'Pagó', fCategory: 'Categoría', fSplit: 'Entre',
+    whatHint: 'Compra', save: 'Guardar', cancel: 'Cancelar', edit: 'Editar', del: 'Borrar', sure: '¿Borrarlo?', keep: 'No',
+    incomplete: 'Falta el concepto, el importe o alguien con quien dividir.',
+    notSaved: 'No se guardó', saving: 'Guardando…', readOnly: 'Copia guardada · solo lectura',
     change: 'Cómo cambiarlo',
-    changeLine: 'Esta página lee la tabla de data/expenses.md. Añade una fila o pídele a tu IA:',
-    prompts: ['“Añade 23,40 $ de compra el día 31, pagado por Mei, entre todos.”', '“Diego no estuvo en la noche de curry: quítalo de ese gasto.”'],
-    problems: 'Líneas que no se pudieron leer',
+    changeLine: 'Los gastos y pagos están en el almacén expenses-ledger; data/expenses.json es una copia legible. Usa el formulario o pídele a tu IA:',
+    prompts: ['“Añade 18,50 de compra pagado por Amara, entre todos.”', '“Diego no estuvo en la noche de curry: quítalo de ese gasto.”', '“Mei le devolvió hoy 150 a Amara.”'],
+    problems: 'Entradas que no se pudieron leer',
   },
 }
 
@@ -68,7 +82,6 @@ export const formatters = (code) => {
   return {
     money: (cents) => money.format(cents / 100),
     whole: (cents) => new Intl.NumberFormat(locale, { style: 'currency', currency: group.currency, maximumFractionDigits: 0 }).format(Math.round(cents / 100)),
-    original: (amount, currency) => new Intl.NumberFormat(locale, { style: 'currency', currency }).format(amount),
     day: (iso) => day.format(date(iso)),
     short: (iso) => short.format(date(iso)),
     num: (iso) => date(iso).getUTCDate(),
@@ -77,8 +90,21 @@ export const formatters = (code) => {
   }
 }
 
+export const PEOPLE = group.people.map((p) => p.name)
 export const COLOR = Object.fromEntries(group.people.map((p) => [p.name, p.color]))
 export const CAT = Object.fromEntries(group.categories.map((c) => [c.name, c.color]))
+
+export const today = () => {
+  const d = new Date()
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+}
+export const newId = (prefix) => `${prefix}-${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`
+
+{/* Send one change to the store and report anything it refused. */}
+export const send = (change, onProblem) =>
+  Promise.resolve(edit(STORE, change)).then((r) => {
+    if (r && r.status && r.status !== 'applied' && r.status !== 'unchanged') onProblem(r.reason || r.status)
+  }, (err) => onProblem(String(err?.message ?? err)))
 
 export const Face = ({ name, size = 32, ring }) => (
   <span className="face" style={{ width: size, height: size, background: COLOR[name] ?? '#94a3b8', fontSize: size * 0.42, boxShadow: ring ? `0 0 0 3px ${ring}` : undefined }} title={name}>
@@ -86,7 +112,58 @@ export const Face = ({ name, size = 32, ring }) => (
   </span>
 )
 
-export const Settle = ({ ledger, w, f }) => (
+export const ExpenseForm = ({ initial, title, w, onSave, onCancel }) => {
+  const start = parseSplit(initial?.split ?? 'everyone', PEOPLE) ?? PEOPLE.map((p) => [p, 1])
+  const [what, setWhat] = React.useState(initial?.what ?? '')
+  const [amount, setAmount] = React.useState(initial?.amount ? (initial.amount / 100).toFixed(2) : '')
+  const [date, setDate] = React.useState(initial?.date ?? today())
+  const [paidBy, setPaidBy] = React.useState(initial?.paid_by ?? PEOPLE[0])
+  const [category, setCategory] = React.useState(initial?.category ?? 'Groceries')
+  const [weights, setWeights] = React.useState(Object.fromEntries(start))
+  const [problem, setProblem] = React.useState(null)
+  const toggle = (name) => setWeights((cur) => {
+    const next = { ...cur }
+    if (next[name]) delete next[name]
+    else next[name] = 1
+    return next
+  })
+  const submit = (ev) => {
+    ev.preventDefault()
+    const cents = Math.round(Number(String(amount).replace(',', '.')) * 100)
+    const split = PEOPLE.filter((p) => weights[p]).map((p) => [p, weights[p]])
+    if (!what.trim() || !(cents > 0) || split.length === 0) return setProblem(w.incomplete)
+    onSave({ date: date || today(), what: what.trim(), category, paid_by: paidBy, amount: cents, split: formatSplit(split, PEOPLE) })
+  }
+  return (
+    <form className="form" onSubmit={submit}>
+      <div className="form-title">{title}</div>
+      <label className="f-what"><span>{w.fWhat}</span><input value={what} placeholder={w.whatHint} onChange={(e) => setWhat(e.target.value)} autoFocus /></label>
+      <label className="f-amount"><span>{w.fAmount}</span><input inputMode="decimal" value={amount} placeholder="0.00" onChange={(e) => setAmount(e.target.value)} /></label>
+      <label className="f-date"><span>{w.fDate}</span><input type="date" value={date} onChange={(e) => setDate(e.target.value)} /></label>
+      <label className="f-paid"><span>{w.fPaidBy}</span>
+        <select value={paidBy} onChange={(e) => setPaidBy(e.target.value)}>{PEOPLE.map((p) => <option key={p} value={p}>{p}</option>)}</select>
+      </label>
+      <label className="f-cat"><span>{w.fCategory}</span>
+        <select value={category} onChange={(e) => setCategory(e.target.value)}>{group.categories.map((c) => <option key={c.name} value={c.name}>{c.name}</option>)}</select>
+      </label>
+      <fieldset className="f-split">
+        <legend>{w.fSplit}</legend>
+        {PEOPLE.map((p) => (
+          <button type="button" key={p} className={`chip${weights[p] ? ' on' : ''}`} aria-pressed={Boolean(weights[p])} onClick={() => toggle(p)}>
+            <Face name={p} size={18} />{p}{weights[p] > 1 ? ` ×${weights[p]}` : ''}
+          </button>
+        ))}
+      </fieldset>
+      {problem && <div className="form-problem">{problem}</div>}
+      <div className="form-actions">
+        <button type="button" className="btn" onClick={onCancel}>{w.cancel}</button>
+        <button type="submit" className="btn primary">{w.save}</button>
+      </div>
+    </form>
+  )
+}
+
+export const Settle = ({ ledger, w, f, canEdit, onPaid, onUndo }) => (
   <section className="settle">
     <div className="settle-head">
       <div className="settle-kicker">{w.settleLine}</div>
@@ -105,9 +182,25 @@ export const Settle = ({ ledger, w, f }) => (
           </span>
           <span className="who"><Face name={t.to} size={44} /><b>{t.to}</b></span>
           <span className="amount">{f.money(t.cents)}</span>
+          {canEdit && <button className="btn sun mark" onClick={() => onPaid(t)}>{w.markPaid}</button>}
         </li>
       ))}
     </ol>
+    {ledger.payments.length > 0 && (
+      <div className="repaid">
+        <div className="repaid-title">{w.paidBack}</div>
+        <ul>
+          {ledger.payments.map((p) => (
+            <li key={p.id}>
+              <Face name={p.from} size={22} /><span><b>{p.from}</b> {w.paidTo} <b>{p.to}</b></span>
+              <span className="repaid-amount">{f.money(p.cents)}</span>
+              <span className="repaid-date">{f.dm(p.date)}</span>
+              {canEdit && <button className="link light" onClick={() => onUndo(p.id)}>{w.undo}</button>}
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
   </section>
 )
 
@@ -155,7 +248,7 @@ export const ByCategory = ({ ledger, w, f }) => {
           <div className="bar-row" key={r.name}>
             <span className="bar-label"><i style={{ background: r.color }} />{r.name}</span>
             <span className="bar-track"><span className="bar-fill" style={{ width: `${(r.cents / max) * 100}%`, background: r.color }} /></span>
-            <span className="bar-value">{f.money(r.cents)}<small>{Math.round((r.cents / ledger.total) * 100)}%</small></span>
+            <span className="bar-value">{f.money(r.cents)}<small>{Math.round((r.cents / Math.max(ledger.total, 1)) * 100)}%</small></span>
           </div>
         ))}
       </div>
@@ -163,9 +256,9 @@ export const ByCategory = ({ ledger, w, f }) => {
   )
 }
 
-export const ByDay = ({ ledger, w, f }) => {
+export const ByDay = ({ ledger, span, w, f }) => {
   const days = []
-  for (let d = new Date(`${group.from}T12:00:00Z`); d <= new Date(`${group.to}T12:00:00Z`); d.setUTCDate(d.getUTCDate() + 1)) days.push(d.toISOString().slice(0, 10))
+  for (let d = new Date(`${span.from}T12:00:00Z`); d <= new Date(`${span.to}T12:00:00Z`); d.setUTCDate(d.getUTCDate() + 1)) days.push(d.toISOString().slice(0, 10))
   // A short stay shows each day; a month shows weeks, counted from the first day.
   const weekly = days.length > 10
   const buckets = weekly
@@ -190,9 +283,11 @@ export const ByDay = ({ ledger, w, f }) => {
   )
 }
 
-export const List = ({ ledger, w, f }) => {
+export const List = ({ ledger, rows: stored, w, f, canEdit, onSave, onDelete }) => {
   const [who, setWho] = React.useState(null)
   const [cat, setCat] = React.useState(null)
+  const [editing, setEditing] = React.useState(null)
+  const [confirming, setConfirming] = React.useState(null)
   const cats = group.categories.filter((c) => ledger.expenses.some((e) => e.category === c.name))
   const rows = ledger.expenses.filter((e) => (!who || e.shares[who] !== undefined || e.paidBy === who) && (!cat || e.category === cat))
   const shownTotal = rows.reduce((s, e) => s + (who ? e.shares[who] ?? 0 : e.cents), 0)
@@ -226,11 +321,18 @@ export const List = ({ ledger, w, f }) => {
             <span>{f.day(iso)}</span>
             <span>{f.money(items.reduce((s, e) => s + (who ? e.shares[who] ?? 0 : e.cents), 0))}</span>
           </div>
-          {items.map((e, i) => {
+          {items.map((e) => {
+            if (canEdit && editing === e.id && stored?.[e.id]) {
+              return (
+                <div className="row-form" key={e.id}>
+                  <ExpenseForm initial={stored[e.id]} title={w.editTitle} w={w} onCancel={() => setEditing(null)} onSave={(values) => { setEditing(null); onSave(e.id, values) }} />
+                </div>
+              )
+            }
             const names = Object.keys(e.shares)
             const all = names.length === group.people.length && names.every((n) => e.weights[n] === 1)
             return (
-              <div className="row" key={`${iso}-${i}`}>
+              <div className="row" key={e.id}>
                 <i className="row-cat" style={{ background: CAT[e.category] ?? '#94a3b8' }} />
                 <div className="row-main">
                   <div className="row-what">{e.what}</div>
@@ -247,7 +349,19 @@ export const List = ({ ledger, w, f }) => {
                 </div>
                 <div className="row-amount">
                   <b>{f.money(who ? e.shares[who] ?? 0 : e.cents)}</b>
-                  <small>{who ? `${w.theirShare} · ${f.money(e.cents)}` : e.currency !== group.currency ? f.original(e.amount, e.currency) : ''}</small>
+                  {who && <small>{`${w.theirShare} · ${f.money(e.cents)}`}</small>}
+                  {canEdit && (confirming === e.id ? (
+                    <span className="row-actions">
+                      <span className="sure">{w.sure}</span>
+                      <button className="link danger" onClick={() => { setConfirming(null); onDelete(e.id) }}>{w.del}</button>
+                      <button className="link" onClick={() => setConfirming(null)}>{w.keep}</button>
+                    </span>
+                  ) : (
+                    <span className="row-actions">
+                      <button className="link" onClick={() => { setConfirming(null); setEditing(e.id) }}>{w.edit}</button>
+                      <button className="link" onClick={() => setConfirming(e.id)}>{w.del}</button>
+                    </span>
+                  ))}
                 </div>
               </div>
             )
@@ -263,7 +377,24 @@ export const Expenses = () => {
   const code = lang()
   const w = WORDS[code]
   const f = formatters(code)
-  const ledger = React.useMemo(() => buildLedger(table, group), [])
+  const live = useStore(STORE)
+  const status = useStoreStatus(STORE)
+  // Without the store (other builds, previews), show the last saved copy, read-only.
+  const open = Boolean(status?.status === 'open' && live)
+  const canEdit = open && Boolean(status?.canEdit)
+  const saving = open && status?.saved === false
+  const data = open ? live : saved
+  const ledger = React.useMemo(() => buildLedger(data, group), [data])
+  const last = ledger.expenses.reduce((m, e) => (e.date > m ? e.date : m), group.to)
+  const span = { from: group.from, to: last }
+  const [adding, setAdding] = React.useState(false)
+  const [problem, setProblem] = React.useState(null)
+  const report = (reason) => setProblem(`${w.notSaved}: ${reason}`)
+  const change = (fn) => { setProblem(null); send(fn, report) }
+  const saveExpense = (id, values) => change((d) => { d.expenses[id] = values })
+  const deleteExpense = (id) => change((d) => { delete d.expenses[id] })
+  const markPaid = (t) => change((d) => { d.payments[newId('p')] = { date: today(), from: t.from, to: t.to, amount: t.cents } })
+  const undoPayment = (id) => change((d) => { delete d.payments[id] })
   return (
     <div className="exp">
       <style>{`
@@ -271,11 +402,13 @@ export const Expenses = () => {
         .exp h1, .exp h2, .exp h3 { font-family: Parkinsans, Figtree, sans-serif; letter-spacing: -0.02em; margin: 0; }
         .face { display: inline-grid; place-items: center; flex: none; border-radius: 999px; color: #06213f; font-family: Parkinsans, sans-serif; font-weight: 800; line-height: 1; }
         .top { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px 24px; margin: 8px 0 20px; }
-        .kind { display: inline-flex; align-items: center; gap: 8px; padding: 5px 12px; border-radius: 999px; background: hsl(var(--muted)); font: 600 13px Figtree, sans-serif; color: var(--soft); margin-bottom: 12px; }
+        .kinds { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+        .kind { display: inline-flex; align-items: center; gap: 8px; padding: 5px 12px; border-radius: 999px; background: hsl(var(--muted)); font: 600 13px Figtree, sans-serif; color: var(--soft); }
         .kind i { width: 8px; height: 8px; border-radius: 99px; background: #f3aa08; }
+        .kind.saving i { background: #5bcbf9; }
         .top h1 { font-weight: 800; font-size: clamp(30px, 4.4cqw, 48px); line-height: 1.02; }
         .top-meta { margin-top: 8px; color: var(--soft); font-size: 16px; }
-        .stats { display: flex; gap: 10px; flex-wrap: wrap; }
+        .stats { display: flex; gap: 10px; flex-wrap: wrap; align-items: stretch; }
         .stat { padding: 12px 16px; border-radius: 18px; background: hsl(var(--card)); border: 1px solid hsl(var(--border)); min-width: 120px; }
         .stat b { display: block; font: 800 22px Parkinsans, sans-serif; letter-spacing: -0.02em; }
         .stat span { font-size: 13px; color: var(--soft); }
@@ -283,12 +416,40 @@ export const Expenses = () => {
         .faces .face + .face { margin-left: -8px; }
         .faces .face { box-shadow: 0 0 0 3px hsl(var(--background)); }
 
+        .btn { all: unset; box-sizing: border-box; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 16px; border-radius: 14px; background: hsl(var(--muted)); color: var(--ink); font: 600 14.5px Figtree, sans-serif; white-space: nowrap; }
+        .btn.primary { background: #f3aa08; color: #06213f; }
+        .btn.big { padding: 12px 18px; border-radius: 18px; font-size: 15px; }
+        .btn.sun { background: rgba(243,170,8,0.16); color: #ffc94a; border: 1px solid rgba(243,170,8,0.45); padding: 8px 14px; font-size: 13.5px; }
+        .btn:focus-visible, .link:focus-visible { outline: 2px solid #0984c8; outline-offset: 2px; }
+        .link { all: unset; cursor: pointer; font: 600 12.5px Figtree, sans-serif; color: var(--soft); }
+        .link:hover { color: var(--ink); }
+        .link.danger { color: var(--down); }
+        .link.light { color: rgba(255,255,255,0.7); }
+        .link.light:hover { color: #fff; }
+        .notice { margin: -8px 0 14px; padding: 10px 14px; border-radius: 14px; border: 1px solid #f3aa08; font-size: 14px; }
+
+        .form { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; padding: 18px; border-radius: 22px; background: hsl(var(--card)); border: 1px solid hsl(var(--border)); margin-bottom: 14px; }
+        .row-form .form { margin: 0; border: none; border-radius: 0; border-top: 1px solid hsl(var(--border)); grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 14px 16px; }
+        .form-title { grid-column: 1 / -1; font: 800 18px Parkinsans, sans-serif; letter-spacing: -0.02em; }
+        .form label { display: grid; gap: 5px; min-width: 0; }
+        .form label > span, .form legend { font: 600 12.5px Figtree, sans-serif; color: var(--soft); }
+        .form input, .form select { box-sizing: border-box; width: 100%; min-width: 0; height: 42px; padding: 0 12px; -webkit-appearance: none; appearance: none; border-radius: 12px; border: 1px solid hsl(var(--border)); background: hsl(var(--background)); color: var(--ink); font: 400 15px Figtree, sans-serif; }
+        .form select { padding-right: 34px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%23888' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; }
+        .form input::placeholder { color: var(--soft); opacity: 0.6; }
+        .form input:focus, .form select:focus { outline: 2px solid #0984c8; outline-offset: 0; }
+        .f-what { grid-column: span 2; }
+        .row-form .f-what { grid-column: 1 / -1; }
+        .f-split { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 8px; border: none; margin: 0; padding: 0; }
+        .f-split legend { padding: 0; margin-bottom: 6px; }
+        .form-problem { grid-column: 1 / -1; color: var(--down); font-size: 14px; }
+        .form-actions { grid-column: 1 / -1; display: flex; justify-content: flex-end; gap: 8px; }
+
         .settle { position: relative; overflow: hidden; border-radius: 28px; padding: clamp(22px, 3.4cqw, 36px); color: #fff; background: radial-gradient(120% 160% at 0% 0%, #0b2d52 0%, #06213f 55%, #031426 100%); box-shadow: 0 18px 50px rgba(6,33,63,0.22); }
-        .settle::after { content: ''; position: absolute; right: -80px; top: -80px; width: 260px; height: 260px; border-radius: 50%; background: radial-gradient(circle, rgba(243,170,8,0.35), transparent 70%); }
+        .settle::after { content: ''; position: absolute; right: -80px; top: -80px; width: 260px; height: 260px; border-radius: 50%; background: radial-gradient(circle, rgba(243,170,8,0.35), transparent 70%); pointer-events: none; }
         .settle-kicker { color: rgba(255,255,255,0.7); font-size: 15px; margin-bottom: 6px; }
         .settle h2 { font-weight: 800; font-size: clamp(24px, 3.4cqw, 38px); line-height: 1.08; max-width: 22ch; }
         .transfers { list-style: none; margin: 22px 0 0; padding: 0; display: grid; gap: 10px; position: relative; z-index: 1; }
-        .transfers li { display: grid; grid-template-columns: minmax(0, 190px) 132px minmax(0, 1fr) auto; align-items: center; gap: 14px; padding: 14px 18px; border-radius: 20px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.08); }
+        .transfers li { display: grid; grid-template-columns: minmax(0, 190px) 132px minmax(0, 1fr) auto auto; align-items: center; gap: 14px; padding: 14px 18px; border-radius: 20px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.08); }
         .who { display: flex; align-items: center; gap: 12px; min-width: 0; }
         .who b { font: 600 18px Figtree, sans-serif; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .flow { display: grid; justify-items: center; gap: 2px; color: rgba(255,255,255,0.55); font-size: 12px; }
@@ -296,6 +457,13 @@ export const Expenses = () => {
         .flow line { stroke: #f3aa08; stroke-width: 2.5; stroke-linecap: round; stroke-dasharray: 5 7; animation: dash 1.4s linear infinite; }
         .flow path { fill: #f3aa08; }
         .amount { font: 800 clamp(20px, 2.6cqw, 28px) Parkinsans, sans-serif; letter-spacing: -0.02em; color: #f3aa08; text-align: right; }
+        .repaid { position: relative; z-index: 1; margin-top: 18px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.12); }
+        .repaid-title { font: 600 13px Figtree, sans-serif; color: rgba(255,255,255,0.6); margin-bottom: 8px; }
+        .repaid ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+        .repaid li { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; font-size: 14.5px; color: rgba(255,255,255,0.85); }
+        .repaid li b { color: #fff; font-weight: 600; }
+        .repaid-amount { font-weight: 600; color: #ffc94a; font-variant-numeric: tabular-nums; }
+        .repaid-date { color: rgba(255,255,255,0.55); font-size: 13px; }
 
         .balances { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 14px; }
         .balance { padding: 16px; border-radius: 22px; background: hsl(var(--card)); border: 1px solid hsl(var(--border)); }
@@ -322,7 +490,7 @@ export const Expenses = () => {
         .bar-fill { display: block; height: 100%; border-radius: 99px; }
         .bar-value { font-weight: 600; font-variant-numeric: tabular-nums; text-align: right; min-width: 104px; }
         .bar-value small { margin-left: 8px; color: var(--soft); font-weight: 400; }
-        .columns { display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; height: 200px; align-items: end; }
+        .columns { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 8px; height: 200px; align-items: end; }
         .col { display: grid; grid-template-rows: auto 1fr auto; height: 100%; gap: 6px; text-align: center; cursor: default; }
         .col-value { font-size: 11.5px; color: var(--soft); font-variant-numeric: tabular-nums; white-space: nowrap; opacity: 0.85; }
         .col.on .col-value { color: var(--ink); opacity: 1; font-weight: 600; }
@@ -344,15 +512,17 @@ export const Expenses = () => {
         .day { break-inside: avoid; border-radius: 22px; background: hsl(var(--card)); border: 1px solid hsl(var(--border)); margin-bottom: 10px; overflow: hidden; }
         .day-head { display: flex; justify-content: space-between; padding: 10px 18px; font: 600 13px Figtree, sans-serif; color: var(--soft); background: hsl(var(--muted) / 0.5); text-transform: capitalize; }
         .row { display: grid; grid-template-columns: 4px 1fr auto; gap: 12px; align-items: center; padding: 10px 16px; border-top: 1px solid hsl(var(--border)); }
-        .day-head + .row { border-top: none; }
+        .day-head + .row, .day-head + .row-form .form { border-top: none; }
         .row-cat { align-self: stretch; border-radius: 4px; }
         .row-what { font-weight: 600; font-size: 15px; }
         .row-meta { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 3px; font-size: 13px; color: var(--soft); align-items: center; }
         .row-pay, .row-split { display: inline-flex; align-items: center; gap: 6px; }
         .mini { display: inline-flex; align-items: center; gap: 2px; font-weight: 600; }
-        .row-amount { text-align: right; font-variant-numeric: tabular-nums; }
+        .row-amount { text-align: right; font-variant-numeric: tabular-nums; display: grid; justify-items: end; gap: 2px; }
         .row-amount b { font: 700 16px Figtree, sans-serif; }
-        .row-amount small { display: block; font-size: 12px; color: var(--soft); }
+        .row-amount small { font-size: 12px; color: var(--soft); }
+        .row-actions { display: inline-flex; gap: 10px; align-items: baseline; }
+        .sure { font-size: 12.5px; color: var(--soft); }
         .empty { padding: 28px; text-align: center; color: var(--soft); border-radius: 22px; border: 1px dashed hsl(var(--border)); }
 
         .change { margin-top: 26px; padding: 18px 20px; border-radius: 22px; background: hsl(var(--muted) / 0.6); display: grid; gap: 8px; }
@@ -369,16 +539,20 @@ export const Expenses = () => {
           .balances { grid-template-columns: repeat(2, minmax(0, 1fr)); }
           .charts { grid-template-columns: 1fr; }
           .days { columns: 1; }
+          .form { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+          .f-what { grid-column: 1 / -1; }
         }
         @container (max-width: 560px) {
           .exp { padding: 12px 14px 40px; }
-          .transfers li { grid-template-columns: auto 64px auto 1fr; grid-template-areas: 'a f b .' 'm m m m'; row-gap: 8px; gap: 10px; padding: 12px 14px; }
-          .flow svg { width: 56px; }
+          .transfers li { grid-template-columns: auto 48px minmax(0, 1fr); grid-template-areas: 'a f b' 'm m p'; row-gap: 8px; gap: 10px; padding: 12px 14px; }
+          .who { gap: 8px; }
+          .flow svg { width: 44px; }
           .flow-word { display: none; }
           .transfers li > .who:first-child { grid-area: a; }
           .transfers li > .flow { grid-area: f; }
           .transfers li > .who:nth-child(3) { grid-area: b; }
           .transfers li > .amount { grid-area: m; text-align: left; }
+          .transfers li > .mark { grid-area: p; justify-self: end; }
           .who b { font-size: 16px; }
           .balances { grid-template-columns: 1fr 1fr; gap: 10px; }
           .balance { padding: 14px; }
@@ -390,29 +564,42 @@ export const Expenses = () => {
           .col-value { visibility: hidden; font-size: 10.5px; }
           .col.on .col-value { visibility: visible; }
           .sep { display: none; }
+          .stats { width: 100%; }
+          .stats .btn.big { flex: 1 1 100%; }
         }
       `}</style>
 
       <header className="top">
         <div>
-          <div className="kind"><i />{w.kind}</div>
+          <div className="kinds">
+            <div className="kind"><i />{w.kind}</div>
+            {saving && <div className="kind saving" role="status"><i />{w.saving}</div>}
+            {!open && <div className="kind">{w.readOnly}</div>}
+          </div>
           <h1>{group.title}</h1>
-          <div className="top-meta">{f.range(group.from, group.to)}</div>
+          <div className="top-meta">{f.range(span.from, span.to)}</div>
           <div className="faces">{group.people.map((p) => <Face key={p.name} name={p.name} size={30} />)}</div>
         </div>
         <div className="stats">
           <div className="stat"><b>{f.money(ledger.total)}</b><span>{w.spent}</span></div>
           <div className="stat"><b>{f.money(Math.round(ledger.total / group.people.length))}</b><span>{w.perHead}</span></div>
+          {canEdit && !adding && <button className="btn primary big" onClick={() => setAdding(true)}>+ {w.add}</button>}
         </div>
       </header>
 
-      <Settle ledger={ledger} w={w} f={f} />
+      {problem && <div className="notice" role="alert">{problem}</div>}
+
+      {canEdit && adding && (
+        <ExpenseForm title={w.newTitle} w={w} onCancel={() => setAdding(false)} onSave={(values) => { setAdding(false); saveExpense(newId('e'), values) }} />
+      )}
+
+      <Settle ledger={ledger} w={w} f={f} canEdit={canEdit} onPaid={markPaid} onUndo={undoPayment} />
       <Balances ledger={ledger} w={w} f={f} />
       <div className="charts">
         <ByCategory ledger={ledger} w={w} f={f} />
-        <ByDay ledger={ledger} w={w} f={f} />
+        <ByDay ledger={ledger} span={span} w={w} f={f} />
       </div>
-      <List ledger={ledger} w={w} f={f} />
+      <List ledger={ledger} rows={data?.expenses} w={w} f={f} canEdit={canEdit} onSave={saveExpense} onDelete={deleteExpense} />
 
       {ledger.errors.length > 0 && (
         <div className="problems"><b>{w.problems}</b><ul>{ledger.errors.map((e) => <li key={e}>{e}</li>)}</ul></div>

@@ -1,10 +1,16 @@
 /**
  * Shared costs, worked out in whole cents so every split adds up exactly.
  *
- * A `split` is `everyone`, or names separated by `;`. `Name*2` gives that person two shares.
- * Each expense is divided by largest remainder: everyone gets the floor of their exact share,
- * and the cents left over go to the largest fractions (ties in the order the names are listed).
+ * The expenses and settle-up payments live in the `expenses-ledger` store (readable copy:
+ * data/expenses.json). Amounts are cents in the group's currency.
+ *
+ * A `split` is `everyone`, or names separated by `;`. `Name*2` gives that person two shares:
+ * rent is split by room size (Amara and Diego have the bigger rooms). Each expense is divided
+ * by largest remainder: everyone gets the floor of their exact share, and the cents left over
+ * go to the largest fractions (ties in the order the names are listed).
  */
+
+import type { ExpensesLedgerStore } from '../types/expenses-ledger.store'
 
 export interface Person { name: string; color: string }
 export interface Category { name: string; color: string }
@@ -13,79 +19,55 @@ export interface Group {
   from: string
   to: string
   currency: string
-  rates: Record<string, number>
   people: Person[]
   categories: Category[]
 }
 
 export interface Expense {
+  id: string
   date: string
   what: string
   category: string
   paidBy: string
-  amount: number
-  currency: string
-  /** The cost in the group's currency, in cents. */
+  split: string
+  /** The cost in cents. */
   cents: number
   /** Cents each person owes for this expense. */
   shares: Record<string, number>
   weights: Record<string, number>
 }
 
+export interface Payment { id: string; date: string; from: string; to: string; cents: number }
 export interface Transfer { from: string; to: string; cents: number }
 
 export interface Ledger {
   expenses: Expense[]
+  payments: Payment[]
   paid: Record<string, number>
   owed: Record<string, number>
-  /** Paid minus owed. Positive: the group owes them. */
+  /** Paid minus owed, after settle-up payments. Positive: the group owes them. */
   balance: Record<string, number>
   transfers: Transfer[]
   total: number
   errors: string[]
 }
 
-/**
- * Rows from a Markdown table (the first one in the text) or, failing that, CSV. A Markdown
- * table keeps the data readable as a page of its own.
- */
-export function parseRows(text: string): Record<string, string>[] {
-  const lines = text.split(/\r?\n/).map((l) => l.trim()).filter((l) => l.startsWith('|'))
-  if (lines.length < 2) return parseCsv(text)
-  const cells = (line: string) => line.replace(/^\|/, '').replace(/\|$/, '').split('|').map((c) => c.trim())
-  const keys = cells(lines[0])
-  return lines
-    .slice(1)
-    .filter((l) => !/^\|?\s*:?-{3,}/.test(l))
-    .map((l) => Object.fromEntries(keys.map((k, i) => [k, cells(l)[i] ?? ''])))
+/** `everyone` or `A;B*2` as weights, or null when a name or weight is not valid. */
+export function parseSplit(split: string, people: string[]): [string, number][] | null {
+  const text = (split || 'everyone').trim()
+  if (text.toLowerCase() === 'everyone') return people.map((p) => [p, 1])
+  const weights = text.split(';').filter((s) => s.trim()).map((part): [string, number] => {
+    const [name, w] = part.trim().split('*')
+    return [name.trim(), w ? Number(w) : 1]
+  })
+  if (!weights.length || weights.some(([name, w]) => !people.includes(name) || !(Number.isInteger(w) && w > 0))) return null
+  return weights
 }
 
-/** CSV with quoted fields and doubled quotes. */
-export function parseCsv(text: string): Record<string, string>[] {
-  const rows: string[][] = []
-  let row: string[] = []
-  let field = ''
-  let quoted = false
-  for (let i = 0; i < text.length; i++) {
-    const c = text[i]
-    if (quoted) {
-      if (c === '"' && text[i + 1] === '"') { field += '"'; i++ }
-      else if (c === '"') quoted = false
-      else field += c
-    } else if (c === '"') quoted = true
-    else if (c === ',') { row.push(field); field = '' }
-    else if (c === '\n' || c === '\r') {
-      if (c === '\r' && text[i + 1] === '\n') i++
-      row.push(field); field = ''
-      if (row.some((cell) => cell.trim() !== '')) rows.push(row)
-      row = []
-    } else field += c
-  }
-  row.push(field)
-  if (row.some((cell) => cell.trim() !== '')) rows.push(row)
-  const [head = [], ...body] = rows
-  const keys = head.map((k) => k.trim())
-  return body.map((cells) => Object.fromEntries(keys.map((k, i) => [k, (cells[i] ?? '').trim()])))
+/** Weights back to the store's text: `everyone` when all are in with one share each. */
+export function formatSplit(weights: [string, number][], people: string[]): string {
+  if (weights.length === people.length && weights.every(([, w]) => w === 1)) return 'everyone'
+  return weights.map(([n, w]) => (w > 1 ? `${n}*${w}` : n)).join(';')
 }
 
 /** Split `cents` by integer weights, exactly. */
@@ -155,47 +137,51 @@ export function settle(balance: Record<string, number>, order: string[]): Transf
   return transfers.sort((a, b) => b.cents - a.cents)
 }
 
-export function buildLedger(text: string, group: Group): Ledger {
+const byDate = <T extends { date: string; id: string }>(a: T, b: T) => a.date.localeCompare(b.date) || a.id.localeCompare(b.id)
+
+/** Balances and the payments that settle them, from the store's data. */
+export function buildLedger(data: Partial<ExpensesLedgerStore> | undefined, group: Group): Ledger {
   const people = group.people.map((p) => p.name)
   const errors: string[] = []
   const paid = Object.fromEntries(people.map((p) => [p, 0]))
   const owed = Object.fromEntries(people.map((p) => [p, 0]))
   const expenses: Expense[] = []
-  parseRows(text).forEach((row, i) => {
-    const line = i + 1
-    const amount = Number(row.amount)
-    const currency = (row.currency || group.currency).toUpperCase()
-    const rate = currency === group.currency ? 1 : group.rates?.[currency]
-    if (!Number.isFinite(amount) || amount <= 0) return errors.push(`Row ${line}: amount "${row.amount}"`)
-    if (!rate) return errors.push(`Row ${line}: no rate for ${currency}`)
-    if (!people.includes(row.paid_by)) return errors.push(`Row ${line}: unknown payer "${row.paid_by}"`)
-    const split = (row.split || 'everyone').trim()
-    const weights: [string, number][] =
-      split.toLowerCase() === 'everyone'
-        ? people.map((p) => [p, 1])
-        : split.split(';').map((part) => {
-            const [name, w] = part.trim().split('*')
-            return [name.trim(), w ? Number(w) : 1]
-          })
-    const bad = weights.find(([name, w]) => !people.includes(name) || !(w > 0))
-    if (bad) return errors.push(`Row ${line}: split "${split}"`)
-    const cents = Math.round(amount * rate * 100)
+  for (const [id, row] of Object.entries(data?.expenses ?? {})) {
+    const cents = row.amount ?? 0
+    const paidBy = row.paid_by ?? ''
+    const split = row.split ?? 'everyone'
+    if (!(cents > 0)) { errors.push(`${id}: amount`); continue }
+    if (!people.includes(paidBy)) { errors.push(`${id}: who paid`); continue }
+    const weights = parseSplit(split, people)
+    if (!weights) { errors.push(`${id}: split "${split}"`); continue }
     const shares = allocate(cents, weights)
-    paid[row.paid_by] += cents
+    paid[paidBy] += cents
     for (const [name, c] of Object.entries(shares)) owed[name] += c
     expenses.push({
-      date: row.date,
-      what: row.what,
-      category: row.category,
-      paidBy: row.paid_by,
-      amount,
-      currency,
+      id,
+      date: row.date ?? group.from,
+      what: row.what ?? '',
+      category: row.category ?? '',
+      paidBy,
+      split,
       cents,
       shares,
       weights: Object.fromEntries(weights),
     })
-  })
-  const balance = Object.fromEntries(people.map((p) => [p, paid[p] - owed[p]]))
+  }
+  expenses.sort(byDate)
+  const payments: Payment[] = []
+  const sent = Object.fromEntries(people.map((p) => [p, 0]))
+  for (const [id, row] of Object.entries(data?.payments ?? {})) {
+    const cents = row.amount ?? 0
+    if (!(cents > 0) || !row.from || !row.to || row.from === row.to) { errors.push(`${id}: payment`); continue }
+    // Paying someone back moves both of them towards even.
+    sent[row.from] += cents
+    sent[row.to] -= cents
+    payments.push({ id, date: row.date ?? group.to, from: row.from, to: row.to, cents })
+  }
+  payments.sort(byDate)
+  const balance = Object.fromEntries(people.map((p) => [p, paid[p] - owed[p] + sent[p]]))
   const total = expenses.reduce((sum, e) => sum + e.cents, 0)
-  return { expenses, paid, owed, balance, transfers: settle(balance, people), total, errors }
+  return { expenses, payments, paid, owed, balance, transfers: settle(balance, people), total, errors }
 }

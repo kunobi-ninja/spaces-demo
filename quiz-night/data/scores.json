@@ -1,0 +1,31 @@
+{
+  "nights": {
+    "2026-10-16": {
+      "date": "2026-10-16",
+      "points": 15,
+      "winner": "owls"
+    },
+    "2026-10-23": {
+      "date": "2026-10-23",
+      "points": 16,
+      "winner": "foxes"
+    },
+    "2026-10-30": {
+      "date": "2026-10-30",
+      "points": 17,
+      "winner": "owls"
+    }
+  },
+  "tonight": {
+    "foxes": 11,
+    "hedgehogs": 12,
+    "otters": 14,
+    "owls": 17
+  },
+  "total": {
+    "foxes": 39,
+    "hedgehogs": 31,
+    "otters": 37,
+    "owls": 45
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "fields": {
+    "guests": {
+      "fields": {
+        "diet": {
+          "kind": "text"
+        },
+        "household": {
+          "kind": "text"
+        },
+        "name": {
+          "kind": "text"
+        },
+        "note": {
+          "kind": "text"
+        },
+        "party": {
+          "kind": "int",
+          "max": 8,
+          "min": 1
+        },
+        "plusOneOf": {
+          "kind": "text"
+        },
+        "rsvp": {
+          "kind": "enum",
+          "values": [
+            "yes",
+            "maybe",
+            "no",
+            "none"
+          ]
+        },
+        "side": {
+          "kind": "text"
+        },
+        "table": {
+          "kind": "text"
+        }
+      },
+      "kind": "rows"
+    }
+  },
+  "rules": {
+    "own": [
+      "guests"
+    ]
+  },
+  "types": "event/types/event-guests.store.d.ts",
+  "version": 5,
+  "view": "event/data/guests.json",
+  "data": "event/data/guests.start.json"
+}

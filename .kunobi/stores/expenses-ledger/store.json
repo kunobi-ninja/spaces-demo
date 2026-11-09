@@ -1,0 +1,75 @@
+{
+  "fields": {
+    "expenses": {
+      "fields": {
+        "amount": {
+          "currency": "USD",
+          "kind": "money"
+        },
+        "category": {
+          "kind": "enum",
+          "values": [
+            "Rent",
+            "Bills",
+            "Groceries",
+            "Household",
+            "Takeaway"
+          ]
+        },
+        "date": {
+          "kind": "text"
+        },
+        "paid_by": {
+          "kind": "enum",
+          "values": [
+            "Amara",
+            "Diego",
+            "Mei",
+            "Rohan"
+          ]
+        },
+        "split": {
+          "kind": "text"
+        },
+        "what": {
+          "kind": "text"
+        }
+      },
+      "kind": "rows"
+    },
+    "payments": {
+      "fields": {
+        "amount": {
+          "currency": "USD",
+          "kind": "money"
+        },
+        "date": {
+          "kind": "text"
+        },
+        "from": {
+          "kind": "enum",
+          "values": [
+            "Amara",
+            "Diego",
+            "Mei",
+            "Rohan"
+          ]
+        },
+        "to": {
+          "kind": "enum",
+          "values": [
+            "Amara",
+            "Diego",
+            "Mei",
+            "Rohan"
+          ]
+        }
+      },
+      "kind": "rows"
+    }
+  },
+  "types": "expenses/types/expenses-ledger.store.d.ts",
+  "version": 2,
+  "view": "expenses/data/expenses.json",
+  "data": "expenses/data/expenses.start.json"
+}
