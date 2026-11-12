@@ -1,13 +1,13 @@
 ---
 title: Cat chase
-description: "Everyone moves their own cat around the living room. First to five fish wins the round."
+description: "Everyone moves their own cat around a house. Catch fish, knock the yarn about; first to five fish wins the round."
 kunobi:
-  page-layout: wide
+  page-layout: full
   rooms:
     cat-chase-room:
       model: map
       rules:
-        own: [cat, meow]
+        own: [cat, meow, kick]
         once: [catch]
 ---
 
@@ -16,7 +16,7 @@ import '@fontsource/figtree/400.css'
 import '@fontsource/figtree/600.css'
 import { Game } from './src/Game'
 
-{/* The game runs in the cat-chase-room room. Each player writes only their own cat (cat.<id>) and meow (meow.<id>); each fish (catch.<n>) goes to the first cat that reaches it. Rounds and scores are counted from the catches, so nothing needs resetting. */}
+{/* The game runs in the cat-chase-room room. Each player writes only their own cat (cat.<id>), meow (meow.<id>) and kicks of the yarn balls (kick.<id>); each fish (catch.<n>) goes to the first cat that reaches it. Rounds and scores are counted from the catches, so nothing needs resetting. */}
 
 export const WORDS = {
   en: {
@@ -24,24 +24,26 @@ export const WORDS = {
     you: 'You',
     guest: 'Guest',
     meow: 'Meow!',
+    jump: 'Jump',
     youWin: 'You win the round!',
     theyWin: (n) => `${n} wins the round!`,
     alone: 'Waiting for another cat.',
     solo: 'Playing alone. Open it in Kunobi with friends to play together.',
     paused: 'Reconnecting…',
-    how: (n) => `Arrows or tap to move · M to meow · first to ${n} fish wins`,
+    how: (n) => `Arrows or tap to move · Space to jump · scroll to zoom · M to meow · first to ${n} fish wins`,
   },
   es: {
     title: 'A por el pez',
     you: 'Tú',
     guest: 'Invitado',
     meow: '¡Miau!',
+    jump: 'Saltar',
     youWin: '¡Ganas la ronda!',
     theyWin: (n) => `¡${n} gana la ronda!`,
     alone: 'Esperando a otro gato.',
     solo: 'Juegas solo. Ábrelo en Kunobi con amigos para jugar juntos.',
     paused: 'Reconectando…',
-    how: (n) => `Flechas o toca para moverte · M para maullar · gana quien coma ${n} peces`,
+    how: (n) => `Flechas o toca para moverte · Espacio para saltar · rueda para zoom · M para maullar · gana quien coma ${n} peces`,
   },
 }
 
