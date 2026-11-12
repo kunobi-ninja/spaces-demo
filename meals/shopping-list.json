@@ -1,0 +1,36 @@
+{
+  "extras": [
+    {
+      "aisle": "Produce",
+      "got": "no",
+      "id": "bananas",
+      "name": "Bananas",
+      "qty": "6"
+    },
+    {
+      "aisle": "Pantry",
+      "got": "no",
+      "id": "coffee",
+      "name": "Coffee",
+      "qty": "500 g"
+    },
+    {
+      "aisle": "Other",
+      "got": "yes",
+      "id": "dish-soap",
+      "name": "Dish soap",
+      "qty": "1"
+    }
+  ],
+  "ticks": {
+    "garlic-clove": {
+      "got": "yes"
+    },
+    "olive-oil-tbsp": {
+      "got": "yes"
+    },
+    "soy-sauce-tbsp": {
+      "got": "yes"
+    }
+  }
+}

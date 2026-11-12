@@ -1,22 +1,47 @@
 import * as React from 'react'
+import { useStore, useStoreStatus, edit } from 'kunobi'
+import type { EventGuestsStore } from '../types/event-guests.store'
 
 /*
  * The event page: a header, the seating plan with what needs attention, replies and dietary
- * needs, the evening hour by hour, and the budget. Everything is computed from the two data
- * files; nothing here writes back.
+ * needs, the evening hour by hour, and the budget. Replies, party sizes, diets and tables live
+ * in the `event-guests` LiveStore; data/guests.json is its readable copy and the starting data
+ * shown read-only where the store cannot open. The evening and budget come from data/event.json.
  */
+
+const STORE = 'event-guests'
+type Rsvp = 'yes' | 'maybe' | 'no' | 'none'
+type Row = EventGuestsStore['guests'][string]
+type Status = { status?: string; canEdit?: boolean; saved?: boolean; reason?: string; actor?: { kind: string; id: string } }
 
 export interface Guest {
   id: string
   name: string
   household: string
   side: string
-  rsvp: 'yes' | 'maybe' | 'no' | 'none'
+  rsvp: Rsvp
+  /** Seats this reply takes: the guest plus anyone they bring. */
+  party: number
   table?: string
   diet: string[]
   note?: string
   plusOneOf?: string
 }
+
+const toGuest = (id: string, r: Row): Guest => ({
+  id,
+  name: r.name || '?',
+  household: r.household || r.name || id,
+  side: r.side || '',
+  rsvp: (r.rsvp ?? 'none') as Rsvp,
+  party: Math.max(1, r.party ?? 1),
+  table: r.table || undefined,
+  diet: (r.diet ?? '').split(',').map((d) => d.trim()).filter(Boolean),
+  note: r.note || undefined,
+  plusOneOf: r.plusOneOf || undefined,
+})
+
+const people = (list: Guest[]) => list.reduce((n, g) => n + g.party, 0)
 
 interface Table { id: string; name: string; seats: number; shape: 'long' | 'round' }
 interface Side { id: string; color: string }
@@ -57,6 +82,10 @@ const initials = (name: string) =>
     .slice(0, 2)
     .join('')
 
+/** One seat per person: the guest (k = 0), then anyone they bring. */
+type Seat = { g: Guest; k: number }
+const seatsOf = (list: Guest[]): Seat[] => list.flatMap((g) => Array.from({ length: g.party }, (_, k) => ({ g, k })))
+
 /** Initials, or the first three letters of the first name where two guests share initials. */
 function seatLabels(guests: Guest[]) {
   const counts = new Map<string, number>()
@@ -79,7 +108,7 @@ function findConflicts(guests: Guest[], tables: Table[]): Conflict[] {
   const out: Conflict[] = []
   for (const t of tables) {
     const at = guests.filter((g) => g.table === t.id)
-    if (at.length > t.seats) out.push({ kind: 'over', key: `over-${t.id}`, table: t, count: at.length, ids: at.map((g) => g.id) })
+    if (people(at) > t.seats) out.push({ kind: 'over', key: `over-${t.id}`, table: t, count: people(at), ids: at.map((g) => g.id) })
   }
   const unseated = guests.filter((g) => g.rsvp === 'yes' && !g.table)
   if (unseated.length) out.push({ kind: 'unseated', key: 'unseated', ids: unseated.map((g) => g.id) })
@@ -125,11 +154,41 @@ function seatPositions(table: Table, count: number) {
 
 /* ---------- the page ---------- */
 
-export function EventPlan({ event, guests, w }: { event: EventData; guests: Guest[]; w: any }) {
+export function EventPlan({ event, start, w }: { event: EventData; start: EventGuestsStore; w: any }) {
   const [selected, setSelected] = React.useState<string | null>(null)
   const [hovered, setHovered] = React.useState<string | null>(null)
   const [active, setActive] = React.useState<string | null>(null)
   const [colourBy, setColourBy] = React.useState<'side' | 'diet'>('side')
+  const [refused, setRefused] = React.useState(false)
+
+  // The store when it is open; otherwise its readable copy, shown without controls.
+  const live = useStore(STORE) as EventGuestsStore | undefined
+  const status = (useStoreStatus(STORE) ?? {}) as Status
+  const open = status.status === 'open' && !!live?.guests
+  const paused = status.status === 'paused' && !!live?.guests
+  const rows = open || paused ? (live as EventGuestsStore).guests : start.guests
+  const actor = open ? status.actor : undefined
+  const isVisitor = actor?.kind === 'visitor'
+  const host = open && !!status.canEdit && !isVisitor
+  const answerOwn = open && !!status.canEdit && isVisitor && !!actor?.id
+  const saving = open && status.saved === false
+
+  const guests = React.useMemo(
+    () => Object.entries(rows ?? {}).map(([id, r]) => toGuest(id, r)).sort((a, b) => a.id.localeCompare(b.id)),
+    [rows],
+  )
+
+  const send = (change: (d: EventGuestsStore) => void) => {
+    Promise.resolve(edit(STORE, change as any))
+      .then((r: any) => setRefused(!!r?.status && !['applied', 'unchanged', 'duplicate'].includes(r.status)))
+      .catch(() => setRefused(true))
+  }
+  const update = (id: string, patch: Partial<Row>) => send((d) => void (d.guests[id] = { ...d.guests[id], ...patch }))
+  const answerMine = (patch: Partial<Row>) => {
+    if (!actor?.id) return
+    const id = actor.id
+    send((d) => void (d.guests[id] = { household: patch.name ?? '', side: '', table: '', diet: '', note: '', plusOneOf: '', ...d.guests[id], ...patch }))
+  }
 
   const byId = React.useMemo(() => new Map(guests.map((g) => [g.id, g])), [guests])
   const sideColor = React.useMemo(() => new Map(event.sides.map((s) => [s.id, s.color])), [event.sides])
@@ -138,8 +197,9 @@ export function EventPlan({ event, guests, w }: { event: EventData; guests: Gues
   const seatedBy = (id: string) => guests.filter((g) => g.table === id)
 
   const yes = guests.filter((g) => g.rsvp === 'yes')
+  const coming = people(yes)
   const seatTotal = event.tables.reduce((n, t) => n + t.seats, 0)
-  const seatedYes = yes.filter((g) => g.table).length
+  const seatsLeft = Math.max(0, seatTotal - people(guests.filter((g) => g.table && event.tables.some((t) => t.id === g.table))))
   const toGo = days(event.today, event.date)
   const money = new Intl.NumberFormat(w.locale, { style: 'currency', currency: event.currency, maximumFractionDigits: 0 })
   const dateLabel = new Intl.DateTimeFormat(w.locale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(event.date))
@@ -190,12 +250,14 @@ export function EventPlan({ event, guests, w }: { event: EventData; guests: Gues
     if (!hoveredGuest?.table) return null
     const t = event.tables.find((x) => x.id === hoveredGuest.table)
     if (!t) return null
-    const list = seatedBy(t.id)
-    const i = list.findIndex((g) => g.id === hoveredGuest.id)
+    const list = seatsOf(seatedBy(t.id))
+    const i = list.findIndex((s) => s.g.id === hoveredGuest.id)
     return seatPositions(t, list.length)[i]
-  }, [hoveredGuest])
+  }, [hoveredGuest, guests])
 
   const selectedGuest = selected ? byId.get(selected) : null
+  const moving = host && selectedGuest ? selectedGuest : null
+  const mine = answerOwn && actor ? rows[actor.id] : undefined
 
   return (
     <div className="ev">
@@ -217,19 +279,17 @@ export function EventPlan({ event, guests, w }: { event: EventData; guests: Gues
             </div>
             <div className="ev-stat">
               <b>
-                {yes.length}
-                <small>/{guests.length}</small>
+                {coming}
+                <small>/{people(guests)}</small>
               </b>
               <span>{w.coming}</span>
             </div>
             <div className="ev-stat">
               <b>
-                {seatedYes}
+                {seatsLeft}
                 <small>/{seatTotal}</small>
               </b>
-              <span>
-                {w.seated}
-              </span>
+              <span>{w.seatsLeft}</span>
             </div>
           </div>
         </header>
@@ -238,15 +298,19 @@ export function EventPlan({ event, guests, w }: { event: EventData; guests: Gues
           <div className="ev-head">
             <div>
               <h2>{w.seating}</h2>
-              <p>{w.seatingLine}</p>
+              <p>{moving ? w.moveHint(moving.name.split(' ')[0]) : host ? w.seatingLineHost : w.seatingLine}</p>
             </div>
-            <div className="ev-toggle" role="group" aria-label={w.colourBy}>
-              <span>{w.colourBy}</span>
-              {(['side', 'diet'] as const).map((k) => (
-                <button key={k} className={colourBy === k ? 'on' : ''} aria-pressed={colourBy === k} onClick={() => setColourBy(k)}>
-                  {w[k]}
-                </button>
-              ))}
+            <div className="ev-head-right">
+              {saving && <span className="ev-saving">{w.saving}</span>}
+              {refused && !saving && <span className="ev-saving err">{w.refused}</span>}
+              <div className="ev-toggle" role="group" aria-label={w.colourBy}>
+                <span>{w.colourBy}</span>
+                {(['side', 'diet'] as const).map((k) => (
+                  <button key={k} className={colourBy === k ? 'on' : ''} aria-pressed={colourBy === k} onClick={() => setColourBy(k)}>
+                    {w[k]}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
 
@@ -273,13 +337,18 @@ export function EventPlan({ event, guests, w }: { event: EventData; guests: Gues
                   <text x="880" y="160" className="ev-room" textAnchor="middle">{w.cake}</text>
 
                   {event.tables.map((t) => {
-                    const list = seatedBy(t.id)
+                    const list = seatsOf(seatedBy(t.id))
                     const pos = seatPositions(t, list.length)
                     const at = LAYOUT[t.id] ?? { x: 500, y: 330 }
                     const over = list.length > t.seats
                     const hot = activeTables.has(t.id)
+                    const target = moving && moving.table !== t.id
                     return (
-                      <g key={t.id} className={`ev-table${hot ? ' hot' : ''}`}>
+                      <g
+                        key={t.id}
+                        className={`ev-table${hot ? ' hot' : ''}${target ? ' target' : ''}`}
+                        onClick={target ? (e) => { e.stopPropagation(); update(moving.id, { table: t.id }) } : undefined}
+                      >
                         {t.shape === 'long' ? (
                           <rect x={at.x - ((pos.length - 1) * 56) / 2 - 34} y={at.y - 22} width={(pos.length - 1) * 56 + 68} height="44" rx="14" className={`ev-top${over ? ' over' : ''}`} />
                         ) : (
@@ -292,20 +361,21 @@ export function EventPlan({ event, guests, w }: { event: EventData; guests: Gues
                           {list.length}/{t.seats}
                         </text>
                         {pos.map((p, i) => {
-                          const g = list[i]
+                          const seat = list[i]
                           const extra = i >= t.seats
-                          if (!g) return <circle key={i} cx={p.x} cy={p.y} r={SEAT_R - 3} className="ev-empty" />
+                          if (!seat) return <circle key={i} cx={p.x} cy={p.y} r={SEAT_R - 3} className="ev-empty" />
+                          const { g, k } = seat
                           const declined = g.rsvp !== 'yes'
                           const fill = declined ? 'hsl(var(--muted))' : colorOf(g)
                           const dim = focus && !focus.has(g.id)
                           const isSel = selected === g.id
                           return (
                             <g
-                              key={g.id}
-                              className={`ev-seat${dim ? ' dim' : ''}${isSel ? ' sel' : ''}`}
+                              key={`${g.id}-${k}`}
+                              className={`ev-seat${dim ? ' dim' : ''}${isSel ? ' sel' : ''}${k ? ' with' : ''}`}
                               role="button"
-                              tabIndex={0}
-                              aria-label={g.name}
+                              tabIndex={k ? -1 : 0}
+                              aria-label={k ? `${g.name} +${k}` : g.name}
                               onClick={(e) => { e.stopPropagation(); select(g.id) }}
                               onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select(g.id) } }}
                               onPointerEnter={() => setHovered(g.id)}
@@ -314,10 +384,10 @@ export function EventPlan({ event, guests, w }: { event: EventData; guests: Gues
                               {focus && focus.has(g.id) && <circle cx={p.x} cy={p.y} r={SEAT_R + 6} className="ev-halo" />}
                               <circle cx={p.x} cy={p.y} r={SEAT_R} fill={fill} className={`ev-dot${declined ? ' declined' : ''}${extra ? ' extra' : ''}`} />
                               <text x={p.x} y={p.y + 4.5} textAnchor="middle" className="ev-ini" fill={declined ? 'hsl(var(--muted-foreground))' : ink(fill)}>
-                                {labels.get(g.id)}
+                                {k ? `+${k}` : labels.get(g.id)}
                               </text>
                               {declined && <line x1={p.x - 13} y1={p.y + 13} x2={p.x + 13} y2={p.y - 13} stroke={C.coral} strokeWidth="2.5" strokeLinecap="round" />}
-                              {colourBy === 'side' && g.diet.length > 0 && !declined && <circle cx={p.x + 14} cy={p.y - 14} r="5.5" fill={DIET_COLORS[g.diet[0]] ?? C.horizon} stroke="hsl(var(--card))" strokeWidth="2" />}
+                              {!k && colourBy === 'side' && g.diet.length > 0 && !declined && <circle cx={p.x + 14} cy={p.y - 14} r="5.5" fill={DIET_COLORS[g.diet[0]] ?? C.horizon} stroke="hsl(var(--card))" strokeWidth="2" />}
                             </g>
                           )
                         })}
@@ -327,7 +397,10 @@ export function EventPlan({ event, guests, w }: { event: EventData; guests: Gues
                 </svg>
                 {hoveredGuest && hoveredPos && (
                   <div className="ev-tip" style={{ left: `${(hoveredPos.x / VIEW.w) * 100}%`, top: `${(hoveredPos.y / VIEW.h) * 100}%` }}>
-                    <b>{hoveredGuest.name}</b>
+                    <b>
+                      {hoveredGuest.name}
+                      {hoveredGuest.party > 1 ? ` +${hoveredGuest.party - 1}` : ''}
+                    </b>
                     <span>
                       {w.rsvp[hoveredGuest.rsvp]}
                       {hoveredGuest.diet.length ? ` · ${hoveredGuest.diet.join(', ')}` : ''}
@@ -359,20 +432,28 @@ export function EventPlan({ event, guests, w }: { event: EventData; guests: Gues
               <div className="ev-cards">
                 {event.tables.map((t) => {
                   const list = seatedBy(t.id)
-                  const over = list.length > t.seats
+                  const used = people(list)
+                  const over = used > t.seats
+                  const target = moving && moving.table !== t.id
                   return (
                     <div key={t.id} className={`ev-tcard${over ? ' over' : ''}`}>
                       <div className="ev-tcard-head">
                         <b>{t.name}</b>
-                        <span>{list.length}/{t.seats}</span>
+                        <span>{used}/{t.seats}</span>
                       </div>
                       <div className="ev-chips">
                         {list.map((g) => (
                           <button key={g.id} className={`ev-chip${g.rsvp !== 'yes' ? ' declined' : ''}${selected === g.id ? ' sel' : ''}`} onClick={() => select(g.id)}>
                             <i style={{ background: g.rsvp === 'yes' ? colorOf(g) : 'hsl(var(--muted))' }} />
                             {g.name}
+                            {g.party > 1 ? ` +${g.party - 1}` : ''}
                           </button>
                         ))}
+                        {target && (
+                          <button className="ev-chip ev-seat-here" onClick={() => update(moving.id, { table: t.id })}>
+                            {w.seatHere(moving.name.split(' ')[0])}
+                          </button>
+                        )}
                       </div>
                     </div>
                   )
@@ -381,8 +462,19 @@ export function EventPlan({ event, guests, w }: { event: EventData; guests: Gues
             </div>
 
             <aside className="ev-panel">
+              {answerOwn && !selectedGuest && <MyReply key={actor?.id} row={mine} onSend={answerMine} w={w} />}
               {selectedGuest ? (
-                <GuestCard g={selectedGuest} guests={guests} tables={event.tables} color={sideColor.get(selectedGuest.side) ?? C.horizon} w={w} onClose={() => setSelected(null)} onPick={select} />
+                <GuestCard
+                  g={selectedGuest}
+                  guests={guests}
+                  tables={event.tables}
+                  color={sideColor.get(selectedGuest.side) ?? C.horizon}
+                  w={w}
+                  host={host}
+                  onChange={(patch) => update(selectedGuest.id, patch)}
+                  onClose={() => setSelected(null)}
+                  onPick={select}
+                />
               ) : (
                 <>
                   <div className="ev-card">
@@ -407,7 +499,7 @@ export function EventPlan({ event, guests, w }: { event: EventData; guests: Gues
                     <div className="ev-chips">
                       {yes.filter((g) => !g.table).map((g) => (
                         <button key={g.id} className="ev-chip" onClick={() => select(g.id)}>
-                          <i style={{ background: sideColor.get(g.side) }} />
+                          <i style={{ background: sideColor.get(g.side) ?? C.horizon }} />
                           {g.name}
                         </button>
                       ))}
@@ -420,7 +512,7 @@ export function EventPlan({ event, guests, w }: { event: EventData; guests: Gues
         </section>
 
         <section className="ev-grid2">
-          <Replies guests={guests} w={w} />
+          <Replies guests={guests} w={w} host={host} onAnswer={(id, rsvp) => update(id, { rsvp })} onPick={select} />
           <Caterer guests={yes} w={w} />
         </section>
 
@@ -440,7 +532,7 @@ export function EventPlan({ event, guests, w }: { event: EventData; guests: Gues
               ))}
             </ol>
           </div>
-          <Budget budget={event.budget} money={money} coming={yes.length} w={w} />
+          <Budget budget={event.budget} money={money} coming={coming} w={w} />
         </section>
 
         <footer className="ev-change">
@@ -451,6 +543,7 @@ export function EventPlan({ event, guests, w }: { event: EventData; guests: Gues
               <code key={p}>{p}</code>
             ))}
           </div>
+          <span className="ev-muted small">{w.linkLine}</span>
         </footer>
       </div>
     </div>
@@ -459,9 +552,55 @@ export function EventPlan({ event, guests, w }: { event: EventData; guests: Gues
 
 /* ---------- parts ---------- */
 
-function GuestCard({ g, guests, tables, color, w, onClose, onPick }: { g: Guest; guests: Guest[]; tables: Table[]; color: string; w: any; onClose: () => void; onPick: (id: string) => void }) {
+const ANSWERS: Rsvp[] = ['yes', 'maybe', 'no', 'none']
+
+function Answer({ value, onPick, w, choices = ANSWERS, disabled }: { value: Rsvp; onPick: (r: Rsvp) => void; w: any; choices?: Rsvp[]; disabled?: boolean }) {
+  return (
+    <div className="ev-seg" role="group" aria-label={w.answer} style={{ gridTemplateColumns: `repeat(${choices.length === 3 ? 3 : 2}, 1fr)` }}>
+      {choices.map((r) => (
+        <button key={r} className={`${r}${value === r ? ' on' : ''}`} aria-pressed={value === r} disabled={disabled} onClick={() => value !== r && onPick(r)}>
+          {w.rsvp[r]}
+        </button>
+      ))}
+    </div>
+  )
+}
+
+function Stepper({ value, onChange, w }: { value: number; onChange: (n: number) => void; w: any }) {
+  return (
+    <div className="ev-step" role="group" aria-label={w.party}>
+      <button aria-label="−" disabled={value <= 1} onClick={() => onChange(value - 1)}>
+        −
+      </button>
+      <b>{value}</b>
+      <button aria-label="+" disabled={value >= 8} onClick={() => onChange(value + 1)}>
+        +
+      </button>
+    </div>
+  )
+}
+
+/** A text field that saves when it loses focus or on Enter, not on every key. */
+function DietField({ value, onSave, w }: { value: string; onSave: (v: string) => void; w: any }) {
+  const [text, setText] = React.useState(value)
+  React.useEffect(() => setText(value), [value])
+  return (
+    <input
+      className="ev-input"
+      value={text}
+      placeholder={w.dietHint}
+      aria-label={w.diet}
+      onChange={(e) => setText(e.target.value)}
+      onBlur={() => text.trim() !== value && onSave(text.trim())}
+      onKeyDown={(e) => e.key === 'Enter' && e.currentTarget.blur()}
+    />
+  )
+}
+
+function GuestCard({ g, guests, tables, color, w, host, onChange, onClose, onPick }: { g: Guest; guests: Guest[]; tables: Table[]; color: string; w: any; host: boolean; onChange: (patch: Partial<Row>) => void; onClose: () => void; onPick: (id: string) => void }) {
   const table = tables.find((t) => t.id === g.table)
   const family = guests.filter((x) => x.household === g.household && x.id !== g.id)
+  const free = (t: Table) => t.seats - people(guests.filter((x) => x.table === t.id))
   return (
     <div className="ev-card ev-guest">
       <button className="ev-close" onClick={onClose} aria-label={w.close}>
@@ -473,19 +612,48 @@ function GuestCard({ g, guests, tables, color, w, onClose, onPick }: { g: Guest;
         </span>
         <div>
           <b>{g.name}</b>
-          <span className="ev-muted">{g.side}</span>
+          <span className="ev-muted">{g.side || w.fromLink}</span>
         </div>
       </div>
-      <div className="ev-pills">
-        <span className={`ev-rsvp ${g.rsvp}`}>{w.rsvp[g.rsvp]}</span>
-        <span className="ev-pill">{table ? table.name : w.noTable}</span>
-        {g.diet.map((d) => (
-          <span key={d} className="ev-pill dot">
-            <i style={{ background: DIET_COLORS[d] ?? C.horizon }} />
-            {d}
-          </span>
-        ))}
-      </div>
+      {host ? (
+        <div className="ev-form">
+          <Answer value={g.rsvp} onPick={(rsvp) => onChange({ rsvp })} w={w} />
+          <div className="ev-row">
+            <span className="ev-label">{w.party}</span>
+            <Stepper value={g.party} onChange={(party) => onChange({ party })} w={w} />
+          </div>
+          <div>
+            <span className="ev-label">{w.table}</span>
+            <div className="ev-tables">
+              {tables.map((t) => (
+                <button key={t.id} className={g.table === t.id ? 'on' : ''} aria-pressed={g.table === t.id} onClick={() => g.table !== t.id && onChange({ table: t.id })}>
+                  {t.id}
+                  <small>{Math.max(0, free(t))}</small>
+                </button>
+              ))}
+              <button className={!g.table ? 'on' : ''} aria-pressed={!g.table} onClick={() => g.table && onChange({ table: '' })}>
+                {w.noSeat}
+              </button>
+            </div>
+          </div>
+          <div>
+            <span className="ev-label">{w.diet}</span>
+            <DietField key={g.id} value={g.diet.join(', ')} onSave={(diet) => onChange({ diet })} w={w} />
+          </div>
+        </div>
+      ) : (
+        <div className="ev-pills">
+          <span className={`ev-rsvp ${g.rsvp}`}>{w.rsvp[g.rsvp]}</span>
+          <span className="ev-pill">{table ? table.name : w.noTable}</span>
+          {g.party > 1 && <span className="ev-pill">{w.withMore(g.party - 1)}</span>}
+          {g.diet.map((d) => (
+            <span key={d} className="ev-pill dot">
+              <i style={{ background: DIET_COLORS[d] ?? C.horizon }} />
+              {d}
+            </span>
+          ))}
+        </div>
+      )}
       {g.note && <p className="ev-note">{g.note}</p>}
       {g.plusOneOf && (
         <p className="ev-muted">
@@ -512,16 +680,50 @@ function GuestCard({ g, guests, tables, color, w, onClose, onPick }: { g: Guest;
   )
 }
 
-function Replies({ guests, w }: { guests: Guest[]; w: any }) {
+/** For a guest on a shared link: their own reply, the only row they may change. */
+function MyReply({ row, onSend, w }: { row?: Row; onSend: (patch: Partial<Row>) => void; w: any }) {
+  const [name, setName] = React.useState(row?.name ?? '')
+  const ready = name.trim().length > 0
+  const rsvp = (row?.rsvp ?? 'none') as Rsvp
+  const party = row?.party ?? 1
+  return (
+    <div className="ev-card ev-mine">
+      <h3>{w.yourReply}</h3>
+      <div className="ev-form">
+        <input
+          className="ev-input"
+          value={name}
+          placeholder={w.yourName}
+          aria-label={w.yourName}
+          onChange={(e) => setName(e.target.value)}
+          onBlur={() => ready && row && name.trim() !== row.name && onSend({ name: name.trim() })}
+        />
+        <Answer value={rsvp} choices={['yes', 'maybe', 'no']} disabled={!ready} onPick={(r) => onSend({ name: name.trim(), rsvp: r, party })} w={w} />
+        {row && (
+          <>
+            <div className="ev-row">
+              <span className="ev-label">{w.party}</span>
+              <Stepper value={party} onChange={(n) => onSend({ party: n })} w={w} />
+            </div>
+            <DietField value={row.diet ?? ''} onSave={(diet) => onSend({ diet })} w={w} />
+          </>
+        )}
+        {!ready && <span className="ev-muted small">{w.nameFirst}</span>}
+      </div>
+    </div>
+  )
+}
+
+function Replies({ guests, w, host, onAnswer, onPick }: { guests: Guest[]; w: any; host: boolean; onAnswer: (id: string, r: Rsvp) => void; onPick: (id: string) => void }) {
   const order = ['yes', 'maybe', 'no', 'none'] as const
   const colors = { yes: C.tide, maybe: C.sun, no: 'hsl(var(--muted-foreground))', none: 'hsl(var(--border))' }
-  const count = (k: string) => guests.filter((g) => g.rsvp === k).length
+  const count = (k: string) => people(guests.filter((g) => g.rsvp === k))
   const waiting = guests.filter((g) => g.rsvp === 'maybe' || g.rsvp === 'none')
   return (
     <div className="ev-card big">
       <div className="ev-card-title">
         <h2>{w.replies}</h2>
-        <span className="ev-muted">{w.repliesLine(guests.length)}</span>
+        <span className="ev-muted">{w.repliesLine(people(guests))}</span>
       </div>
       <div className="ev-replies">
         {order.map((k) => (
@@ -543,12 +745,24 @@ function Replies({ guests, w }: { guests: Guest[]; w: any }) {
       {waiting.length === 0 ? (
         <p className="ev-muted">{w.waitingNone}</p>
       ) : (
-        <ul className="ev-list">
+        <ul className={`ev-list${host ? ' host' : ''}`}>
           {waiting.map((g) => (
             <li key={g.id}>
               <span className={`ev-rsvp ${g.rsvp}`}>{w.rsvp[g.rsvp]}</span>
-              <b>{g.name}</b>
+              <button className="ev-name" onClick={() => onPick(g.id)}>
+                {g.name}
+              </button>
               <span className="ev-muted">{g.note ?? g.side}</span>
+              {host && (
+                <span className="ev-quick">
+                  <button className="yes" onClick={() => onAnswer(g.id, 'yes')}>
+                    {w.rsvp.yes}
+                  </button>
+                  <button className="no" onClick={() => onAnswer(g.id, 'no')}>
+                    {w.rsvp.no}
+                  </button>
+                </span>
+              )}
             </li>
           ))}
         </ul>
@@ -561,13 +775,14 @@ function Caterer({ guests, w }: { guests: Guest[]; w: any }) {
   const diets = new Map<string, Guest[]>()
   for (const g of guests) for (const d of g.diet) diets.set(d, [...(diets.get(d) ?? []), g])
   const rows = [...diets.entries()].sort((a, b) => b[1].length - a[1].length)
-  const standard = guests.filter((g) => g.diet.length === 0).length
+  const plates = people(guests)
+  const standard = plates - guests.filter((g) => g.diet.length > 0).length
   return (
     <div className="ev-card big">
       <div className="ev-card-title">
         <h2>{w.caterer}</h2>
         <span className="ev-big">
-          {guests.length} <small>{w.dinners}</small>
+          {plates} <small>{w.dinners}</small>
         </span>
       </div>
       <ul className="ev-diets">
@@ -578,7 +793,7 @@ function Caterer({ guests, w }: { guests: Guest[]; w: any }) {
           <span className="ev-count">{standard}</span>
         </li>
         {rows.map(([d, list]) => (
-          <li key={d} className={d === 'Nut allergy' ? 'alert' : ''}>
+          <li key={d} className={/allerg/i.test(d) ? 'alert' : ''}>
             <i style={{ background: DIET_COLORS[d] ?? C.horizon }} />
             <b>{d}</b>
             <span className="ev-names">{list.map((g) => g.name.split(' ')[0]).join(', ')}</span>
@@ -598,7 +813,7 @@ function Budget({ budget, money, coming, w }: { budget: EventData['budget']; mon
       <div className="ev-card-title">
         <h2>{w.budget}</h2>
         <span className="ev-muted">
-          {money.format(Math.round(planned / coming))} {w.perGuest}
+          {money.format(Math.round(planned / Math.max(1, coming)))} {w.perGuest}
         </span>
       </div>
       <div className="ev-money">
@@ -804,6 +1019,44 @@ const STYLE = `
 .ev-prompts { display: flex; flex-wrap: wrap; gap: 8px; }
 .ev-prompts code { font: 600 13.5px Figtree, sans-serif; padding: 7px 12px; border-radius: 12px; background: hsl(var(--muted)); }
 
+.ev-head-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.ev-saving { font-size: 13px; font-weight: 600; color: hsl(var(--muted-foreground)); padding: 5px 10px; border-radius: 99px; background: hsl(var(--muted)); }
+.ev-saving.err { color: #a33a1f; background: rgba(226, 96, 63, 0.16); }
+.ev-table.target { cursor: pointer; }
+.ev-table.target .ev-top { stroke: ${C.horizon}; stroke-dasharray: 6 5; }
+.ev-table.target:hover .ev-top { stroke: ${C.sun}; stroke-width: 4; stroke-dasharray: none; }
+.ev-seat.with .ev-ini { font-size: 12px; }
+.ev-form { display: flex; flex-direction: column; gap: 12px; margin-bottom: 12px; }
+.ev-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.ev-row .ev-label { margin: 0; }
+.ev-seg { display: grid; gap: 4px; padding: 3px; border-radius: 14px; background: hsl(var(--muted)); }
+.ev-seg button { all: unset; cursor: pointer; text-align: center; padding: 7px 6px; border-radius: 11px; font: 600 13px Figtree, sans-serif; color: hsl(var(--foreground)); }
+.ev-seg button:disabled { opacity: 0.45; cursor: default; }
+.ev-seg button.on.yes { background: ${C.tide}; color: ${C.midnight}; }
+.ev-seg button.on.maybe { background: ${C.sun}; color: ${C.midnight}; }
+.ev-seg button.on.no { background: ${C.coral}; color: #fff; }
+.ev-seg button.on.none { background: hsl(var(--card)); box-shadow: inset 0 0 0 1px hsl(var(--border)); }
+.ev-seg button:focus-visible, .ev-step button:focus-visible, .ev-tables button:focus-visible, .ev-quick button:focus-visible, .ev-name:focus-visible { outline: 2px solid ${C.horizon}; outline-offset: 2px; }
+.ev-step { display: inline-flex; align-items: center; gap: 4px; padding: 3px; border-radius: 99px; background: hsl(var(--muted)); }
+.ev-step button { all: unset; cursor: pointer; width: 30px; height: 30px; border-radius: 99px; display: grid; place-items: center; font: 700 17px Figtree, sans-serif; background: hsl(var(--card)); }
+.ev-step button:disabled { opacity: 0.35; cursor: default; }
+.ev-step b { min-width: 26px; text-align: center; font: 800 16px Parkinsans, sans-serif; }
+.ev-tables { display: flex; flex-wrap: wrap; gap: 5px; }
+.ev-tables button { all: unset; cursor: pointer; display: inline-flex; align-items: baseline; gap: 5px; padding: 6px 11px; border-radius: 11px; background: hsl(var(--muted)); font: 600 13.5px Figtree, sans-serif; }
+.ev-tables button small { font-size: 11.5px; color: hsl(var(--muted-foreground)); }
+.ev-tables button.on { background: ${C.midnight}; color: #fff; }
+.ev-tables button.on small { color: rgba(255,255,255,0.7); }
+.ev-input { box-sizing: border-box; width: 100%; padding: 9px 12px; border-radius: 12px; border: 1px solid hsl(var(--border)); background: hsl(var(--background, var(--card))); color: hsl(var(--foreground)); font: 400 14px Figtree, sans-serif; }
+.ev-input:focus { outline: 2px solid ${C.horizon}; outline-offset: 0; }
+.ev-mine { border-color: ${C.tide}; }
+.ev-name { all: unset; cursor: pointer; font-weight: 600; }
+.ev-list.host li { grid-template-columns: 92px 130px 1fr auto; }
+.ev-quick { display: inline-flex; gap: 4px; }
+.ev-quick button { all: unset; cursor: pointer; padding: 4px 9px; border-radius: 99px; font: 600 12.5px Figtree, sans-serif; background: hsl(var(--muted)); white-space: nowrap; }
+.ev-quick button.yes:hover { background: rgba(48, 204, 213, 0.25); }
+.ev-quick button.no:hover { background: rgba(226, 96, 63, 0.18); }
+.ev-seat-here { background: transparent; box-shadow: inset 0 0 0 1.5px ${C.horizon}; color: ${C.horizon}; }
+
 @container (max-width: 980px) {
   .ev-seating { grid-template-columns: 1fr; }
   .ev-panel { display: grid; grid-template-columns: 1fr 1fr; }
@@ -821,7 +1074,8 @@ const STYLE = `
   .ev-tcard.over .ev-tcard-head span { color: ${C.coral}; font-weight: 700; }
   .ev-panel { display: flex; }
   .ev-replies { grid-template-columns: repeat(2, 1fr); row-gap: 14px; }
-  .ev-list li { grid-template-columns: 1fr; gap: 3px; }
+  .ev-list li, .ev-list.host li { grid-template-columns: 1fr; gap: 3px; }
+  .ev-list li .ev-quick { margin-top: 4px; }
   .ev-diets li { grid-template-columns: 12px 1fr auto; grid-template-areas: 'dot name count' '. names names'; row-gap: 2px; }
   .ev-diets li > i { grid-area: dot; }
   .ev-diets li > b { grid-area: name; }

@@ -95,10 +95,8 @@
       "id": "C1",
       "name": "Amara Nwosu",
       "role": "support",
-      "stage": "interview",
       "source": "Referral",
       "applied": "2026-10-06",
-      "since": "2026-10-27",
       "scorecards": [
         {
           "by": "hannah",
@@ -145,10 +143,8 @@
       "id": "C2",
       "name": "Tom Hendricks",
       "role": "support",
-      "stage": "offer",
       "source": "LinkedIn",
       "applied": "2026-09-29",
-      "since": "2026-11-02",
       "scorecards": [
         {
           "by": "hannah",
@@ -195,10 +191,8 @@
       "id": "C3",
       "name": "Inés Duarte",
       "role": "support",
-      "stage": "interview",
       "source": "Job board",
       "applied": "2026-10-14",
-      "since": "2026-10-30",
       "scorecards": [
         {
           "by": "hannah",
@@ -234,10 +228,8 @@
       "id": "C4",
       "name": "Kenji Watanabe",
       "role": "support",
-      "stage": "screen",
       "source": "Careers page",
       "applied": "2026-10-20",
-      "since": "2026-10-29",
       "scorecards": [],
       "next": {
         "what": "Phone screen with Hannah",
@@ -250,10 +242,8 @@
       "id": "C5",
       "name": "Laura Becker",
       "role": "support",
-      "stage": "applied",
       "source": "Job board",
       "applied": "2026-11-01",
-      "since": "2026-11-01",
       "scorecards": [],
       "next": {
         "what": "Review application",
@@ -266,12 +256,9 @@
       "id": "C6",
       "name": "Samuel Osei",
       "role": "support",
-      "stage": "declined",
-      "reached": "interview",
       "declinedBy": "candidate",
       "source": "Referral",
       "applied": "2026-09-22",
-      "since": "2026-10-24",
       "declinedReason": "Accepted another offer closer to home.",
       "scorecards": [
         {
@@ -302,10 +289,8 @@
       "id": "C7",
       "name": "Rosa Martín",
       "role": "support",
-      "stage": "screen",
       "source": "LinkedIn",
       "applied": "2026-10-18",
-      "since": "2026-10-23",
       "scorecards": [],
       "next": {
         "what": "Phone screen (rescheduled twice)",
@@ -318,10 +303,8 @@
       "id": "C8",
       "name": "Daniel Kim",
       "role": "support",
-      "stage": "applied",
       "source": "Careers page",
       "applied": "2026-10-30",
-      "since": "2026-10-30",
       "scorecards": [],
       "next": {
         "what": "Review application",
@@ -334,10 +317,8 @@
       "id": "D1",
       "name": "Mei Chen",
       "role": "designer",
-      "stage": "interview",
       "source": "Portfolio site",
       "applied": "2026-10-09",
-      "since": "2026-10-28",
       "scorecards": [
         {
           "by": "sofia",
@@ -384,10 +365,8 @@
       "id": "D2",
       "name": "Oliver Grant",
       "role": "designer",
-      "stage": "hired",
       "source": "Referral",
       "applied": "2026-09-15",
-      "since": "2026-10-20",
       "scorecards": [
         {
           "by": "sofia",
@@ -423,10 +402,8 @@
       "id": "D3",
       "name": "Aisha Rahman",
       "role": "designer",
-      "stage": "offer",
       "source": "Job board",
       "applied": "2026-10-02",
-      "since": "2026-11-03",
       "scorecards": [
         {
           "by": "sofia",
@@ -473,10 +450,8 @@
       "id": "D4",
       "name": "Lucas Moreau",
       "role": "designer",
-      "stage": "interview",
       "source": "Dribbble",
       "applied": "2026-10-21",
-      "since": "2026-11-02",
       "scorecards": [
         {
           "by": "sofia",
@@ -501,10 +476,8 @@
       "id": "D5",
       "name": "Nora Lindqvist",
       "role": "designer",
-      "stage": "screen",
       "source": "Portfolio site",
       "applied": "2026-10-25",
-      "since": "2026-10-31",
       "scorecards": [],
       "next": {
         "what": "Portfolio review call",
@@ -517,10 +490,8 @@
       "id": "D6",
       "name": "Ethan Park",
       "role": "designer",
-      "stage": "applied",
       "source": "Careers page",
       "applied": "2026-11-02",
-      "since": "2026-11-02",
       "scorecards": [],
       "next": {
         "what": "Review portfolio",
@@ -533,12 +504,9 @@
       "id": "D7",
       "name": "Zoe Adams",
       "role": "designer",
-      "stage": "declined",
-      "reached": "interview",
       "declinedBy": "us",
       "source": "Job board",
       "applied": "2026-09-30",
-      "since": "2026-10-22",
       "declinedReason": "Strong illustrator; we need more product design experience for this role.",
       "scorecards": [
         {
@@ -569,10 +537,8 @@
       "id": "D8",
       "name": "Felix Wagner",
       "role": "designer",
-      "stage": "applied",
       "source": "LinkedIn",
       "applied": "2026-10-28",
-      "since": "2026-10-28",
       "scorecards": [],
       "next": {
         "what": "Review portfolio",

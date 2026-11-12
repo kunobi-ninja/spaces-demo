@@ -1,0 +1,85 @@
+{
+  "candidates": {
+    "C1": {
+      "reached": null,
+      "since": "2026-10-27",
+      "stage": "interview"
+    },
+    "C2": {
+      "reached": null,
+      "since": "2026-11-02",
+      "stage": "offer"
+    },
+    "C3": {
+      "reached": null,
+      "since": "2026-10-30",
+      "stage": "interview"
+    },
+    "C4": {
+      "reached": null,
+      "since": "2026-10-29",
+      "stage": "screen"
+    },
+    "C5": {
+      "reached": null,
+      "since": "2026-11-01",
+      "stage": "applied"
+    },
+    "C6": {
+      "reached": "interview",
+      "since": "2026-10-24",
+      "stage": "declined"
+    },
+    "C7": {
+      "reached": null,
+      "since": "2026-10-23",
+      "stage": "screen"
+    },
+    "C8": {
+      "reached": null,
+      "since": "2026-10-30",
+      "stage": "applied"
+    },
+    "D1": {
+      "reached": null,
+      "since": "2026-10-28",
+      "stage": "interview"
+    },
+    "D2": {
+      "reached": null,
+      "since": "2026-10-20",
+      "stage": "hired"
+    },
+    "D3": {
+      "reached": null,
+      "since": "2026-11-03",
+      "stage": "offer"
+    },
+    "D4": {
+      "reached": null,
+      "since": "2026-11-02",
+      "stage": "interview"
+    },
+    "D5": {
+      "reached": null,
+      "since": "2026-10-31",
+      "stage": "screen"
+    },
+    "D6": {
+      "reached": null,
+      "since": "2026-11-02",
+      "stage": "applied"
+    },
+    "D7": {
+      "reached": "interview",
+      "since": "2026-10-22",
+      "stage": "declined"
+    },
+    "D8": {
+      "reached": null,
+      "since": "2026-10-28",
+      "stage": "applied"
+    }
+  },
+  "verdicts": {}
+}

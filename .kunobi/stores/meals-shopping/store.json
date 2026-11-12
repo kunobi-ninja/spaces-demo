@@ -1,0 +1,50 @@
+{
+  "fields": {
+    "ticks": {
+      "kind": "rows",
+      "fields": {
+        "got": {
+          "kind": "enum",
+          "values": [
+            "yes",
+            "no"
+          ]
+        }
+      }
+    },
+    "extras": {
+      "kind": "ordered",
+      "fields": {
+        "name": {
+          "kind": "text"
+        },
+        "qty": {
+          "kind": "text"
+        },
+        "aisle": {
+          "kind": "enum",
+          "values": [
+            "Produce",
+            "Meat and fish",
+            "Dairy and eggs",
+            "Bakery",
+            "Pantry",
+            "Frozen",
+            "Other"
+          ]
+        },
+        "got": {
+          "kind": "enum",
+          "values": [
+            "yes",
+            "no"
+          ]
+        }
+      }
+    }
+  },
+  "view": "meals/shopping-list.json",
+  "types": "meals/types/meals-shopping.store.d.ts",
+  "version": 3,
+  "data": "meals/data/shopping.json"
+}

@@ -1,0 +1,24 @@
+{
+  "fields": {
+    "nights": {
+      "kind": "rows",
+      "fields": {
+        "recipe": {
+          "kind": "text"
+        },
+        "cook": {
+          "kind": "text"
+        },
+        "servings": {
+          "kind": "int",
+          "min": 1,
+          "max": 20
+        }
+      }
+    }
+  },
+  "view": "meals/this-week.json",
+  "types": "meals/types/meals-week.store.d.ts",
+  "version": 3,
+  "data": "meals/data/week.json"
+}

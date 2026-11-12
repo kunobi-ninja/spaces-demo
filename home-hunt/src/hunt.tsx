@@ -1,5 +1,11 @@
 import * as React from 'react'
-import { TileMap } from 'kunobi'
+import { TileMap, edit, useStore, useStoreStatus } from 'kunobi'
+import type { HomeHuntTakesStore } from '../types/home-hunt-takes.store'
+
+/** Each person's take on a home (keen, maybe, no, and a note), saved for both of them. */
+export const STORE = 'home-hunt-takes'
+type Take = HomeHuntTakesStore['takes'][string]
+const VERDICTS = ['keen', 'maybe', 'no'] as const
 
 export type Criterion = { id: string; must: boolean; max?: number; label: string }
 export type Person = { id: string; name: string; color: string; role: string; ai: string; criteria: Criterion[] }
@@ -123,6 +129,36 @@ function Face({ p, size = 34 }: { p: Person; size?: number }) {
   )
 }
 
+function Takes({ id, people, takeOf, w }: { id: string; people: Person[]; takeOf: (home: string, person: string) => Take | undefined; w: any }) {
+  const given = people.map((p) => ({ p, t: takeOf(id, p.id) })).filter((x) => x.t?.verdict)
+  if (!given.length) return null
+  return (
+    <div className="takes">
+      {given.map(({ p, t }) => (
+        <span key={p.id} className={`take ${t!.verdict}`}>
+          <Face p={p} size={18} />
+          {w.verdict[t!.verdict!]}
+        </span>
+      ))}
+    </div>
+  )
+}
+
+/** A note field that saves when the person leaves it or presses Enter. */
+function NoteField({ value, placeholder, onSave }: { value: string; placeholder: string; onSave: (note: string) => void }) {
+  const save = (el: HTMLInputElement) => el.value.trim() !== value && onSave(el.value.trim())
+  return (
+    <input
+      className="take-input"
+      defaultValue={value}
+      placeholder={placeholder}
+      maxLength={140}
+      onBlur={(e) => save(e.currentTarget)}
+      onKeyDown={(e) => e.key === 'Enter' && e.currentTarget.blur()}
+    />
+  )
+}
+
 function Meter({ p, f, w }: { p: Person; f: Fit; w: any }) {
   return (
     <div className={`meter${f.fits ? '' : ' miss'}`} title={`${w.fitsFor} ${p.name}: ${f.score}%`}>
@@ -138,8 +174,21 @@ function Meter({ p, f, w }: { p: Person; f: Fit; w: any }) {
   )
 }
 
-export function HomeHunt({ homes, setup, words: w }: { homes: Home[]; setup: Setup; words: any }) {
+export function HomeHunt({ homes, setup, takes: start, words: w }: { homes: Home[]; setup: Setup; takes: HomeHuntTakesStore; words: any }) {
   const people = setup.people
+  const live = useStore(STORE) as HomeHuntTakesStore | undefined
+  const status = useStoreStatus(STORE)
+  // Without the store (other builds, previews), show the last saved takes, read-only.
+  const open = (status?.status === 'open' || status?.status === 'paused') && live !== undefined
+  const canEdit = open && status?.status === 'open' && Boolean(status?.canEdit)
+  const takes = (open ? live : start)?.takes ?? {}
+  const takeOf = (home: string, person: string) => takes[`${home}-${person}`]
+  const setTake = (home: string, person: string, change: Partial<Take>) =>
+    edit(STORE, (d: HomeHuntTakesStore) => {
+      const id = `${home}-${person}`
+      if (d.takes[id]) Object.assign(d.takes[id], change)
+      else d.takes[id] = { home, person: person as Take['person'], verdict: null, note: '', ...change }
+    })
   const money = (n: number) => `${setup.currency}${n.toLocaleString('en-GB')}`
   const rows = React.useMemo(
     () =>
@@ -151,8 +200,8 @@ export function HomeHunt({ homes, setup, words: w }: { homes: Home[]; setup: Set
       }),
     [homes, people, w]
   )
-  const live = rows.filter((r) => r.h.status !== 'rejected')
-  const shortlist = live.filter((r) => r.both).sort((a, b) => b.sum - a.sum).slice(0, 3)
+  const running = rows.filter((r) => r.h.status !== 'rejected')
+  const shortlist = running.filter((r) => r.both).sort((a, b) => b.sum - a.sum).slice(0, 3)
   const rank = new Map(shortlist.map((r, i) => [r.h.id, i + 1]))
   const rejected = rows.filter((r) => r.h.status === 'rejected')
   const viewings = rows.filter((r) => r.h.status === 'viewing').length
@@ -210,9 +259,9 @@ export function HomeHunt({ homes, setup, words: w }: { homes: Home[]; setup: Set
     return r.fits[i].fits
   })
   const counts: Record<string, number> = {
-    all: live.length,
-    both: live.filter((r) => r.both).length,
-    ...Object.fromEntries(people.map((p, i) => [p.id, live.filter((r) => r.fits[i].fits).length])),
+    all: running.length,
+    both: running.filter((r) => r.both).length,
+    ...Object.fromEntries(people.map((p, i) => [p.id, running.filter((r) => r.fits[i].fits).length])),
   }
 
   return (
@@ -309,7 +358,24 @@ export function HomeHunt({ homes, setup, words: w }: { homes: Home[]; setup: Set
         .by { font-size: 13px; color: hsl(var(--muted-foreground)); white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; }
         .how { margin-top: 28px; padding: 16px 18px; border-radius: 20px; background: hsl(var(--muted)); font-size: 14px; line-height: 1.5; }
         .how code { font-size: 13px; background: hsl(var(--card)); padding: 1px 6px; border-radius: 6px; }
-        .how q { display: block; margin-top: 6px; font-style: italic; quotes: '“' '”'; }
+        .how q { display: block; margin-top: 6px; font-style: italic; quotes: none; }
+        .how q::before, .how q::after { content: none; }
+        .takes { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+        .take { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px 3px 3px; border-radius: 999px; font: 600 12px Figtree, sans-serif; background: hsl(var(--muted)); color: hsl(var(--foreground)); }
+        .take-edit .take { padding: 3px 10px; }
+        .take.keen { background: rgba(47,179,122,0.16); }
+        .take.no { background: rgba(217,101,75,0.15); color: ${C.cut}; }
+        .take .face { font-size: 9px !important; }
+        .take-edit { display: grid; gap: 6px; margin: 2px 0 8px; justify-items: start; }
+        .tvs { display: flex; flex-wrap: wrap; gap: 4px; }
+        .tv { all: unset; cursor: pointer; padding: 4px 9px; border-radius: 999px; font: 600 12px Figtree, sans-serif; background: hsl(var(--muted)); color: hsl(var(--foreground)); }
+        .tv.on.keen { background: ${BOTH}; color: #fff; }
+        .tv.on.maybe { background: ${C.sun}; color: ${C.midnight}; }
+        .tv.on.no { background: ${C.cut}; color: #fff; }
+        .tv:focus-visible, .take-input:focus-visible { outline: 2px solid ${C.horizon}; outline-offset: 2px; }
+        .take-input { width: 100%; box-sizing: border-box; font: 400 13px Figtree, sans-serif; padding: 6px 10px; border-radius: 10px; border: 1px solid hsl(var(--border)); background: hsl(var(--background)); color: hsl(var(--foreground)); }
+        .take-note { font-size: 13px; line-height: 1.35; color: hsl(var(--muted-foreground)); }
+        .saving { margin-left: auto; align-self: center; font: 600 12px Figtree, sans-serif; color: hsl(var(--muted-foreground)); }
         @container (max-width: 860px) {
           .main { grid-template-columns: 1fr; }
           .head { grid-template-columns: 1fr; }
@@ -333,7 +399,7 @@ export function HomeHunt({ homes, setup, words: w }: { homes: Home[]; setup: Set
             </h1>
           </div>
           <div className="stats">
-            <div className="stat"><b>{live.length + rejected.length}</b><span>{w.seen}</span></div>
+            <div className="stat"><b>{running.length + rejected.length}</b><span>{w.seen}</span></div>
             <div className="stat"><b>{counts.both}</b><span>{w.fitBoth}</span></div>
             <div className="stat"><b>{viewings}</b><span>{w.viewings}</span></div>
           </div>
@@ -378,12 +444,46 @@ export function HomeHunt({ homes, setup, words: w }: { homes: Home[]; setup: Set
                       {active.h.area} · {money(cost(active.h))} {w.month} · {fill(w.beds, { n: active.h.beds })}
                     </div>
                   </div>
+                  {open && !status?.saved && <span className="saving">{w.saving}</span>}
                   <button className="close" onClick={() => setSelected(null)} aria-label={w.close}>×</button>
                 </div>
                 <div className="c-cols">
                   {people.map((p, i) => (
                     <div className="c-col" key={p.id}>
                       <h4><i style={{ background: p.color }} />{fill(w.forName, { name: p.name })} · {active.fits[i].score}%</h4>
+                      {(() => {
+                        const t = takeOf(active.h.id, p.id)
+                        if (canEdit && active.h.status !== 'rejected')
+                          return (
+                            <div className="take-edit">
+                              <div className="tvs" role="group" aria-label={fill(w.takeOf, { name: p.name })}>
+                                {VERDICTS.map((v) => (
+                                  <button
+                                    key={v}
+                                    className={`tv ${v}${t?.verdict === v ? ' on' : ''}`}
+                                    aria-pressed={t?.verdict === v}
+                                    onClick={() => setTake(active.h.id, p.id, { verdict: v })}
+                                  >
+                                    {w.verdict[v]}
+                                  </button>
+                                ))}
+                              </div>
+                              <NoteField
+                                key={`${active.h.id}-${p.id}-${t?.note ?? ''}`}
+                                value={t?.note ?? ''}
+                                placeholder={fill(w.notePh, { name: p.name })}
+                                onSave={(note) => setTake(active.h.id, p.id, { note })}
+                              />
+                            </div>
+                          )
+                        if (!t?.verdict && !t?.note) return null
+                        return (
+                          <div className="take-edit">
+                            {t.verdict && <span className={`take ${t.verdict}`}>{w.verdict[t.verdict]}</span>}
+                            {t.note && <div className="take-note">“{t.note}”</div>}
+                          </div>
+                        )
+                      })()}
                       {active.fits[i].checks.map(({ c, ok }) => (
                         <div key={c.id} className={`chk ${ok ? 'ok' : 'no'}${c.must ? ' is-must' : ''}`}>
                           <span>{ok ? '✓' : c.must ? '✕' : '–'}</span>
@@ -420,6 +520,7 @@ export function HomeHunt({ homes, setup, words: w }: { homes: Home[]; setup: Set
                   {people.map((p, j) => <Meter key={p.id} p={p} f={r.fits[j]} w={w} />)}
                 </div>
                 <div className="why">{r.sentence}</div>
+                <Takes id={r.h.id} people={people} takeOf={takeOf} w={w} />
               </button>
             ))}
           </aside>
@@ -456,6 +557,7 @@ export function HomeHunt({ homes, setup, words: w }: { homes: Home[]; setup: Set
                   {people.map((p, j) => <Meter key={p.id} p={p} f={r.fits[j]} w={w} />)}
                 </div>
                 <div className="why">{r.sentence}</div>
+                <Takes id={r.h.id} people={people} takeOf={takeOf} w={w} />
               </button>
             ))}
           </div>
@@ -486,8 +588,9 @@ export function HomeHunt({ homes, setup, words: w }: { homes: Home[]; setup: Set
         </section>
 
         <div className="how">
-          {w.how[0]} <code>home-hunt/data/homes.json</code> {w.how[1]} <code>home-hunt/data/people.json</code>. {w.how[2]}
-          {w.prompts.map((p: string) => <q key={p}>{p}</q>)}
+          {w.how[0]} <code>home-hunt/data/homes.json</code> {w.how[1]} <code>home-hunt/data/people.json</code>. {w.how[3]}{' '}
+          <code>home-hunt/data/takes.json</code>.{canEdit ? ` ${w.how[4]}` : ''} {w.how[2]}
+          {w.prompts.map((p: string) => <q key={p}>“{p}”</q>)}
         </div>
       </div>
     </div>

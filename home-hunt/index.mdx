@@ -3,6 +3,7 @@ title: Home hunt
 description: "Alex and Maya look for a home in Bristol: every listing on a map, scored against what each of them needs, with the trade-off in one sentence."
 kunobi:
   page-layout: wide
+  stores: [home-hunt-takes]
 ---
 
 import '@fontsource/parkinsans/600.css'
@@ -11,9 +12,10 @@ import '@fontsource/figtree/400.css'
 import '@fontsource/figtree/600.css'
 import homes from './data/homes.json'
 import setup from './data/people.json'
+import takes from './data/takes.json'
 import { HomeHunt } from './src/hunt'
 
-{/* The homes live in data/homes.json and what each person needs in data/people.json. The page's words are below. */}
+{/* The homes live in data/homes.json and what each person needs in data/people.json. Each person's take on a home is in the home-hunt-takes store, saved to data/takes.json. The page's words are below. */}
 
 export const WORDS = {
   en: {
@@ -28,9 +30,12 @@ export const WORDS = {
     shortlist: 'Our top three', shortlistSub: 'Homes that meet every must-have for both of us.',
     allHomes: 'Still in the running', all: 'All',
     whyNo: 'Why we said no', saidBy: '{name} said no', bothOfUs: 'We both',
-    how: ['The homes come from', 'and what each of us needs from', 'Edit the files, or ask your AI:'],
+    verdict: { keen: 'Keen', maybe: 'Maybe', no: 'Not for me' },
+    takeOf: "{name}'s take", notePh: "{name}'s note", saving: 'Saving…',
+    how: ['The homes come from', 'and what each of us needs from', 'Edit the files, or ask your AI:', 'Our takes are saved in', 'Open a home to give yours.'],
     prompts: [
       'Add 14 Ashley Down Road, Horfield: £1,350, 3 bedrooms, garden shed, 13 min by bike, 6 min to the M32',
+      'Alex is keen on 18 Elgin Park: the cellar fits his workbench',
       'Maya says the Cotham flat is too small for her easels: reject it with that reason',
     ],
     say: {
@@ -70,9 +75,12 @@ export const WORDS = {
     shortlist: 'Nuestras tres mejores', shortlistSub: 'Casas que cumplen todo lo imprescindible para los dos.',
     allHomes: 'Siguen en carrera', all: 'Todas',
     whyNo: 'Por qué dijimos que no', saidBy: '{name} dijo que no', bothOfUs: 'Los dos',
-    how: ['Las casas vienen de', 'y lo que necesita cada uno de', 'Edita los archivos o pídeselo a tu IA:'],
+    verdict: { keen: 'Me encanta', maybe: 'Quizá', no: 'No me convence' },
+    takeOf: 'Opinión de {name}', notePh: 'Nota de {name}', saving: 'Guardando…',
+    how: ['Las casas vienen de', 'y lo que necesita cada uno de', 'Edita los archivos o pídeselo a tu IA:', 'Nuestras opiniones se guardan en', 'Abre una casa para dar la tuya.'],
     prompts: [
       'Añade 14 Ashley Down Road, Horfield: 1.350 £, 3 dormitorios, cobertizo, 13 min en bici, 6 min a la M32',
+      'A Alex le encanta 18 Elgin Park: el sótano le sirve de taller',
       'Maya dice que el piso de Cotham es pequeño para sus caballetes: descártalo con ese motivo',
     ],
     say: {
@@ -107,4 +115,4 @@ export const words = () => {
   return WORDS[tag.toLowerCase().split('-')[0]] ?? WORDS.en
 }
 
-<HomeHunt homes={homes} setup={setup} words={words()} />
+<HomeHunt homes={homes} setup={setup} takes={takes} words={words()} />

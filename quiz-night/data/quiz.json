@@ -2,12 +2,11 @@
   "title": "Friday Quiz Night",
   "host": "Mum",
   "seconds": 20,
-  "players": [
-    { "name": "Mum", "color": "#f3aa08" },
-    { "name": "Dad", "color": "#5bcbf9" },
-    { "name": "Lucía", "color": "#30ccd5" },
-    { "name": "Noah", "color": "#ff7a59" },
-    { "name": "Grandma Rosa", "color": "#b69cff" }
+  "teams": [
+    { "id": "owls", "name": "Owls", "color": "#f3aa08" },
+    { "id": "foxes", "name": "Foxes", "color": "#ff7a59" },
+    { "id": "otters", "name": "Otters", "color": "#30ccd5" },
+    { "id": "hedgehogs", "name": "Hedgehogs", "color": "#b69cff" }
   ],
   "rounds": [
     {

@@ -1,0 +1,62 @@
+{
+  "fields": {
+    "candidates": {
+      "fields": {
+        "reached": {
+          "kind": "enum",
+          "values": [
+            "applied",
+            "screen",
+            "interview",
+            "offer",
+            "hired"
+          ]
+        },
+        "since": {
+          "kind": "text"
+        },
+        "stage": {
+          "kind": "enum",
+          "values": [
+            "applied",
+            "screen",
+            "interview",
+            "offer",
+            "hired",
+            "declined"
+          ]
+        }
+      },
+      "kind": "rows"
+    },
+    "verdicts": {
+      "fields": {
+        "by": {
+          "kind": "enum",
+          "values": [
+            "hannah",
+            "marco",
+            "sofia"
+          ]
+        },
+        "candidate": {
+          "kind": "text"
+        },
+        "recommend": {
+          "kind": "enum",
+          "values": [
+            "strong yes",
+            "yes",
+            "unsure",
+            "no"
+          ]
+        }
+      },
+      "kind": "rows"
+    }
+  },
+  "types": "hiring/types/hiring-pipeline.store.d.ts",
+  "view": "hiring/data/pipeline.json",
+  "data": "hiring/data/pipeline.start.json",
+  "version": 2
+}

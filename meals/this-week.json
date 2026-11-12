@@ -1,0 +1,39 @@
+{
+  "nights": {
+    "Fri": {
+      "cook": "Tom",
+      "recipe": "homemade-pizza",
+      "servings": 4
+    },
+    "Mon": {
+      "cook": "Maya",
+      "recipe": "lentil-soup",
+      "servings": 4
+    },
+    "Sat": {
+      "cook": "Maya",
+      "recipe": "mushroom-risotto",
+      "servings": 6
+    },
+    "Sun": {
+      "cook": "Tom",
+      "recipe": "roast-chicken",
+      "servings": 5
+    },
+    "Thu": {
+      "cook": "Maya",
+      "recipe": "salmon-rice",
+      "servings": 4
+    },
+    "Tue": {
+      "cook": "Tom",
+      "recipe": "chicken-traybake",
+      "servings": 4
+    },
+    "Wed": {
+      "cook": "Leo",
+      "recipe": "veggie-tacos",
+      "servings": 4
+    }
+  }
+}

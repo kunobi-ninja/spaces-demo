@@ -1,10 +1,15 @@
 import * as React from 'react'
+import { edit, useStore, useStoreStatus } from 'kunobi'
+import type { HiringPipelineStore } from '../types/hiring-pipeline.store'
 
 /*
  * A small company's hiring pipeline: a board per role, the interviewers' scorecards side by side
- * with the places they disagree, the funnel, and what happens this week. Everything is computed
- * from data/hiring.json; nothing here writes back.
+ * with the places they disagree, the funnel, and what happens this week. Roles, candidates and
+ * scorecards come from data/hiring.json. Where each candidate stands, and quick verdicts from
+ * interviewers who have not written a scorecard yet, live in the hiring-pipeline store.
  */
+
+export const STORE = 'hiring-pipeline'
 
 type Stage = 'applied' | 'screen' | 'interview' | 'offer' | 'hired'
 type Recommend = 'strong yes' | 'yes' | 'unsure' | 'no'
@@ -26,14 +31,17 @@ interface Candidate {
   since: string
   next?: { what: string; type: 'review' | 'screen' | 'interview' | 'meeting' | 'decision' | 'offer' | 'start'; date: string; with: string }
   scorecards: Scorecard[]
+  /** Quick verdicts from interviewers without a scorecard yet. */
+  quick: { by: string; recommend: Recommend }[]
 }
+type FileCandidate = Omit<Candidate, 'stage' | 'since' | 'reached' | 'quick'>
 export interface HiringData {
   company: string
   today: string
   interviewers: Interviewer[]
   stages: Stage[]
   roles: Role[]
-  candidates: Candidate[]
+  candidates: FileCandidate[]
 }
 
 const C = { midnight: '#06213f', deep: '#0b2d52', sun: '#f3aa08', ocean: '#5bcbf9', tide: '#30ccd5', horizon: '#0984c8', coral: '#e2603f' }
@@ -52,7 +60,7 @@ export function disagreements(c: Candidate, role: Role) {
     const spread = scores.length > 1 ? Math.max(...scores) - Math.min(...scores) : 0
     return { criterion: cr, scores, spread, low: Math.min(...scores), high: Math.max(...scores), flagged: spread >= 2 }
   })
-  const verdicts = c.scorecards.map((s) => s.recommend)
+  const verdicts = [...c.scorecards.map((s) => s.recommend), ...c.quick.map((q) => q.recommend)]
   const split = verdicts.some((v) => POSITIVE.includes(v)) && verdicts.some((v) => v === 'no')
   return { rows, split, count: rows.filter((r) => r.flagged).length + (split ? 1 : 0) }
 }
@@ -82,8 +90,42 @@ function ScoreCell({ value }: { value?: number }) {
   )
 }
 
-export function Hiring({ data, w }: { data: HiringData; w: any }) {
-  const { today, stages, roles, interviewers, candidates } = data
+export function Hiring({ data, pipeline: start, w }: { data: HiringData; pipeline: HiringPipelineStore; w: any }) {
+  const { today, stages, roles, interviewers } = data
+  const stored = useStore(STORE) as HiringPipelineStore | undefined
+  const status = useStoreStatus(STORE)
+  // Without the store (other builds, previews), show the last saved pipeline, read-only.
+  const open = (status?.status === 'open' || status?.status === 'paused') && stored !== undefined
+  const canEdit = open && status?.status === 'open' && Boolean(status?.canEdit)
+  const pipe = (open ? stored : start) ?? { candidates: {}, verdicts: {} }
+  const candidates: Candidate[] = React.useMemo(() => {
+    const quick = Object.values(pipe.verdicts ?? {})
+    return data.candidates.map((c) => {
+      const at = pipe.candidates?.[c.id]
+      return {
+        ...c,
+        stage: at?.stage ?? 'applied',
+        since: at?.since ?? c.applied,
+        reached: at?.reached ?? undefined,
+        quick: quick.filter((q) => q.candidate === c.id && q.by && q.recommend).map((q) => ({ by: q.by!, recommend: q.recommend! })),
+      }
+    })
+  }, [data, pipe])
+  /** Move a candidate on (or out). The date is the board's own "today". */
+  const move = (c: Candidate, to: Candidate['stage']) =>
+    edit(STORE, (d: HiringPipelineStore) => {
+      const values = { stage: to, since: today, reached: to === 'declined' ? (c.stage as Stage) : null }
+      if (d.candidates[c.id]) Object.assign(d.candidates[c.id], values)
+      else d.candidates[c.id] = values
+    })
+  const setQuick = (c: Candidate, by: string, recommend: Recommend | '') =>
+    edit(STORE, (d: HiringPipelineStore) => {
+      const id = `${c.id}-${by}`
+      if (!recommend) delete d.verdicts[id]
+      else if (d.verdicts[id]) d.verdicts[id].recommend = recommend
+      else d.verdicts[id] = { candidate: c.id, by: by as HiringPipelineStore['verdicts'][string]['by'], recommend }
+    })
+  const [picked, setPicked] = React.useState<string | null>(null)
   const byInterviewer = new Map(interviewers.map((i) => [i.id, i]))
   const roleById = new Map(roles.map((r) => [r.id, r]))
   const [roleFilter, setRoleFilter] = React.useState<string>('all')
@@ -224,6 +266,14 @@ export function Hiring({ data, w }: { data: HiringData; w: any }) {
         .hr-change b { font-family: Parkinsans, sans-serif; }
         .hr-change code { font-size: 13px; background: hsl(var(--card)); padding: 1px 6px; border-radius: 6px; }
         .hr-change q { display: block; margin-top: 4px; quotes: none; font-style: italic; }
+        .hr-change q::before, .hr-change q::after { content: none; }
+        .hr-cardwrap { margin-bottom: 8px; }
+        .hr-cardwrap .hr-card { margin-bottom: 0; }
+        .hr-moves { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 5px; }
+        .hr-move { all: unset; cursor: pointer; font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 99px; background: ${C.midnight}; color: #fff; }
+        .hr-move.no { background: transparent; color: hsl(var(--muted-foreground)); box-shadow: inset 0 0 0 1px hsl(var(--border)); }
+        .hr-move:focus-visible, .hr-quick:focus-visible { outline: 2px solid ${C.horizon}; outline-offset: 2px; }
+        .hr-quick { font: 600 12px Figtree, sans-serif; padding: 3px 6px; border-radius: 99px; border: 1px dashed hsl(var(--border)); background: hsl(var(--card)); color: hsl(var(--foreground)); max-width: 100%; }
         .hr-sample { margin-top: 10px; font-size: 12.5px; color: hsl(var(--muted-foreground)); }
         @container (max-width: 860px) {
           .hr-head { grid-template-columns: 1fr; }
@@ -295,7 +345,7 @@ export function Hiring({ data, w }: { data: HiringData; w: any }) {
                 <div className="hr-ptop">
                   <div>
                     <h3>{current.name}</h3>
-                    <div className="hr-role">{currentRole.title} · {w.stage[current.stage]} · {current.source} · {w.applied} {fmt(current.applied, { day: 'numeric', month: 'short' })}</div>
+                    <div className="hr-role">{currentRole.title} · {w.stage[current.stage]} · {current.source} · {w.applied} {fmt(current.applied, { day: 'numeric', month: 'short' })}{open && !status?.saved ? ` · ${w.saving}` : ''}</div>
                   </div>
                   {currentD.split ? (
                     <span className="hr-verdict split">● {w.splitVerdict}</span>
@@ -338,9 +388,28 @@ export function Hiring({ data, w }: { data: HiringData; w: any }) {
                       <td style={{ fontWeight: 600, fontSize: 13.5 }}>{w.recommends}</td>
                       {interviewers.map((iv) => {
                         const sc = current.scorecards.find((s) => s.by === iv.id)
+                        const q = current.quick.find((x) => x.by === iv.id)
+                        const tone = (r: Recommend) => (POSITIVE.includes(r) ? 'yes' : r === 'no' ? 'no' : '')
+                        const stillOpen = current.stage !== 'declined' && current.stage !== 'hired'
                         return (
                           <td key={iv.id}>
-                            {sc ? <span className={`hr-pill ${POSITIVE.includes(sc.recommend) ? 'yes' : sc.recommend === 'no' ? 'no' : ''}`}>{w.rec[sc.recommend]}</span> : <span className="hr-ok">{w.notYet}</span>}
+                            {sc ? (
+                              <span className={`hr-pill ${tone(sc.recommend)}`}>{w.rec[sc.recommend]}</span>
+                            ) : canEdit && stillOpen ? (
+                              <select
+                                className={`hr-quick ${q ? tone(q.recommend) : ''}`}
+                                value={q?.recommend ?? ''}
+                                aria-label={w.quickFor(iv.name.split(' ')[0])}
+                                onChange={(e) => setQuick(current, iv.id, e.currentTarget.value as Recommend | '')}
+                              >
+                                <option value="">{w.notYet}</option>
+                                {(['strong yes', 'yes', 'unsure', 'no'] as Recommend[]).map((r) => <option key={r} value={r}>{w.rec[r]}</option>)}
+                              </select>
+                            ) : q ? (
+                              <span className={`hr-pill ${tone(q.recommend)}`} title={w.quickTitle}>{w.rec[q.recommend]}*</span>
+                            ) : (
+                              <span className="hr-ok">{w.notYet}</span>
+                            )}
                           </td>
                         )
                       })}
@@ -372,7 +441,7 @@ export function Hiring({ data, w }: { data: HiringData; w: any }) {
 
         <div className="hr-bar hr-pipe">
           <h2 className="hr-h2">{w.pipeline}</h2>
-          <span className="hr-hint">{w.boardHint}</span>
+          <span className="hr-hint">{open && !status?.saved ? w.saving : canEdit ? w.boardHintEdit : w.boardHint}</span>
         </div>
 
         <div className="hr-board">
@@ -386,7 +455,8 @@ export function Hiring({ data, w }: { data: HiringData; w: any }) {
                   const inStage = daysBetween(c.since, today)
                   const live = st !== 'declined' && st !== 'hired'
                   return (
-                    <button key={c.id} className={`hr-card${selected === c.id ? ' sel' : ''}${st === 'declined' ? ' muted' : ''}`} onClick={() => c.scorecards.length && select(c.id, true)} aria-pressed={selected === c.id}>
+                    <div key={c.id} className="hr-cardwrap">
+                    <button className={`hr-card${selected === c.id || (canEdit && picked === c.id) ? ' sel' : ''}${st === 'declined' ? ' muted' : ''}`} onClick={() => { setPicked(c.id); if (c.scorecards.length) select(c.id, !canEdit) }} aria-pressed={selected === c.id || (canEdit && picked === c.id)}>
                       <div className="hr-cardtop">
                         <Avatar name={c.name} size={26} />
                         <div>
@@ -401,6 +471,15 @@ export function Hiring({ data, w }: { data: HiringData; w: any }) {
                         {d && d.count > 0 && live && <span className="hr-pill flag">{w.discuss(d.count)}</span>}
                       </div>
                     </button>
+                    {canEdit && live && picked === c.id && (
+                      <div className="hr-moves">
+                        <button className="hr-move" onClick={() => move(c, stages[stages.indexOf(c.stage as Stage) + 1])}>
+                          → {w.stage[stages[stages.indexOf(c.stage as Stage) + 1]]}
+                        </button>
+                        <button className="hr-move no" onClick={() => move(c, 'declined')}>{w.decline}</button>
+                      </div>
+                    )}
+                    </div>
                   )
                 })}
               </section>
@@ -464,7 +543,7 @@ export function Hiring({ data, w }: { data: HiringData; w: any }) {
         </section>
 
         <div className="hr-change">
-          <b>{w.change}</b> {w.changeLine}
+          <b>{w.change}</b> {canEdit ? w.changeLineEdit : w.changeLine}
           {w.prompts.map((p: string) => <q key={p}>{p}</q>)}
           <div className="hr-sample">{w.sample}</div>
         </div>

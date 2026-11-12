@@ -1,0 +1,28 @@
+{
+  "takes": {
+    "H1-alex": {
+      "home": "H1",
+      "note": "The shed already has power.",
+      "person": "alex",
+      "verdict": "keen"
+    },
+    "H1-maya": {
+      "home": "H1",
+      "note": "The back bedroom gets sun all afternoon.",
+      "person": "maya",
+      "verdict": "keen"
+    },
+    "H2-alex": {
+      "home": "H2",
+      "note": "Street parking only, so the van needs a permit.",
+      "person": "alex",
+      "verdict": "maybe"
+    },
+    "H3-maya": {
+      "home": "H3",
+      "note": "Four minutes to work, but where do the easels go?",
+      "person": "maya",
+      "verdict": "maybe"
+    }
+  }
+}
