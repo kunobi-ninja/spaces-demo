@@ -1,0 +1,92 @@
+{
+  "pins": {
+    "p1": {
+      "added": "2026-11-02T19:10",
+      "author": "sam",
+      "kind": "issue",
+      "resolved": "no",
+      "room": "kitchen",
+      "text": "The tap drips all night. Can we call the landlord this week?",
+      "x": 1090,
+      "y": 90,
+      "z": 600
+    },
+    "p2": {
+      "added": "2026-11-03T08:40",
+      "author": "noa",
+      "kind": "issue",
+      "resolved": "no",
+      "room": "bath",
+      "text": "The mould is back in the corner above the bath.",
+      "x": 430,
+      "y": 55,
+      "z": 45
+    },
+    "p3": {
+      "added": "2026-11-03T21:05",
+      "author": "ines",
+      "kind": "idea",
+      "resolved": "no",
+      "room": "living",
+      "text": "More plants in this corner? It gets the morning sun.",
+      "x": 40,
+      "y": 120,
+      "z": 760
+    },
+    "p4": {
+      "added": "2026-11-04T22:30",
+      "author": "sam",
+      "kind": "like",
+      "resolved": "no",
+      "room": "living",
+      "text": "Best seat in the flat for Sunday films.",
+      "x": 220,
+      "y": 80,
+      "z": 740
+    },
+    "p5": {
+      "added": "2026-11-05T18:15",
+      "author": "ines",
+      "kind": "question",
+      "resolved": "no",
+      "room": "hall",
+      "text": "Who has the spare key for the bike shed?",
+      "x": 1050,
+      "y": 0,
+      "z": 380
+    },
+    "p6": {
+      "added": "2026-11-06T12:00",
+      "author": "noa",
+      "kind": "idea",
+      "resolved": "yes",
+      "room": "kitchen",
+      "text": "One shared shelf for spices, with labels.",
+      "x": 760,
+      "y": 75,
+      "z": 620
+    },
+    "p7": {
+      "added": "2026-11-07T07:50",
+      "author": "ines",
+      "kind": "question",
+      "resolved": "no",
+      "room": "ines",
+      "text": "My radiator only does full heat. Can someone look at the valve?",
+      "x": 1080,
+      "y": 0,
+      "z": 40
+    },
+    "p8": {
+      "added": "2026-11-08T23:20",
+      "author": "noa",
+      "kind": "issue",
+      "resolved": "no",
+      "room": "living",
+      "text": "The big window doesn't shut all the way. Cold draught at night.",
+      "x": 400,
+      "y": 100,
+      "z": 795
+    }
+  }
+}

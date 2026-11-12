@@ -1,0 +1,266 @@
+{
+  "takenAt": "2026-11-12T01:16:00Z",
+  "windowHours": 12,
+  "cluster": {
+    "name": "Sample cluster",
+    "k8s": "v1.30.6"
+  },
+  "totals": {
+    "nodes": 11,
+    "nodesReady": 11,
+    "pods": 174,
+    "running": 170,
+    "succeeded": 4,
+    "notReady": 0,
+    "nodeShells": 12,
+    "kustomizations": 47,
+    "helmreleases": 29,
+    "helmrepositories": 22,
+    "statefulsets": 16
+  },
+  "events": [
+    {
+      "ns": "flux-system",
+      "kind": "Kustomization",
+      "obj": "shop-operators",
+      "reason": "HealthCheckFailed",
+      "count": 103790,
+      "first": "2026-08-31T16:57:17Z",
+      "last": "2026-11-12T01:13:42Z",
+      "src": "kustomize-controller",
+      "msg": "health check failed after 17.997904ms: failed early due to stalled resources: [HelmRelease/flux-system/pgo status: 'Failed']"
+    },
+    {
+      "ns": "flux-system",
+      "kind": "HelmChart",
+      "obj": "flux-system-agent",
+      "reason": "InvalidChartReference",
+      "count": 1,
+      "first": "2026-11-12T01:13:12Z",
+      "last": "2026-11-12T01:13:12Z",
+      "src": "source-controller",
+      "msg": "invalid chart reference: stat …/source/apps/agent/deploy/helm/agent-memory: no such file or directory"
+    },
+    {
+      "ns": "flux-system",
+      "kind": "HelmRepository",
+      "obj": "onechart",
+      "reason": "Failed",
+      "count": 10314,
+      "first": "2026-07-27T14:29:42Z",
+      "last": "2026-11-12T01:08:37Z",
+      "src": "source-controller",
+      "msg": "failed to fetch Helm repository index: Get \"https://chart.onechart.dev/index.yaml\": dial tcp: lookup chart.onechart.dev on 10.43.0.10:53: no such host"
+    },
+    {
+      "ns": "monitoring",
+      "kind": "StatefulSet",
+      "obj": "vmalertmanager-cluster",
+      "reason": "FailedCreate",
+      "count": 14863,
+      "first": "2026-05-26T08:26:45Z",
+      "last": "2026-11-12T01:03:57Z",
+      "src": "statefulset-controller",
+      "msg": "create Pod vmalertmanager-cluster-0 failed: pods \"vmalertmanager-cluster-0\" is forbidden: error looking up service account monitoring/vmalertmanager-cluster"
+    },
+    {
+      "ns": "flux-system",
+      "kind": "Kustomization",
+      "obj": "agent",
+      "reason": "HealthCheckFailed",
+      "count": 1,
+      "first": "2026-11-12T01:07:55Z",
+      "last": "2026-11-12T01:07:55Z",
+      "src": "kustomize-controller",
+      "msg": "health check failed after 5m0.012291705s: timeout waiting for: [HelmRelease/flux-system/agent status: 'InProgress']"
+    },
+    {
+      "ns": "flux-system",
+      "kind": "Kustomization",
+      "obj": "agent",
+      "reason": "HealthCheckFailed",
+      "count": 1,
+      "first": "2026-11-12T00:57:55Z",
+      "last": "2026-11-12T00:57:55Z",
+      "src": "kustomize-controller",
+      "msg": "health check failed after 5m0.017255082s: timeout waiting for: [HelmRelease/flux-system/agent status: 'InProgress']"
+    },
+    {
+      "ns": "flux-system",
+      "kind": "Kustomization",
+      "obj": "agent",
+      "reason": "HealthCheckFailed",
+      "count": 1,
+      "first": "2026-11-12T00:47:54Z",
+      "last": "2026-11-12T00:47:54Z",
+      "src": "kustomize-controller",
+      "msg": "health check failed after 5m0.015793539s: timeout waiting for: [HelmRelease/flux-system/agent status: 'InProgress']"
+    },
+    {
+      "ns": "flux-system",
+      "kind": "Kustomization",
+      "obj": "agent",
+      "reason": "HealthCheckFailed",
+      "count": 1,
+      "first": "2026-11-12T00:37:54Z",
+      "last": "2026-11-12T00:37:54Z",
+      "src": "kustomize-controller",
+      "msg": "health check failed after 5m0.011913348s: timeout waiting for: [HelmRelease/flux-system/agent status: 'InProgress']"
+    },
+    {
+      "ns": "flux-system",
+      "kind": "Kustomization",
+      "obj": "agent",
+      "reason": "HealthCheckFailed",
+      "count": 1,
+      "first": "2026-11-12T00:27:54Z",
+      "last": "2026-11-12T00:27:54Z",
+      "src": "kustomize-controller",
+      "msg": "health check failed after 5m0.018380063s: timeout waiting for: [Namespace/agent status: 'Unknown': client rate limiter Wait returned an error, HelmRelease/flux-system/agent status: 'InProgress']"
+    },
+    {
+      "ns": "flux-system",
+      "kind": "Kustomization",
+      "obj": "agent",
+      "reason": "HealthCheckFailed",
+      "count": 1,
+      "first": "2026-11-12T00:17:54Z",
+      "last": "2026-11-12T00:17:54Z",
+      "src": "kustomize-controller",
+      "msg": "health check failed after 5m0.012367656s: timeout waiting for: [HelmRelease/flux-system/agent status: 'InProgress']"
+    }
+  ],
+  "changes": [
+    {
+      "ns": "flux-system",
+      "kind": "GitRepository",
+      "obj": "apps",
+      "reason": "NewArtifact",
+      "last": "2026-11-12T01:13:07Z"
+    }
+  ],
+  "pods": [
+    {
+      "ns": "storage",
+      "n": "storage-api-0",
+      "r": 112,
+      "last": "2026-11-11T17:30:03Z",
+      "why": [
+        "Error"
+      ]
+    },
+    {
+      "ns": "kube-system",
+      "n": "node-shell-bdad5124f508c00d",
+      "r": 2676,
+      "last": "2026-11-11T23:02:56Z",
+      "why": [
+        "Completed"
+      ]
+    },
+    {
+      "ns": "kube-system",
+      "n": "node-shell-905b3a4461a9026c",
+      "r": 2677,
+      "last": "2026-11-11T23:49:04Z",
+      "why": [
+        "Completed"
+      ]
+    },
+    {
+      "ns": "kube-system",
+      "n": "node-shell-agent-3",
+      "r": 2733,
+      "last": "2026-11-12T00:30:59Z",
+      "why": [
+        "Completed"
+      ]
+    },
+    {
+      "ns": "observability",
+      "n": "chi-observability-clickhouse-cluster-0-0-0",
+      "r": 31,
+      "last": "2026-11-11T05:11:00Z",
+      "why": [
+        "OOMKilled"
+      ]
+    }
+  ],
+  "flux": {
+    "kustomizations": [
+      {
+        "n": "agent",
+        "s": "Unknown",
+        "reason": "Progressing",
+        "t": "2026-11-12T01:12:55Z",
+        "m": "Reconciliation in progress",
+        "d": []
+      },
+      {
+        "n": "shop-operators",
+        "s": "False",
+        "reason": "HealthCheckFailed",
+        "t": "2026-11-12T01:14:42Z",
+        "m": "health check failed: failed early due to stalled resources: [HelmRelease/flux-system/pgo status: 'Failed']",
+        "d": [
+          "shop-base"
+        ]
+      },
+      {
+        "n": "shop-databases",
+        "s": "False",
+        "reason": "DependencyNotReady",
+        "t": "2026-03-11T15:40:49Z",
+        "m": "dependency 'flux-system/shop-operators' is not ready",
+        "d": [
+          "shop-operators"
+        ]
+      },
+      {
+        "n": "shop-apps",
+        "s": "False",
+        "reason": "DependencyNotReady",
+        "t": "2026-03-11T15:41:28Z",
+        "m": "dependency 'flux-system/shop-databases' is not ready",
+        "d": [
+          "shop-databases"
+        ]
+      }
+    ],
+    "helmreleases": [
+      {
+        "n": "agent",
+        "tns": "agent",
+        "s": "False",
+        "reason": "SourceNotReady",
+        "t": "2026-11-12T01:15:20Z",
+        "m": "HelmChart 'flux-system/flux-system-agent' is not ready: invalid chart reference under apps/agent/deploy/helm/agent-memory"
+      },
+      {
+        "n": "pgo",
+        "tns": "shop",
+        "s": "False",
+        "reason": "UpgradeFailed",
+        "t": "2026-08-25T19:43:23Z",
+        "m": "Helm upgrade failed for release shop/pgo with chart pgo@5.8.9+640166ed654e: context deadline exceeded"
+      }
+    ],
+    "helmrepositories": [
+      {
+        "n": "onechart",
+        "url": "https://chart.onechart.dev",
+        "s": "False",
+        "reason": "Failed",
+        "t": "2026-07-27T14:29:42Z"
+      }
+    ]
+  },
+  "statefulsets": [
+    {
+      "ns": "monitoring",
+      "n": "vmalertmanager-cluster",
+      "want": 1,
+      "ready": 0
+    }
+  ]
+}

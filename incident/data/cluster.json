@@ -1,0 +1,422 @@
+{
+ "takenAt": "2026-11-12T01:17:00Z",
+ "cluster": {
+  "label": "Sample cluster",
+  "k8s": "v1.30.6+rke2r1"
+ },
+ "scope": {
+  "app": "fern",
+  "namespace": "fern",
+  "fluxNamespace": "flux-system",
+  "release": "pgo"
+ },
+ "kustomizations": [
+  {
+   "ns": "flux-system",
+   "n": "fern-base",
+   "path": "./.infra/base",
+   "dependsOn": [],
+   "rev": "main@sha1:f18a67154bf3898eaffe6cdd404e2e8a9c1c198c",
+   "ready": {
+    "status": "True",
+    "reason": "ReconciliationSucceeded",
+    "message": "Applied revision: main@sha1:f18a67154bf3898eaffe6cdd404e2e8a9c1c198c",
+    "t": "2026-11-12T01:14:28Z"
+   }
+  },
+  {
+   "ns": "flux-system",
+   "n": "fern-operators",
+   "path": "./.infra/operators",
+   "dependsOn": [
+    "fern-base"
+   ],
+   "rev": "main@sha1:f18a67154bf3898eaffe6cdd404e2e8a9c1c198c",
+   "ready": {
+    "status": "False",
+    "reason": "HealthCheckFailed",
+    "message": "health check failed after 15.595369ms: failed early due to stalled resources: [HelmRelease/flux-system/pgo status: 'Failed']",
+    "t": "2026-11-12T01:14:42Z"
+   }
+  },
+  {
+   "ns": "flux-system",
+   "n": "fern-databases",
+   "path": "./.infra/databases",
+   "dependsOn": [
+    "fern-operators"
+   ],
+   "rev": "main@sha1:f18a67154bf3898eaffe6cdd404e2e8a9c1c198c",
+   "ready": {
+    "status": "False",
+    "reason": "DependencyNotReady",
+    "message": "dependency 'flux-system/fern-operators' is not ready",
+    "t": "2026-03-11T15:40:49Z"
+   }
+  },
+  {
+   "ns": "flux-system",
+   "n": "fern-apps",
+   "path": "./.infra/apps",
+   "dependsOn": [
+    "fern-databases"
+   ],
+   "rev": "main@sha1:f18a67154bf3898eaffe6cdd404e2e8a9c1c198c",
+   "ready": {
+    "status": "False",
+    "reason": "DependencyNotReady",
+    "message": "dependency 'flux-system/fern-databases' is not ready",
+    "t": "2026-03-11T15:41:28Z"
+   }
+  }
+ ],
+ "helmreleases": [
+  {
+   "ns": "flux-system",
+   "n": "pgo",
+   "target": "fern",
+   "chart": "OCIRepository/pgo",
+   "ks": "fern-operators",
+   "timeout": null,
+   "ready": {
+    "status": "False",
+    "reason": "UpgradeFailed",
+    "message": "Helm upgrade failed for release fern/pgo with chart pgo@5.8.9+640166ed654e: context deadline exceeded",
+    "t": "2026-08-25T19:43:23Z"
+   },
+   "stalled": {
+    "status": "True",
+    "reason": "RetriesExceeded",
+    "message": "Failed to upgrade after 1 attempt(s)",
+    "t": "2026-08-31T16:35:10Z"
+   },
+   "history": [
+    {
+     "v": "5.8.9",
+     "s": "failed",
+     "at": "2026-08-25T19:38:22Z"
+    },
+    {
+     "v": "5.8.8",
+     "s": "failed",
+     "at": "2026-06-15T14:04:44Z"
+    },
+    {
+     "v": "5.8.7",
+     "s": "failed",
+     "at": "2026-03-11T15:40:13Z"
+    },
+    {
+     "v": "5.8.6",
+     "s": "deployed",
+     "at": "2026-01-29T11:06:26Z"
+    }
+   ]
+  }
+ ],
+ "ocirepositories": [
+  {
+   "ns": "flux-system",
+   "n": "pgo",
+   "url": "oci://registry.developers.crunchydata.com/crunchydata/pgo",
+   "semver": "5.*",
+   "artifact": "5.8.9@sha256:640166ed654e",
+   "ready": {
+    "status": "True",
+    "reason": "Succeeded",
+    "message": "stored artifact for digest '5.8.9@sha256:640166ed654e…'",
+    "t": "2026-10-28T20:35:09Z"
+   }
+  }
+ ],
+ "gitrepositories": [
+  {
+   "ns": "flux-system",
+   "n": "fern",
+   "branch": "main",
+   "artifact": "main@sha1:f18a67154bf3898eaffe6cdd404e2e8a9c1c198c",
+   "ready": {
+    "status": "True",
+    "reason": "Succeeded",
+    "message": "no changes since last reconciliation",
+    "t": "2026-10-07T16:22:59Z"
+   }
+  }
+ ],
+ "deployments": [
+  {
+   "ns": "fern",
+   "n": "pgo",
+   "want": 1,
+   "ready": 1,
+   "image": "postgres-operator:ubi9-5.8.9-0",
+   "hr": "pgo",
+   "ks": null
+  },
+  {
+   "ns": "fern",
+   "n": "fern-api",
+   "want": 1,
+   "ready": 1,
+   "image": "fern-api:20260304-111134-182cea5",
+   "hr": null,
+   "ks": "fern-apps"
+  },
+  {
+   "ns": "fern",
+   "n": "fern-worker",
+   "want": 9,
+   "ready": 9,
+   "image": "fern-worker:20260304-111134-182cea5",
+   "hr": null,
+   "ks": "fern-apps"
+  }
+ ],
+ "statefulsets": [
+  {
+   "ns": "fern",
+   "n": "fern-pg-instance1-4qhb",
+   "want": 1,
+   "ready": 1,
+   "owner": "fern-pg"
+  },
+  {
+   "ns": "fern",
+   "n": "fern-pg-instance1-fzql",
+   "want": 1,
+   "ready": 1,
+   "owner": "fern-pg"
+  },
+  {
+   "ns": "fern",
+   "n": "fern-pg-repo-host",
+   "want": 1,
+   "ready": 1,
+   "owner": "fern-pg"
+  }
+ ],
+ "postgresclusters": [
+  {
+   "ns": "fern",
+   "n": "fern-pg",
+   "pg": 18,
+   "want": 2,
+   "ready": 2,
+   "ks": "fern-databases"
+  }
+ ],
+ "pods": [
+  {
+   "ns": "fern",
+   "n": "pgo-5dd9f85479-v725r",
+   "phase": "Running",
+   "ready": [
+    true
+   ],
+   "restarts": 1,
+   "owner": "pgo",
+   "start": "2026-08-25T19:38:23Z"
+  },
+  {
+   "ns": "fern",
+   "n": "fern-pg-instance1-4qhb-0",
+   "phase": "Running",
+   "ready": [
+    true,
+    true,
+    true,
+    true
+   ],
+   "restarts": 0,
+   "owner": "fern-pg-instance1-4qhb",
+   "start": "2026-08-25T20:06:23Z"
+  },
+  {
+   "ns": "fern",
+   "n": "fern-pg-instance1-fzql-0",
+   "phase": "Running",
+   "ready": [
+    true,
+    true,
+    true,
+    true
+   ],
+   "restarts": 0,
+   "owner": "fern-pg-instance1-fzql",
+   "start": "2026-08-25T20:05:21Z"
+  },
+  {
+   "ns": "fern",
+   "n": "fern-pg-repo-host-0",
+   "phase": "Running",
+   "ready": [
+    true,
+    true
+   ],
+   "restarts": 0,
+   "owner": "fern-pg-repo-host",
+   "start": "2026-08-25T20:05:19Z"
+  },
+  {
+   "ns": "fern",
+   "n": "fern-api-784dfcf6f6-kw9rh",
+   "phase": "Running",
+   "ready": [
+    true,
+    true
+   ],
+   "restarts": 2,
+   "owner": "fern-api",
+   "start": "2026-05-18T08:19:50Z"
+  },
+  {
+   "ns": "fern",
+   "n": "fern-worker-64b5c5f865-59tcz",
+   "phase": "Running",
+   "ready": [
+    true
+   ],
+   "restarts": 13,
+   "owner": "fern-worker",
+   "start": "2026-05-18T08:19:50Z"
+  },
+  {
+   "ns": "fern",
+   "n": "fern-worker-64b5c5f865-64sbz",
+   "phase": "Running",
+   "ready": [
+    true
+   ],
+   "restarts": 2,
+   "owner": "fern-worker",
+   "start": "2026-05-26T08:33:35Z"
+  },
+  {
+   "ns": "fern",
+   "n": "fern-worker-64b5c5f865-bp8mc",
+   "phase": "Running",
+   "ready": [
+    true
+   ],
+   "restarts": 12,
+   "owner": "fern-worker",
+   "start": "2026-05-18T08:19:39Z"
+  },
+  {
+   "ns": "fern",
+   "n": "fern-worker-64b5c5f865-mt5lb",
+   "phase": "Running",
+   "ready": [
+    true
+   ],
+   "restarts": 11,
+   "owner": "fern-worker",
+   "start": "2026-05-26T07:03:37Z"
+  },
+  {
+   "ns": "fern",
+   "n": "fern-worker-64b5c5f865-n96qh",
+   "phase": "Running",
+   "ready": [
+    true
+   ],
+   "restarts": 10,
+   "owner": "fern-worker",
+   "start": "2026-05-26T07:02:47Z"
+  },
+  {
+   "ns": "fern",
+   "n": "fern-worker-64b5c5f865-nk9kl",
+   "phase": "Running",
+   "ready": [
+    true
+   ],
+   "restarts": 2,
+   "owner": "fern-worker",
+   "start": "2026-05-26T08:33:36Z"
+  },
+  {
+   "ns": "fern",
+   "n": "fern-worker-64b5c5f865-qz8sn",
+   "phase": "Running",
+   "ready": [
+    true
+   ],
+   "restarts": 13,
+   "owner": "fern-worker",
+   "start": "2026-05-18T08:19:40Z"
+  },
+  {
+   "ns": "fern",
+   "n": "fern-worker-64b5c5f865-wpc7t",
+   "phase": "Running",
+   "ready": [
+    true
+   ],
+   "restarts": 2,
+   "owner": "fern-worker",
+   "start": "2026-06-08T14:49:03Z"
+  },
+  {
+   "ns": "fern",
+   "n": "fern-worker-64b5c5f865-wtttv",
+   "phase": "Running",
+   "ready": [
+    true
+   ],
+   "restarts": 2,
+   "owner": "fern-worker",
+   "start": "2026-06-04T15:17:25Z"
+  }
+ ],
+ "events": [
+  {
+   "ns": "flux-system",
+   "kind": "Kustomization",
+   "obj": "fern-operators",
+   "type": "Warning",
+   "reason": "HealthCheckFailed",
+   "count": 103790,
+   "first": "2026-08-31T16:57:17Z",
+   "last": "2026-11-12T01:13:42Z",
+   "src": "kustomize-controller",
+   "msg": "health check failed after 17.997904ms: failed early due to stalled resources: [HelmRelease/flux-system/pgo status: 'Failed']"
+  },
+  {
+   "ns": "flux-system",
+   "kind": "Kustomization",
+   "obj": "fern-databases",
+   "type": "Normal",
+   "reason": "DependencyNotReady",
+   "count": 208301,
+   "first": "2026-08-31T16:48:12Z",
+   "last": "2026-11-12T01:13:41Z",
+   "src": "kustomize-controller",
+   "msg": "Dependencies do not meet ready condition, retrying in 30s"
+  },
+  {
+   "ns": "flux-system",
+   "kind": "Kustomization",
+   "obj": "fern-apps",
+   "type": "Normal",
+   "reason": "DependencyNotReady",
+   "count": 208302,
+   "first": "2026-08-31T16:48:12Z",
+   "last": "2026-11-12T01:13:26Z",
+   "src": "kustomize-controller",
+   "msg": "Dependencies do not meet ready condition, retrying in 30s"
+  },
+  {
+   "ns": "flux-system",
+   "kind": "OCIRepository",
+   "obj": "pgo",
+   "type": "Normal",
+   "reason": "ArtifactUpToDate",
+   "count": 11233,
+   "first": "2026-08-25T19:48:30Z",
+   "last": "2026-11-12T01:09:11Z",
+   "src": "source-controller",
+   "msg": "artifact up-to-date with remote revision: '5.8.9@sha256:640166ed654e…'"
+  }
+ ]
+}

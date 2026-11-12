@@ -24,10 +24,17 @@ import birthdayCover from './assets/covers/birthday-film.jpg'
 import reportCover from './assets/covers/monthly-report.jpg'
 import dinoCover from './assets/covers/dino-snack.jpg'
 import quizCover from './assets/covers/quiz-night.jpg'
-import questCover from './assets/covers/week-quest.jpg'
+import catCover from './assets/covers/cat-chase.jpg'
 import glassCover from './assets/covers/spectral-core.jpg'
 import paperCover from './assets/covers/paper-explainer.jpg'
 import splatCover from './assets/covers/scan-viewer.jpg'
+import incidentCover from './assets/covers/incident.jpg'
+import dashboardCover from './assets/covers/cluster-dashboard.jpg'
+import blastCover from './assets/covers/blast-radius.jpg'
+import runbookCover from './assets/covers/runbook.jpg'
+import handoverCover from './assets/covers/on-call-handover.jpg'
+import jamCover from './assets/covers/music-jam.jpg'
+import flatCover from './assets/covers/flat-tour.jpg'
 
 {/* The words on this page, per language. The page follows the system language and falls back to English. */}
 
@@ -36,7 +43,7 @@ export const WORDS = {
     eyebrow: 'Kunobi Spaces',
     title: ['Made in', 'a space.'],
     lede: 'Plans, tools and games for life and work. Open one, then ask your AI to make it yours.',
-    all: 'All', life: 'Everyday', work: 'Work', play: 'Play', film: 'Films', study: 'Studies',
+    all: 'All', life: 'Everyday', work: 'Work', ninja: 'Ninja', play: 'Play', film: 'Films', study: 'Studies',
     sizes: { large: 'Large tiles', medium: 'Medium tiles', compact: 'Compact tiles' },
     previews: 'Previews',
     needs: { experiment: 'Experiment', 'shared-state': 'Needs shared state' },
@@ -57,17 +64,24 @@ export const WORDS = {
       'dino-snack': ['Dino Snack', 'A 3D game for a kid who loves dinosaurs.'],
       'content-calendar': ['Content calendar', "A café's month of posts, from idea to published."],
       'quiz-night': ['Quiz Night', 'Your questions. Each team answers from its own screen, and the scores are kept.'],
-      'week-quest': ['Week Quest', 'Your week as a retro RPG.'],
+      'cat-chase': ['Cat chase', 'Everyone moves their own cat around a house. Chase fish, kick the yarn.'],
       'spectral-core': ['Light, contained', 'Glass, light and a custom shader.'],
       'paper-explainer': ['A stencil, explained', 'Paper, ink and a lifted cutout.'],
       'scan-viewer': ['Felipe, in 3D', 'A 1.7-million-point scan you can turn and zoom.'],
+      'cluster-dashboard': ['Cluster dashboard', 'What is broken in your cluster, where, and why.'],
+      'incident': ['A stuck upgrade, investigated', 'Timeline, affected objects and a postmortem, built from cluster data.'],
+      'blast-radius': ['Blast radius', 'Pick a ConfigMap, Secret, Service or PVC and see what breaks if you change it.'],
+      'runbook': ['Stuck HelmRelease runbook', 'Checks that read the cluster, the commands to run, and a shared log of runs.'],
+      'on-call-handover': ['On-call handover', 'The last 12 hours for the next person, who acks each open item.'],
+      'music-jam': ['Music Jam', 'Each friend owns a track, and every screen plays the same groove.'],
+      'flat-tour': ['Flat tour', 'Flatmates pin issues, questions and ideas on a 3D model of their flat.'],
     },
   },
   es: {
     eyebrow: 'Kunobi Spaces',
     title: ['Hecho en', 'un espacio.'],
     lede: 'Planes, herramientas y juegos para la vida y el trabajo. Abre uno y pide a tu IA que lo haga tuyo.',
-    all: 'Todo', life: 'Día a día', work: 'Trabajo', play: 'Jugar', film: 'Películas', study: 'Estudios',
+    all: 'Todo', life: 'Día a día', work: 'Trabajo', ninja: 'Ninja', play: 'Jugar', film: 'Películas', study: 'Estudios',
     sizes: { large: 'Mosaicos grandes', medium: 'Mosaicos medianos', compact: 'Mosaicos compactos' },
     previews: 'Avances',
     needs: { experiment: 'Experimento', 'shared-state': 'Necesita estado compartido' },
@@ -88,10 +102,17 @@ export const WORDS = {
       'dino-snack': ['Dino Snack', 'Un juego 3D para un niño que ama los dinosaurios.'],
       'content-calendar': ['Calendario de contenidos', 'Un mes de publicaciones de un café.'],
       'quiz-night': ['Noche de preguntas', 'Tus preguntas. Cada equipo responde desde su pantalla y los puntos se guardan.'],
-      'week-quest': ['Week Quest', 'Tu semana como un RPG retro.'],
+      'cat-chase': ['A por el pez', 'Cada uno mueve su gato por una casa. Caza peces y patea la lana.'],
       'spectral-core': ['Luz contenida', 'Vidrio, luz y un shader propio.'],
       'paper-explainer': ['Un esténcil, explicado', 'Papel, tinta y un recorte.'],
       'scan-viewer': ['Felipe, en 3D', 'Un escaneo de 1,7 millones de puntos que puedes girar.'],
+      'cluster-dashboard': ['Panel del clúster', 'Qué está roto en tu clúster, dónde y por qué.'],
+      'incident': ['Una actualización atascada, investigada', 'Cronología, objetos afectados y un postmortem, a partir del clúster.'],
+      'blast-radius': ['Radio de impacto', 'Elige un ConfigMap, Secret, Service o PVC y mira qué se rompe si lo cambias.'],
+      'runbook': ['Runbook de HelmRelease atascado', 'Comprobaciones que leen el clúster, los comandos y un registro compartido.'],
+      'on-call-handover': ['Relevo de guardia', 'Las últimas 12 horas para quien entra, que marca cada pendiente.'],
+      'music-jam': ['Jam musical', 'Cada persona lleva una pista y todas las pantallas tocan el mismo groove.'],
+      'flat-tour': ['Recorrido por el piso', 'Los compañeros dejan problemas, preguntas e ideas en un modelo 3D del piso.'],
     },
   },
 }
@@ -112,22 +133,29 @@ export const EXAMPLES = [
   { id: 'event', href: 'event/', cover: eventCover, kind: 'life', size: 'half', tags: ['Seating', 'RSVP', 'Budget'] },
   { id: 'expenses', href: 'expenses/', cover: expensesCover, kind: 'life', size: 'base', tags: ['Rent by room', 'Settle up'] },
   { id: 'meals', href: 'meals/', cover: mealsCover, kind: 'life', size: 'base', tags: ['Shopping list', 'Recipes'] },
+  { id: 'flat-tour', href: 'flat-tour/', cover: flatCover, kind: 'life', size: 'half', tags: ['3D', 'Pins', 'Flatmates'] },
   { id: 'dino-snack', href: 'dino-snack/', cover: dinoCover, kind: 'play', size: 'base', tags: ['three.js', 'Touch', 'Sound'] },
   { id: 'monthly-report', href: 'monthly-report/', cover: reportCover, kind: 'work', size: 'half', tags: ['Charts', 'KPIs'] },
   { id: 'hiring', href: 'hiring/', cover: hiringCover, kind: 'work', size: 'half', tags: ['Scorecards', 'Pipeline'] },
   { id: 'content-calendar', href: 'content-calendar/', cover: calendarCover, kind: 'work', size: 'half', tags: ['Calendar', 'Board'] },
   { id: 'projects', href: 'team/projects.mdx', cover: projectsCover, kind: 'work', size: 'half', tags: ['Board', 'Timeline'] },
+  { id: 'cluster-dashboard', href: 'cluster-dashboard/', cover: dashboardCover, kind: 'ninja', size: 'feature', tags: ['Kubernetes', 'Health', 'Read-only'] },
+  { id: 'runbook', href: 'runbook/', cover: runbookCover, kind: 'ninja', size: 'tall', tags: ['Flux', 'Checks', 'Run log'] },
+  { id: 'incident', href: 'incident/', cover: incidentCover, kind: 'ninja', size: 'half', tags: ['Timeline', 'Postmortem'] },
+  { id: 'blast-radius', href: 'blast-radius/', cover: blastCover, kind: 'ninja', size: 'half', tags: ['Dependencies', 'Checklist'] },
+  { id: 'on-call-handover', href: 'on-call-handover/', cover: handoverCover, kind: 'ninja', size: 'half', tags: ['On-call', 'Acks'] },
   { id: 'quiz-night', href: 'quiz-night/', cover: quizCover, kind: 'play', size: 'half', tags: ['Teams', 'Live round', 'Sound'] },
+  { id: 'music-jam', href: 'music-jam/', cover: jamCover, kind: 'play', size: 'half', tags: ['Sequencer', 'Live', 'Sound'] },
   { id: 'pitch-deck', href: 'pitch-deck.mdx/', cover: pitchCover, kind: 'film', size: 'half', tags: ['Slides', '2 formats', '2 looks'] },
   { id: 'scan-viewer', href: 'scan-viewer/', cover: splatCover, kind: 'study', size: 'half', tags: ['3D scan', 'Orbit', 'Zoom'] },
   { id: 'birthday-film', href: 'birthday-film.mdx/', cover: birthdayCover, kind: 'film', size: 'half', tags: ['Music', '3 formats'] },
-  { id: 'week-quest', href: 'week-quest/', cover: questCover, kind: 'play', size: 'base', status: 'preview', needs: 'experiment', focus: '0% 35%', tags: ['Pixel art', 'Sound'] },
+  { id: 'cat-chase', href: 'cat-chase/', cover: catCover, kind: 'play', size: 'half', tags: ['3D', 'Multiplayer', 'Sound'] },
   { id: 'spectral-core', href: 'spectral-core.mdx/', cover: glassCover, kind: 'study', size: 'base', status: 'preview', needs: 'experiment', tags: ['GLSL', '3 formats'] },
   { id: 'paper-explainer', href: 'paper-explainer.mdx/', cover: paperCover, kind: 'study', size: 'base', status: 'preview', needs: 'experiment', tags: ['Motion', '3 formats'] },
 ]
 
 export const COLORS = { midnight: '#06213f', deep: '#0b2d52', sun: '#f3aa08', ocean: '#5bcbf9', tide: '#30ccd5', horizon: '#0984c8' }
-export const KIND_COLOR = { life: COLORS.tide, work: COLORS.ocean, play: COLORS.sun, film: COLORS.horizon, study: '#9aa9bb' }
+export const KIND_COLOR = { life: COLORS.tide, work: COLORS.ocean, ninja: '#a78bfa', play: COLORS.sun, film: COLORS.horizon, study: '#9aa9bb' }
 
 export const Waves = () => {
   const ref = React.useRef(null)
@@ -226,7 +254,7 @@ export const Gallery = () => {
   const listed = EXAMPLES.filter((e) => e.status !== 'hidden')
   const visible = listed.filter((e) => previews || e.status !== 'preview')
   const previewCount = listed.filter((e) => e.status === 'preview').length
-  const kinds = ['all', 'life', 'work', 'play', 'film', 'study']
+  const kinds = ['all', 'life', 'work', 'ninja', 'play', 'film', 'study']
   const count = (k) => (k === 'all' ? visible.length : visible.filter((e) => e.kind === k).length)
   const shown = visible.filter((e) => filter === 'all' || e.kind === filter)
   return (

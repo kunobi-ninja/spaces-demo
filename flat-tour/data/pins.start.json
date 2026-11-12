@@ -1,0 +1,12 @@
+{
+  "pins": {
+    "p1": { "x": 1090, "y": 90, "z": 600, "kind": "issue", "text": "The tap drips all night. Can we call the landlord this week?", "author": "sam", "room": "kitchen", "resolved": "no", "added": "2026-11-02T19:10" },
+    "p2": { "x": 430, "y": 55, "z": 45, "kind": "issue", "text": "The mould is back in the corner above the bath.", "author": "noa", "room": "bath", "resolved": "no", "added": "2026-11-03T08:40" },
+    "p3": { "x": 40, "y": 120, "z": 760, "kind": "idea", "text": "More plants in this corner? It gets the morning sun.", "author": "ines", "room": "living", "resolved": "no", "added": "2026-11-03T21:05" },
+    "p4": { "x": 220, "y": 80, "z": 740, "kind": "like", "text": "Best seat in the flat for Sunday films.", "author": "sam", "room": "living", "resolved": "no", "added": "2026-11-04T22:30" },
+    "p5": { "x": 1050, "y": 0, "z": 380, "kind": "question", "text": "Who has the spare key for the bike shed?", "author": "ines", "room": "hall", "resolved": "no", "added": "2026-11-05T18:15" },
+    "p6": { "x": 760, "y": 75, "z": 620, "kind": "idea", "text": "One shared shelf for spices, with labels.", "author": "noa", "room": "kitchen", "resolved": "yes", "added": "2026-11-06T12:00" },
+    "p7": { "x": 1080, "y": 0, "z": 40, "kind": "question", "text": "My radiator only does full heat. Can someone look at the valve?", "author": "ines", "room": "ines", "resolved": "no", "added": "2026-11-07T07:50" },
+    "p8": { "x": 400, "y": 100, "z": 795, "kind": "issue", "text": "The big window doesn't shut all the way. Cold draught at night.", "author": "noa", "room": "living", "resolved": "no", "added": "2026-11-08T23:20" }
+  }
+}

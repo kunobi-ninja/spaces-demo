@@ -1,0 +1,132 @@
+{
+  "commander": "Platform on-call",
+  "entries": [
+    {
+      "author": "Claude",
+      "id": "e01",
+      "kind": "note",
+      "source": "HelmRelease flux-system/pgo · history v1",
+      "text": "Flux installed pgo 5.8.6 into fern. This is the last release Helm recorded as deployed.",
+      "time": "2026-01-29T11:06:26Z"
+    },
+    {
+      "author": "Claude",
+      "id": "e02",
+      "kind": "finding",
+      "source": "HelmRelease flux-system/pgo · history v2",
+      "text": "The OCIRepository picked up pgo 5.8.7 (semver 5.*) and Flux upgraded the release. Helm recorded the upgrade as failed.",
+      "time": "2026-03-11T15:40:13Z"
+    },
+    {
+      "author": "Claude",
+      "id": "e03",
+      "kind": "finding",
+      "source": "Kustomization flux-system/fern-databases · Ready=False DependencyNotReady",
+      "text": "fern-databases stopped reconciling because fern-operators was not Ready. fern-apps followed at 15:41. Both have stayed blocked since.",
+      "time": "2026-03-11T15:40:49Z"
+    },
+    {
+      "author": "Claude",
+      "id": "e04",
+      "kind": "finding",
+      "source": "HelmRelease flux-system/pgo · history v3",
+      "text": "The upgrade to 5.8.8 failed the same way.",
+      "time": "2026-06-15T14:04:44Z"
+    },
+    {
+      "author": "Claude",
+      "id": "e05",
+      "kind": "finding",
+      "source": "Pod fern/pgo-5dd9f85479-v725r",
+      "text": "Flux started the 5.8.9 upgrade. The new operator pod started on 5.8.9 within a second and is still the running pod, so the chart did roll out.",
+      "time": "2026-08-25T19:38:23Z"
+    },
+    {
+      "author": "Claude",
+      "id": "e06",
+      "kind": "finding",
+      "source": "HelmRelease flux-system/pgo · Ready=False UpgradeFailed",
+      "text": "Helm stopped waiting after five minutes: \"context deadline exceeded\". Release v4 was marked failed.",
+      "time": "2026-08-25T19:43:23Z"
+    },
+    {
+      "author": "Claude",
+      "id": "e07",
+      "kind": "finding",
+      "source": "PostgresCluster fern/fern-pg",
+      "text": "The new operator rolled the fern-pg pods: repo host at 20:05, both instances by 20:06. All three have been ready since, with no restarts.",
+      "time": "2026-08-25T20:05:19Z"
+    },
+    {
+      "author": "Claude",
+      "id": "e08",
+      "kind": "finding",
+      "source": "HelmRelease flux-system/pgo · Stalled RetriesExceeded",
+      "text": "Flux stopped retrying the release. From 16:57 fern-operators has reported HealthCheckFailed on every reconcile.",
+      "time": "2026-08-31T16:35:10Z"
+    },
+    {
+      "author": "Claude",
+      "id": "e09",
+      "kind": "detect",
+      "source": "Event flux-system/fern-operators · HealthCheckFailed ×103,785",
+      "text": "Spotted while reading the cluster's Warning events: fern-operators has failed its health check 103,785 times since 31 August. Nobody had picked it up.",
+      "time": "2026-11-12T01:10:00Z"
+    },
+    {
+      "author": "Claude",
+      "id": "e10",
+      "kind": "finding",
+      "source": "Deployment fern/pgo · PostgresCluster fern/fern-pg",
+      "text": "Everything that runs is healthy: pgo 1/1 on 5.8.9, fern-pg 2/2 instances, fern-api 1/1, fern-worker 9/9, and no events in the fern namespace. What failed is Helm's record of the release.",
+      "time": "2026-11-12T01:14:42Z"
+    },
+    {
+      "author": "Claude",
+      "id": "e11",
+      "kind": "finding",
+      "source": "GitRepository flux-system/fern",
+      "text": "Git main is at f18a671 and all four fern Kustomizations last applied that revision, so nothing is waiting to deploy today. The next change under .infra/databases or .infra/apps will not roll out.",
+      "time": "2026-11-12T01:15:06Z"
+    },
+    {
+      "author": "Claude",
+      "id": "e12",
+      "kind": "note",
+      "source": "HelmRelease flux-system/pgo · spec",
+      "text": "Proposed, not run: check that the 5.8.9 objects match the chart, then have Flux retry the release once (flux reconcile helmrelease pgo -n flux-system --force). Needs an owner and a decision.",
+      "time": "2026-11-12T01:17:00Z"
+    }
+  ],
+  "followups": [
+    {
+      "done": "open",
+      "id": "f1",
+      "owner": "Platform on-call",
+      "text": "Get pgo back to Ready so fern-operators, fern-databases and fern-apps reconcile again."
+    },
+    {
+      "done": "open",
+      "id": "f2",
+      "owner": "",
+      "text": "Give HelmRelease pgo an explicit spec.timeout and upgrade remediation, so a slow upgrade is retried instead of stalling."
+    },
+    {
+      "done": "open",
+      "id": "f3",
+      "owner": "",
+      "text": "Alert when a Flux Kustomization stays not Ready for more than a day. This one went unseen for eight months."
+    },
+    {
+      "done": "open",
+      "id": "f4",
+      "owner": "",
+      "text": "Decide whether pgo should follow every 5.* release automatically or be pinned and bumped on purpose."
+    }
+  ],
+  "resolved": "",
+  "severity": "SEV3",
+  "started": "2026-03-11T15:40:13Z",
+  "status": "investigating",
+  "title": "pgo upgrade stuck, fern rollouts blocked"
+}

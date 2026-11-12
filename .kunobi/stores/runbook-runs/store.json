@@ -1,0 +1,67 @@
+{
+  "fields": {
+    "checks": {
+      "fields": {
+        "note": {
+          "kind": "text"
+        },
+        "result": {
+          "kind": "enum",
+          "values": [
+            "pass",
+            "fail",
+            "unknown"
+          ]
+        },
+        "run": {
+          "kind": "text"
+        },
+        "seen": {
+          "kind": "text"
+        },
+        "step": {
+          "kind": "enum",
+          "values": [
+            "ready",
+            "suspend",
+            "source",
+            "retries",
+            "history",
+            "workloads",
+            "downstream",
+            "pending"
+          ]
+        }
+      },
+      "kind": "rows"
+    },
+    "runs": {
+      "fields": {
+        "at": {
+          "kind": "text"
+        },
+        "by": {
+          "kind": "text"
+        },
+        "note": {
+          "kind": "text"
+        },
+        "source": {
+          "kind": "enum",
+          "values": [
+            "live",
+            "snapshot",
+            "agent"
+          ]
+        },
+        "target": {
+          "kind": "text"
+        }
+      },
+      "kind": "rows"
+    }
+  },
+  "types": "runbook/types/runbook-runs.store.d.ts",
+  "version": 1,
+  "view": "runbook/data/runs.json"
+}
