@@ -1,0 +1,81 @@
+{
+  "fields": {
+    "commander": {
+      "kind": "text"
+    },
+    "entries": {
+      "fields": {
+        "author": {
+          "kind": "text"
+        },
+        "kind": {
+          "kind": "enum",
+          "values": [
+            "detect",
+            "finding",
+            "action",
+            "decision",
+            "note"
+          ]
+        },
+        "source": {
+          "kind": "text"
+        },
+        "text": {
+          "kind": "text"
+        },
+        "time": {
+          "kind": "text"
+        }
+      },
+      "kind": "ordered"
+    },
+    "followups": {
+      "fields": {
+        "done": {
+          "kind": "enum",
+          "values": [
+            "open",
+            "done"
+          ]
+        },
+        "owner": {
+          "kind": "text"
+        },
+        "text": {
+          "kind": "text"
+        }
+      },
+      "kind": "ordered"
+    },
+    "resolved": {
+      "kind": "text"
+    },
+    "severity": {
+      "kind": "enum",
+      "values": [
+        "SEV1",
+        "SEV2",
+        "SEV3",
+        "SEV4"
+      ]
+    },
+    "started": {
+      "kind": "text"
+    },
+    "status": {
+      "kind": "enum",
+      "values": [
+        "investigating",
+        "mitigated",
+        "resolved"
+      ]
+    },
+    "title": {
+      "kind": "text"
+    }
+  },
+  "types": "incident/types/incident-timeline.store.d.ts",
+  "version": 1,
+  "view": "incident/data/timeline.json"
+}

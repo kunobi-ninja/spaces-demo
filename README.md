@@ -30,9 +30,23 @@ Each example keeps its data in its own folder. Change it on the page, or ask you
 | Flat tour | `flat-tour/` | Pins and their comments | `data/flat.json`, `data/pins.start.json` |
 | Cat chase | `cat-chase/` | Nothing: the game lives in a room while someone has it open | |
 
+## Ninja: Kubernetes examples
+
+These read the cluster you have selected in Kunobi. They need Kunobi with Ninja mode, and each time you open one, it asks before it watches your cluster ("Allow this page"). Without a cluster they show sample data, read-only. The pages never change the cluster: they show the commands for you to run.
+
+| Example | Folder | Saved on the page | Sample data |
+| --- | --- | --- | --- |
+| Cluster dashboard | `cluster-dashboard/` | "Known" marks | `data/cluster.json` |
+| A stuck upgrade, investigated | `incident/` | Timeline, status and follow-ups | `data/cluster.json`, `data/timeline.start.json` |
+| Blast radius | `blast-radius/` | Checklist and notes per object | `data/cluster.json` |
+| Stuck HelmRelease runbook | `runbook/` | Runs and their check results | `data/cluster.json` |
+| On-call handover | `on-call-handover/` | Acks, owners and comments | `data/cluster.json`, `data/items.start.json` |
+
+## Where the data lives
+
 What a page saves lives in a LiveStore, defined in `.kunobi/stores/<name>/store.json`. A new copy of the space starts each store from its starting data: the `*.start.json` file beside it, or `data/week.json` and `data/shopping.json` for meals. Kunobi keeps a readable JSON copy of each store next to the example, so you and your AI can still read it as a file. Ask your AI to change a store's data and it edits the store, not the copy.
 
-LiveStores need a Kunobi build with live editing, and live editing turned on for the space. Elsewhere the pages show their starting data and cannot be changed. The people, numbers and places are made up.
+LiveStores need a Kunobi build with live editing, and live editing turned on for the space. Elsewhere the pages show their starting data and cannot be changed. The people, numbers and places are made up. The Kubernetes samples come from a real cluster, with its names changed.
 
 ## Credits
 

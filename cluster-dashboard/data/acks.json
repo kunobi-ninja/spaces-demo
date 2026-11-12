@@ -1,0 +1,9 @@
+{
+  "acks": {
+    "HelmRepository:flux-system:onechart": {
+      "at": "2026-11-12T01:42:00Z",
+      "note": "",
+      "state": "known"
+    }
+  }
+}

@@ -1,0 +1,306 @@
+{
+  "takenAt": "2026-11-12T01:16:00Z",
+  "label": "Sample cluster",
+  "k8s": "v1.30.6",
+  "hrTotal": 29,
+  "helmreleases": [
+    {
+      "ns": "flux-system",
+      "n": "pgo",
+      "suspend": null,
+      "src": {
+        "kind": "OCIRepository",
+        "name": "pgo",
+        "namespace": "flux-system"
+      },
+      "tns": "shop",
+      "rel": "pgo",
+      "storageNs": "flux-system",
+      "timeout": null,
+      "helmChart": null,
+      "ready": {
+        "s": "False",
+        "r": "UpgradeFailed",
+        "m": "Helm upgrade failed for release shop/pgo with chart pgo@5.8.9+640166ed654e: context deadline exceeded",
+        "t": "2026-08-25T19:43:23Z"
+      },
+      "stalled": {
+        "s": "True",
+        "r": "RetriesExceeded",
+        "m": "Failed to upgrade after 1 attempt(s)",
+        "t": "2026-08-31T16:35:10Z"
+      },
+      "failures": 1,
+      "upgradeFailures": 1,
+      "installFailures": 0,
+      "lastAction": "upgrade",
+      "lastRev": "5.8.9+640166ed654e",
+      "history": [
+        {
+          "v": 4,
+          "s": "failed",
+          "chart": "5.8.9+640166ed654e",
+          "last": "2026-08-25T19:38:22Z"
+        },
+        {
+          "v": 3,
+          "s": "failed",
+          "chart": "5.8.8+c4547cbdc0f6",
+          "last": "2026-06-15T14:04:44Z"
+        },
+        {
+          "v": 2,
+          "s": "failed",
+          "chart": "5.8.7+c6666e691666",
+          "last": "2026-03-11T15:40:13Z"
+        },
+        {
+          "v": 1,
+          "s": "deployed",
+          "chart": "5.8.6+9fd80bf18d4f",
+          "last": "2026-01-29T11:06:26Z"
+        }
+      ]
+    },
+    {
+      "ns": "flux-system",
+      "n": "agent",
+      "suspend": null,
+      "src": {
+        "kind": "HelmChart",
+        "name": "flux-system-agent",
+        "namespace": "flux-system"
+      },
+      "tns": "agent",
+      "rel": "agent",
+      "storageNs": "flux-system",
+      "timeout": null,
+      "helmChart": "flux-system/flux-system-agent",
+      "ready": {
+        "s": "False",
+        "r": "SourceNotReady",
+        "m": "HelmChart 'flux-system/flux-system-agent' is not ready: invalid chart reference: stat .../source/apps/agent/deploy/helm/agent-memory: no such file",
+        "t": "2026-11-12T01:15:20Z"
+      },
+      "stalled": null,
+      "failures": 0,
+      "upgradeFailures": 0,
+      "installFailures": 0,
+      "lastAction": "upgrade",
+      "lastRev": "0.3.0+679c6bd931bb",
+      "history": [
+        {
+          "v": 1293,
+          "s": "deployed",
+          "chart": "0.3.0+679c6bd931bb",
+          "last": "2026-11-09T19:51:30Z"
+        },
+        {
+          "v": 1292,
+          "s": "superseded",
+          "chart": "0.3.0+729e0a681d9b",
+          "last": "2026-11-09T19:45:46Z"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "kind": "OCIRepository",
+      "ns": "flux-system",
+      "n": "pgo",
+      "ready": {
+        "s": "True",
+        "r": "Succeeded",
+        "m": "stored artifact for digest '5.8.9@sha256:640166ed654ec820a34bafaea0c0e0e7e9d8545f7f02f5818f4d1169173cdc0d'",
+        "t": "2026-10-28T20:35:09Z"
+      },
+      "rev": "5.8.9@sha256:640166ed654ec820a34bafaea0c0e0e7e9d8545f7f02f5818f4d1169173cdc0d",
+      "chart": null,
+      "srcRef": null
+    },
+    {
+      "kind": "HelmChart",
+      "ns": "flux-system",
+      "n": "flux-system-agent",
+      "ready": {
+        "s": "False",
+        "r": "InvalidChartReference",
+        "m": "invalid chart reference: stat .../source/apps/agent/deploy/helm/agent-memory: no such file or directory",
+        "t": "2026-11-12T01:13:12Z"
+      },
+      "rev": null,
+      "chart": "./apps/agent/deploy/helm/agent-memory",
+      "srcRef": {
+        "kind": "GitRepository",
+        "name": "agent-app"
+      }
+    },
+    {
+      "kind": "GitRepository",
+      "ns": "flux-system",
+      "n": "agent-app",
+      "ready": {
+        "s": "True",
+        "r": "Succeeded",
+        "m": null,
+        "t": "2026-11-12T01:13:08Z"
+      },
+      "rev": "dev@sha1:6f36bd5738bf9d8cf4b601ca8a4dbca50b3a7e93",
+      "chart": null,
+      "srcRef": null
+    },
+    {
+      "kind": "GitRepository",
+      "ns": "flux-system",
+      "n": "shop",
+      "ready": {
+        "s": "True",
+        "r": "Succeeded",
+        "m": null,
+        "t": "2026-10-07T16:22:59Z"
+      },
+      "rev": "main@sha1:f18a67154bf3898eaffe6cdd404e2e8a9c1c198c",
+      "chart": null,
+      "srcRef": null
+    },
+    {
+      "kind": "GitRepository",
+      "ns": "flux-system",
+      "n": "tenant-apps",
+      "ready": {
+        "s": "True",
+        "r": "Succeeded",
+        "m": null,
+        "t": "2026-11-03T12:43:29Z"
+      },
+      "rev": "master@sha1:ff19bb8f76ca52f9cc45720f0dd1da55ed32cfed",
+      "chart": null,
+      "srcRef": null
+    }
+  ],
+  "kustomizations": [
+    {
+      "ns": "flux-system",
+      "n": "shop-base",
+      "dependsOn": [],
+      "hc": [],
+      "hrs": [],
+      "src": {
+        "kind": "GitRepository",
+        "name": "shop"
+      },
+      "ready": {
+        "s": "True",
+        "r": "ReconciliationSucceeded",
+        "m": "Applied revision: main@sha1:f18a67154bf3898eaffe6cdd404e2e8a9c1c198c",
+        "t": "2026-11-12T01:15:27Z"
+      },
+      "applied": "main@sha1:f18a67154bf3898eaffe6cdd404e2e8a9c1c198c"
+    },
+    {
+      "ns": "flux-system",
+      "n": "shop-operators",
+      "dependsOn": [
+        "shop-base"
+      ],
+      "hc": [
+        "pgo"
+      ],
+      "hrs": [
+        "flux-system/pgo"
+      ],
+      "src": {
+        "kind": "GitRepository",
+        "name": "shop"
+      },
+      "ready": {
+        "s": "False",
+        "r": "HealthCheckFailed",
+        "m": "health check failed after 15.595369ms: failed early due to stalled resources: [HelmRelease/flux-system/pgo status: 'Failed']",
+        "t": "2026-11-12T01:14:42Z"
+      },
+      "applied": "main@sha1:f18a67154bf3898eaffe6cdd404e2e8a9c1c198c"
+    },
+    {
+      "ns": "flux-system",
+      "n": "shop-databases",
+      "dependsOn": [
+        "shop-operators"
+      ],
+      "hc": [],
+      "hrs": [],
+      "src": {
+        "kind": "GitRepository",
+        "name": "shop"
+      },
+      "ready": {
+        "s": "False",
+        "r": "DependencyNotReady",
+        "m": "dependency 'flux-system/shop-operators' is not ready",
+        "t": "2026-03-11T15:40:49Z"
+      },
+      "applied": "main@sha1:f18a67154bf3898eaffe6cdd404e2e8a9c1c198c"
+    },
+    {
+      "ns": "flux-system",
+      "n": "shop-apps",
+      "dependsOn": [
+        "shop-databases"
+      ],
+      "hc": [],
+      "hrs": [],
+      "src": {
+        "kind": "GitRepository",
+        "name": "shop"
+      },
+      "ready": {
+        "s": "False",
+        "r": "DependencyNotReady",
+        "m": "dependency 'flux-system/shop-databases' is not ready",
+        "t": "2026-03-11T15:41:28Z"
+      },
+      "applied": "main@sha1:f18a67154bf3898eaffe6cdd404e2e8a9c1c198c"
+    },
+    {
+      "ns": "flux-system",
+      "n": "agent",
+      "dependsOn": [],
+      "hc": [
+        "agent"
+      ],
+      "hrs": [
+        "flux-system/agent"
+      ],
+      "src": {
+        "kind": "GitRepository",
+        "name": "tenant-apps"
+      },
+      "ready": {
+        "s": "Unknown",
+        "r": "Progressing",
+        "m": "Reconciliation in progress",
+        "t": "2026-11-12T01:12:55Z"
+      },
+      "applied": "master@sha1:ff19bb8f76ca52f9cc45720f0dd1da55ed32cfed"
+    }
+  ],
+  "workloads": [
+    {
+      "kind": "Deployment",
+      "ns": "shop",
+      "n": "pgo",
+      "want": 1,
+      "ready": 1,
+      "chart": "pgo-5.8.9_640166ed654e"
+    },
+    {
+      "kind": "Deployment",
+      "ns": "agent",
+      "n": "agent-memory",
+      "want": 1,
+      "ready": 1,
+      "chart": "agent-memory-0.3.0_679c6bd931bb"
+    }
+  ]
+}

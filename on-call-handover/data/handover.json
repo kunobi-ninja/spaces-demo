@@ -1,0 +1,20 @@
+{
+  "writtenAt": "2026-11-12T01:16:00Z",
+  "rota": ["Jonas Keller", "Ana Ruiz", "Priya Shah", "Tomás Vidal"],
+  "en": {
+    "headline": "Workloads healthy. 1 new Flux failure, 3 old ones without an owner.",
+    "lines": [
+      "New 01:13: agent chart path missing in the new apps revision. Old release still runs; no rollouts.",
+      "Old: pgo upgrade blocks shop-* since 25 Aug · Alertmanager has no ServiceAccount · onechart DNS fails.",
+      "Restarts: storage-api-0 once at 17:30 (Error)."
+    ]
+  },
+  "es": {
+    "headline": "Cargas sanas. 1 fallo nuevo en Flux y 3 antiguos sin responsable.",
+    "lines": [
+      "Nuevo 01:13: falta la ruta del chart de agent en la nueva revisión de apps. La release anterior sigue; no se despliega nada.",
+      "Antiguos: el upgrade de pgo bloquea shop-* desde el 25 ago · Alertmanager sin ServiceAccount · onechart falla por DNS.",
+      "Reinicios: storage-api-0 una vez a las 17:30 (Error)."
+    ]
+  }
+}

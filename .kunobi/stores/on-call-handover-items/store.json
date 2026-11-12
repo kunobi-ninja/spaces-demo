@@ -1,0 +1,65 @@
+{
+  "fields": {
+    "handedAt": {
+      "kind": "text"
+    },
+    "handedBy": {
+      "kind": "text"
+    },
+    "items": {
+      "fields": {
+        "check": {
+          "kind": "text"
+        },
+        "comment": {
+          "kind": "text"
+        },
+        "detail": {
+          "kind": "text"
+        },
+        "order": {
+          "kind": "int",
+          "max": 999,
+          "min": 0
+        },
+        "owner": {
+          "kind": "text"
+        },
+        "severity": {
+          "kind": "enum",
+          "values": [
+            "high",
+            "medium",
+            "low"
+          ]
+        },
+        "since": {
+          "kind": "text"
+        },
+        "source": {
+          "kind": "text"
+        },
+        "status": {
+          "kind": "enum",
+          "values": [
+            "open",
+            "acked",
+            "done"
+          ]
+        },
+        "title": {
+          "kind": "text"
+        }
+      },
+      "kind": "rows"
+    },
+    "takenAt": {
+      "kind": "text"
+    },
+    "takenBy": {
+      "kind": "text"
+    }
+  },
+  "types": "on-call-handover/types/on-call-handover-items.store.d.ts",
+  "view": "on-call-handover/data/items.json"
+}

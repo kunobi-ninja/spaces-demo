@@ -1,0 +1,146 @@
+{
+  "checks": {
+    "r-20261112-0116-pgo-downstream": {
+      "note": "",
+      "result": "fail",
+      "run": "r-20261112-0116-pgo",
+      "seen": "3 held back: shop-operators (HealthCheckFailed, since 12 Nov 2026) → shop-databases (DependencyNotReady, since 11 Mar 2026) → shop-apps (DependencyNotReady, since 11 Mar 2026)",
+      "step": "downstream"
+    },
+    "r-20261112-0116-pgo-history": {
+      "note": "",
+      "result": "fail",
+      "run": "r-20261112-0116-pgo",
+      "seen": "v4 failed · 5.8.9+640166ed654e · last good v1 5.8.6+9fd80bf18d4f, 29 Jan 2026 · 3 failed since",
+      "step": "history"
+    },
+    "r-20261112-0116-pgo-pending": {
+      "note": "",
+      "result": "pass",
+      "run": "r-20261112-0116-pgo",
+      "seen": "nothing waiting · blocked steps already run main@f18a67154bf3",
+      "step": "pending"
+    },
+    "r-20261112-0116-pgo-ready": {
+      "note": "",
+      "result": "fail",
+      "run": "r-20261112-0116-pgo",
+      "seen": "Ready=False · UpgradeFailed · since 25 Aug 2026",
+      "step": "ready"
+    },
+    "r-20261112-0116-pgo-retries": {
+      "note": "",
+      "result": "fail",
+      "run": "r-20261112-0116-pgo",
+      "seen": "Stalled · RetriesExceeded · 1 failed attempt",
+      "step": "retries"
+    },
+    "r-20261112-0116-pgo-source": {
+      "note": "",
+      "result": "pass",
+      "run": "r-20261112-0116-pgo",
+      "seen": "OCIRepository pgo · Ready · 5.8.9@640166ed654e",
+      "step": "source"
+    },
+    "r-20261112-0116-pgo-suspend": {
+      "note": "",
+      "result": "pass",
+      "run": "r-20261112-0116-pgo",
+      "seen": "spec.suspend: not set",
+      "step": "suspend"
+    },
+    "r-20261112-0116-pgo-workloads": {
+      "note": "",
+      "result": "pass",
+      "run": "r-20261112-0116-pgo",
+      "seen": "Deployment shop/pgo 1/1 · pgo-5.8.9+640166ed654e",
+      "step": "workloads"
+    },
+    "r-20261112-0117-agent-downstream": {
+      "note": "",
+      "result": "fail",
+      "run": "r-20261112-0117-agent",
+      "seen": "1 held back: agent (Progressing, since 12 Nov 2026)",
+      "step": "downstream"
+    },
+    "r-20261112-0117-agent-history": {
+      "note": "",
+      "result": "pass",
+      "run": "r-20261112-0117-agent",
+      "seen": "v1293 deployed · 0.3.0+679c6bd931bb · 9 Nov 2026",
+      "step": "history"
+    },
+    "r-20261112-0117-agent-pending": {
+      "note": "",
+      "result": "fail",
+      "run": "r-20261112-0117-agent",
+      "seen": "waiting to ship: agent: 0.3.0+679c6bd931bb → dev@6f36bd5738bf",
+      "step": "pending"
+    },
+    "r-20261112-0117-agent-ready": {
+      "note": "",
+      "result": "fail",
+      "run": "r-20261112-0117-agent",
+      "seen": "Ready=False · SourceNotReady · since 12 Nov 2026",
+      "step": "ready"
+    },
+    "r-20261112-0117-agent-retries": {
+      "note": "",
+      "result": "pass",
+      "run": "r-20261112-0117-agent",
+      "seen": "not stalled · 0 failed attempts",
+      "step": "retries"
+    },
+    "r-20261112-0117-agent-source": {
+      "note": "",
+      "result": "fail",
+      "run": "r-20261112-0117-agent",
+      "seen": "HelmChart flux-system-agent · InvalidChartReference · ./apps/agent/deploy/helm/agent-memory",
+      "step": "source"
+    },
+    "r-20261112-0117-agent-suspend": {
+      "note": "",
+      "result": "pass",
+      "run": "r-20261112-0117-agent",
+      "seen": "spec.suspend: not set",
+      "step": "suspend"
+    },
+    "r-20261112-0117-agent-workloads": {
+      "note": "",
+      "result": "pass",
+      "run": "r-20261112-0117-agent",
+      "seen": "Deployment agent/agent-memory 1/1 · agent-memory-0.3.0+679c6bd931bb",
+      "step": "workloads"
+    },
+    "r-20261112-0136-pgo-retries": {
+      "note": "Re-read before recording: still stalled, nobody has reset it.",
+      "result": "fail",
+      "run": "r-20261112-0136-pgo",
+      "seen": "Stalled · RetriesExceeded · 1 failed attempt",
+      "step": "retries"
+    }
+  },
+  "runs": {
+    "r-20261112-0116-pgo": {
+      "at": "2026-11-12T01:16:00Z",
+      "by": "Claude",
+      "note": "The operator already runs 5.8.9; only the Helm record failed. Needs a forced upgrade.",
+      "source": "agent",
+      "target": "flux-system/pgo"
+    },
+    "r-20261112-0117-agent": {
+      "at": "2026-11-12T01:17:00Z",
+      "by": "Claude",
+      "note": "The chart path no longer exists on the dev branch. Fix the path in Git, then reconcile with source.",
+      "source": "agent",
+      "target": "flux-system/agent"
+    },
+    "r-20261112-0136-pgo": {
+      "at": "2026-11-12T01:36:00Z",
+      "by": "Claude",
+      "note": "",
+      "source": "agent",
+      "target": "flux-system/pgo"
+    }
+  }
+}

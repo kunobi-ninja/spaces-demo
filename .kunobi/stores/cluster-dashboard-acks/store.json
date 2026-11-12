@@ -1,0 +1,25 @@
+{
+  "fields": {
+    "acks": {
+      "fields": {
+        "at": {
+          "kind": "text"
+        },
+        "note": {
+          "kind": "text"
+        },
+        "state": {
+          "kind": "enum",
+          "values": [
+            "known",
+            "ignored"
+          ]
+        }
+      },
+      "kind": "rows"
+    }
+  },
+  "types": "cluster-dashboard/types/cluster-dashboard-acks.store.d.ts",
+  "version": 1,
+  "view": "cluster-dashboard/data/acks.json"
+}

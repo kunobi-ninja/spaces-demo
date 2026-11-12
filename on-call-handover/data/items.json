@@ -1,0 +1,80 @@
+{
+  "handedAt": "2026-11-12T01:16:00Z",
+  "handedBy": "Jonas Keller",
+  "items": {
+    "agent-chart": {
+      "check": "flux get helmreleases agent -n flux-system",
+      "comment": "",
+      "detail": "The new apps revision (01:13 UTC) has no apps/agent/deploy/helm/agent-memory, so the HelmRelease is SourceNotReady. Revision 1293 from 9 Nov keeps running; no upgrades until the path matches the repo.",
+      "order": 1,
+      "owner": "",
+      "severity": "high",
+      "since": "2026-11-12T01:13:12Z",
+      "source": "HelmRelease flux-system/agent",
+      "status": "open",
+      "title": "agent chart path is gone"
+    },
+    "node-shell-cleanup": {
+      "check": "kubectl -n kube-system get pods | grep node-shell",
+      "comment": "",
+      "detail": "Debug pods left in kube-system. Three of them exit and restart in a loop (about 2,700 restarts each). Safe to delete once nobody is using them.",
+      "order": 6,
+      "owner": "",
+      "severity": "low",
+      "since": "2026-05-26T07:06:50Z",
+      "source": "Pods kube-system/node-shell-*",
+      "status": "open",
+      "title": "12 leftover node-shell pods"
+    },
+    "onechart-dns": {
+      "check": "flux get sources helm onechart -n flux-system",
+      "comment": "",
+      "detail": "chart.onechart.dev returns no such host from cluster DNS. Remove the HelmRepository if nothing uses it.",
+      "order": 4,
+      "owner": "",
+      "severity": "low",
+      "since": "2026-07-27T14:29:42Z",
+      "source": "HelmRepository flux-system/onechart",
+      "status": "open",
+      "title": "onechart repository does not resolve"
+    },
+    "pgo-upgrade": {
+      "check": "flux get kustomizations shop-operators shop-databases shop-apps",
+      "comment": "",
+      "detail": "Helm upgrade of shop/pgo (pgo@5.8.9) hit context deadline exceeded. shop-operators fails its health check on it; shop-databases and shop-apps wait on that.",
+      "order": 3,
+      "owner": "",
+      "severity": "medium",
+      "since": "2026-08-25T19:43:23Z",
+      "source": "HelmRelease flux-system/pgo",
+      "status": "open",
+      "title": "pgo upgrade failed, shop chain blocked"
+    },
+    "storage-api-restart": {
+      "check": "kubectl -n storage logs storage-api-0 --previous --tail=100",
+      "comment": "",
+      "detail": "One restart in the window, exit reason Error; 112 restarts in total. Watch for another one before acting.",
+      "order": 5,
+      "owner": "",
+      "severity": "low",
+      "since": "2026-11-11T17:30:03Z",
+      "source": "Pod storage/storage-api-0",
+      "status": "open",
+      "title": "storage-api-0 restarted at 17:30"
+    },
+    "vmalertmanager-sa": {
+      "check": "kubectl -n monitoring get serviceaccount vmalertmanager-cluster",
+      "comment": "",
+      "detail": "vmalertmanager-cluster wants 1 pod and has 0. Pod creation is forbidden: ServiceAccount monitoring/vmalertmanager-cluster does not exist. Alerts from vmalert are not delivered.",
+      "order": 2,
+      "owner": "",
+      "severity": "high",
+      "since": "2026-05-26T08:26:45Z",
+      "source": "StatefulSet monitoring/vmalertmanager-cluster",
+      "status": "open",
+      "title": "No Alertmanager: ServiceAccount missing"
+    }
+  },
+  "takenAt": "",
+  "takenBy": ""
+}

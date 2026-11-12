@@ -1,0 +1,14 @@
+{
+  "handedBy": "Jonas Keller",
+  "handedAt": "2026-11-12T01:16:00Z",
+  "takenBy": "",
+  "takenAt": "",
+  "items": {
+    "agent-chart": {"order": 1, "severity": "high", "status": "open", "since": "2026-11-12T01:13:12Z", "title": "agent chart path is gone", "detail": "The new apps revision (01:13 UTC) has no apps/agent/deploy/helm/agent-memory, so the HelmRelease is SourceNotReady. Revision 1293 from 9 Nov keeps running; no upgrades until the path matches the repo.", "source": "HelmRelease flux-system/agent", "check": "flux get helmreleases agent -n flux-system", "owner": "", "comment": ""},
+    "vmalertmanager-sa": {"order": 2, "severity": "high", "status": "open", "since": "2026-05-26T08:26:45Z", "title": "No Alertmanager: ServiceAccount missing", "detail": "vmalertmanager-cluster wants 1 pod and has 0. Pod creation is forbidden: ServiceAccount monitoring/vmalertmanager-cluster does not exist. Alerts from vmalert are not delivered.", "source": "StatefulSet monitoring/vmalertmanager-cluster", "check": "kubectl -n monitoring get serviceaccount vmalertmanager-cluster", "owner": "", "comment": ""},
+    "pgo-upgrade": {"order": 3, "severity": "medium", "status": "open", "since": "2026-08-25T19:43:23Z", "title": "pgo upgrade failed, shop chain blocked", "detail": "Helm upgrade of shop/pgo (pgo@5.8.9) hit context deadline exceeded. shop-operators fails its health check on it; shop-databases and shop-apps wait on that.", "source": "HelmRelease flux-system/pgo", "check": "flux get kustomizations shop-operators shop-databases shop-apps", "owner": "", "comment": ""},
+    "onechart-dns": {"order": 4, "severity": "low", "status": "open", "since": "2026-07-27T14:29:42Z", "title": "onechart repository does not resolve", "detail": "chart.onechart.dev returns no such host from cluster DNS. Remove the HelmRepository if nothing uses it.", "source": "HelmRepository flux-system/onechart", "check": "flux get sources helm onechart -n flux-system", "owner": "", "comment": ""},
+    "storage-api-restart": {"order": 5, "severity": "low", "status": "open", "since": "2026-11-11T17:30:03Z", "title": "storage-api-0 restarted at 17:30", "detail": "One restart in the window, exit reason Error; 112 restarts in total. Watch for another one before acting.", "source": "Pod storage/storage-api-0", "check": "kubectl -n storage logs storage-api-0 --previous --tail=100", "owner": "", "comment": ""},
+    "node-shell-cleanup": {"order": 6, "severity": "low", "status": "open", "since": "2026-05-26T07:06:50Z", "title": "12 leftover node-shell pods", "detail": "Debug pods left in kube-system. Three of them exit and restart in a loop (about 2,700 restarts each). Safe to delete once nobody is using them.", "source": "Pods kube-system/node-shell-*", "check": "kubectl -n kube-system get pods | grep node-shell", "owner": "", "comment": ""}
+  }
+}

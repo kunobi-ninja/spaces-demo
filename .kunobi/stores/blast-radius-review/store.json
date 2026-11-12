@@ -1,0 +1,39 @@
+{
+  "fields": {
+    "checks": {
+      "fields": {
+        "item": {
+          "kind": "text"
+        },
+        "object": {
+          "kind": "text"
+        },
+        "state": {
+          "kind": "enum",
+          "values": [
+            "done",
+            "skipped"
+          ]
+        }
+      },
+      "kind": "rows"
+    },
+    "notes": {
+      "fields": {
+        "at": {
+          "kind": "text"
+        },
+        "object": {
+          "kind": "text"
+        },
+        "text": {
+          "kind": "text"
+        }
+      },
+      "kind": "ordered"
+    }
+  },
+  "types": "blast-radius/types/blast-radius-review.store.d.ts",
+  "version": 1,
+  "view": "blast-radius/data/review.json"
+}
