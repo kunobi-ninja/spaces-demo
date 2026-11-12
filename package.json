@@ -1,0 +1,14 @@
+{
+  "name": "spaces-demo",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:catalog": "node scripts/build-catalog.mjs",
+    "test": "node --test scripts/*.test.mjs"
+  },
+  "devDependencies": {
+    "@fontsource/figtree": "5.3.0",
+    "@fontsource/parkinsans": "5.3.0",
+    "yaml": "2.8.1"
+  }
+}
