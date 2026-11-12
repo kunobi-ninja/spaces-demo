@@ -24,10 +24,12 @@ import birthdayCover from './assets/covers/birthday-film.jpg'
 import reportCover from './assets/covers/monthly-report.jpg'
 import dinoCover from './assets/covers/dino-snack.jpg'
 import quizCover from './assets/covers/quiz-night.jpg'
-import questCover from './assets/covers/week-quest.jpg'
+import catCover from './assets/covers/cat-chase.jpg'
 import glassCover from './assets/covers/spectral-core.jpg'
 import paperCover from './assets/covers/paper-explainer.jpg'
 import splatCover from './assets/covers/scan-viewer.jpg'
+import jamCover from './assets/covers/music-jam.jpg'
+import flatCover from './assets/covers/flat-tour.jpg'
 
 {/* The words on this page, per language. The page follows the system language and falls back to English. */}
 
@@ -57,10 +59,12 @@ export const WORDS = {
       'dino-snack': ['Dino Snack', 'A 3D game for a kid who loves dinosaurs.'],
       'content-calendar': ['Content calendar', "A café's month of posts, from idea to published."],
       'quiz-night': ['Quiz Night', 'Your questions. Each team answers from its own screen, and the scores are kept.'],
-      'week-quest': ['Week Quest', 'Your week as a retro RPG.'],
+      'cat-chase': ['Cat chase', 'Everyone moves their own cat. First to five fish wins.'],
       'spectral-core': ['Light, contained', 'Glass, light and a custom shader.'],
       'paper-explainer': ['A stencil, explained', 'Paper, ink and a lifted cutout.'],
       'scan-viewer': ['Felipe, in 3D', 'A 1.7-million-point scan you can turn and zoom.'],
+      'music-jam': ['Music Jam', 'Each friend owns a track, and every screen plays the same groove.'],
+      'flat-tour': ['Flat tour', 'Flatmates pin issues, questions and ideas on a 3D model of their flat.'],
     },
   },
   es: {
@@ -88,10 +92,12 @@ export const WORDS = {
       'dino-snack': ['Dino Snack', 'Un juego 3D para un niño que ama los dinosaurios.'],
       'content-calendar': ['Calendario de contenidos', 'Un mes de publicaciones de un café.'],
       'quiz-night': ['Noche de preguntas', 'Tus preguntas. Cada equipo responde desde su pantalla y los puntos se guardan.'],
-      'week-quest': ['Week Quest', 'Tu semana como un RPG retro.'],
+      'cat-chase': ['A por el pez', 'Cada uno mueve su gato. Gana quien coma cinco peces.'],
       'spectral-core': ['Luz contenida', 'Vidrio, luz y un shader propio.'],
       'paper-explainer': ['Un esténcil, explicado', 'Papel, tinta y un recorte.'],
       'scan-viewer': ['Felipe, en 3D', 'Un escaneo de 1,7 millones de puntos que puedes girar.'],
+      'music-jam': ['Jam musical', 'Cada persona lleva una pista y todas las pantallas tocan el mismo groove.'],
+      'flat-tour': ['Recorrido por el piso', 'Los compañeros dejan problemas, preguntas e ideas en un modelo 3D del piso.'],
     },
   },
 }
@@ -112,16 +118,18 @@ export const EXAMPLES = [
   { id: 'event', href: 'event/', cover: eventCover, kind: 'life', size: 'half', tags: ['Seating', 'RSVP', 'Budget'] },
   { id: 'expenses', href: 'expenses/', cover: expensesCover, kind: 'life', size: 'base', tags: ['Rent by room', 'Settle up'] },
   { id: 'meals', href: 'meals/', cover: mealsCover, kind: 'life', size: 'base', tags: ['Shopping list', 'Recipes'] },
+  { id: 'flat-tour', href: 'flat-tour/', cover: flatCover, kind: 'life', size: 'half', tags: ['3D', 'Pins', 'Flatmates'] },
   { id: 'dino-snack', href: 'dino-snack/', cover: dinoCover, kind: 'play', size: 'base', tags: ['three.js', 'Touch', 'Sound'] },
   { id: 'monthly-report', href: 'monthly-report/', cover: reportCover, kind: 'work', size: 'half', tags: ['Charts', 'KPIs'] },
   { id: 'hiring', href: 'hiring/', cover: hiringCover, kind: 'work', size: 'half', tags: ['Scorecards', 'Pipeline'] },
   { id: 'content-calendar', href: 'content-calendar/', cover: calendarCover, kind: 'work', size: 'half', tags: ['Calendar', 'Board'] },
   { id: 'projects', href: 'team/projects.mdx', cover: projectsCover, kind: 'work', size: 'half', tags: ['Board', 'Timeline'] },
   { id: 'quiz-night', href: 'quiz-night/', cover: quizCover, kind: 'play', size: 'half', tags: ['Teams', 'Live round', 'Sound'] },
+  { id: 'music-jam', href: 'music-jam/', cover: jamCover, kind: 'play', size: 'half', tags: ['Sequencer', 'Live', 'Sound'] },
   { id: 'pitch-deck', href: 'pitch-deck.mdx/', cover: pitchCover, kind: 'film', size: 'half', tags: ['Slides', '2 formats', '2 looks'] },
   { id: 'scan-viewer', href: 'scan-viewer/', cover: splatCover, kind: 'study', size: 'half', tags: ['3D scan', 'Orbit', 'Zoom'] },
   { id: 'birthday-film', href: 'birthday-film.mdx/', cover: birthdayCover, kind: 'film', size: 'half', tags: ['Music', '3 formats'] },
-  { id: 'week-quest', href: 'week-quest/', cover: questCover, kind: 'play', size: 'base', status: 'preview', needs: 'experiment', focus: '0% 35%', tags: ['Pixel art', 'Sound'] },
+  { id: 'cat-chase', href: 'cat-chase/', cover: catCover, kind: 'play', size: 'half', tags: ['3D', 'Multiplayer', 'Sound'] },
   { id: 'spectral-core', href: 'spectral-core.mdx/', cover: glassCover, kind: 'study', size: 'base', status: 'preview', needs: 'experiment', tags: ['GLSL', '3 formats'] },
   { id: 'paper-explainer', href: 'paper-explainer.mdx/', cover: paperCover, kind: 'study', size: 'base', status: 'preview', needs: 'experiment', tags: ['Motion', '3 formats'] },
 ]

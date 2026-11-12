@@ -1,0 +1,54 @@
+---
+title: Cat chase
+description: "Everyone moves their own cat around the living room. First to five fish wins the round."
+kunobi:
+  page-layout: wide
+  rooms:
+    cat-chase-room:
+      model: map
+      rules:
+        own: [cat, meow]
+        once: [catch]
+---
+
+import '@fontsource/parkinsans/800.css'
+import '@fontsource/figtree/400.css'
+import '@fontsource/figtree/600.css'
+import { Game } from './src/Game'
+
+{/* The game runs in the cat-chase-room room. Each player writes only their own cat (cat.<id>) and meow (meow.<id>); each fish (catch.<n>) goes to the first cat that reaches it. Rounds and scores are counted from the catches, so nothing needs resetting. */}
+
+export const WORDS = {
+  en: {
+    title: 'Cat chase',
+    you: 'You',
+    guest: 'Guest',
+    meow: 'Meow!',
+    youWin: 'You win the round!',
+    theyWin: (n) => `${n} wins the round!`,
+    alone: 'Waiting for another cat.',
+    solo: 'Playing alone. Open it in Kunobi with friends to play together.',
+    paused: 'Reconnecting…',
+    how: (n) => `Arrows or tap to move · M to meow · first to ${n} fish wins`,
+  },
+  es: {
+    title: 'A por el pez',
+    you: 'Tú',
+    guest: 'Invitado',
+    meow: '¡Miau!',
+    youWin: '¡Ganas la ronda!',
+    theyWin: (n) => `¡${n} gana la ronda!`,
+    alone: 'Esperando a otro gato.',
+    solo: 'Juegas solo. Ábrelo en Kunobi con amigos para jugar juntos.',
+    paused: 'Reconectando…',
+    how: (n) => `Flechas o toca para moverte · M para maullar · gana quien coma ${n} peces`,
+  },
+}
+
+export const Page = () => {
+  const tag = (typeof navigator !== 'undefined' && navigator.language) || 'en'
+  const w = WORDS[tag.toLowerCase().split('-')[0]] ?? WORDS.en
+  return <Game w={w} />
+}
+
+<Page />

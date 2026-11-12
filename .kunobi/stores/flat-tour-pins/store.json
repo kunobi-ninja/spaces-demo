@@ -1,0 +1,49 @@
+{
+  "data": "flat-tour/data/pins.start.json",
+  "fields": {
+    "pins": {
+      "fields": {
+        "added": {
+          "kind": "text"
+        },
+        "author": {
+          "kind": "text"
+        },
+        "kind": {
+          "kind": "enum",
+          "values": [
+            "like",
+            "issue",
+            "question",
+            "idea"
+          ]
+        },
+        "resolved": {
+          "kind": "enum",
+          "values": [
+            "no",
+            "yes"
+          ]
+        },
+        "room": {
+          "kind": "text"
+        },
+        "text": {
+          "kind": "text"
+        },
+        "x": {
+          "kind": "int"
+        },
+        "y": {
+          "kind": "int"
+        },
+        "z": {
+          "kind": "int"
+        }
+      },
+      "kind": "rows"
+    }
+  },
+  "types": "flat-tour/types/flat-tour-pins.store.d.ts",
+  "view": "flat-tour/data/pins.json"
+}

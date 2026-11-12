@@ -1,0 +1,46 @@
+{
+  "key": "A minor",
+  "tempo": 104,
+  "tracks": [
+    {
+      "id": "kick",
+      "instrument": "kick",
+      "name": "Kick",
+      "owner": "Maya",
+      "steps": "X.....x.X..x..x.",
+      "volume": 90
+    },
+    {
+      "id": "snare",
+      "instrument": "snare",
+      "name": "Snare",
+      "owner": "Jonas",
+      "steps": "....X.......X..x",
+      "volume": 70
+    },
+    {
+      "id": "hat",
+      "instrument": "hat",
+      "name": "Hi-hat",
+      "owner": "Lu",
+      "steps": "x.xxx.x.x.xXx.xx",
+      "volume": 55
+    },
+    {
+      "id": "bass",
+      "instrument": "bass",
+      "name": "Bass",
+      "owner": "Sam",
+      "steps": "1..1..5.6.6..43.",
+      "volume": 80
+    },
+    {
+      "id": "chords",
+      "instrument": "chords",
+      "name": "Chords",
+      "owner": "Ines",
+      "steps": "1.......6...7...",
+      "volume": 60
+    }
+  ]
+}

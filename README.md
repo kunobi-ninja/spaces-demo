@@ -26,6 +26,9 @@ Each example keeps its data in its own folder. Change it on the page, or ask you
 | A birthday film | `birthday-film.mdx/` | | `data/film.json` |
 | Seed pitch | `pitch-deck.mdx/` | | `data/deck.json` and the slide text in `full.mdx` |
 | Felipe, in 3D | `scan-viewer/` | | `data/scene.json` |
+| Music Jam | `music-jam/` | The pattern, one track per person | `data/pattern.start.json` |
+| Flat tour | `flat-tour/` | Pins and their comments | `data/flat.json`, `data/pins.start.json` |
+| Cat chase | `cat-chase/` | Nothing: the game lives in a room while someone has it open | |
 
 What a page saves lives in a LiveStore, defined in `.kunobi/stores/<name>/store.json`. A new copy of the space starts each store from its starting data: the `*.start.json` file beside it, or `data/week.json` and `data/shopping.json` for meals. Kunobi keeps a readable JSON copy of each store next to the example, so you and your AI can still read it as a file. Ask your AI to change a store's data and it edits the store, not the copy.
 
