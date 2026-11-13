@@ -52,6 +52,10 @@ LiveStores need a Kunobi build with live editing, and live editing turned on for
 
 New demos and fixes are welcome: see [CONTRIBUTING.md](CONTRIBUTING.md). Every pull request is reviewed by a maintainer. `gallery.json` picks the demos Kunobi's home and Get started show.
 
+## License
+
+The demos are licensed under the [Apache License 2.0](LICENSE), except material credited below under its own license.
+
 ## Credits
 
 Felipe is "[ChatGPT dots - Felipe](https://superspl.at/scene/ca6a4c9b)" by abstrakt, licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/); see `scan-viewer/CREDITS.md` for the changes made. Maps use © OpenStreetMap contributors.
