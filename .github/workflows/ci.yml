@@ -1,0 +1,26 @@
+name: Check demos
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      # The builder's own tests, against the real demos.
+      - run: npm test
+      # Builds the catalog Kunobi reads: every page must have a title and description
+      # (gallery.json picks also prompts), its stores and fonts must resolve, and it
+      # must stay under its size cap (10 MB for a gallery pick, 32 MB otherwise).
+      - run: npm run build:catalog -- --out out --release check

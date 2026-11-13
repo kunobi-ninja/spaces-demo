@@ -1,2 +1,4 @@
 **/*.status.json
 .DS_Store
+node_modules/
+out/
