@@ -20,7 +20,7 @@ jobs:
       - run: npm ci
       # The builder's own tests, against the real demos.
       - run: npm test
-      # Builds the catalog Kunobi's gallery reads: every demo in gallery.json must
-      # be a page with a title, description and prompts, its stores and fonts must
-      # resolve, and it must stay under the size cap.
+      # Builds the catalog Kunobi reads: every page must have a title and description
+      # (gallery.json picks also prompts), its stores and fonts must resolve, and it
+      # must stay under its size cap (10 MB for a gallery pick, 32 MB otherwise).
       - run: npm run build:catalog -- --out out --release check

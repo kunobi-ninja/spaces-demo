@@ -19,13 +19,40 @@ after(() => rm(out, { recursive: true, force: true }))
 const demo = (id) => catalog.demos.find((d) => d.id === id)
 const paths = (id) => demo(id).files.map((f) => f.path)
 
-test('catalog lists gallery.json ids in order', () => {
+const GALLERY = ['dino-snack', 'week-quest', 'cat-chase', 'trip', 'event']
+
+test('catalog lists the gallery picks first, then every other page in the index order', () => {
   assert.equal(catalog.version, 1)
   assert.equal(catalog.release, 'test')
   assert.deepEqual(
     catalog.demos.map((d) => d.id),
-    ['dino-snack', 'week-quest', 'cat-chase', 'trip', 'event']
+    [
+      ...GALLERY,
+      'home-hunt', 'team', 'expenses', 'meals', 'flat-tour', 'monthly-report', 'hiring', 'content-calendar',
+      'projects', 'cluster-dashboard', 'runbook', 'incident', 'blast-radius', 'on-call-handover', 'quiz-night',
+      'music-jam', 'scan-viewer',
+    ]
   )
+  for (const d of catalog.demos) assert.equal(d.gallery, GALLERY.includes(d.id), d.id)
+})
+
+test('a page that is not its folder index keeps its own entry', () => {
+  assert.equal(demo('projects').entry, 'team/projects.mdx')
+  assert.ok(paths('projects').includes('team/projects.mdx'))
+  assert.equal(demo('projects').cover.path, 'assets/covers/projects.jpg')
+})
+
+test('a page without prompts is listed with none; a large page stays out of the gallery', () => {
+  assert.deepEqual(demo('hiring').prompts, [])
+  assert.equal(demo('scan-viewer').gallery, false)
+})
+
+test('the home page carries the index, the covers it shows and its fonts', () => {
+  assert.equal(catalog.home.entry, 'index.mdx')
+  const files = catalog.home.files.map((f) => f.path)
+  for (const path of ['index.mdx', 'assets/covers/trip.jpg', 'assets/covers/birthday-film.jpg', '@fontsource/parkinsans/800.css']) {
+    assert.ok(files.includes(path), `missing ${path}`)
+  }
 })
 
 test('metadata comes from the entry front matter', () => {

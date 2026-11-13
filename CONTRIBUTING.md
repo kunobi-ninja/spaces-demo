@@ -27,7 +27,7 @@ Thanks for making something for Kunobi spaces. Every demo here is a page people 
 
 - **Made-up content only**: no real people, addresses, companies or data, and nothing private.
 - **Credit what you did not make** (images, 3D models, music, fonts) in a `CREDITS.md` in the demo's folder. Only use material whose license allows reuse.
-- **Keep it light**: a demo, cover included, stays under 10 MB.
+- **Keep it light**: a demo, cover included, stays under 10 MB (the build refuses one over 32 MB, and only demos under 10 MB can be picked for the gallery).
 - **English first.** Other languages go in the page's `WORDS` object, next to English.
 - **No network calls** beyond what Kunobi pages already allow (map tiles).
 
@@ -43,4 +43,4 @@ Then open the repository in Kunobi with **From a Git URL…** (or open your fork
 
 ## What happens next
 
-A maintainer reviews every pull request. Which demos appear on Kunobi's home and Get started is chosen in `gallery.json` by the maintainers; a demo merged here is always in the Demo space, and may later be picked for the gallery.
+A maintainer reviews every pull request. Which demos appear on Kunobi's home and Get started is chosen in `gallery.json` by the maintainers; a page merged here and listed in the root `index.mdx` shows in Kunobi's Demos, and may later be picked for the gallery.

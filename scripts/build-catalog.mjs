@@ -1,29 +1,36 @@
 #!/usr/bin/env node
 /**
- * Builds the catalog Kunobi's gallery reads: the demos named in `gallery.json`,
- * each as its entry page, every file in its folder, the LiveStores its front
- * matter names (with their view and starting data) and the Fontsource CSS it
- * imports (Latin only, font inlined). Every file is written once to
- * `<out>/objects/<sha256>`; `<out>/catalog.json` lists them.
+ * Builds the catalog Kunobi reads: every page demo, the gallery's picks
+ * (`gallery.json`, in its order) first and marked `gallery`, then the other
+ * pages the root `index.mdx` lists (`EXAMPLES`, in its order; timelines, the
+ * `*.mdx/` folders, are left out). Each demo is its entry page, every file in
+ * its folder, the LiveStores its front matter names (with their view and
+ * starting data) and the Fontsource CSS it imports (Latin only, font inlined).
+ * `home` is the root `index.mdx` with the files it imports. Every file is
+ * written once to `<out>/objects/<sha256>`; `<out>/catalog.json` lists them.
  *
  *   node scripts/build-catalog.mjs --out out --release v2026.11.12
  */
 
 import { createHash } from 'node:crypto'
 import { mkdir, readdir, readFile, rm, stat, writeFile } from 'node:fs/promises'
-import { join, relative, resolve, sep } from 'node:path'
+import { dirname, join, posix as posixPath, relative, resolve, sep } from 'node:path'
 import { parseArgs } from 'node:util'
 import { parse as parseYaml } from 'yaml'
 
 export const CATALOG_VERSION = 1
-/** The most one demo may weigh, cover included. */
+/** The most a gallery pick may weigh, cover included: the app downloads these ahead. */
 export const DEMO_SIZE_CAP = 10 * 1024 * 1024
+/** The most any other demo may weigh: the app downloads it when opened, and compiles under 32 MiB. */
+export const PAGE_SIZE_CAP = 32 * 1024 * 1024
 /** The oldest app that can run these demos. */
 const MIN_APP_VERSION = '2.0.0'
 
 const SKIPPED = [/\.DS_Store$/, /\.status\.json$/]
 const SOURCE = /\.(mdx|md|tsx?|jsx?)$/
 const FONT_IMPORT = /['"](@fontsource\/[a-z0-9-]+\/[a-z0-9-]+\.css)['"]/g
+const RELATIVE_IMPORT = /(?:from|import)\s+['"](\.{1,2}\/[^'"]+)['"]/g
+const EXAMPLE = /\{\s*id:\s*'([^']+)',\s*href:\s*'([^']+)'/g
 
 const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex')
 const posix = (path) => path.split(sep).join('/')
@@ -63,18 +70,50 @@ async function fontCss(repo, specifier) {
   return `/* ${family} ${weight}, Latin subset, from @fontsource/${family} (SIL Open Font License 1.1). */\n${face.trim()}\n`
 }
 
-async function buildDemo(repo, id, objects) {
-  const folder = join(repo, id)
-  const entryPath = join(folder, 'index.mdx')
-  if (id.endsWith('.mdx') || !(await stat(entryPath).catch(() => null))?.isFile()) {
-    throw new Error(`${id}: not a page (a gallery demo is a folder with an index.mdx)`)
+/** The Fontsource CSS the sources among `contents` import, added to it. */
+async function addFonts(repo, contents) {
+  const fonts = new Set()
+  for (const [path, bytes] of contents) {
+    if (!SOURCE.test(path)) continue
+    for (const match of bytes.toString('utf8').matchAll(FONT_IMPORT)) fonts.add(match[1])
+  }
+  for (const specifier of [...fonts].sort()) contents.set(specifier, Buffer.from(await fontCss(repo, specifier)))
+}
+
+function recorder(objects) {
+  return (path, bytes) => {
+    const hash = sha256(bytes)
+    objects.set(hash, bytes)
+    return { path, sha256: hash, size: bytes.length }
+  }
+}
+
+/** The demos to build, in catalog order: `{ id, entry, gallery }`. */
+async function listDemos(repo) {
+  const picks = JSON.parse(await readFile(join(repo, 'gallery.json'), 'utf8'))
+  if (!Array.isArray(picks) || picks.length === 0) throw new Error('gallery.json must list at least one demo id')
+  const demos = picks.map((id) => ({ id, entry: `${id}/index.mdx`, gallery: true }))
+  const index = await readFile(join(repo, 'index.mdx'), 'utf8')
+  for (const [, id, href] of index.matchAll(EXAMPLE)) {
+    if (demos.some((demo) => demo.id === id) || href.endsWith('.mdx/')) continue
+    demos.push({ id, entry: href.endsWith('/') ? `${href}index.mdx` : href, gallery: false })
+  }
+  return demos
+}
+
+async function buildDemo(repo, { id, entry, gallery }, objects) {
+  const folder = join(repo, dirname(entry))
+  const entryPath = join(repo, entry)
+  if (!entry.endsWith('.mdx') || dirname(entry).endsWith('.mdx') || !(await stat(entryPath).catch(() => null))?.isFile()) {
+    throw new Error(`${id}: not a page (a demo is a folder with an index.mdx, or an .mdx page in one)`)
   }
   const entrySource = await readFile(entryPath, 'utf8')
   const meta = frontMatter(entrySource, id)
   for (const field of ['title', 'description']) {
     if (typeof meta[field] !== 'string' || !meta[field]) throw new Error(`${id}: front matter needs a ${field}`)
   }
-  if (!Array.isArray(meta.prompts) || meta.prompts.length === 0) throw new Error(`${id}: front matter needs prompts`)
+  const prompts = meta.prompts ?? []
+  if (!Array.isArray(prompts) || (gallery && prompts.length === 0)) throw new Error(`${id}: front matter needs prompts`)
 
   /** Repository-relative path → bytes. */
   const contents = new Map()
@@ -93,49 +132,60 @@ async function buildDemo(repo, id, objects) {
     }
   }
 
-  const fonts = new Set()
-  for (const [path, bytes] of contents) {
-    if (!SOURCE.test(path)) continue
-    for (const match of bytes.toString('utf8').matchAll(FONT_IMPORT)) fonts.add(match[1])
-  }
-  for (const specifier of [...fonts].sort()) contents.set(specifier, Buffer.from(await fontCss(repo, specifier)))
+  await addFonts(repo, contents)
 
   const coverPath = `assets/covers/${id}.jpg`
   const cover = await readFile(join(repo, coverPath)).catch(() => {
     throw new Error(`${id}: no cover at ${coverPath}`)
   })
 
-  const record = (path, bytes) => {
-    const hash = sha256(bytes)
-    objects.set(hash, bytes)
-    return { path, sha256: hash, size: bytes.length }
-  }
+  const record = recorder(objects)
   const files = [...contents.keys()].sort().map((path) => record(path, contents.get(path)))
   const coverFile = record(coverPath, cover)
 
   const size = files.reduce((sum, file) => sum + file.size, coverFile.size)
-  if (size > DEMO_SIZE_CAP) throw new Error(`${id}: ${size} bytes is over the ${DEMO_SIZE_CAP} byte cap`)
+  const cap = gallery ? DEMO_SIZE_CAP : PAGE_SIZE_CAP
+  if (size > cap) throw new Error(`${id}: ${size} bytes is over the ${cap} byte cap`)
 
   return {
     id,
     name: meta.title,
     title: meta.title,
     description: meta.description,
-    prompts: meta.prompts.map(String),
-    entry: `${id}/index.mdx`,
+    prompts: prompts.map(String),
+    entry,
+    gallery,
     cover: coverFile,
     files,
     minAppVersion: MIN_APP_VERSION,
   }
 }
 
+/** The root `index.mdx` and every file it reaches through relative imports, with its fonts. */
+async function buildHome(repo, objects) {
+  const contents = new Map()
+  const visit = async (path) => {
+    if (contents.has(path)) return
+    const bytes = await readFile(join(repo, path)).catch(() => {
+      throw new Error(`home: ${path} is imported but missing`)
+    })
+    contents.set(path, bytes)
+    if (!SOURCE.test(path)) return
+    for (const [, specifier] of bytes.toString('utf8').matchAll(RELATIVE_IMPORT)) {
+      await visit(posixPath.normalize(posixPath.join(posixPath.dirname(path), specifier)))
+    }
+  }
+  await visit('index.mdx')
+  await addFonts(repo, contents)
+  const record = recorder(objects)
+  return { entry: 'index.mdx', files: [...contents.keys()].sort().map((path) => record(path, contents.get(path))) }
+}
+
 export async function buildCatalog({ repo, out, release }) {
-  const ids = JSON.parse(await readFile(join(repo, 'gallery.json'), 'utf8'))
-  if (!Array.isArray(ids) || ids.length === 0) throw new Error('gallery.json must list at least one demo id')
   const objects = new Map()
   const demos = []
-  for (const id of ids) demos.push(await buildDemo(repo, id, objects))
-  const catalog = { version: CATALOG_VERSION, release, demos }
+  for (const demo of await listDemos(repo)) demos.push(await buildDemo(repo, demo, objects))
+  const catalog = { version: CATALOG_VERSION, release, home: await buildHome(repo, objects), demos }
 
   await rm(out, { recursive: true, force: true })
   await mkdir(join(out, 'objects'), { recursive: true })
