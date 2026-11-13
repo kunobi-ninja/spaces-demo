@@ -24,28 +24,30 @@ test('catalog lists gallery.json ids in order', () => {
   assert.equal(catalog.release, 'test')
   assert.deepEqual(
     catalog.demos.map((d) => d.id),
-    ['home-hunt', 'team', 'trip', 'event', 'expenses']
+    ['dino-snack', 'week-quest', 'cat-chase', 'trip', 'event']
   )
 })
 
 test('metadata comes from the entry front matter', () => {
-  const hunt = demo('home-hunt')
-  assert.equal(hunt.entry, 'home-hunt/index.mdx')
-  assert.equal(hunt.name, 'Home hunt')
-  assert.equal(hunt.title, 'Home hunt')
-  assert.match(hunt.description, /Bristol/)
-  assert.ok(hunt.prompts.length >= 2)
-  assert.equal(hunt.cover.path, 'assets/covers/home-hunt.jpg')
+  const trip = demo('trip')
+  assert.equal(trip.entry, 'trip/index.mdx')
+  assert.equal(trip.name, 'Lisbon weekend')
+  assert.equal(trip.title, 'Lisbon weekend')
+  assert.match(trip.description, /Lisbon/)
+  assert.ok(trip.prompts.length >= 2)
+  assert.equal(trip.cover.path, 'assets/covers/trip.jpg')
+  // A page whose front matter was added for the gallery.
+  assert.equal(demo('week-quest').title, 'Week Quest')
 })
 
 test('files include the entry folder, named stores and their starting data', () => {
-  const files = paths('home-hunt')
+  const files = paths('event')
   for (const path of [
-    'home-hunt/index.mdx',
-    'home-hunt/src/hunt.tsx',
-    '.kunobi/stores/home-hunt-takes/store.json',
-    'home-hunt/data/takes.start.json',
-    'home-hunt/data/takes.json',
+    'event/index.mdx',
+    'event/src/EventPlan.tsx',
+    '.kunobi/stores/event-guests/store.json',
+    'event/data/guests.start.json',
+    'event/data/guests.json',
   ]) {
     assert.ok(files.includes(path), `missing ${path}`)
   }
@@ -53,12 +55,18 @@ test('files include the entry folder, named stores and their starting data', () 
 })
 
 test('fontsource imports are resolved to a Latin css with the font inlined', async () => {
-  const font = demo('home-hunt').files.find((f) => f.path === '@fontsource/figtree/400.css')
-  assert.ok(font, 'figtree 400 css missing')
-  const css = await readFile(join(out, 'objects', font.sha256), 'utf8')
-  assert.match(css, /font-family: 'Figtree'/)
-  assert.match(css, /url\(data:font\/woff2;base64,/)
-  assert.doesNotMatch(css, /latin-ext/)
+  for (const [id, specifier, family] of [
+    ['trip', '@fontsource/figtree/400.css', 'Figtree'],
+    ['week-quest', '@fontsource/press-start-2p/400.css', 'Press Start 2P'],
+    ['dino-snack', '@fontsource/fredoka/700.css', 'Fredoka'],
+  ]) {
+    const font = demo(id).files.find((f) => f.path === specifier)
+    assert.ok(font, `${id}: ${specifier} missing`)
+    const css = await readFile(join(out, 'objects', font.sha256), 'utf8')
+    assert.match(css, new RegExp(`font-family: '${family}'`))
+    assert.match(css, /url\(data:font\/woff2;base64,/)
+    assert.doesNotMatch(css, /latin-ext/)
+  }
 })
 
 test('objects are content addressed', async () => {
