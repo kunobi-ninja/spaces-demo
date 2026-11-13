@@ -48,6 +48,10 @@ What a page saves lives in a LiveStore, defined in `.kunobi/stores/<name>/store.
 
 LiveStores need a Kunobi build with live editing, and live editing turned on for the space. Elsewhere the pages show their starting data and cannot be changed. The people, numbers and places are made up. The Kubernetes samples come from a real cluster, with its names changed.
 
+## Contributing
+
+New demos and fixes are welcome: see [CONTRIBUTING.md](CONTRIBUTING.md). Every pull request is reviewed by a maintainer. `gallery.json` picks the demos Kunobi's home and Get started show.
+
 ## Credits
 
 Felipe is "[ChatGPT dots - Felipe](https://superspl.at/scene/ca6a4c9b)" by abstrakt, licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/); see `scan-viewer/CREDITS.md` for the changes made. Maps use © OpenStreetMap contributors.

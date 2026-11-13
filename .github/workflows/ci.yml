@@ -1,0 +1,26 @@
+name: Check demos
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      # The builder's own tests, against the real demos.
+      - run: npm test
+      # Builds the catalog Kunobi's gallery reads: every demo in gallery.json must
+      # be a page with a title, description and prompts, its stores and fonts must
+      # resolve, and it must stay under the size cap.
+      - run: npm run build:catalog -- --out out --release check
