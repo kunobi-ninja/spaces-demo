@@ -1,0 +1,37 @@
+name: Promote demos
+
+# Points Kunobi's unstable or stable channel at a released version. Rolling
+# back is promoting the previous version. Each channel is a GitHub environment
+# (unstable, stable): its required reviewers approve the run.
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Version to publish (a released tag, e.g. v1.2.0)
+        required: true
+        type: string
+      channel:
+        description: Channel to point at it
+        required: true
+        type: choice
+        options: [unstable, stable]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: promote-demos-${{ inputs.channel }}
+  cancel-in-progress: false
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.channel }}
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      TAG: ${{ inputs.tag }}
+      CHANNEL: ${{ inputs.channel }}
+    steps:
+      - uses: actions/checkout@v4
+      - run: scripts/publish-channel.sh "$TAG" "$CHANNEL"

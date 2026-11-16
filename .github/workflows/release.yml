@@ -1,0 +1,39 @@
+name: Release demos
+
+# A version tag (vX.Y.Z) publishes the demos as a GitHub release: catalog.json
+# plus one asset per file, named by its sha256. Kunobi's dev channel then reads
+# it; the Promote workflow moves unstable and stable.
+on:
+  push:
+    tags: ['v*.*.*']
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-demos
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      TAG: ${{ github.ref_name }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run build:catalog -- --out out --release "$TAG"
+      - name: Create the release
+        run: |
+          if [[ "$TAG" == *-* ]]; then prerelease=--prerelease; else prerelease=; fi
+          gh release create "$TAG" --verify-tag --generate-notes --title "Demos $TAG" $prerelease \
+            out/catalog.json out/objects/*
+      - name: Point the dev channel at it
+        run: scripts/publish-channel.sh "$TAG" dev
