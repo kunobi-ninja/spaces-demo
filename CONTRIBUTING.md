@@ -44,3 +44,13 @@ Then open the repository in Kunobi with **From a Git URL…** (or open your fork
 ## What happens next
 
 A maintainer reviews every pull request. Which demos appear on Kunobi's home and Get started is chosen in `gallery.json` by the maintainers; a page merged here and listed in the root `index.mdx` shows in Kunobi's Demos, and may later be picked for the gallery.
+
+## Publishing (maintainers)
+
+Kunobi reads the demos from this repository's GitHub releases, so a new version reaches people without a Kunobi release.
+
+1. **Release**: push a version tag from `main`, e.g. `git tag v1.2.0 && git push origin v1.2.0`. The Release workflow builds the catalog, creates the `v1.2.0` release (the catalog plus one file per asset) and points the **dev** channel at it.
+2. **Promote**: once checked in a dev build, run **Actions → Promote demos** with the tag and `unstable` or `stable`. The channel's environment asks its reviewers to approve.
+3. **Roll back**: promote the previous tag.
+
+Each channel is a `channel/<channel>` release holding only `catalog.json`; the files stay in the version release it names. Never delete a version release a channel still points at.
