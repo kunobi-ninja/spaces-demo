@@ -33,7 +33,7 @@ export const ordinal = (n, lang) => {
   return `${n}${s}`
 }
 
-{/* The film's own words. Their translations, and those of data/film.json, are in locales/<lang>.json; the film follows the app's language. */}
+{/* The film's own words. Their translations, and those of data/film.json, are in locales/<lang>.json. The film is in the app's language when it opens; after a language change it shows the new one once reopened. */}
 
 export const WORDS = { turns: "turns {{age}}", happy: "Happy {{age}}, {{to}}", from: "from {{name}}" }
 

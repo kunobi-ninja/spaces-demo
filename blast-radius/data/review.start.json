@@ -1,0 +1,17 @@
+{
+  "checks": {
+    "ConfigMap_kube-system_cilium-config_diff": {
+      "item": "diff",
+      "object": "ConfigMap/kube-system/cilium-config",
+      "state": "done"
+    }
+  },
+  "notes": [
+    {
+      "at": "2026-11-12T01:45:00Z",
+      "id": "n-seed-1",
+      "object": "ConfigMap/kube-system/cilium-config",
+      "text": "Restart cilium node by node, Tuesday 09:00 UTC"
+    }
+  ]
+}

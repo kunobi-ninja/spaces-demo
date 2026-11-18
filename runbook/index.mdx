@@ -17,11 +17,12 @@ import '@fontsource/figtree/400.css'
 import '@fontsource/figtree/600.css'
 import snapshot from './data/cluster.json'
 import saved from './data/runs.json'
+import savedStart from './data/runs.start.json'
 import { Runbook } from './src/Runbook'
 import { useI18n } from '../lib/i18n'
 import translations from './locales/index'
 
-{/* The page's words. Their translations, and those of the starting runs (data/runs.json, by id), are in locales/<lang>.json; a run still as it started shows translated. Cluster data comes from the cluster selected in your tab once you allow it in your own preview, otherwise from the sample in data/cluster.json. Recorded runs live in the runbook-runs store, saved to data/runs.json. */}
+{/* The page's words. Their translations, and those of the starting runs (data/runs.start.json, by id), are in locales/<lang>.json; a run still as it started shows translated. Cluster data comes from the cluster selected in your tab once you allow it in your own preview, otherwise from the sample in data/cluster.json. Recorded runs live in the runbook-runs store, saved to data/runs.json. */}
 
 export const WORDS = {
   title: 'Stuck HelmRelease',
@@ -29,6 +30,7 @@ export const WORDS = {
   subOn: 'Flux runbook · 8 read-only checks · {{cluster}}',
   thisTarget: 'Checks for this release',
   result: { pass: 'Pass', fail: 'Fail', unknown: 'Unknown' },
+  resultInText: { pass: 'pass', fail: 'fail', unknown: 'unknown' },
   live: 'Live · selected cluster',
   snapshot: 'Sample data · {{date}} UTC · read-only',
   useLive: 'Use live data',
@@ -122,7 +124,7 @@ export const Page = () => {
   const t = useI18n(WORDS, translations)
   const w = React.useMemo(() => ({ ...t.w, locale: t.lang === 'en' ? 'en-GB' : t.tag }), [t])
   const sample = React.useMemo(() => t.data('cluster', snapshot), [t])
-  const localize = React.useCallback((live) => t.data('runs', live, saved), [t])
+  const localize = React.useCallback((live) => t.data('runs', live, savedStart), [t])
   return <Runbook snapshot={sample} saved={saved} localize={localize} w={w} />
 }
 

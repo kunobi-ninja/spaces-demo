@@ -60,7 +60,8 @@ export const OF = 10
   the exported video plays straight through. The slides show the words in WORDS.slides
   (by scene id); the Markdown under each scene is the same text, as the scene's outline,
   so keep the two in step. The figures read data/deck.json. Translations of both are in
-  locales/<lang>.json; the deck follows the app's language.
+  locales/<lang>.json. The deck is in the app's language when it opens; after a language
+  change it shows the new one once reopened.
 */}
 
 export const WORDS = {
@@ -83,7 +84,7 @@ export const t = i18n(WORDS, translations)
 export const w = t.w
 export const deck = t.data("deck", deckData)
 export const S = w.slides
-export const LOCALE = t.tag.toLowerCase().startsWith(t.lang.toLowerCase().split("-")[0]) ? t.tag : t.lang
+export const LOCALE = t.locale
 
 <Scene id="title" duration="6s">
 

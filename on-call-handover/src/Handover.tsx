@@ -33,7 +33,7 @@ export function Handover({ snap, text, start, localize, w }: { snap: Snapshot; t
   const open = (st?.status === 'open' || st?.status === 'paused') && stored !== undefined
   const canEdit = open && st?.status === 'open' && Boolean(st?.canEdit)
   // Seeded items show in the reader's language until someone changes them; display only.
-  const data = localize((open ? stored : start) ?? start)
+  const data = React.useMemo(() => localize((open ? stored : start) ?? start), [open, stored, start, localize])
   const items: Item[] = Object.entries(data.items ?? {})
     .map(([id, v]) => ({ ...v, id }))
     .sort((a, b) => (a.order ?? 99) - (b.order ?? 99))

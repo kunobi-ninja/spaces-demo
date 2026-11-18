@@ -33,11 +33,9 @@ export const PAGE_SIZE_CAP = 32 * 1024 * 1024
 const MIN_APP_VERSION = '2.0.0'
 
 const SKIPPED = [/\.DS_Store$/, /\.status\.json$/]
-const SOURCE = /\.(mdx|md|tsx?|jsx?)$/
+const SCRIPT = /\.(tsx?|jsx?)$/
 const FONT_IMPORT = /['"](@fontsource\/[a-z0-9-]+\/[a-z0-9-]+\.css)['"]/g
 const RELATIVE_IMPORT = /(?:from|import)\s+['"](\.{1,2}\/[^'"]+)['"]/g
-/** Block and line comments, whose examples are not imports. */
-const COMMENT = /\/\*[\s\S]*?\*\/|^\s*\/\/.*$/gm
 /** How an import without an extension resolves, in order. */
 const IMPORT_SUFFIXES = ['', '.ts', '.tsx', '.d.ts', '.js', '.jsx', '.mdx', '.json', '/index.ts', '/index.tsx', '/index.js']
 const EXAMPLE = /\{\s*id:\s*'([^']+)',\s*href:\s*'([^']+)'/g
@@ -78,6 +76,51 @@ async function readTranslations(repo, entry, id) {
   return Object.keys(out).length ? out : undefined
 }
 
+/** `code` without its comments; strings, which may hold `/*` or `//`, are kept whole. */
+export function stripComments(code) {
+  let out = ''
+  for (let i = 0; i < code.length; i++) {
+    const ch = code[i]
+    if (ch === '"' || ch === "'" || ch === '`') {
+      const start = i
+      for (i++; i < code.length && code[i] !== ch && (ch === '`' || code[i] !== '\n'); i++) if (code[i] === '\\') i++
+      out += code.slice(start, i + 1)
+    } else if (ch === '/' && code[i + 1] === '/') {
+      const end = code.indexOf('\n', i)
+      i = end < 0 ? code.length : end - 1
+    } else if (ch === '/' && code[i + 1] === '*') {
+      const end = code.indexOf('*/', i + 2)
+      i = end < 0 ? code.length : end + 1
+    } else out += ch
+  }
+  return out
+}
+
+/**
+ * The code of the file at `path` that can import: a script whole, and of an MDX page only its ESM
+ * blocks (paragraphs starting with `import` or `export`, outside code fences), without comments.
+ * Markdown and the page's prose import nothing, whatever they quote.
+ */
+export function importingCode(path, text) {
+  if (SCRIPT.test(path)) return stripComments(text)
+  if (!path.endsWith('.mdx')) return ''
+  const blocks = []
+  let fence = null
+  let block = null
+  for (const line of text.split(/\r?\n/)) {
+    const marker = line.match(/^\s{0,3}(`{3,}|~{3,})/)?.[1]
+    if (fence) {
+      if (marker && marker[0] === fence[0] && marker.length >= fence.length) fence = null
+    } else if (marker) {
+      fence = marker
+      block = null
+    } else if (!line.trim()) block = null
+    else if (block) block.push(line)
+    else if (/^(import|export)\b/.test(line)) blocks.push((block = [line]))
+  }
+  return blocks.map((lines) => stripComments(lines.join('\n'))).join('\n')
+}
+
 /** Where `specifier`, imported from `from`, lives (repository-relative), or undefined. */
 async function resolveImport(repo, from, specifier) {
   const path = posixPath.normalize(posixPath.join(posixPath.dirname(from), specifier))
@@ -92,9 +135,7 @@ async function addImports(repo, contents) {
   const pending = [...contents.keys()]
   while (pending.length) {
     const path = pending.pop()
-    if (!SOURCE.test(path)) continue
-    const code = contents.get(path).toString('utf8').replace(COMMENT, '')
-    for (const [, specifier] of code.matchAll(RELATIVE_IMPORT)) {
+    for (const [, specifier] of importingCode(path, contents.get(path).toString('utf8')).matchAll(RELATIVE_IMPORT)) {
       const target = await resolveImport(repo, path, specifier.replace(/\?raw$/, ''))
       if (!target) throw new Error(`${path}: ${specifier} is imported but missing`)
       if (contents.has(target)) continue
@@ -127,8 +168,7 @@ async function fontCss(repo, specifier) {
 async function addFonts(repo, contents) {
   const fonts = new Set()
   for (const [path, bytes] of contents) {
-    if (!SOURCE.test(path)) continue
-    for (const match of bytes.toString('utf8').matchAll(FONT_IMPORT)) fonts.add(match[1])
+    for (const match of importingCode(path, bytes.toString('utf8')).matchAll(FONT_IMPORT)) fonts.add(match[1])
   }
   for (const specifier of [...fonts].sort()) contents.set(specifier, Buffer.from(await fontCss(repo, specifier)))
 }

@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { test } from 'node:test'
 import { checkRepo, renderReport } from './i18n-check.mjs'
-import { batches, problem, translateRepo } from './i18n-sync.mjs'
+import { exportTodo, importAnswers, problem } from './i18n-sync.mjs'
 import { compareLocale, expandPattern, extractPage, hash, localeDir, renderIndex, renderLocale } from './i18n.mjs'
 
 // lib/i18n.ts imports React for its hook; the tests use the plain functions, so a stub will do.
@@ -110,19 +110,20 @@ test('words must be plain text and declared data must select something', async (
 })
 
 test('a locale is missing, stale or broken key by key', () => {
-  const texts = new Map([['words.a', 'One'], ['words.b', 'Two {{n}}'], ['words.c_other', 'Many'], ['meta.prompts', ['x']]])
+  const texts = new Map([['words.a', 'One'], ['words.b', 'Two {{n}}'], ['words.c_one', 'One guest'], ['words.c_other', '{{count}} guests'], ['meta.prompts', ['x']]])
   const state = compareLocale(texts, {
     'words.a': entry('Uno', 'One (old)'),
     'words.b': entry('Dos', 'Two {{n}}'),
-    'words.c_few': entry('Pocos', 'Many'),
+    'words.c_one': entry('{{count}} invitado', 'One guest'),
+    'words.c_few': entry('Pocos', '{{count}} guests'),
     'meta.prompts': entry('x', ['x']),
     'words.gone': entry('Nada'),
   })
   assert.deepEqual(state.missing, ['words.c_other'])
   assert.deepEqual(state.stale, ['words.a'])
   assert.deepEqual(state.orphans, ['words.gone'])
-  assert.deepEqual(state.invalid, ['meta.prompts: the source is a list'])
-  assert.match(state.warnings[0], /words.b: placeholders differ/)
+  // A lost placeholder breaks the page like a list for a string does; a plural form may spell its number out.
+  assert.deepEqual(state.invalid, ['words.b: placeholders differ from the source ({{n}})', 'meta.prompts: the source is a list'])
 })
 
 test('locale files list one entry per line in page order; the index imports each', () => {
@@ -164,47 +165,52 @@ test('the check reports missing translations without failing, and fails on what 
   }
 })
 
-test('translating sends only missing and stale texts, keeps what is current and drops the rest', async () => {
+test('the export lists only missing and stale texts; an import writes only the keys it holds', async () => {
   const repo = await repoWith({
     ...FILES,
     'trip/locales/es.json': { 'meta.title': entry('Viaje', 'Trip'), 'words.title': entry('Finde', 'Weekend (old)'), 'words.gone': entry('Nada') },
     'trip/locales/index.ts': renderIndex('en', ['es']),
   })
-  const requests = []
-  const translate = async (request) => {
-    requests.push(request)
-    return request.items.map(({ key, text }) => ({ key, text: key === 'words.seat' ? 'Sienta aquí' : Array.isArray(text) ? text.map((t) => `es:${t}`) : `es:${text}` }))
-  }
   try {
-    const report = await translateRepo(repo, { translate, langs: ['es', 'fr'] })
-    const es = requests.find((r) => r.target === 'es')
-    assert.equal(es.title, 'Trip')
-    assert.ok(!es.items.some((item) => item.key === 'meta.title'))
-    assert.deepEqual(es.items.find((item) => item.key === 'words.title'), { key: 'words.title', text: 'Weekend', previous: 'Finde' })
-    assert.deepEqual(report.find((r) => r.lang === 'es').skipped, ['words.seat (placeholders differ)'])
+    const todo = await exportTodo(repo, { langs: ['es', 'fr'] })
+    const es = todo.filter((item) => item.lang === 'es')
+    assert.ok(!es.some((item) => item.key === 'meta.title'))
+    assert.deepEqual(es.find((item) => item.key === 'words.title'), { page: 'trip/index.mdx', lang: 'es', key: 'words.title', text: 'Weekend', previous: 'Finde' })
+    assert.equal(todo.filter((item) => item.lang === 'fr').length, 13)
+
+    // Part of the work: three Spanish answers (one with a lost placeholder) and two French ones.
+    const { written, skipped } = await importAnswers(repo, [
+      { page: 'trip/index.mdx', lang: 'es', key: 'words.title', text: 'Fin de semana' },
+      { page: 'trip/index.mdx', lang: 'es', key: 'words.seat', text: 'Sienta aquí' },
+      { page: 'trip/index.mdx', lang: 'es', key: 'data.plan.days[fri].stops', text: ['Café', 'Parque'] },
+      { page: 'trip/index.mdx', lang: 'fr', key: 'words.title', text: 'Week-end' },
+      { page: 'trip/index.mdx', lang: 'fr', key: 'words.nope', text: 'Rien' },
+    ])
+    assert.equal(written, 3)
+    assert.deepEqual(skipped, ['trip/index.mdx es words.seat (placeholders differ)', 'trip/index.mdx fr words.nope (points at nothing)'])
 
     const locale = JSON.parse(await readFile(join(repo, 'trip/locales/es.json'), 'utf8'))
     assert.deepEqual(locale['meta.title'], entry('Viaje', 'Trip'))
-    assert.deepEqual(locale['words.title'], entry('es:Weekend', 'Weekend'))
-    assert.deepEqual(locale['data.plan.days[fri].stops'], entry(['es:Café', 'es:Park'], ['Café', 'Park']))
+    assert.deepEqual(locale['words.title'], entry('Fin de semana', 'Weekend'))
+    assert.deepEqual(locale['data.plan.days[fri].stops'], entry(['Café', 'Parque'], ['Café', 'Park']))
     assert.ok(!('words.gone' in locale) && !('words.seat' in locale))
+    assert.deepEqual(JSON.parse(await readFile(join(repo, 'trip/locales/fr.json'), 'utf8')), { 'words.title': entry('Week-end', 'Weekend') })
     assert.equal(await readFile(join(repo, 'trip/locales/index.ts'), 'utf8'), renderIndex('en', ['es', 'fr']))
 
     const [result] = await checkRepo(repo)
     assert.deepEqual(result.errors, [])
-    assert.deepEqual(result.langs.fr.missing, ['words.seat'])
+    assert.ok(result.langs.es.missing.includes('words.seat'))
   } finally {
     await rm(repo, { recursive: true, force: true })
   }
 })
 
-test('translations are batched by size and checked against their source', () => {
-  const items = ['a'.repeat(10), 'b'.repeat(10), 'c'.repeat(10)].map((text, i) => ({ key: `k${i}`, text }))
-  assert.deepEqual(batches(items, 25).map((batch) => batch.length), [2, 1])
-  assert.equal(problem('Hi {{name}}', 'Hola {{name}}'), undefined)
-  assert.equal(problem('Hi {{name}}', 'Hola'), 'placeholders differ')
-  assert.equal(problem(['a', 'b'], ['x']), 'expected a list of 2 strings')
-  assert.equal(problem('a', ['a']), 'expected a string')
+test('an answer must keep the shape and placeholders of its source', () => {
+  assert.equal(problem('words.seat', 'Hi {{name}}', 'Hola {{name}}'), undefined)
+  assert.equal(problem('words.seat', 'Hi {{name}}', 'Hola'), 'placeholders differ')
+  assert.equal(problem('words.guests_one', 'One guest', '{{count}} invitado'), undefined)
+  assert.equal(problem('words.days', ['a', 'b'], ['x']), 'expected a list of 2 strings')
+  assert.equal(problem('words.a', 'a', ['a']), 'expected a string')
 })
 
 const WORDS = { title: 'Weekend', seat: 'Seat {{name}} here', places_one: '{{count}} place', places_other: '{{count}} places', kinds: { food: 'Food' }, days: ['Fri', 'Sat'] }
@@ -237,6 +243,10 @@ test('the reader gets the exact tag, then the base language, then English, then 
 
   const t = i18n(WORDS, TRANSLATIONS, 'es-AR')
   assert.equal(t.lang, 'es-AR')
+  assert.equal(t.locale, 'es-AR')
+  assert.equal(i18n(WORDS, TRANSLATIONS, 'zh-CN').locale, 'zh-CN')
+  // A reader whose language the page lacks gets numbers and dates in the language it shows.
+  assert.equal(i18n(WORDS, { source: 'es', locales: { en: {} } }, 'fr').locale, 'en')
   assert.equal(t.w.title, 'Finde largo')
   assert.equal(t.w.kinds.food, 'Food')
   assert.equal(i18n(WORDS, TRANSLATIONS, 'de').w.title, 'Weekend')
@@ -252,6 +262,10 @@ test('words with placeholders and plurals become functions in the reader languag
   assert.equal(en.places({ count: 1 }), '1 place')
   assert.equal(en.seat({ name: 'Ana' }), 'Seat Ana here')
   assert.equal(i18n(WORDS, TRANSLATIONS, 'es').meta('title', 'Trip'), 'Viaje')
+  // Whether a word is a function comes from the page's text, not from a translation that lost its placeholders.
+  const lost = { source: 'en', locales: { es: { 'words.seat': entry('Siéntate aquí', 'Seat {{name}} here'), 'words.title': entry('Finde {{x}}', 'Weekend') } } }
+  assert.equal(i18n(WORDS, lost, 'es').w.seat({ name: 'Ana' }), 'Siéntate aquí')
+  assert.equal(i18n(WORDS, lost, 'es').w.title, 'Finde {{x}}')
   assert.deepEqual(i18n(WORDS, TRANSLATIONS, 'es').meta('prompts', ['Add']), ['Add'])
 })
 

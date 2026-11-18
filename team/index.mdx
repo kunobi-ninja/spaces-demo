@@ -84,17 +84,22 @@ export const Avatar = ({ person, size = 28 }) => (
   </span>
 )
 
+{/* The wiki's translations carry only its documents: no words of its own. */}
+
+export const WIKI_WORDS = {}
+
 export const TeamHome = () => {
   const t = useI18n(WORDS, translations)
-  const wiki = useI18n({}, wikiTranslations)
+  const wiki = useI18n(WIKI_WORDS, wikiTranslations)
   const w = t.w
-  const TEAM = t.data('team', TEAM_SOURCE)
+  const TEAM = React.useMemo(() => t.data('team', TEAM_SOURCE), [t])
   const say = (value) => w.labels[value] ?? value
   // The shared board's tasks; where the store cannot open, the readable copy Kunobi keeps of it.
   const live = useStore('team-tasks')
   const shared = useStoreStatus('team-tasks')?.status === 'open'
-  const tasks = t.data('tasks', shared && live?.tasks ? live : SEED, SEED_START).tasks.map((t) => Object.fromEntries(Object.entries(t).map(([k, v]) => [k, v ?? ''])))
-  const decisions = parseDecisions(wiki.doc('decisions.md', DECISIONS)).slice(0, 3)
+  const board = shared && live?.tasks ? live : SEED
+  const tasks = React.useMemo(() => t.data('tasks', board, SEED_START).tasks.map((t) => Object.fromEntries(Object.entries(t).map(([k, v]) => [k, v ?? '']))), [t, board])
+  const decisions = React.useMemo(() => parseDecisions(wiki.doc('decisions.md', DECISIONS)).slice(0, 3), [wiki])
   const people = Object.fromEntries(TEAM.people.map((p) => [p.id, p]))
   const projectColor = Object.fromEntries(TEAM.projects.map((p) => [p.id, p.color]))
   const today = toDate(TEAM.today)

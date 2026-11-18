@@ -8,100 +8,85 @@
  *
  * The exported file is a list of `{ page, lang, key, text, previous? }`: translate each `text`
  * (keep `{{placeholders}}`, lists stay lists of the same length; `previous` is the old translation
- * of a text whose source changed) and import the same list with `text` translated. Keys that point
- * at nothing are dropped. A translation whose placeholders or shape do not match its source is left
- * out and reported, so the page keeps its own text there. Names and terms that stay as written are
- * in `i18n-glossary.json`.
+ * of a text whose source changed) and import the same list with `text` translated. An import
+ * writes only the keys in the file, so a file may cover part of the work; keys that point at
+ * nothing are dropped from the files it writes. A translation whose placeholders or shape do not
+ * match its source is left out and reported, so the page keeps its own text there. Names and
+ * terms that stay as written are in `i18n-glossary.json`.
  */
 
 import { existsSync } from 'node:fs'
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { join, resolve } from 'node:path'
 import { parseArgs } from 'node:util'
-import { LANGUAGES, compareLocale, extractPage, findPages, hash, readLocales, renderIndex, renderLocale } from './i18n.mjs'
+import { LANGUAGES, compareLocale, extractPage, findPages, hash, readLocales, renderIndex, renderLocale, samePlaceholders } from './i18n.mjs'
 
-/** Roughly how much source text one batch carries. */
-const BATCH_CHARS = 12000
-const PLACEHOLDER = /\{\{\s*(\w+)\s*\}\}/g
-
-
-/** The texts to send, split so no request carries much more than `BATCH_CHARS`. */
-export function batches(items, limit = BATCH_CHARS) {
-  const out = []
-  let current = []
-  let size = 0
-  for (const item of items) {
-    const length = JSON.stringify(item.text).length
-    if (current.length && size + length > limit) {
-      out.push(current)
-      current = []
-      size = 0
-    }
-    current.push(item)
-    size += length
-  }
-  if (current.length) out.push(current)
-  return out
-}
-
-const placeholders = (text) => [...[text].flat().join('\n').matchAll(PLACEHOLDER)].map((match) => match[1]).sort().join(',')
-
-/** Why `text` cannot stand for `source`, or undefined when it can. */
-export function problem(source, text) {
+/** Why `text` cannot stand for `source` (the text of `key`), or undefined when it can. */
+export function problem(key, source, text) {
   if (Array.isArray(source) !== Array.isArray(text)) return Array.isArray(source) ? 'expected a list' : 'expected a string'
   if (Array.isArray(text) && (text.length !== source.length || !text.every((item) => typeof item === 'string'))) return `expected a list of ${source.length} strings`
   if (!Array.isArray(text) && (typeof text !== 'string' || !text.trim())) return 'empty'
-  if (placeholders(source) !== placeholders(text)) return 'placeholders differ'
+  if (!samePlaceholders(key, source, text)) return 'placeholders differ'
   return undefined
 }
 
-/**
- * Brings every page's locales up to date. `translate({ page, title, description, source, target,
- * items })` returns `[{ key, text }]` for the `items` (`{ key, text, previous? }`) it was given:
- * for an import, the translations read from a file. Returns what changed:
- * `[{ page, lang, todo, items, written, skipped }]` (`items` only on a dry run, for an export).
- */
-export async function translateRepo(repo, { translate, langs = LANGUAGES, pages, dryRun = false, log = () => {} }) {
-  const report = []
+/** What every page is missing or has stale in `langs`: `[{ page, lang, key, text, previous? }]`. */
+export async function exportTodo(repo, { langs = LANGUAGES, pages } = {}) {
+  const items = []
   for (const page of pages ?? (await findPages(repo))) {
     const extracted = await extractPage(repo, page)
+    if (extracted.errors.length) continue
+    const locales = await readLocales(repo, extracted.dir)
+    for (const lang of langs) {
+      if (lang === extracted.source || locales[lang]?.errors.length) continue
+      const entries = locales[lang]?.entries ?? {}
+      const state = compareLocale(extracted.texts, entries)
+      for (const key of [...state.missing, ...state.stale]) {
+        items.push({ page, lang, key, text: extracted.texts.get(key), ...(entries[key] && { previous: entries[key].text }) })
+      }
+    }
+  }
+  return items
+}
+
+/**
+ * Writes the translations in `answers` (`[{ page, lang, key, text }]`) into their pages' locale
+ * files, each with the hash of its current source text. Keys not in `answers` stay as they are.
+ * Returns `{ written, skipped }`, `skipped` naming each answer left out and why.
+ */
+export async function importAnswers(repo, answers, { log = () => {} } = {}) {
+  let written = 0
+  const skipped = []
+  for (const [page, pageAnswers] of Map.groupBy(answers, (answer) => answer.page)) {
+    const extracted = await extractPage(repo, page)
     if (extracted.errors.length) {
-      log(`${page}: skipped, ${extracted.errors[0]}`)
+      skipped.push(...pageAnswers.map(({ lang, key }) => `${page} ${lang} ${key} (${extracted.errors[0]})`))
       continue
     }
     const locales = await readLocales(repo, extracted.dir)
     let added = false
-    for (const lang of langs) {
-      if (lang === extracted.source) continue
+    for (const [lang, langAnswers] of Map.groupBy(pageAnswers, (answer) => answer.lang)) {
       const file = locales[lang]
-      if (file?.errors.length) {
-        log(`${page} ${lang}: skipped, ${file.errors[0]}`)
+      const unusable = lang === extracted.source ? `the page is written in ${lang}` : file?.errors[0]
+      if (unusable) {
+        skipped.push(...langAnswers.map(({ key }) => `${page} ${lang} ${key} (${unusable})`))
         continue
       }
       const entries = { ...(file?.entries ?? {}) }
-      const state = compareLocale(extracted.texts, entries)
-      const todo = [...state.missing, ...state.stale].map((key) => ({ key, text: extracted.texts.get(key), ...(entries[key] && { previous: entries[key].text }) }))
-      if (!todo.length && !state.orphans.length) continue
-      for (const key of state.orphans) delete entries[key]
-      const skipped = []
-      let written = 0
-      for (const items of batches(todo)) {
-        if (dryRun) break
-        const answers = await translate({ page, title: extracted.title, description: extracted.description, source: extracted.source, target: lang, items })
-        const byKey = new Map(answers.map((answer) => [answer.key, answer.text]))
-        for (const item of items) {
-          const text = byKey.get(item.key)
-          const why = text === undefined ? 'no answer' : problem(item.text, text)
-          if (why) skipped.push(`${item.key} (${why})`)
-          else {
-            entries[item.key] = { text, from: hash(item.text) }
-            written++
-          }
+      for (const key of compareLocale(extracted.texts, entries).orphans) delete entries[key]
+      let count = 0
+      for (const { key, text } of langAnswers) {
+        const source = extracted.texts.get(key)
+        const why = source === undefined ? 'points at nothing' : problem(key, source, text)
+        if (why) skipped.push(`${page} ${lang} ${key} (${why})`)
+        else {
+          entries[key] = { text, from: hash(source) }
+          count++
         }
       }
-      log(`${page} ${lang}: ${dryRun ? `${todo.length} to translate` : `${written} translated`}${state.orphans.length ? `, ${state.orphans.length} dropped` : ''}${skipped.length ? `, skipped ${skipped.join(', ')}` : ''}`)
-      report.push({ page, lang, todo: todo.length, ...(dryRun && { items: todo }), written, skipped })
-      if (dryRun || (!Object.keys(entries).length && !file)) continue
+      written += count
+      log(`${page} ${lang}: ${count} imported`)
+      if (!count && !file) continue
       await mkdir(join(repo, extracted.dir), { recursive: true })
       await writeFile(join(repo, extracted.dir, `${lang}.json`), renderLocale(extracted.texts, entries))
       if (!file) {
@@ -115,37 +100,26 @@ export async function translateRepo(repo, { translate, langs = LANGUAGES, pages,
       await writeFile(indexPath, renderIndex(extracted.source, Object.keys(locales).filter((lang) => lang !== extracted.source).sort()))
     }
   }
-  return report
+  return { written, skipped }
 }
-
 
 if (import.meta.url === `file://${process.argv[1]}`) {
   const { values } = parseArgs({ options: { export: { type: 'string' }, import: { type: 'string' }, page: { type: 'string', multiple: true } } })
   const repo = resolve(import.meta.dirname, '..')
   if (values.export) {
-    const report = await translateRepo(repo, { translate: async () => [], langs: values.export.split(',').map((lang) => lang.trim()), pages: values.page, dryRun: true })
-    const items = report.flatMap(({ page, lang, items: todo }) => todo.map((item) => ({ page, lang, ...item })))
+    const items = await exportTodo(repo, { langs: values.export.split(',').map((lang) => lang.trim()), pages: values.page })
     process.stdout.write(`${JSON.stringify(items, null, 1)}\n`)
     console.error(`${items.length} texts to translate.`)
   } else if (values.import) {
-    const done = JSON.parse(await readFile(values.import, 'utf8'))
-    const answers = new Map(done.map((item) => [`${item.page}\u0000${item.lang}\u0000${item.key}`, item.text]))
+    const answers = JSON.parse(await readFile(values.import, 'utf8'))
     // Only languages Kunobi speaks and pages that exist: the file decides nothing else, such as a path.
     const known = new Set(await findPages(repo))
-    const unknown = done.filter((item) => !LANGUAGES.includes(item.lang) || !known.has(item.page))
+    const unknown = answers.filter((item) => !LANGUAGES.includes(item.lang) || !known.has(item.page))
     if (unknown.length) throw new Error(`${unknown.length} items name an unknown language or page, e.g. ${JSON.stringify(unknown[0].lang)} ${JSON.stringify(unknown[0].page)}`)
-    const langs = [...new Set(done.map((item) => item.lang))]
-    const pages = [...new Set(done.map((item) => item.page))]
-    const translate = async ({ page, target, items }) =>
-      items.flatMap((item) => {
-        const text = answers.get(`${page}\u0000${target}\u0000${item.key}`)
-        return text === undefined ? [] : [{ key: item.key, text }]
-      })
-    const report = await translateRepo(repo, { translate, langs, pages, log: (line) => console.log(line) })
-    const written = report.reduce((sum, entry) => sum + entry.written, 0)
-    const skipped = report.reduce((sum, entry) => sum + entry.skipped.length, 0)
-    console.log(`${written} texts imported, ${skipped} skipped.`)
-    if (skipped) process.exitCode = 1
+    const { written, skipped } = await importAnswers(repo, answers, { log: (line) => console.log(line) })
+    for (const line of skipped) console.log(`skipped ${line}`)
+    console.log(`${written} texts imported, ${skipped.length} skipped.`)
+    if (skipped.length) process.exitCode = 1
   } else {
     console.error('Usage: node scripts/i18n-sync.mjs --export <lang[,lang]> [--page <page>] | --import <file>')
     process.exitCode = 2

@@ -3,8 +3,9 @@
  * Reports, for every page and every language Kunobi speaks, which translations are missing and
  * which are stale (their source text changed since). Missing and stale translations never fail:
  * pages fall back to their own language, and the maintainers translate them by hand (scripts/i18n-sync.mjs). It fails only
- * on what is broken: a locale file that does not parse or has the wrong shape, a key that points
- * at nothing, a `locales/index.ts` that does not list the locale files, or a page whose
+ * on what is broken: a locale file that does not parse or has the wrong shape, a translation whose
+ * placeholders differ from its source's, a key that points at nothing, a `locales/index.ts` that
+ * does not list the locale files, or a page whose
  * translatable text cannot be read (WORDS, `i18n.data`, `i18n.docs`).
  *
  *   node scripts/i18n-check.mjs              # report; exit 1 on errors
@@ -20,13 +21,12 @@ import { join, resolve } from 'node:path'
 import { parseArgs } from 'node:util'
 import { LANGUAGES, compareLocale, extractPage, findPages, readLocales, renderIndex, renderLocale } from './i18n.mjs'
 
-/** Every page's state: `[{ page, source, errors, warnings, langs: { lang: { missing, stale } } }]`. */
+/** Every page's state: `[{ page, source, errors, langs: { lang: { missing, stale } } }]`. */
 export async function checkRepo(repo, { fix = false } = {}) {
   const results = []
   for (const page of await findPages(repo)) {
     const extracted = await extractPage(repo, page)
     const errors = [...extracted.errors]
-    const warnings = []
     const locales = await readLocales(repo, extracted.dir)
     const langs = {}
     for (const [lang, { entries, errors: fileErrors }] of Object.entries(locales)) {
@@ -34,7 +34,6 @@ export async function checkRepo(repo, { fix = false } = {}) {
       if (lang === extracted.source) errors.push(`${extracted.dir}/${lang}.json: the page is written in ${lang}; it needs no translation into it`)
       const state = compareLocale(extracted.texts, entries)
       errors.push(...state.invalid.map((error) => `${extracted.dir}/${lang}.json: ${error}`))
-      warnings.push(...state.warnings.map((warning) => `${extracted.dir}/${lang}.json: ${warning}`))
       if (state.orphans.length && fix && !extracted.errors.length) {
         for (const key of state.orphans) delete entries[key]
         await writeFile(join(repo, extracted.dir, `${lang}.json`), renderLocale(extracted.texts, entries))
@@ -57,7 +56,7 @@ export async function checkRepo(repo, { fix = false } = {}) {
         else errors.push(`${extracted.dir}/index.ts does not list the page's locale files: run node scripts/i18n-check.mjs --fix`)
       }
     }
-    results.push({ page, source: extracted.source, total: extracted.texts.size, errors, warnings, langs })
+    results.push({ page, source: extracted.source, total: extracted.texts.size, errors, langs })
   }
   return results
 }
@@ -68,7 +67,6 @@ const list = (keys) => (keys.length > MAX_KEYS ? `${keys.slice(0, MAX_KEYS).join
 /** The report as Markdown. */
 export function renderReport(results) {
   const errors = results.flatMap((result) => result.errors.map((error) => `- \`${result.page}\`: ${error}`))
-  const warnings = results.flatMap((result) => result.warnings.map((warning) => `- \`${result.page}\`: ${warning}`))
   const lines = ['## Translations', '']
   if (errors.length) lines.push(`**${errors.length} to fix** (these fail the check):`, '', ...errors, '')
   lines.push('Missing or stale translations never block a pull request: the page shows its own language, and the maintainers translate it after merge.', '')
@@ -88,7 +86,6 @@ export function renderReport(results) {
       .map(([lang, state]) => `- \`${result.page}\` ${lang}: ${[state.missing.length && `missing ${list(state.missing)}`, state.stale.length && `stale ${list(state.stale)}`].filter(Boolean).join('; ')}`)
   )
   if (details.length) lines.push('', '<details><summary>Partly translated</summary>', '', ...details, '', '</details>')
-  if (warnings.length) lines.push('', '<details><summary>Worth a look</summary>', '', ...warnings, '', '</details>')
   return `${lines.join('\n')}\n`
 }
 

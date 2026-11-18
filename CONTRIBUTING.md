@@ -62,7 +62,7 @@ export const WORDS = { title: 'Lisbon weekend', places_one: '{{count}} place', p
 
 export const Trip = () => {
   const t = useI18n(WORDS, translations)
-  // t.w.title, t.w.places({ count: 3 }), t.data('places', live, start), t.doc('menu.md', menu), t.lang
+  // t.w.title, t.w.places({ count: 3 }), t.data('places', live, start), t.doc('menu.md', menu), t.lang, t.locale (for number and date formats)
 }
 ```
 
@@ -95,7 +95,7 @@ A locale file maps each key to its text and the hash of the source text it was t
 
 Keys are `meta.<field>`, `words.<key>` (groups joined with `.`), `data.<name><path>` (a list row by its `id`, or by its position when rows have none) and `doc.<path>`. When you fix a translation by hand, keep `from` as it is.
 
-`node scripts/i18n-check.mjs` reports what is missing or stale per page and language; every pull request gets that report. It fails only on a locale file that does not parse, a key that points at nothing (after you remove or rename source text; `--fix` drops those keys) or a `locales/index.ts` that does not list the files (`--fix` rewrites it). The translator's glossary, the names and terms it never translates, is `i18n-glossary.json`.
+`node scripts/i18n-check.mjs` reports what is missing or stale per page and language; every pull request gets that report. It fails only on a locale file that does not parse, a translation whose `{{placeholders}}` differ from its source's, a key that points at nothing (after you remove or rename source text; `--fix` drops those keys) or a `locales/index.ts` that does not list the files (`--fix` rewrites it). The translator's glossary, the names and terms it never translates, is `i18n-glossary.json`.
 
 ## Check it locally
 

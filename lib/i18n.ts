@@ -82,10 +82,13 @@ export function format(text: string, vars: Record<string, unknown> = {}): string
   return text.replace(PLACEHOLDER, (whole, name) => (name in vars ? String(vars[name]) : whole))
 }
 
-/** A word as the page uses it: a string, a list, or, with `{{placeholders}}`, a function of their values. */
-function word(text: string | string[]): unknown {
-  if (Array.isArray(text) || !text.includes('{{')) return text
-  return (vars?: Record<string, unknown>) => format(text, vars)
+/**
+ * A word as the page uses it: `text`, or a function of its values when the page's own text
+ * (`source`) has `{{placeholders}}`. The source decides, so a translation cannot change the shape.
+ */
+function word(source: unknown, text: string | string[]): unknown {
+  if (typeof source !== 'string' || !source.includes('{{')) return text
+  return (vars?: Record<string, unknown>) => format(String(text), vars)
 }
 
 /** One path segment: an object key, or a list row (by its `id`, or by position when rows have none). */
@@ -137,8 +140,10 @@ const same = (a: unknown, b: unknown) => a === b || JSON.stringify(a) === JSON.s
 export interface I18n<W> {
   /** The language the page shows: the first locale used, or the page's own. */
   lang: string
-  /** The reader's tag, for number and date formats. */
+  /** The reader's tag. */
   tag: string
+  /** The locale for number and date formats: the reader's tag when it is of the shown language, else that language. */
+  locale: string
   /** The page's words in the reader's language (see `useI18n`). */
   w: W & Record<string, any>
   /** A front matter field (`title`, `description`, `prompts`) in the reader's language, or `fallback`. */
@@ -196,7 +201,7 @@ export function i18n<W extends Record<string, unknown>>(words: W, translations: 
         continue
       }
       if (value && typeof value === 'object' && !Array.isArray(value)) out[key] = translateWords(value as Record<string, unknown>, `${prefix}${key}.`)
-      else out[key] = word((lookup(`${prefix}${key}`) ?? value) as string | string[])
+      else out[key] = word(value, (lookup(`${prefix}${key}`) ?? value) as string | string[])
     }
     return out
   }
@@ -204,6 +209,7 @@ export function i18n<W extends Record<string, unknown>>(words: W, translations: 
   return {
     lang,
     tag,
+    locale: base(tag) === base(lang) ? tag : lang,
     w: translateWords(words, 'words.') as W & Record<string, any>,
     meta: (field, fallback) => (lookup(`meta.${field}`) ?? fallback) as typeof fallback,
     data: (name, value, start = value) => {

@@ -38,8 +38,8 @@ These read the cluster you have selected in Kunobi. They need Kunobi with Ninja 
 | --- | --- | --- | --- |
 | Cluster dashboard | `cluster-dashboard/` | "Known" marks | `data/cluster.json` |
 | A stuck upgrade, investigated | `incident/` | Timeline, status and follow-ups | `data/cluster.json`, `data/timeline.start.json` |
-| Blast radius | `blast-radius/` | Checklist and notes per object | `data/cluster.json` |
-| Stuck HelmRelease runbook | `runbook/` | Runs and their check results | `data/cluster.json` |
+| Blast radius | `blast-radius/` | Checklist and notes per object | `data/cluster.json`, `data/review.start.json` |
+| Stuck HelmRelease runbook | `runbook/` | Runs and their check results | `data/cluster.json`, `data/runs.start.json` |
 | On-call handover | `on-call-handover/` | Acks, owners and comments | `data/cluster.json`, `data/items.start.json` |
 
 ## Where the data lives

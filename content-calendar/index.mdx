@@ -42,11 +42,12 @@ export const Page = ({ view }) => {
   const t = useI18n(WORDS, translations)
   const w = t.w
   const localize = React.useCallback((live) => t.data('posts', live, postsStart), [t])
+  const calendar = React.useMemo(() => t.data('calendar', settings), [t])
   const store = useStoreStatus(STORE)
   const canEdit = store?.status === 'open' && Boolean(store?.canEdit)
   return (
     <>
-      <ContentCalendar posts={posts} localize={localize} settings={t.data('calendar', settings)} words={w} locale={t.tag} initial={view} />
+      <ContentCalendar posts={posts} localize={localize} settings={calendar} words={w} locale={t.tag} initial={view} />
       <div className="cc-how">
         <style>{`
           .cc-how { width: min(var(--kunobi-prose-width, 1200px), 100%); margin: 0 auto; box-sizing: border-box; padding: 0 24px 40px; font-family: Figtree, system-ui, sans-serif; color: hsl(var(--muted-foreground)); font-size: 14px; line-height: 1.5; }

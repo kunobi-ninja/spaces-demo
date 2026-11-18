@@ -4,7 +4,7 @@ import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join, resolve } from 'node:path'
 import { after, before, test } from 'node:test'
-import { buildCatalog } from './build-catalog.mjs'
+import { buildCatalog, importingCode, stripComments } from './build-catalog.mjs'
 
 const repo = resolve(import.meta.dirname, '..')
 let out
@@ -186,4 +186,31 @@ test('rejects front matter translations, a bad lang and a broken locale file', a
   ]) {
     await withPage(yaml, locales, (build) => assert.rejects(build(), error))
   }
+})
+
+test('only code imports: an MDX page\'s ESM blocks and scripts, never prose, code fences or Markdown', () => {
+  const page = [
+    '---',
+    'title: P',
+    '---',
+    "import a from './a.json'",
+    "export { b } from './b'",
+    '',
+    "To use it, write import x from './prose' in your page.",
+    '',
+    '```js',
+    "import c from './fenced'",
+    '```',
+    '',
+    "{/* import d from './jsx-comment' */}",
+  ].join('\n')
+  const specifiers = (path, text) => [...importingCode(path, text).matchAll(/from\s+'([^']+)'/g)].map((match) => match[1])
+  assert.deepEqual(specifiers('p/index.mdx', page), ['./a.json', './b'])
+  assert.deepEqual(specifiers('p/notes.md', "import e from './e'"), [])
+  assert.deepEqual(specifiers('p/src/x.ts', "// import f from './f'\nimport g from './g'"), ['./g'])
+})
+
+test('comments go, strings that look like comments stay', () => {
+  const code = "const glob = 'src/**/*.ts'\nimport a from './a'\n/* import b from './b' */\nconst url = \"http://x\" // trailing\nimport c from './c' // */"
+  assert.equal(stripComments(code), "const glob = 'src/**/*.ts'\nimport a from './a'\n\nconst url = \"http://x\" \nimport c from './c' ")
 })

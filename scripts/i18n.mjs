@@ -241,7 +241,16 @@ function sourceOf(texts, key) {
   return undefined
 }
 
-const placeholders = (text) => [...[text].flat().join('\n').matchAll(PLACEHOLDER)].map((match) => match[1]).sort().join(',')
+const placeholders = (text) => [...new Set([...[text].flat().join('\n').matchAll(PLACEHOLDER)].map((match) => match[1]))].sort()
+
+/**
+ * Whether translation `text` of `key` has the placeholders of its `source`. A plural form may say
+ * its number in words ("One guest"), so `count` may come or go there.
+ */
+export function samePlaceholders(key, source, text) {
+  const names = (value) => placeholders(value).filter((name) => !(PLURAL.test(key) && name === 'count')).join(',')
+  return names(source) === names(text)
+}
 
 /** Reads `<dir>/<lang>.json` for every language present: `{ lang: { entries, errors } }`. */
 export async function readLocales(repo, dir) {
@@ -270,11 +279,11 @@ export async function readLocales(repo, dir) {
 
 /**
  * How a locale stands against its page: `missing` and `stale` keys (still usable), `orphans` (keys
- * that point at nothing) and `invalid` entries (wrong shape against the source: errors), and
- * `warnings` (placeholders that differ).
+ * that point at nothing) and `invalid` entries (a list for a string or the other way round, or
+ * placeholders that differ from the source's: the page would break or lose a value).
  */
 export function compareLocale(texts, entries) {
-  const result = { missing: [], stale: [], orphans: [], invalid: [], warnings: [] }
+  const result = { missing: [], stale: [], orphans: [], invalid: [] }
   for (const [key, text] of texts) {
     const entry = entries[key]
     if (!entry) result.missing.push(key)
@@ -287,7 +296,7 @@ export function compareLocale(texts, entries) {
       continue
     }
     if (Array.isArray(text) !== Array.isArray(entry.text)) result.invalid.push(`${key}: the source is ${Array.isArray(text) ? 'a list' : 'a string'}`)
-    else if (placeholders(text) !== placeholders(entry.text)) result.warnings.push(`${key}: placeholders differ from the source ({{${placeholders(text)}}})`)
+    else if (!samePlaceholders(key, text, entry.text)) result.invalid.push(`${key}: placeholders differ from the source ({{${placeholders(text).join('}}, {{')}}})`)
   }
   return result
 }

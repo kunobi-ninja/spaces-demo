@@ -76,7 +76,7 @@ export function Runbook({ snapshot, saved, localize, w }: { snapshot: Cluster; s
   const open = (status?.status === 'open' || status?.status === 'paused') && stored !== undefined
   const canEdit = open && status?.status === 'open' && Boolean(status?.canEdit)
   // Seeded runs show in the reader's language until someone changes them; display only.
-  const log: RunbookRunsStore = localize((open ? stored : saved) ?? { runs: {}, checks: {} })
+  const log: RunbookRunsStore = React.useMemo(() => localize((open ? stored : saved) ?? { runs: {}, checks: {} }), [open, stored, saved, localize])
 
   const stuck = cluster.helmreleases.filter((h) => h.ready?.s !== 'True')
   const [pick, setPick] = React.useState<string | null>(null)
@@ -98,7 +98,9 @@ export function Runbook({ snapshot, saved, localize, w }: { snapshot: Cluster; s
     for (const [id, c] of Object.entries(log.checks ?? {})) {
       if (!c.run || !c.step) continue
       const list = checksByRun.get(c.run) ?? []
-      list.push({ id, step: c.step, result: (c.result ?? 'unknown') as Result, seen: c.seen ?? '', note: c.note ?? '' })
+      // A value this page does not know (an older or hand-edited run) reads as unknown.
+      const result: Result = c.result && Object.hasOwn(RESULT_COLOR, c.result) ? (c.result as Result) : 'unknown'
+      list.push({ id, step: c.step, result, seen: c.seen ?? '', note: c.note ?? '' })
       checksByRun.set(c.run, list)
     }
     return Object.entries(log.runs ?? {})
@@ -232,7 +234,7 @@ export function Runbook({ snapshot, saved, localize, w }: { snapshot: Cluster; s
                         {c.cmd.map((cmd) => <Command key={cmd} cmd={cmd} w={w} />)}
                         <div className="rb-foot">
                           <span className={`rb-last ${changed ? 'changed' : ''}`}>
-                            {last ? `${changed ? w.wasBefore({ result: w.result[last.result].toLowerCase() }) : w.sameAsLast} · ${last.by} · ${last.at ? localFmt.format(new Date(last.at)) : '–'}` : w.neverRecorded}
+                            {last ? `${changed ? w.wasBefore({ result: w.resultInText[last.result] }) : w.sameAsLast} · ${last.by} · ${last.at ? localFmt.format(new Date(last.at)) : '–'}` : w.neverRecorded}
                           </span>
                           <details className="rb-more">
                             <summary>{w.more}</summary>

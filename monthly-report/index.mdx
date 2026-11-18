@@ -82,7 +82,7 @@ export const summaries = (s, lang) => {
 export const Page = ({ month }) => {
   const t = useI18n(WORDS, translations)
   const w = { ...t.w, ...summaries(t.w.sum, t.lang) }
-  return <Report data={t.data('report', data)} w={w} locale={t.tag.toLowerCase().startsWith(t.lang.toLowerCase().split('-')[0]) ? t.tag : t.lang} initial={month} />
+  return <Report data={t.data('report', data)} w={w} locale={t.locale} initial={month} />
 }
 
 <Page month={props.month} />
