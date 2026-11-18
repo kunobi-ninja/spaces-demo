@@ -130,6 +130,10 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   } else if (values.import) {
     const done = JSON.parse(await readFile(values.import, 'utf8'))
     const answers = new Map(done.map((item) => [`${item.page}\u0000${item.lang}\u0000${item.key}`, item.text]))
+    // Only languages Kunobi speaks and pages that exist: the file decides nothing else, such as a path.
+    const known = new Set(await findPages(repo))
+    const unknown = done.filter((item) => !LANGUAGES.includes(item.lang) || !known.has(item.page))
+    if (unknown.length) throw new Error(`${unknown.length} items name an unknown language or page, e.g. ${JSON.stringify(unknown[0].lang)} ${JSON.stringify(unknown[0].page)}`)
     const langs = [...new Set(done.map((item) => item.lang))]
     const pages = [...new Set(done.map((item) => item.page))]
     const translate = async ({ page, target, items }) =>
