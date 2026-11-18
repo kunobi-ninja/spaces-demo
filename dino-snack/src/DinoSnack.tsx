@@ -302,7 +302,7 @@ export function DinoSnack({ kid = 'Mateo', goal = 10, lives = 3, w }: { kid?: st
               ))}
             </span>
           </div>
-          <div style={{ ...pill, color: C.heart, letterSpacing: 2 }} aria-label={w.lives(hud.lives)}>
+          <div style={{ ...pill, color: C.heart, letterSpacing: 2 }} aria-label={w.lives({ count: hud.lives })}>
             {Array.from({ length: lives }, (_, i) => (
               <span key={i} style={{ opacity: i < hud.lives ? 1 : 0.25, transition: 'opacity 300ms' }}>
                 ♥
@@ -356,10 +356,10 @@ export function DinoSnack({ kid = 'Mateo', goal = 10, lives = 3, w }: { kid?: st
           }}
         >
           <span style={{ fontSize: phase === 'title' ? 'clamp(40px, 9cqw, 96px)' : 'clamp(32px, 7cqw, 76px)', fontWeight: 700, lineHeight: 1, color: phase === 'lose' ? C.ocean : C.sun, textShadow: outline(4) }}>
-            {phase === 'title' ? w.title : phase === 'win' ? w.win(kid) : w.lose}
+            {phase === 'title' ? w.title : phase === 'win' ? w.win({ kid }) : w.lose}
           </span>
           <span style={{ fontSize: 'clamp(17px, 3cqw, 30px)', fontWeight: 700, textShadow: outline(2), maxWidth: 640 }}>
-            {phase === 'title' ? w.intro(kid, goal) : phase === 'win' ? w.won(goal) : w.lost(hud.score, kid)}
+            {phase === 'title' ? w.intro({ kid, goal }) : phase === 'win' ? w.won({ goal }) : w.lost({ count: hud.score, kid })}
           </span>
           <span
             style={{

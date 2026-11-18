@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { useStore, useStoreStatus, edit, useDiagram } from 'kunobi'
 import type { IncidentTimelineStore } from '../types/incident-timeline.store'
-import { localizeSeed } from './seed'
 import { useCluster, type Cluster, type Cond, type Snapshot, type Ev } from './live'
 
 /*
@@ -105,8 +104,8 @@ function graphModel(f: Facts, w: any) {
     const id = nid('pods', owner)
     add({
       id, kind: 'Pod', ns: group[0].ns,
-      name: group.length === 1 ? group[0].n : w.pods(group.length),
-      status: w.podStatus(ready, group.length, restarts),
+      name: group.length === 1 ? group[0].n : w.pods({ count: group.length }),
+      status: w.podStatus({ ready, total: group.length }) + (restarts ? ` · ${w.restarts({ count: restarts })}` : ''),
       health: countHealth(ready, group.length),
       match: group.length === 1 ? group[0].n : owner,
     })
@@ -114,7 +113,7 @@ function graphModel(f: Facts, w: any) {
   }
   const deployment = (d: Facts['deploys'][number], parent: string, rel: string) => {
     const id = nid('dep', d.n)
-    add({ id, kind: 'Deployment', ns: d.ns, name: d.n, status: w.replicas(d.ready, d.want), health: countHealth(d.ready, d.want), match: `Deployment ${d.ns}/${d.n}` })
+    add({ id, kind: 'Deployment', ns: d.ns, name: d.n, status: w.replicas({ ready: d.ready, total: d.want }), health: countHealth(d.ready, d.want), match: `Deployment ${d.ns}/${d.n}` })
     edges.push({ from: parent, to: id, rel })
     podGroup(d.n, [d.n], id)
   }
@@ -136,7 +135,7 @@ function graphModel(f: Facts, w: any) {
     }
     if (f.pgc && f.pgc.ks === k.n) {
       const pid = nid('pgc', f.pgc.n)
-      add({ id: pid, kind: 'PostgresCluster', ns: f.pgc.ns, name: f.pgc.n, status: w.instances(f.pgc.ready, f.pgc.want), health: countHealth(f.pgc.ready, f.pgc.want), match: f.pgc.n })
+      add({ id: pid, kind: 'PostgresCluster', ns: f.pgc.ns, name: f.pgc.n, status: w.instances({ ready: f.pgc.ready, total: f.pgc.want }), health: countHealth(f.pgc.ready, f.pgc.want), match: f.pgc.n })
       edges.push({ from: kid, to: pid, rel: w.rel.applies })
       if (f.operator) edges.push({ from: nid('dep', f.operator.n), to: pid, rel: w.rel.operates })
       podGroup(f.pgc.n, f.sts.filter((s) => s.owner === f.pgc!.n).map((s) => s.n), pid)
@@ -307,7 +306,7 @@ function detailOf(n: GNode, f: Facts): { detail: string; since: string } {
   return { detail: '', since: '' }
 }
 
-export function Incident({ snapshot, start, translated, w }: { snapshot: Snapshot; start: Store; translated?: unknown; w: any }) {
+export function Incident({ snapshot, start, localize, w }: { snapshot: Snapshot; start: Store; localize: (data: Store) => Store; w: any }) {
   const cl = useCluster(snapshot)
   const f = React.useMemo(() => facts(cl, snapshot.scope), [cl, snapshot.scope])
   const model = React.useMemo(() => graphModel(f, w), [f, w])
@@ -316,7 +315,7 @@ export function Incident({ snapshot, start, translated, w }: { snapshot: Snapsho
   const st = (useStoreStatus(STORE) ?? {}) as St
   const open = st.status === 'open' && !!live
   // Seeded text shows in the reader's language until someone changes it; display only.
-  const data: Store = React.useMemo(() => localizeSeed((open || st.status === 'paused') && live ? live : start, start, translated), [open, st.status, live, start, translated])
+  const data: Store = React.useMemo(() => localize((open || st.status === 'paused') && live ? live : start), [open, st.status, live, start, localize])
   const canEdit = open && !!st.canEdit
   const [refused, setRefused] = React.useState(false)
   const send = (change: (d: Store) => void) =>
@@ -363,7 +362,7 @@ export function Incident({ snapshot, start, translated, w }: { snapshot: Snapsho
     send((d) => {
       d.status = next
       d.resolved = next === 'resolved' ? when : ''
-      d.entries.push({ id: `e-${uid()}`, time: when, kind: 'decision', author: author || w.someone, source: w.storeSource, text: w.statusChanged(w.status[next]) })
+      d.entries.push({ id: `e-${uid()}`, time: when, kind: 'decision', author: author || w.someone, source: w.storeSource, text: w.statusChanged({ status: w.status[next] }) })
     })
   }
 
@@ -393,7 +392,7 @@ export function Incident({ snapshot, start, translated, w }: { snapshot: Snapsho
 
   const shown = focus ? entries.filter((e) => `${e.source ?? ''} ${e.text ?? ''}`.includes(focus.match)) : entries
   const detail = focus ? <NodeDetail n={focus} d={detailOf(focus, f)} w={w} dateTime={dateTime} count={shown.length} onClose={() => setFocusId(null)} /> : null
-  const sourceNote = cl.live ? w.live : cl.missing ? w.missing : w.sample(dateTime(snapshot.takenAt))
+  const sourceNote = cl.live ? w.live : cl.missing ? w.missing : w.sample({ date: dateTime(snapshot.takenAt) })
 
   return (
     <div className="inc">
@@ -401,7 +400,7 @@ export function Incident({ snapshot, start, translated, w }: { snapshot: Snapsho
       <div className="inc-in">
         <header className="inc-head">
           <div className="inc-head-l">
-            <span className="inc-eyebrow"><span className="inc-dot" style={{ background: STATUS_COLOR[status] }} />{w.eyebrow(cl.live ? w.selectedCluster : snapshot.cluster.label)}</span>
+            <span className="inc-eyebrow"><span className="inc-dot" style={{ background: STATUS_COLOR[status] }} />{w.eyebrow({ cluster: cl.live ? w.selectedCluster : snapshot.cluster.label })}</span>
             <h1>{data.title}</h1>
             <p className="inc-lede" title={w.plainTitle}>{w.plain(pm)}</p>
           </div>
@@ -475,7 +474,7 @@ export function Incident({ snapshot, start, translated, w }: { snapshot: Snapsho
 
           <section className="inc-card inc-tl">
             <div className="inc-card-head">
-              <h2>{w.timelineTitle}<small>{w.entriesN(entries.length)}</small></h2>
+              <h2>{w.timelineTitle}<small>{w.entriesN({ count: entries.length })}</small></h2>
               {canEdit && st.saved === false ? <span className="inc-saving">{w.saving}</span> : null}
             </div>
             <div className="inc-detail-wide">{detail}</div>
@@ -554,7 +553,7 @@ function SourceBadge({ cl, w, takenAt }: { cl: Cluster; w: any; takenAt: string 
   if (cl.live) return <span className="inc-badge live"><i />{w.live}</span>
   return (
     <span className="inc-badge">
-      {cl.partial ? w.partial : w.sample(takenAt)}
+      {cl.partial ? w.partial : w.sample({ date: takenAt })}
       {cl.allow ? <button type="button" onClick={cl.allow}>{w.useLive}</button> : null}
     </span>
   )
@@ -571,8 +570,8 @@ function NodeDetail({ n, d, w, dateTime, count, onClose }: { n: GNode; d: { deta
       <div className="inc-detail-state" style={{ color: HEALTH[n.health] }}>{n.status}</div>
       {d.detail ? <div className="inc-detail-msg">{d.detail}</div> : null}
       <div className="inc-detail-foot">
-        {d.since ? <span>{w.since(dateTime(d.since))}</span> : null}
-        <span>{w.entriesN(count)}</span>
+        {d.since ? <span>{w.since({ date: dateTime(d.since) })}</span> : null}
+        <span>{w.entriesN({ count })}</span>
       </div>
     </div>
   )
@@ -616,7 +615,7 @@ function AddEntry({ w, author, setAuthor, focus, onAdd }: { w: any; author: stri
 function Resources({ f, w, dateTime }: { f: Facts; w: any; dateTime: (iso?: string | null) => string }) {
   const rows: { key: string; kind: string; name: string; health: Health; state: string; tip: string }[] = []
   const ok = (h: Health, state: string) => (h === 'ok' && /Succeeded|Ready/.test(state) ? w.health.ok : state)
-  const tip = (msg: string, since?: string) => [msg, since ? w.since(dateTime(since)) : ''].filter(Boolean).join('\n')
+  const tip = (msg: string, since?: string) => [msg, since ? w.since({ date: dateTime(since) }) : ''].filter(Boolean).join('\n')
   if (f.hr) rows.push({ key: 'hr', kind: 'HelmRelease', name: `${f.hr.ns}/${f.hr.n}`, health: condHealth(f.hr.ready), state: f.hr.ready?.reason ?? '—', tip: tip(f.hr.ready?.message ?? '', f.hr.ready?.t) })
   for (const k of f.ks) rows.push({ key: `ks-${k.n}`, kind: 'Kustomization', name: `${k.ns}/${k.n}`, health: condHealth(k.ready), state: k.ready?.reason ?? '—', tip: tip(k.ready?.message ?? '', condHealth(k.ready) === 'ok' ? '' : k.ready?.t) })
   if (f.oci) rows.push({ key: 'oci', kind: 'OCIRepository', name: `${f.oci.ns}/${f.oci.n}`, health: condHealth(f.oci.ready), state: f.oci.artifact.split('@')[0] || '—', tip: `${f.oci.semver} → ${f.oci.artifact}` })

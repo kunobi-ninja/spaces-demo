@@ -514,7 +514,7 @@ export function Game({ w }: { w: Words }) {
           </ol>
         </div>
         <canvas className="cc-map" ref={map} width={180 * dpr} height={120 * dpr} />
-        {banner && <div className="cc-banner">{banner === me ? w.youWin : w.theyWin(nameOf(banner))}</div>}
+        {banner && <div className="cc-banner">{banner === me ? w.youWin : w.theyWin({ name: nameOf(banner) })}</div>}
         <div className="cc-buttons">
           <button onClick={() => jumpNow.current()}>{w.jump}</button>
           <button onClick={() => meowNow.current()}>{w.meow}</button>
@@ -522,7 +522,7 @@ export function Game({ w }: { w: Words }) {
       </div>
       <p className="cc-foot">
         {status && <strong>{status}</strong>}
-        <span>{w.how(TO_WIN)}</span>
+        <span>{w.how({ count: TO_WIN })}</span>
       </p>
     </div>
   )

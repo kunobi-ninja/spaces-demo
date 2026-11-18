@@ -1,0 +1,22 @@
+{
+  "meta.title": { "text": "Panel del clúster", "from": "e9469e10" },
+  "meta.description": { "text": "Qué está roto en tu clúster, dónde y por qué.", "from": "d1a2e10f" },
+  "words.sample": { "text": "Clúster de ejemplo", "from": "59783d6d" },
+  "words.selected": { "text": "Tu clúster", "from": "db3a2e4c" },
+  "words.sampleData": { "text": "Datos de ejemplo", "from": "0fada9af" },
+  "words.useLive": { "text": "Usar mi clúster", "from": "70fe5169" },
+  "words.sampleTip": { "text": "Tomado el {{when}}. Solo lectura.", "from": "4d49eae8" },
+  "words.broken": { "text": "rotos", "from": "dfef76f6" },
+  "words.toCheck": { "text": "por revisar", "from": "5a3bc732" },
+  "words.allGood": { "text": "Todo sano", "from": "804c323b" },
+  "words.podsOk": { "text": "pods sanos", "from": "fb9863a2" },
+  "words.map": { "text": "Pods por namespace", "from": "2381d145" },
+  "words.problems": { "text": "Problemas", "from": "009537e9" },
+  "words.all": { "text": "Todos", "from": "9a9877c8" },
+  "words.none": { "text": "Nada aquí.", "from": "fcc41fa4" },
+  "words.back": { "text": "Volver", "from": "357885fe" },
+  "words.mark": { "text": "Marcar como conocido", "from": "2bcfdfa5" },
+  "words.unmark": { "text": "Quitar marca", "from": "0c770638" },
+  "words.known": { "text": "Conocidos", "from": "5235ede1" },
+  "words.saving": { "text": "Guardando…", "from": "53ca6040" }
+}

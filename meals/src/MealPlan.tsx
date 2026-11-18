@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { edit, useStore, useStoreStatus } from 'kunobi'
 import { amount, hours, nights, scaled, shopping, slug, type Line, type Night, type Recipe, type WeekData } from './plan'
-import { localizeSeed } from './seed'
 
 const C = { midnight: '#06213f', sun: '#f3aa08', ocean: '#5bcbf9', tide: '#30ccd5', horizon: '#0984c8' }
 const COOKS = [C.sun, C.horizon, C.tide, '#e8794a', '#8a6cf0']
@@ -141,7 +140,7 @@ function Tick({ on }: { on: boolean }) {
   )
 }
 
-export function MealPlan({ startWeek, startShopping, translatedShopping, recipes, aisles: recipeAisles, words: w }: { startWeek: WeekData; startShopping: ShoppingData; translatedShopping?: unknown; recipes: Recipe[]; aisles: string[]; words: Words }) {
+export function MealPlan({ startWeek, startShopping, localizeShopping, recipes, aisles: recipeAisles, words: w }: { startWeek: WeekData; startShopping: ShoppingData; localizeShopping: (data: ShoppingData) => ShoppingData; recipes: Recipe[]; aisles: string[]; words: Words }) {
   // The stores when Kunobi has them; the starting data where it does not (previews, builds without live editing).
   const weekStore = useStore(WEEK) as WeekData | undefined
   const shopStore = useStore(SHOP) as ShoppingData | undefined
@@ -158,7 +157,7 @@ export function MealPlan({ startWeek, startShopping, translatedShopping, recipes
   const week = slots.filter((n): n is Night => n.recipe !== null)
   const list = React.useMemo(() => shopping(week), [slots])
   // Starting extras in the reader's language; display only, edits go to the store as typed.
-  const shop = React.useMemo(() => localizeSeed(shopStore ?? startShopping, startShopping, translatedShopping), [shopStore, startShopping, translatedShopping])
+  const shop = React.useMemo(() => localizeShopping(shopStore ?? startShopping), [shopStore, startShopping, localizeShopping])
   const ticks = shop.ticks ?? {}
   const extras = shop.extras ?? []
   const aisles = [...recipeAisles, 'Other']

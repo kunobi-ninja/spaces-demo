@@ -3,7 +3,6 @@ import { edit, useStore, useStoreStatus } from 'kunobi'
 import type { RunbookRunsStore } from '../types/runbook-runs.store'
 import { STEP_IDS, blockedBy, chartSources, nextAction, runChecks, type Check, type Cluster, type HR, type Result, type StepId } from './cluster'
 import { useCluster } from './live'
-import { localizeSeed } from './seed'
 
 /*
  * A runbook for a stuck Flux HelmRelease. Each step reads the cluster selected in the tab (live in
@@ -69,7 +68,7 @@ function Command({ cmd, w }: { cmd: string; w: any }) {
   )
 }
 
-export function Runbook({ snapshot, saved, translated, w }: { snapshot: Cluster; saved: RunbookRunsStore; translated?: unknown; w: any }) {
+export function Runbook({ snapshot, saved, localize, w }: { snapshot: Cluster; saved: RunbookRunsStore; localize: (data: RunbookRunsStore) => RunbookRunsStore; w: any }) {
   const src = useCluster(snapshot)
   const cluster = src.cluster
   const stored = useStore(STORE) as RunbookRunsStore | undefined
@@ -77,7 +76,7 @@ export function Runbook({ snapshot, saved, translated, w }: { snapshot: Cluster;
   const open = (status?.status === 'open' || status?.status === 'paused') && stored !== undefined
   const canEdit = open && status?.status === 'open' && Boolean(status?.canEdit)
   // Seeded runs show in the reader's language until someone changes them; display only.
-  const log: RunbookRunsStore = localizeSeed((open ? stored : saved) ?? { runs: {}, checks: {} }, saved, translated)
+  const log: RunbookRunsStore = localize((open ? stored : saved) ?? { runs: {}, checks: {} })
 
   const stuck = cluster.helmreleases.filter((h) => h.ready?.s !== 'True')
   const [pick, setPick] = React.useState<string | null>(null)
@@ -162,12 +161,12 @@ export function Runbook({ snapshot, saved, translated, w }: { snapshot: Cluster;
   if (hr) {
     const blocked = blockedBy(cluster, hr)
     const r = (id: StepId) => by[id]?.result
-    plain.push(r('workloads') === 'pass' ? w.plain.running(hr.n) : r('workloads') === 'fail' ? w.plain.notRunning(hr.n) : w.plain.unknownRunning(hr.n))
+    plain.push(r('workloads') === 'pass' ? w.plain.running({ name: hr.n }) : r('workloads') === 'fail' ? w.plain.notRunning({ name: hr.n }) : w.plain.unknownRunning({ name: hr.n }))
     if (r('suspend') === 'fail') plain.push(w.plain.paused)
     else if (r('source') === 'fail') plain.push(w.plain.noPackage)
     else if (r('retries') === 'fail') plain.push(w.plain.gaveUp)
     else if (r('ready') === 'fail') plain.push(w.plain.unhealthy)
-    if (blocked.length) plain.push(w.plain.waitingOn(blocked.length))
+    if (blocked.length) plain.push(w.plain.waitingOn({ count: blocked.length }))
     if (r('pending') === 'fail') plain.push(w.plain.newerWaiting)
     else if (r('pending') === 'pass' && blocked.length) plain.push(w.plain.nothingNew)
   }
@@ -181,7 +180,7 @@ export function Runbook({ snapshot, saved, translated, w }: { snapshot: Cluster;
         <header className="rb-head">
           <div className="rb-htext">
             <h1 className="rb-title">{w.title}</h1>
-            <p className="rb-sub">{w.sub(src.live ? null : cluster.label)}</p>
+            <p className="rb-sub">{src.live || !cluster.label ? w.sub : w.subOn({ cluster: cluster.label })}</p>
           </div>
           <div className="rb-kpis" aria-label={w.thisTarget}>
             <span><b style={{ color: C.coral }}>{count('fail')}</b> {w.result.fail}</span>
@@ -194,13 +193,13 @@ export function Runbook({ snapshot, saved, translated, w }: { snapshot: Cluster;
           {src.live ? (
             <span className="rb-badge live"><i />{w.live} · {stampFmt.format(new Date(cluster.takenAt))} UTC</span>
           ) : (
-            <span className="rb-badge snap" title={src.allow ? w.liveAsk : w.liveOff}><i />{w.snapshot(stampFmt.format(new Date(snapshot.takenAt)))}</span>
+            <span className="rb-badge snap" title={src.allow ? w.liveAsk : w.liveOff}><i />{w.snapshot({ date: stampFmt.format(new Date(snapshot.takenAt)) })}</span>
           )}
           {!src.live && src.allow ? <button type="button" className="rb-btn ghost" onClick={src.allow}>{w.useLive}</button> : null}
           {!src.live && !src.allow ? <span className="rb-muted">{src.loading ? w.liveLoading : w.liveOff}</span> : null}
           {stuck.length ? (
             <nav className="rb-targets" aria-label={w.pickTarget}>
-              <span className="rb-label">{w.stuckOf(stuck.length, cluster.hrTotal)}</span>
+              <span className="rb-label">{w.stuckOf({ count: stuck.length, total: cluster.hrTotal })}</span>
               {stuck.map((h) => (
                 <button type="button" key={keyOf(h)} className={`rb-target ${keyOf(h) === target ? 'on' : ''}`} aria-pressed={keyOf(h) === target} onClick={() => setPick(keyOf(h))}>
                   <i style={{ background: h.ready?.s === 'False' ? C.coral : C.sun }} aria-hidden="true" />
@@ -215,7 +214,7 @@ export function Runbook({ snapshot, saved, translated, w }: { snapshot: Cluster;
         <div className="rb-grid">
           <section className="rb-steps" aria-label={w.steps}>
             {stuck.length === 0 ? (
-              <div className="rb-box"><b>{w.allReady(cluster.hrTotal)}</b></div>
+              <div className="rb-box"><b>{w.allReady({ count: cluster.hrTotal })}</b></div>
             ) : (
               <ol>
                 {checks.map((c, i) => {
@@ -233,7 +232,7 @@ export function Runbook({ snapshot, saved, translated, w }: { snapshot: Cluster;
                         {c.cmd.map((cmd) => <Command key={cmd} cmd={cmd} w={w} />)}
                         <div className="rb-foot">
                           <span className={`rb-last ${changed ? 'changed' : ''}`}>
-                            {last ? `${changed ? w.wasBefore(w.result[last.result]) : w.sameAsLast} · ${last.by} · ${last.at ? localFmt.format(new Date(last.at)) : '–'}` : w.neverRecorded}
+                            {last ? `${changed ? w.wasBefore({ result: w.result[last.result].toLowerCase() }) : w.sameAsLast} · ${last.by} · ${last.at ? localFmt.format(new Date(last.at)) : '–'}` : w.neverRecorded}
                           </span>
                           <details className="rb-more">
                             <summary>{w.more}</summary>
@@ -263,7 +262,7 @@ export function Runbook({ snapshot, saved, translated, w }: { snapshot: Cluster;
             {next && next.kind !== 'none' ? (
               <section className="rb-box rb-next">
                 <h2>{w.next.title}</h2>
-                <p>{next.kind === 'source' ? w.next.source(first?.chart ?? '–', first?.srcRef?.name ?? '–', definedIn?.src?.name ?? null) : w.next[next.kind]}</p>
+                <p>{next.kind === 'source' ? (definedIn?.src?.name ? w.next.sourceIn : w.next.source)({ chart: first?.chart ?? '–', repo: first?.srcRef?.name ?? '–', file: definedIn?.src?.name }) : w.next[next.kind]}</p>
                 {next.cmds.map((c) => <Command key={c} cmd={c} w={w} />)}
                 {'timeout' in next && next.timeout ? <p className="rb-warn">{w.next.timeout}</p> : null}
                 <details className="rb-more">

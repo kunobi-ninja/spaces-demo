@@ -5,138 +5,91 @@ prompts:
   - "Add 14 Ashley Down Road, Horfield: £1,350, 3 bedrooms, garden shed, 13 min by bike, 6 min to the M32"
   - "Alex is keen on 18 Elgin Park: the cellar fits his workbench"
   - "Maya says the Cotham flat is too small for her easels: reject it with that reason"
-translations:
-  es:
-    title: Buscando casa
-    description: "Alex y Maya buscan casa en Bristol: cada anuncio en un mapa, puntuado según lo que necesita cada uno, con la pega resumida en una frase."
-    prompts:
-      - "Añade 14 Ashley Down Road, Horfield: 1.350 £, 3 dormitorios, cobertizo, 13 min en bici, 6 min a la M32"
-      - "A Alex le encanta 18 Elgin Park: el sótano le sirve de taller"
-      - "Maya dice que el piso de Cotham es pequeño para sus caballetes: descártalo con ese motivo"
+i18n:
+  data:
+    homes:
+      - '[*].facts.light'
+      - '[*].facts.workshop'
+      - '[*].note'
+      - '[*].addedBy'
+      - '[*].when'
+      - '[*].reason'
+    people:
+      - places[*].name
+      - people[*].role
+      - people[*].criteria[*].label
+    takes: [takes.*.note]
 kunobi:
   page-layout: wide
   stores: [home-hunt-takes]
 ---
 
+import * as React from 'react'
 import '@fontsource/parkinsans/600.css'
 import '@fontsource/parkinsans/800.css'
 import '@fontsource/figtree/400.css'
 import '@fontsource/figtree/600.css'
 import homes from './data/homes.json'
-import homesEs from './data/homes.es.json'
 import setup from './data/people.json'
-import setupEs from './data/people.es.json'
 import takes from './data/takes.json'
 import takesStart from './data/takes.start.json'
-import takesEs from './data/takes.es.json'
 import { HomeHunt } from './src/hunt'
+import { useI18n } from '../lib/i18n'
+import translations from './locales/index'
 
-{/* The homes live in data/homes.json and what each person needs in data/people.json, in Spanish in data/homes.es.json and data/people.es.json (same ids). Each person's take on a home is in the home-hunt-takes store, saved to data/takes.json; data/takes.es.json translates the starting takes (data/takes.start.json) by id, so a note still as it started shows in Spanish. The page's words are below. */}
+{/* The homes live in data/homes.json and what each person needs in data/people.json. Each person's take on a home is in the home-hunt-takes store, saved to data/takes.json. The page's words are below. Their translations, and those of the data fields listed under i18n in the front matter (the starting takes, data/takes.start.json, by id), are in locales/<lang>.json; a note still as it started shows translated. */}
 
 export const WORDS = {
-  en: {
-    eyebrow: 'Home hunt · {city}',
-    files: { homes: 'home-hunt/data/homes.json', people: 'home-hunt/data/people.json' },
-    title: 'find a home',
-    seen: 'homes seen', fitBoth: 'fit both', viewings: 'viewings booked',
-    withAi: 'with {ai}',
-    legendBoth: 'Fits both', legendOne: 'Fits {name}',
-    mapLabel: 'Map of the homes', month: 'a month', beds: '{n} bedrooms',
-    forName: 'For {name}', close: 'Close', viewing: 'Viewing', saidNo: 'Said no', addedBy: 'Added by',
-    fitsFor: 'Fits',
-    shortlist: 'Our top three', shortlistSub: 'Homes that meet every must-have for both of us.',
-    allHomes: 'Still in the running', all: 'All',
-    whyNo: 'Why we said no', saidBy: '{name} said no', bothOfUs: 'We both',
-    verdict: { keen: 'Keen', maybe: 'Maybe', no: 'Not for me' },
-    takeOf: "{name}'s take", notePh: "{name}'s note", saving: 'Saving…',
-    how: ['The homes come from', 'and what each of us needs from', 'Edit the files, or ask your AI:', 'Our takes are saved in', 'Open a home to give yours.'],
-    prompts: [
-      'Add 14 Ashley Down Road, Horfield: £1,350, 3 bedrooms, garden shed, 13 min by bike, 6 min to the M32',
-      'Alex is keen on 18 Elgin Park: the cellar fits his workbench',
-      'Maya says the Cotham flat is too small for her easels: reject it with that reason',
-    ],
-    say: {
-      both: 'Works for both. The catch: {lacks}.',
-      perfect: 'Ticks every box for both of us.',
-      but: '{good}, but {bad}.',
-      neither: '{a}, and {b}.',
-      pos: {
-        light: "bright rooms for {name}'s studio",
-        quiet: 'a quiet street',
-        cycle: '{n} min by bike for {name}',
-        workshop: 'a workshop for {name}',
-        motorway: '{n} min to the motorway',
-        cost: '{under} under the limit',
-      },
-      and: 'and',
-      lack: { park: 'no park nearby', studioRoom: 'no room just for painting', parking: 'no off-street parking for the van', garden: 'no garden' },
-      neg: {
-        light: "it's dark for {name}'s studio ({fact})",
-        quiet: "it's on a busy road",
-        cycle: "{name}'s ride to the clinic is {n} min",
-        workshop: "there's no room for {name}'s workshop",
-        motorway: "it's {n} min to the motorway",
-        cost: "it's {over} a month over the limit",
-      },
+  eyebrow: 'Home hunt · {{city}}',
+  title: 'find a home',
+  seen: 'homes seen', fitBoth: 'fit both', viewings: 'viewings booked',
+  withAi: 'with {{ai}}',
+  legendBoth: 'Fits both', legendOne: 'Fits {{name}}',
+  mapLabel: 'Map of the homes', month: 'a month', beds: '{{n}} bedrooms',
+  forName: 'For {{name}}', close: 'Close', viewing: 'Viewing', saidNo: 'Said no', addedBy: 'Added by',
+  fitsFor: 'Fits',
+  shortlist: 'Our top three', shortlistSub: 'Homes that meet every must-have for both of us.',
+  allHomes: 'Still in the running', all: 'All',
+  whyNo: 'Why we said no', saidBy: '{{name}} said no', bothOfUs: 'We both',
+  verdict: { keen: 'Keen', maybe: 'Maybe', no: 'Not for me' },
+  takeOf: "{{name}}'s take", notePh: "{{name}}'s note", saving: 'Saving…',
+  how: ['The homes come from', 'and what each of us needs from', 'Edit the files, or ask your AI:', 'Our takes are saved in', 'Open a home to give yours.'],
+  prompts: [
+    'Add 14 Ashley Down Road, Horfield: £1,350, 3 bedrooms, garden shed, 13 min by bike, 6 min to the M32',
+    'Alex is keen on 18 Elgin Park: the cellar fits his workbench',
+    'Maya says the Cotham flat is too small for her easels: reject it with that reason',
+  ],
+  say: {
+    both: 'Works for both. The catch: {{lacks}}.',
+    perfect: 'Ticks every box for both of us.',
+    but: '{{good}}, but {{bad}}.',
+    neither: '{{a}}, and {{b}}.',
+    pos: {
+      light: "bright rooms for {{name}}'s studio",
+      quiet: 'a quiet street',
+      cycle: '{{n}} min by bike for {{name}}',
+      workshop: 'a workshop for {{name}}',
+      motorway: '{{n}} min to the motorway',
+      cost: '{{under}} under the limit',
     },
-  },
-  es: {
-    eyebrow: 'Buscando casa · {city}',
-    files: { homes: 'home-hunt/data/homes.es.json', people: 'home-hunt/data/people.es.json' },
-    title: 'buscan casa',
-    seen: 'casas vistas', fitBoth: 'sirven a los dos', viewings: 'visitas',
-    withAi: 'con {ai}',
-    legendBoth: 'Sirve a los dos', legendOne: 'Sirve a {name}',
-    mapLabel: 'Mapa de las casas', month: 'al mes', beds: '{n} dormitorios',
-    forName: 'Para {name}', close: 'Cerrar', viewing: 'Visita', saidNo: 'Descartada', addedBy: 'Añadida por',
-    fitsFor: 'Sirve a',
-    shortlist: 'Nuestras tres mejores', shortlistSub: 'Casas que cumplen todo lo imprescindible para los dos.',
-    allHomes: 'Siguen en carrera', all: 'Todas',
-    whyNo: 'Por qué dijimos que no', saidBy: '{name} dijo que no', bothOfUs: 'Los dos',
-    verdict: { keen: 'Me encanta', maybe: 'Quizá', no: 'No me convence' },
-    takeOf: 'Opinión de {name}', notePh: 'Nota de {name}', saving: 'Guardando…',
-    how: ['Las casas vienen de', 'y lo que necesita cada uno de', 'Edita los archivos o pídeselo a tu IA:', 'Nuestras opiniones se guardan en', 'Abre una casa para dar la tuya.'],
-    prompts: [
-      'Añade 14 Ashley Down Road, Horfield: 1.350 £, 3 dormitorios, cobertizo, 13 min en bici, 6 min a la M32',
-      'A Alex le encanta 18 Elgin Park: el sótano le sirve de taller',
-      'Maya dice que el piso de Cotham es pequeño para sus caballetes: descártalo con ese motivo',
-    ],
-    say: {
-      both: 'Sirve a los dos. La pega: {lacks}.',
-      perfect: 'Cumple todo para los dos.',
-      but: '{good}, pero {bad}.',
-      neither: '{a}, y {b}.',
-      pos: {
-        light: 'luz para el estudio de {name}',
-        quiet: 'una calle tranquila',
-        cycle: '{n} min en bici para {name}',
-        workshop: 'un taller para {name}',
-        motorway: '{n} min a la autopista',
-        cost: '{under} por debajo del límite',
-      },
-      and: 'y',
-      lack: { park: 'ningún parque cerca', studioRoom: 'ninguna habitación solo para pintar', parking: 'sin aparcamiento para la furgoneta', garden: 'sin jardín' },
-      neg: {
-        light: 'es oscura para el estudio de {name}',
-        quiet: 'está en una calle con mucho tráfico',
-        cycle: '{name} tarda {n} min en bici a la clínica',
-        workshop: 'no hay sitio para el taller de {name}',
-        motorway: 'está a {n} min de la autopista',
-        cost: 'se pasa {over} al mes del límite',
-      },
+    and: 'and',
+    lack: { park: 'no park nearby', studioRoom: 'no room just for painting', parking: 'no off-street parking for the van', garden: 'no garden' },
+    neg: {
+      light: "it's dark for {{name}}'s studio ({{fact}})",
+      quiet: "it's on a busy road",
+      cycle: "{{name}}'s ride to the clinic is {{n}} min",
+      workshop: "there's no room for {{name}}'s workshop",
+      motorway: "it's {{n}} min to the motorway",
+      cost: "it's {{over}} a month over the limit",
     },
   },
 }
 
-export const DATA = { en: { homes, setup }, es: { homes: homesEs, setup: setupEs } }
-export const SEED = { es: takesEs }
-
-export const pickLang = () => {
-  const tag = (typeof navigator !== 'undefined' && navigator.language) || 'en'
-  const lang = tag.toLowerCase().split('-')[0]
-  return WORDS[lang] ? lang : 'en'
+export const Hunt = () => {
+  const t = useI18n(WORDS, translations)
+  const localized = React.useMemo(() => ({ homes: t.data('homes', homes), setup: t.data('people', setup) }), [t])
+  const localize = React.useCallback((live) => t.data('takes', live, takesStart), [t])
+  return <HomeHunt homes={localized.homes} setup={localized.setup} takes={takes} localize={localize} words={t.w} />
 }
 
-export const data = () => DATA[pickLang()] ?? DATA.en
-
-<HomeHunt homes={data().homes} setup={data().setup} takes={takes} seed={takesStart} translated={SEED[pickLang()]} words={WORDS[pickLang()]} />
+<Hunt />

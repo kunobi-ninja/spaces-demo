@@ -1,10 +1,9 @@
 ---
 title: Monthly report
 description: "A small shop's month in numbers: revenue, customers, channels and best sellers, with a summary written from the data."
-translations:
-  es:
-    title: Informe mensual
-    description: "El mes de una pequeña tienda en números: ingresos, clientes, canales y lo más vendido, con un resumen escrito a partir de los datos."
+i18n:
+  data:
+    report: [what, "months[*].note", "months[*].products[*].name"]
 kunobi:
   page-layout: wide
 ---
@@ -14,100 +13,76 @@ import '@fontsource/parkinsans/800.css'
 import '@fontsource/figtree/400.css'
 import '@fontsource/figtree/600.css'
 import data from './data/report.json'
-import dataEs from './data/report.es.json'
 import { Report } from './src/Report'
+import { useI18n } from '../lib/i18n'
+import translations from './locales/index'
 
-{/* The page's own words. Every number comes from data/report.json, in Spanish in data/report.es.json (same numbers); the summary sentences are filled in from it. */}
+{/* The page's own words; their translations, and those of the shop's description, notes and product names, are in locales/<lang>.json. Every number comes from data/report.json; the summary sentences are filled in from it. */}
 
 export const pctText = (v) => `${Math.abs(v * 100).toFixed(0)}%`
 export const ptsText = (v) => `${v > 0 ? '+' : v < 0 ? '−' : '±'}${Math.abs(v * 100).toFixed(1)}`
 
 export const WORDS = {
-  en: {
-    eyebrow: 'Monthly report · Example data',
-    pickMonth: 'Choose a month', prev: 'Previous month', next: 'Next month',
-    summary: 'This month in three lines', teamNote: 'Team note:',
-    kpi: { revenue: 'Revenue', orders: 'Orders', aov: 'Average order', returningShare: 'Returning customers', conversion: 'Conversion', refundRate: 'Refunds' },
-    mom: 'vs last month', yoy: 'vs last year',
-    revenueTitle: 'Revenue by month', revenueHint: 'Click a month. Numbered dots are team notes.',
-    channelsTitle: 'Where visitors came from', sessions: 'visits',
-    channels: { search: 'Search', social: 'Social', email: 'Email', direct: 'Direct', referral: 'Referral' },
-    cohortTitle: 'Do new customers come back?', cohortHint: 'Share who ordered again within n months',
-    firstOrder: 'First order', customers: 'New',
-    productsTitle: 'Best sellers', productsHint: 'By revenue this month',
-    product: 'Product', units: 'Units', revenue: 'Revenue', share: 'Share', lastSix: 'Last 6 months',
-    howTitle: 'Make it yours.', howBody: 'Everything here is computed from', file: 'data/report.json', howAsk: 'Replace it with your numbers, or ask your AI:',
-    prompt1: 'Add November 2026: revenue €21,400, 318 orders, 141 returning',
-    prompt2: 'Rebuild this from my shop’s order export in exports/orders.json',
-    example: 'Example data for a made-up shop. The summary, deltas and charts are computed from the file, so they change when it does.',
-    sumRevenue: ({ month, value, mom, yoy, prev, year }) => {
-      const dir = (v) => (Math.abs(v) < 0.005 ? 'flat' : `${v > 0 ? 'up' : 'down'} ${pctText(v)}`)
-      let s = `${month} revenue was ${value}`
-      if (mom !== null) s += `, ${dir(mom)} on ${prev}`
-      if (yoy !== null) s += ` and ${dir(yoy)} on ${year}`
-      return s + '.'
-    },
-    sumDrivers: ({ orders, aov, move, channel }) => {
-      const dir = (v) => (Math.abs(v) < 0.005 ? 'flat' : `${v > 0 ? 'up' : 'down'} ${pctText(v)}`)
-      let s = `Orders were ${dir(orders)} and the average order ${dir(aov)}.`
-      if (move) s += ` ${channel} visits moved most: ${move.diff > 0 ? '+' : '−'}${Math.abs(move.diff).toLocaleString('en')}.`
-      return s
-    },
-    sumCustomers: ({ share, change, top, topValue }) => {
-      let s = `Returning customers placed ${pctText(share)} of orders`
-      if (change !== null) s += ` (${ptsText(change)} points on last month)`
-      return `${s}. ${top} was the best seller at ${topValue}.`
-    },
-  },
-  es: {
-    eyebrow: 'Informe mensual · Datos de ejemplo',
-    pickMonth: 'Elige un mes', prev: 'Mes anterior', next: 'Mes siguiente',
-    summary: 'Este mes en tres líneas', teamNote: 'Nota del equipo:',
-    kpi: { revenue: 'Ingresos', orders: 'Pedidos', aov: 'Pedido medio', returningShare: 'Clientes que repiten', conversion: 'Conversión', refundRate: 'Devoluciones' },
-    mom: 'vs mes anterior', yoy: 'vs año anterior',
-    revenueTitle: 'Ingresos por mes', revenueHint: 'Toca un mes. Los puntos numerados son notas del equipo.',
-    channelsTitle: 'De dónde llegaron las visitas', sessions: 'visitas',
-    channels: { search: 'Buscadores', social: 'Redes', email: 'Email', direct: 'Directo', referral: 'Referidos' },
-    cohortTitle: '¿Vuelven los clientes nuevos?', cohortHint: 'Parte que volvió a comprar en n meses',
-    firstOrder: 'Primer pedido', customers: 'Nuevos',
-    productsTitle: 'Lo más vendido', productsHint: 'Por ingresos este mes',
-    product: 'Producto', units: 'Unidades', revenue: 'Ingresos', share: 'Parte', lastSix: 'Últimos 6 meses',
-    howTitle: 'Hazlo tuyo.', howBody: 'Todo se calcula a partir de', file: 'data/report.es.json', howAsk: 'Cámbialo por tus números o pídeselo a tu IA:',
-    prompt1: 'Añade noviembre de 2026: ingresos 21.400 €, 318 pedidos, 141 que repiten',
-    prompt2: 'Rehaz esto con la exportación de pedidos de mi tienda en exports/orders.json',
-    example: 'Datos de ejemplo de una tienda inventada. El resumen, las variaciones y los gráficos se calculan del archivo, así que cambian con él.',
-    sumRevenue: ({ month, value, mom, yoy, prev, year }) => {
-      const dir = (v) => (Math.abs(v) < 0.005 ? 'sin cambios' : `un ${pctText(v)} ${v > 0 ? 'más' : 'menos'}`)
-      let s = `En ${month} los ingresos fueron ${value}`
-      if (mom !== null) s += `, ${dir(mom)} que en ${prev}`
-      if (yoy !== null) s += ` y ${dir(yoy)} que en ${year}`
-      return s + '.'
-    },
-    sumDrivers: ({ orders, aov, move, channel }) => {
-      const dir = (v) => (Math.abs(v) < 0.005 ? 'sin cambios' : `${v > 0 ? 'suben' : 'bajan'} un ${pctText(v)}`)
-      let s = `Pedidos: ${dir(orders)}. Pedido medio: ${dir(aov)}.`
-      if (move) s += ` El canal que más cambió fue ${channel}: ${move.diff > 0 ? '+' : '−'}${Math.abs(move.diff).toLocaleString('es')} visitas.`
-      return s
-    },
-    sumCustomers: ({ share, change, top, topValue }) => {
-      let s = `Los clientes que repiten hicieron el ${pctText(share)} de los pedidos`
-      if (change !== null) s += ` (${ptsText(change)} puntos frente al mes anterior)`
-      return `${s}. Lo más vendido fue ${top}, con ${topValue}.`
-    },
+  eyebrow: 'Monthly report · Example data',
+  pickMonth: 'Choose a month', prev: 'Previous month', next: 'Next month',
+  summary: 'This month in three lines', teamNote: 'Team note:',
+  kpi: { revenue: 'Revenue', orders: 'Orders', aov: 'Average order', returningShare: 'Returning customers', conversion: 'Conversion', refundRate: 'Refunds' },
+  mom: 'vs last month', yoy: 'vs last year',
+  revenueTitle: 'Revenue by month', revenueHint: 'Click a month. Numbered dots are team notes.',
+  channelsTitle: 'Where visitors came from', sessions: 'visits',
+  channels: { search: 'Search', social: 'Social', email: 'Email', direct: 'Direct', referral: 'Referral' },
+  cohortTitle: 'Do new customers come back?', cohortHint: 'Share who ordered again within n months',
+  firstOrder: 'First order', customers: 'New',
+  productsTitle: 'Best sellers', productsHint: 'By revenue this month',
+  product: 'Product', units: 'Units', revenue: 'Revenue', share: 'Share', lastSix: 'Last 6 months',
+  howTitle: 'Make it yours.', howBody: 'Everything here is computed from', file: 'data/report.json', howAsk: 'Replace it with your numbers, or ask your AI:',
+  prompt1: 'Add November 2026: revenue €21,400, 318 orders, 141 returning',
+  prompt2: 'Rebuild this from my shop’s order export in exports/orders.json',
+  example: 'Example data for a made-up shop. The summary, deltas and charts are computed from the file, so they change when it does.',
+  sum: {
+    revenue: '{{month}} revenue was {{value}}',
+    revenueMom: ', {{change}} on {{prev}}',
+    revenueYoy: ' and {{change}} on {{year}}',
+    revenueFlat: 'flat', revenueUp: 'up {{pct}}', revenueDown: 'down {{pct}}',
+    drivers: 'Orders were {{orders}} and the average order {{aov}}.',
+    driversFlat: 'flat', driversUp: 'up {{pct}}', driversDown: 'down {{pct}}',
+    channelMove: ' {{channel}} visits moved most: {{diff}}.',
+    customers: 'Returning customers placed {{share}} of orders',
+    customersChange: ' ({{points}} points on last month)',
+    customersTop: '. {{top}} was the best seller at {{topValue}}.',
+    end: '.',
   },
 }
 
-export const DATA = { en: data, es: dataEs }
+{/* The three summary lines, put together from the sentences in WORDS.sum. */}
 
-export const pick = () => {
-  const tag = (typeof navigator !== 'undefined' && navigator.language) || 'en'
-  const lang = tag.toLowerCase().split('-')[0]
-  return WORDS[lang] ? { lang, w: WORDS[lang], locale: tag } : { lang: 'en', w: WORDS.en, locale: 'en' }
+export const summaries = (s, lang) => {
+  const dir = (v, flat, up, down) => (Math.abs(v) < 0.005 ? flat : (v > 0 ? up : down)({ pct: pctText(v) }))
+  return {
+    sumRevenue: ({ month, value, mom, yoy, prev, year }) => {
+      let text = s.revenue({ month, value })
+      if (mom !== null) text += s.revenueMom({ change: dir(mom, s.revenueFlat, s.revenueUp, s.revenueDown), prev })
+      if (yoy !== null) text += s.revenueYoy({ change: dir(yoy, s.revenueFlat, s.revenueUp, s.revenueDown), year })
+      return text + s.end
+    },
+    sumDrivers: ({ orders, aov, move, channel }) => {
+      const change = (v) => dir(v, s.driversFlat, s.driversUp, s.driversDown)
+      let text = s.drivers({ orders: change(orders), aov: change(aov) })
+      if (move) text += s.channelMove({ channel, diff: `${move.diff > 0 ? '+' : '−'}${Math.abs(move.diff).toLocaleString(lang)}` })
+      return text
+    },
+    sumCustomers: ({ share, change, top, topValue }) => {
+      let text = s.customers({ share: pctText(share) })
+      if (change !== null) text += s.customersChange({ points: ptsText(change) })
+      return text + s.customersTop({ top, topValue })
+    },
+  }
 }
 
 export const Page = ({ month }) => {
-  const { lang, w, locale } = pick()
-  return <Report data={DATA[lang] ?? DATA.en} w={w} locale={locale} initial={month} />
+  const t = useI18n(WORDS, translations)
+  const w = { ...t.w, ...summaries(t.w.sum, t.lang) }
+  return <Report data={t.data('report', data)} w={w} locale={t.tag.toLowerCase().startsWith(t.lang.toLowerCase().split('-')[0]) ? t.tag : t.lang} initial={month} />
 }
 
 <Page month={props.month} />

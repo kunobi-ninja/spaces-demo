@@ -1,10 +1,6 @@
 ---
 title: Cluster dashboard
 description: "What is broken in your cluster, where, and why."
-translations:
-  es:
-    title: Panel del clúster
-    description: "Qué está roto en tu clúster, dónde y por qué."
 kunobi:
   page-layout: full
   stores: [cluster-dashboard-acks]
@@ -16,29 +12,21 @@ import '@fontsource/figtree/600.css'
 import snap from './data/cluster.json'
 import savedAcks from './data/acks.json'
 import { Dashboard } from './src/Dashboard'
+import { useI18n } from '../lib/i18n'
+import translations from './locales/index'
 
-{/* Reads the cluster selected in your Kunobi tab after "Use live data"; otherwise the sample in data/cluster.json. "Known" marks are shared through the cluster-dashboard-acks store (readable copy: data/acks.json). */}
+{/* Reads the cluster selected in your Kunobi tab after "Use live data"; otherwise the sample in data/cluster.json. "Known" marks are shared through the cluster-dashboard-acks store (readable copy: data/acks.json). The words below are in English; their translations are in locales/<lang>.json. */}
 
 export const WORDS = {
-  en: {
-    sample: 'Sample cluster', selected: 'Your cluster', sampleData: 'Sample data', useLive: 'Use my cluster',
-    sampleTip: (at) => `Taken ${new Date(at).toUTCString()}. Read only.`,
-    broken: 'broken', toCheck: 'to check', allGood: 'All healthy', podsOk: 'pods healthy',
-    map: 'Pods by namespace', problems: 'Problems', all: 'All', none: 'Nothing here.',
-    back: 'Back', mark: 'Mark as known', unmark: 'Not known', known: 'Known', saving: 'Saving…',
-  },
-  es: {
-    sample: 'Clúster de ejemplo', selected: 'Tu clúster', sampleData: 'Datos de ejemplo', useLive: 'Usar mi clúster',
-    sampleTip: (at) => `Tomado el ${new Date(at).toUTCString()}. Solo lectura.`,
-    broken: 'rotos', toCheck: 'por revisar', allGood: 'Todo sano', podsOk: 'pods sanos',
-    map: 'Pods por namespace', problems: 'Problemas', all: 'Todos', none: 'Nada aquí.',
-    back: 'Volver', mark: 'Marcar como conocido', unmark: 'Quitar marca', known: 'Conocidos', saving: 'Guardando…',
-  },
+  sample: 'Sample cluster', selected: 'Your cluster', sampleData: 'Sample data', useLive: 'Use my cluster',
+  sampleTip: 'Taken {{when}}. Read only.',
+  broken: 'broken', toCheck: 'to check', allGood: 'All healthy', podsOk: 'pods healthy',
+  map: 'Pods by namespace', problems: 'Problems', all: 'All', none: 'Nothing here.',
+  back: 'Back', mark: 'Mark as known', unmark: 'Not known', known: 'Known', saving: 'Saving…',
 }
 
 export const Page = () => {
-  const tag = (typeof navigator !== 'undefined' && navigator.language) || 'en'
-  const w = WORDS[tag.toLowerCase().split('-')[0]] ?? WORDS.en
+  const { w } = useI18n(WORDS, translations)
   return <Dashboard snap={snap} savedAcks={savedAcks} w={w} />
 }
 

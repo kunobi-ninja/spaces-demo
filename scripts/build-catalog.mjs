@@ -6,8 +6,11 @@
  * `*.mdx/` folders, are left out). Each demo is its entry page, every file in
  * its folder, the LiveStores its front matter names (with their view and
  * starting data) and the Fontsource CSS it imports (Latin only, font inlined).
- * A demo's `translations` (front matter, per language) carry its title,
- * description and prompts in that language.
+ * A demo written in another language than English says so in `lang`
+ * (front matter `lang`); its `translations` carry its title, description and
+ * prompts per language, from the page's `locales/<lang>.json` (`meta.*`). Files
+ * outside the demo's folder that its sources import (the shared `lib/i18n.ts`)
+ * are included too.
  * `home` is the root `index.mdx` with the files it imports. Every file is
  * written once to `<out>/objects/<sha256>`; `<out>/catalog.json` lists them.
  *
@@ -19,6 +22,7 @@ import { mkdir, readdir, readFile, rm, stat, writeFile } from 'node:fs/promises'
 import { dirname, join, posix as posixPath, relative, resolve, sep } from 'node:path'
 import { parseArgs } from 'node:util'
 import { parse as parseYaml } from 'yaml'
+import { localeDir, readLocales } from './i18n.mjs'
 
 export const CATALOG_VERSION = 1
 /** The most a gallery pick may weigh, cover included: the app downloads these ahead. */
@@ -32,6 +36,10 @@ const SKIPPED = [/\.DS_Store$/, /\.status\.json$/]
 const SOURCE = /\.(mdx|md|tsx?|jsx?)$/
 const FONT_IMPORT = /['"](@fontsource\/[a-z0-9-]+\/[a-z0-9-]+\.css)['"]/g
 const RELATIVE_IMPORT = /(?:from|import)\s+['"](\.{1,2}\/[^'"]+)['"]/g
+/** Block and line comments, whose examples are not imports. */
+const COMMENT = /\/\*[\s\S]*?\*\/|^\s*\/\/.*$/gm
+/** How an import without an extension resolves, in order. */
+const IMPORT_SUFFIXES = ['', '.ts', '.tsx', '.d.ts', '.js', '.jsx', '.mdx', '.json', '/index.ts', '/index.tsx', '/index.js']
 const EXAMPLE = /\{\s*id:\s*'([^']+)',\s*href:\s*'([^']+)'/g
 
 const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex')
@@ -54,26 +62,46 @@ function frontMatter(source, id) {
 }
 
 /**
- * The front matter's `translations`, per language: `{ es: { title, description, prompts? } }`,
- * or undefined when there are none.
+ * A demo's `translations` from its locale files: `{ es: { title, description, prompts? } }`, for
+ * each language whose file translates the title and description; undefined when none does.
  */
-function readTranslations(translations, id) {
-  if (translations === undefined || translations === null) return undefined
-  if (typeof translations !== 'object' || Array.isArray(translations)) throw new Error(`${id}: translations must map a language to its title and description`)
+async function readTranslations(repo, entry, id) {
   const out = {}
-  for (const [lang, entry] of Object.entries(translations)) {
-    if (!/^[a-z]{2,3}$/.test(lang)) throw new Error(`${id}: translations.${lang} is not a language code`)
-    if (!entry || typeof entry !== 'object' || Array.isArray(entry)) throw new Error(`${id}: translations.${lang} needs a title and description`)
-    for (const field of ['title', 'description']) {
-      if (typeof entry[field] !== 'string' || !entry[field]) throw new Error(`${id}: translations.${lang} needs a ${field}`)
-    }
-    out[lang] = { title: entry.title, description: entry.description }
-    if (entry.prompts !== undefined) {
-      if (!Array.isArray(entry.prompts)) throw new Error(`${id}: translations.${lang}.prompts must be a list`)
-      out[lang].prompts = entry.prompts.map(String)
-    }
+  for (const [lang, { entries, errors }] of Object.entries(await readLocales(repo, localeDir(entry)))) {
+    if (errors.length) throw new Error(`${id}: ${errors[0]}`)
+    const title = entries['meta.title']?.text
+    const description = entries['meta.description']?.text
+    if (typeof title !== 'string' || typeof description !== 'string') continue
+    out[lang] = { title, description }
+    if (Array.isArray(entries['meta.prompts']?.text)) out[lang].prompts = entries['meta.prompts'].text.map(String)
   }
   return Object.keys(out).length ? out : undefined
+}
+
+/** Where `specifier`, imported from `from`, lives (repository-relative), or undefined. */
+async function resolveImport(repo, from, specifier) {
+  const path = posixPath.normalize(posixPath.join(posixPath.dirname(from), specifier))
+  for (const suffix of IMPORT_SUFFIXES) {
+    if ((await stat(join(repo, path + suffix)).catch(() => null))?.isFile()) return path + suffix
+  }
+  return undefined
+}
+
+/** Adds to `contents` every file its sources import from outside them, and what those import. */
+async function addImports(repo, contents) {
+  const pending = [...contents.keys()]
+  while (pending.length) {
+    const path = pending.pop()
+    if (!SOURCE.test(path)) continue
+    const code = contents.get(path).toString('utf8').replace(COMMENT, '')
+    for (const [, specifier] of code.matchAll(RELATIVE_IMPORT)) {
+      const target = await resolveImport(repo, path, specifier.replace(/\?raw$/, ''))
+      if (!target) throw new Error(`${path}: ${specifier} is imported but missing`)
+      if (contents.has(target)) continue
+      contents.set(target, await readFile(join(repo, target)))
+      pending.push(target)
+    }
+  }
 }
 
 /** One `@fontsource/<family>/<weight>.css`, keeping its Latin face with the woff2 inlined. */
@@ -139,7 +167,10 @@ async function buildDemo(repo, { id, entry, gallery }, objects) {
   }
   const prompts = meta.prompts ?? []
   if (!Array.isArray(prompts) || (gallery && prompts.length === 0)) throw new Error(`${id}: front matter needs prompts`)
-  const translations = readTranslations(meta.translations, id)
+  if (meta.translations !== undefined) throw new Error(`${id}: front matter translations moved to ${localeDir(entry)}/<lang>.json`)
+  const lang = meta.lang ?? 'en'
+  if (typeof lang !== 'string' || !/^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$/.test(lang)) throw new Error(`${id}: lang must be a language tag`)
+  const translations = await readTranslations(repo, entry, id)
 
   /** Repository-relative path → bytes. */
   const contents = new Map()
@@ -158,6 +189,7 @@ async function buildDemo(repo, { id, entry, gallery }, objects) {
     }
   }
 
+  await addImports(repo, contents)
   await addFonts(repo, contents)
 
   const coverPath = `assets/covers/${id}.jpg`
@@ -179,6 +211,7 @@ async function buildDemo(repo, { id, entry, gallery }, objects) {
     title: meta.title,
     description: meta.description,
     prompts: prompts.map(String),
+    ...(lang !== 'en' && { lang }),
     ...(translations && { translations }),
     entry,
     gallery,
@@ -190,19 +223,8 @@ async function buildDemo(repo, { id, entry, gallery }, objects) {
 
 /** The root `index.mdx` and every file it reaches through relative imports, with its fonts. */
 async function buildHome(repo, objects) {
-  const contents = new Map()
-  const visit = async (path) => {
-    if (contents.has(path)) return
-    const bytes = await readFile(join(repo, path)).catch(() => {
-      throw new Error(`home: ${path} is imported but missing`)
-    })
-    contents.set(path, bytes)
-    if (!SOURCE.test(path)) return
-    for (const [, specifier] of bytes.toString('utf8').matchAll(RELATIVE_IMPORT)) {
-      await visit(posixPath.normalize(posixPath.join(posixPath.dirname(path), specifier)))
-    }
-  }
-  await visit('index.mdx')
+  const contents = new Map([['index.mdx', await readFile(join(repo, 'index.mdx'))]])
+  await addImports(repo, contents)
   await addFonts(repo, contents)
   const record = recorder(objects)
   return { entry: 'index.mdx', files: [...contents.keys()].sort().map((path) => record(path, contents.get(path))) }

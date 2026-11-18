@@ -5,14 +5,10 @@ prompts:
   - "Add 18.50 for groceries paid by Amara, split between everyone."
   - "Diego was out for curry night: take him out of that split."
   - "Mei paid Amara back 150 today."
-translations:
-  es:
-    title: Piso 4B · octubre
-    description: "Cuatro compañeros de piso, un mes: el alquiler según el tamaño de cada habitación, facturas y compra, y los mínimos pagos para quedar en paz."
-    prompts:
-      - "Añade 18,50 de compra pagado por Amara, entre todos."
-      - "Diego no estuvo en la noche de curry: quítalo de ese gasto."
-      - "Mei le devolvió hoy 150 a Amara."
+i18n:
+  data:
+    group: [title]
+    expenses: [expenses.*.what]
 kunobi:
   page-layout: wide
   stores: [expenses-ledger]
@@ -26,71 +22,46 @@ import '@fontsource/figtree/400.css'
 import '@fontsource/figtree/600.css'
 import saved from './data/expenses.json'
 import seedStart from './data/expenses.start.json'
-import seedEs from './data/expenses.es.json'
 import group from './data/group.json'
-import groupEs from './data/group.es.json'
 import { buildLedger, formatSplit, parseSplit } from './src/ledger'
-import { localizeSeed } from './src/seed'
+import { useI18n } from '../lib/i18n'
+import translations from './locales/index'
 
-{/* Interface words per language. The page follows the system language and falls back to English. Expenses and payments live in the expenses-ledger store; data/expenses.json is its readable copy. data/expenses.es.json translates the starting expenses (data/expenses.start.json) by id, so an expense still as it started shows in Spanish; categories stay as stored and show translated through WORDS cats. The group (title, people, categories) is data/group.json, in Spanish in data/group.es.json. */}
+{/* The page's words. Expenses and payments live in the expenses-ledger store; data/expenses.json is its readable copy. The group (title, people, categories) is data/group.json. Translations of the words, the group's title and the starting expenses (data/expenses.start.json, by id) are in locales/<lang>.json: an expense still as it started shows translated, and categories stay as stored and show through WORDS cats. */}
 
 export const STORE = 'expenses-ledger'
 
 export const WORDS = {
-  en: {
-    kind: 'Shared costs',
-    people: 'people', spent: 'spent', perHead: 'per person',
-    settleTitle: (n) => (n === 0 ? 'Everyone is square.' : n === 1 ? 'One payment and everyone is square.' : `${['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six'][n] ?? n} payments and everyone is square.`),
-    settleLine: 'The fewest payments that settle every balance.',
-    pays: 'pays', markPaid: 'Mark paid', paidBack: 'Paid back', paidTo: 'paid', undo: 'Undo',
-    paid: 'Paid', share: 'Share', getsBack: 'gets back', owes: 'owes', even: 'even',
-    byCategory: 'Where it went', byDay: 'Day by day', byWeek: 'Week by week', weekOf: 'from',
-    list: 'Every expense', everyone: 'Everyone', all: 'All',
-    paidBy: 'paid by', splitWith: 'split with', theirShare: 'share',
-    shown: (n, total) => `${n} expenses · ${total}`,
-    none: 'Nothing matches these filters.',
-    add: 'Add expense', newTitle: 'New expense', editTitle: 'Fix this expense',
-    fWhat: 'What for', fAmount: 'Amount', fDate: 'Date', fPaidBy: 'Paid by', fCategory: 'Category', fSplit: 'Split between',
-    whatHint: 'Groceries', save: 'Save', cancel: 'Cancel', edit: 'Edit', del: 'Delete', sure: 'Delete it?', keep: 'Keep',
-    incomplete: 'Add what it was for, an amount and at least one person.',
-    notSaved: 'Not saved', saving: 'Saving…', readOnly: 'Saved copy · read only',
-    change: 'How to change this',
-    changeLine: 'Expenses and payments are kept in the expenses-ledger store; data/expenses.json is a readable copy. Use the form, or ask your AI:',
-    prompts: ['“Add 18.50 for groceries paid by Amara, split between everyone.”', '“Diego was out for curry night: take him out of that split.”', '“Mei paid Amara back 150 today.”'],
-    problems: 'Entries that could not be read',
-  },
-  es: {
-    kind: 'Gastos compartidos',
-    people: 'personas', spent: 'gastado', perHead: 'por persona',
-    settleTitle: (n) => (n === 0 ? 'Todos están en paz.' : n === 1 ? 'Un pago y todos en paz.' : `${['', 'Un', 'Dos', 'Tres', 'Cuatro', 'Cinco', 'Seis'][n] ?? n} pagos y todos en paz.`),
-    settleLine: 'Los pagos mínimos que saldan todas las cuentas.',
-    pays: 'paga a', markPaid: 'Ya pagó', paidBack: 'Devuelto', paidTo: 'pagó a', undo: 'Deshacer',
-    paid: 'Pagó', share: 'Le toca', getsBack: 'recibe', owes: 'debe', even: 'en paz',
-    byCategory: 'En qué se fue', byDay: 'Día a día', byWeek: 'Semana a semana', weekOf: 'desde',
-    list: 'Todos los gastos', everyone: 'Todos', all: 'Todo',
-    paidBy: 'pagó', splitWith: 'entre', theirShare: 'le toca',
-    shown: (n, total) => `${n} gastos · ${total}`,
-    none: 'Nada coincide con estos filtros.',
-    add: 'Añadir gasto', newTitle: 'Nuevo gasto', editTitle: 'Corregir gasto',
-    fWhat: 'Concepto', fAmount: 'Importe', fDate: 'Fecha', fPaidBy: 'Pagó', fCategory: 'Categoría', fSplit: 'Entre',
-    cats: { Rent: 'Alquiler', Bills: 'Facturas', Groceries: 'Compra', Household: 'Hogar', Takeaway: 'Comida para llevar' },
-    whatHint: 'Compra', save: 'Guardar', cancel: 'Cancelar', edit: 'Editar', del: 'Borrar', sure: '¿Borrarlo?', keep: 'No',
-    incomplete: 'Falta el concepto, el importe o alguien con quien dividir.',
-    notSaved: 'No se guardó', saving: 'Guardando…', readOnly: 'Copia guardada · solo lectura',
-    change: 'Cómo cambiarlo',
-    changeLine: 'Los gastos y pagos están en el almacén expenses-ledger; data/expenses.json es una copia legible. Usa el formulario o pídele a tu IA:',
-    prompts: ['“Añade 18,50 de compra pagado por Amara, entre todos.”', '“Diego no estuvo en la noche de curry: quítalo de ese gasto.”', '“Mei le devolvió hoy 150 a Amara.”'],
-    problems: 'Entradas que no se pudieron leer',
-  },
+  kind: 'Shared costs',
+  people: 'people', spent: 'spent', perHead: 'per person',
+  settleNone: 'Everyone is square.',
+  settleOne: 'One payment and everyone is square.',
+  settleMany: '{{number}} payments and everyone is square.',
+  numbers: ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six'],
+  settleLine: 'The fewest payments that settle every balance.',
+  pays: 'pays', markPaid: 'Mark paid', paidBack: 'Paid back', paidTo: 'paid', undo: 'Undo',
+  paid: 'Paid', share: 'Share', getsBack: 'gets back', owes: 'owes', even: 'even',
+  byCategory: 'Where it went', byDay: 'Day by day', byWeek: 'Week by week', weekOf: 'from',
+  list: 'Every expense', everyone: 'Everyone', all: 'All',
+  paidBy: 'paid by', splitWith: 'split with', theirShare: 'share',
+  shown: '{{count}} expenses · {{total}}',
+  none: 'Nothing matches these filters.',
+  add: 'Add expense', newTitle: 'New expense', editTitle: 'Fix this expense',
+  fWhat: 'What for', fAmount: 'Amount', fDate: 'Date', fPaidBy: 'Paid by', fCategory: 'Category', fSplit: 'Split between',
+  cats: { Rent: 'Rent', Bills: 'Bills', Groceries: 'Groceries', Household: 'Household', Takeaway: 'Takeaway' },
+  whatHint: 'Groceries', save: 'Save', cancel: 'Cancel', edit: 'Edit', del: 'Delete', sure: 'Delete it?', keep: 'Keep',
+  incomplete: 'Add what it was for, an amount and at least one person.',
+  notSaved: 'Not saved', saving: 'Saving…', readOnly: 'Saved copy · read only',
+  change: 'How to change this',
+  changeLine: 'Expenses and payments are kept in the expenses-ledger store; data/expenses.json is a readable copy. Use the form, or ask your AI:',
+  prompts: ['“Add 18.50 for groceries paid by Amara, split between everyone.”', '“Diego was out for curry night: take him out of that split.”', '“Mei paid Amara back 150 today.”'],
+  problems: 'Entries that could not be read',
 }
 
-export const lang = () => {
-  const tag = ((typeof navigator !== 'undefined' && navigator.language) || 'en').toLowerCase().split('-')[0]
-  return WORDS[tag] ? tag : 'en'
-}
+{/* The settle-up heading: no payments, one, or a number of them spelled out while the words have it. */}
+export const settleTitle = (w, n) => (n === 0 ? w.settleNone : n === 1 ? w.settleOne : w.settleMany({ number: w.numbers[n] || n }))
 
-export const formatters = (code) => {
-  const locale = code === 'es' ? 'es-ES' : 'en-GB'
+export const formatters = (locale) => {
   const money = new Intl.NumberFormat(locale, { style: 'currency', currency: group.currency })
   const day = new Intl.DateTimeFormat(locale, { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' })
   const short = new Intl.DateTimeFormat(locale, { weekday: 'short', timeZone: 'UTC' })
@@ -107,8 +78,6 @@ export const formatters = (code) => {
   }
 }
 
-export const GROUP = { en: group, es: groupEs }
-export const SEED = { es: seedEs }
 export const catName = (w, c) => w.cats?.[c] ?? c
 
 export const PEOPLE = group.people.map((p) => p.name)
@@ -188,7 +157,7 @@ export const Settle = ({ ledger, w, f, canEdit, onPaid, onUndo }) => (
   <section className="settle">
     <div className="settle-head">
       <div className="settle-kicker">{w.settleLine}</div>
-      <h2>{w.settleTitle(ledger.transfers.length)}</h2>
+      <h2>{settleTitle(w, ledger.transfers.length)}</h2>
     </div>
     <ol className="transfers">
       {ledger.transfers.map((t) => (
@@ -317,7 +286,7 @@ export const List = ({ ledger, rows: stored, w, f, canEdit, onSave, onDelete }) 
     <section className="list">
       <div className="list-head">
         <h3>{w.list}</h3>
-        <span className="list-count">{w.shown(rows.length, who ? `${who} · ${w.theirShare} ${f.money(shownTotal)}` : f.money(shownTotal))}</span>
+        <span className="list-count">{w.shown({ count: rows.length, total: who ? `${who} · ${w.theirShare} ${f.money(shownTotal)}` : f.money(shownTotal) })}</span>
       </div>
       <div className="filters">
         <button className={`chip${!who ? ' on' : ''}`} onClick={() => setWho(null)} aria-pressed={!who}>{w.everyone}</button>
@@ -395,9 +364,9 @@ export const List = ({ ledger, rows: stored, w, f, canEdit, onSave, onDelete }) 
 }
 
 export const Expenses = () => {
-  const code = lang()
-  const w = WORDS[code]
-  const f = formatters(code)
+  const t = useI18n(WORDS, translations)
+  const w = t.w
+  const f = React.useMemo(() => formatters(t.tag), [t.tag])
   const live = useStore(STORE)
   const status = useStoreStatus(STORE)
   // Without the store (other builds, previews), show the last saved copy, read-only.
@@ -406,7 +375,7 @@ export const Expenses = () => {
   const saving = open && status?.saved === false
   const data = open ? live : saved
   // Starting expenses in the reader's language; display only. The edit form starts from the stored row.
-  const ledger = React.useMemo(() => buildLedger(localizeSeed(data, seedStart, SEED[code]), group), [data, code])
+  const ledger = React.useMemo(() => buildLedger(t.data('expenses', data, seedStart), group), [data, t])
   const last = ledger.expenses.reduce((m, e) => (e.date > m ? e.date : m), group.to)
   const span = { from: group.from, to: last }
   const [adding, setAdding] = React.useState(false)
@@ -598,7 +567,7 @@ export const Expenses = () => {
             {saving && <div className="kind saving" role="status"><i />{w.saving}</div>}
             {!open && <div className="kind">{w.readOnly}</div>}
           </div>
-          <h1>{(GROUP[code] ?? group).title}</h1>
+          <h1>{t.data('group', group).title}</h1>
           <div className="top-meta">{f.range(span.from, span.to)}</div>
           <div className="faces">{group.people.map((p) => <Face key={p.name} name={p.name} size={30} />)}</div>
         </div>

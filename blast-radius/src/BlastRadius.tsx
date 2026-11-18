@@ -3,7 +3,6 @@ import { useDiagram, useSource, useStore, useStoreStatus, edit } from 'kunobi'
 import SNAP from '../data/cluster.json'
 import { buildIndex } from './build.js'
 import { projectLive } from './project.js'
-import { localizeSeed } from './seed'
 import {
   type Index, type Referrer, type Effect, TARGET_KINDS, SHORT,
   decodeSnapshot, finalizeLive, parseId, referrersOf, summarize, podCounts, refCounts, rowKey, restartCmd,
@@ -69,7 +68,7 @@ const fmtWhen = (iso: string, locale: string) => {
   }
 }
 
-export const BlastRadius = ({ w, locale, seed, translated }: { w: any; locale: string; seed?: unknown; translated?: unknown }) => {
+export const BlastRadius = ({ w, locale, localize }: { w: any; locale: string; localize: (data: unknown) => unknown }) => {
   const { index, live, allow } = useIndex()
   const [q, setQ] = React.useState('')
   const [kind, setKind] = React.useState<string>('all')
@@ -79,7 +78,7 @@ export const BlastRadius = ({ w, locale, seed, translated }: { w: any; locale: s
   const refsN = React.useMemo(() => refCounts(index), [index])
   const stored = useStore(STORE)
   // Seeded notes show in the reader's language until someone changes them; display only.
-  const review = React.useMemo(() => localizeSeed(stored, seed, translated), [stored, seed, translated]) as any
+  const review = React.useMemo(() => localize(stored), [stored, localize]) as any
   const status = useStoreStatus(STORE) as any
   const canEdit = status?.status === 'open' && !!status?.canEdit
   const saving = status?.status === 'open' && status?.saved === false
@@ -115,7 +114,7 @@ export const BlastRadius = ({ w, locale, seed, translated }: { w: any; locale: s
         </div>
         <div className={`br-source ${live ? 'live' : ''}`}>
           <span className="br-dot" />
-          <span>{live ? w.live : w.snapshot(fmtWhen(SNAP.takenAt, locale))}</span>
+          <span>{live ? w.live : w.snapshot({ date: fmtWhen(SNAP.takenAt, locale) })}</span>
           {!live ? <span className="br-tag">{w.readOnlyChip}</span> : null}
           {!live ? <span className="br-ctx">{w.sample}</span> : null}
           <span className="br-tag br-info" title={w.coverageTip} tabIndex={0}>{w.coverage} ⓘ</span>
@@ -134,7 +133,7 @@ export const BlastRadius = ({ w, locale, seed, translated }: { w: any; locale: s
               </button>
             ))}
           </div>
-          <div className="br-count">{w.results(filtered.length)}</div>
+          <div className="br-count">{w.results({ count: filtered.length })}</div>
           <ul className="br-list">
             {filtered.length === 0 ? <li className="br-empty">{w.noMatch}</li> : null}
             {filtered.slice(0, limit).map((id) => {
@@ -151,14 +150,14 @@ export const BlastRadius = ({ w, locale, seed, translated }: { w: any; locale: s
                     </span>
                     <span className="br-li-right">
                       {reviewed.has(id) ? <span className="br-rev" title={w.reviewed} aria-label={w.reviewed} /> : null}
-                      {o.missing ? <span className="br-tag bad">{w.missing}</span> : n ? <span className="br-num">{w.pods(n)}</span> : refsN[id] ? <span className="br-num">{refsN[id]}</span> : <span className="br-tag">{w.unused}</span>}
+                      {o.missing ? <span className="br-tag bad">{w.missing}</span> : n ? <span className="br-num">{w.pods({ count: n })}</span> : refsN[id] ? <span className="br-num">{refsN[id]}</span> : <span className="br-tag">{w.unused}</span>}
                     </span>
                   </button>
                 </li>
               )
             })}
             {filtered.length > limit ? (
-              <li><button className="br-more" onClick={() => setLimit(limit + 120)}>{w.showMore(Math.min(120, filtered.length - limit))}</button></li>
+              <li><button className="br-more" onClick={() => setLimit(limit + 120)}>{w.showMore({ count: Math.min(120, filtered.length - limit) })}</button></li>
             ) : null}
           </ul>
         </aside>
@@ -178,17 +177,17 @@ function Detail({ id, index, w, locale, review, canEdit, saving }: { id: string;
   const items = React.useMemo(() => checklist(p, o, refs, s, w), [id, refs])
 
   const meta: string[] = []
-  if (p.kind === 'ConfigMap' && o.keys != null) meta.push(w.keys(o.keys))
+  if (p.kind === 'ConfigMap' && o.keys != null) meta.push(w.keys({ count: o.keys }))
   if (o.imm) meta.push(w.immutable)
   if (p.kind === 'Service') {
     if (o.type) meta.push(o.type)
     if (o.ports?.length) meta.push(o.ports.join(' '))
-    if (o.endpoints != null) meta.push(w.selects(o.endpoints))
+    if (o.endpoints != null) meta.push(w.selects({ count: o.endpoints }))
   }
   if (p.kind === 'PersistentVolumeClaim') meta.push(...[o.cap, o.sc, ...(o.am || []), o.phase].filter(Boolean))
   if (p.kind === 'Secret') meta.push(w.secretNote)
-  if (o.mgr) meta.push(o.mgr.startsWith('helm:') ? w.managedHelm(o.mgr.slice(5)) : w.managedFlux(o.mgr.slice(5)))
-  if (o.src) meta.push(w.syncedFrom(o.src))
+  if (o.mgr) meta.push(o.mgr.startsWith('helm:') ? w.managedHelm({ name: o.mgr.slice(5) }) : w.managedFlux({ name: o.mgr.slice(5) }))
+  if (o.src) meta.push(w.syncedFrom({ name: o.src }))
 
   return (
     <section className="br-detail">
@@ -201,7 +200,7 @@ function Detail({ id, index, w, locale, review, canEdit, saving }: { id: string;
       </div>
 
       <div className="br-kpis">
-        <Kpi label={w.k.pods} value={s.pods} sub={s.pods ? w.k.ready(s.podsReady) : ''} />
+        <Kpi label={w.k.pods} value={s.pods} sub={s.pods ? w.k.ready({ count: s.podsReady }) : ''} />
         <Kpi label={w.k.workloads} value={s.workloads} />
         <Kpi label={w.k.restart} value={s.restart.length} tone={s.restart.length ? 'bad' : ''} />
         <Kpi label={w.k.auto} value={s.auto.length} />
@@ -290,7 +289,7 @@ function Graph({ id, refs, w }: { id: string; refs: Referrer[]; w: any }) {
       return (
         <g key={nid} transform={`translate(${n.x + pad} ${n.y + pad})`}>
           <rect width={n.width} height={n.height} rx="10" className="g-more" />
-          <text x={n.width / 2} y={n.height / 2 + 4} textAnchor="middle" className="g-kind">{w.and(rest)}</text>
+          <text x={n.width / 2} y={n.height / 2 + 4} textAnchor="middle" className="g-kind">{w.and({ count: rest })}</text>
         </g>
       )
     }
@@ -369,7 +368,7 @@ function GraphStack({ id, refs, w }: { id: string; refs: Referrer[]; w: any }) {
             </li>
           )
         })}
-        {rest ? <li className="gs-more">{w.and(rest)}</li> : null}
+        {rest ? <li className="gs-more">{w.and({ count: rest })}</li> : null}
       </ul>
     </div>
   )
@@ -450,8 +449,8 @@ function RefTable({ refs, w }: { refs: Referrer[]; w: any }) {
             <span className="br-pods">
               {podList.length ? (
                 <button className="br-podbtn" onClick={() => setOpen(isOpen ? null : r.id)} aria-expanded={isOpen}>
-                  <b className={ready < podList.length ? 'warn' : ''}>{w.podsOf(ready, podList.length)}</b>
-                  {n.restarts ? <span className="br-muted"> · {w.restarts(n.restarts)}</span> : null}
+                  <b className={ready < podList.length ? 'warn' : ''}>{w.podsOf({ ready, total: podList.length })}</b>
+                  {n.restarts ? <span className="br-muted"> · {w.restarts({ count: n.restarts })}</span> : null}
                 </button>
               ) : n?.pods && r.kind === 'CronJob' ? <span className="br-mono br-muted">{n.sch}</span> : n?.pods && n.want > 0 ? <b className="warn">{`0/${n.want}`}</b> : <span className="br-muted">–</span>}
               {n?.pods && !n.bare && r.kind !== 'DaemonSet' && r.kind !== 'CronJob' && (n.want ?? 0) <= 1 && (r.effect === 'restart' || r.effect === 'auto') ? <span className="br-tag">{w.single}</span> : null}
@@ -481,39 +480,39 @@ function checklist(p: any, o: any, refs: Referrer[], s: ReturnType<typeof summar
   const items: Item[] = []
   const names = (rs: Referrer[]) => w.list(rs.map((r) => r.name))
   const B = s.byEffect
-  if (o.missing) items.push({ id: 'missing', text: w.c.missing(refs.length), tone: 'bad' })
-  if (o.mgr?.startsWith('helm:')) items.push({ id: 'managed', text: w.c.helm(o.mgr.slice(5)) })
-  else if (o.mgr?.startsWith('flux:')) items.push({ id: 'managed', text: w.c.flux(o.mgr.slice(5)) })
-  if (o.src) items.push({ id: 'src', text: w.c.src(o.src) })
+  if (o.missing) items.push({ id: 'missing', text: w.c.missing({ count: refs.length }), tone: 'bad' })
+  if (o.mgr?.startsWith('helm:')) items.push({ id: 'managed', text: w.c.helm({ name: o.mgr.slice(5) }) })
+  else if (o.mgr?.startsWith('flux:')) items.push({ id: 'managed', text: w.c.flux({ name: o.mgr.slice(5) }) })
+  if (o.src) items.push({ id: 'src', text: w.c.src({ name: o.src }) })
   if (!refs.length) items.push({ id: 'unused', text: w.c.unused })
   if (s.restart.length) {
     const cmds = s.restart.map(restartCmd).filter(Boolean) as string[]
-    items.push({ id: 'restart', text: w.c.restart(s.restart.length, names(s.restart)), cmds: cmds.slice(0, 4), tone: 'bad' })
+    items.push({ id: 'restart', text: w.c.restart({ count: s.restart.length, names: names(s.restart) }), cmds: cmds.slice(0, 4), tone: 'bad' })
   }
-  if (s.auto.length) items.push({ id: 'auto', text: w.c.auto(names(s.auto)) })
-  if (s.single.length) items.push({ id: 'single', text: w.c.single(names(s.single)), tone: 'bad' })
-  if (s.envKeys.length) items.push({ id: 'keys', text: w.c.keys(w.list(s.envKeys)) })
-  if (s.files.length) items.push({ id: 'files', text: w.c.files(names(s.files)) })
-  if (B.helm?.length) items.push({ id: 'helm', text: w.c.helmValues(B.helm.length, names(B.helm)) })
-  if (B.flux?.length) items.push({ id: 'flux', text: w.c.substitute(B.flux.length) })
+  if (s.auto.length) items.push({ id: 'auto', text: w.c.auto({ names: names(s.auto) }) })
+  if (s.single.length) items.push({ id: 'single', text: w.c.single({ names: names(s.single) }), tone: 'bad' })
+  if (s.envKeys.length) items.push({ id: 'keys', text: w.c.keys({ keys: w.list(s.envKeys) }) })
+  if (s.files.length) items.push({ id: 'files', text: w.c.files({ names: names(s.files) }) })
+  if (B.helm?.length) items.push({ id: 'helm', text: w.c.helmValues({ count: B.helm.length, names: names(B.helm) }) })
+  if (B.flux?.length) items.push({ id: 'flux', text: w.c.substitute({ count: B.flux.length }) })
   const hosts = (rs: Referrer[] = []) => w.list([...new Set(rs.flatMap((r) => r.node?.hosts || []))])
-  if (B.route?.length) items.push({ id: 'route', text: w.c.route(hosts(B.route)) })
+  if (B.route?.length) items.push({ id: 'route', text: w.c.route({ hosts: hosts(B.route) }) })
   if (B.traffic?.length) {
     const n = B.traffic.reduce((a, r) => a + (r.node?.pods || []).filter((x: any[]) => x[1] === 'Running').length, 0)
-    items.push({ id: 'traffic', text: w.c.traffic(n, names(B.traffic)) })
+    items.push({ id: 'traffic', text: w.c.traffic({ count: n }) })
   }
-  if (B.cert?.length) items.push({ id: 'cert', text: w.c.cert(hosts(B.cert)) })
-  if (B.data?.length) items.push({ id: 'data', text: w.c.data(names(B.data), (o.am || []).includes('ReadWriteOnce')) })
-  if (B.identity?.length) items.push({ id: 'identity', text: w.c.identity(B.identity.length) })
+  if (B.cert?.length) items.push({ id: 'cert', text: w.c.cert({ hosts: hosts(B.cert) }) })
+  if (B.data?.length) items.push({ id: 'data', text: ((o.am || []).includes('ReadWriteOnce') ? w.c.dataRwo : w.c.data) })
+  if (B.identity?.length) items.push({ id: 'identity', text: w.c.identity({ count: B.identity.length }) })
   if (B.grant?.length) {
     const roles = [...new Set(B.grant.flatMap((r) => r.hows.map((h) => h.d).filter(Boolean)))] as string[]
-    items.push({ id: 'grant', text: w.c.grant(B.grant.length, w.list(roles)) })
+    items.push({ id: 'grant', text: w.c.grant({ count: B.grant.length, roles: w.list(roles) }) })
   }
-  if (B.pull?.length) items.push({ id: 'pull', text: w.c.pull(names(B.pull)) })
+  if (B.pull?.length) items.push({ id: 'pull', text: w.c.pull({ names: names(B.pull) }) })
   if (refs.length && !o.missing) items.push({ id: 'diff', text: w.c.diff })
   if (s.pods) {
     const nss = [...new Set(refs.filter((r) => r.node?.pods).map((r) => r.ns).filter(Boolean))].slice(0, 2) as string[]
-    items.push({ id: 'watch', text: w.c.watch(), cmds: nss.map((ns) => `kubectl -n ${ns} get pods -w`) })
+    items.push({ id: 'watch', text: w.c.watch, cmds: nss.map((ns) => `kubectl -n ${ns} get pods -w`) })
   }
   return items
 }
@@ -534,9 +533,9 @@ function Checklist({ id, items, w, review, canEdit, saving }: { id: string; item
     <div className="br-card">
       <div className="br-card-head">
         <h3>{w.check}</h3>
-        <span className="br-muted">{canEdit ? (saving ? <span className="br-saving">{w.saving} · </span> : '') : `${w.readOnly} · `}{w.progress(done, items.length)}</span>
+        <span className="br-muted">{canEdit ? (saving ? <span className="br-saving">{w.saving} · </span> : '') : `${w.readOnly} · `}{w.progress({ done, total: items.length })}</span>
       </div>
-      {problem ? <p className="br-problem" role="alert">{w.notSaved(problem)}</p> : null}
+      {problem ? <p className="br-problem" role="alert">{w.notSaved({ reason: problem })}</p> : null}
       <ol className="br-check">
         {items.map((it) => {
           const on = checks[rowKey(id, it.id)]?.state === 'done'
@@ -584,7 +583,7 @@ function Notes({ id, w, review, canEdit, saving, locale }: { id: string; w: any;
   return (
     <div className="br-card">
       <div className="br-card-head"><h3>{w.notes}</h3><span className="br-muted">{canEdit && saving ? <span className="br-saving">{w.saving} · </span> : null}{notes.length || ''}</span></div>
-      {problem ? <p className="br-problem" role="alert">{w.notSaved(problem)}</p> : null}
+      {problem ? <p className="br-problem" role="alert">{w.notSaved({ reason: problem })}</p> : null}
       {canEdit ? (
         <form className="br-noteform" onSubmit={(e) => { e.preventDefault(); add() }}>
           <input value={text} onChange={(e) => setText(e.target.value)} placeholder={w.notePlaceholder} aria-label={w.notes} />

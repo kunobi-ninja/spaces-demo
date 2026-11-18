@@ -2,7 +2,6 @@ import * as React from 'react'
 import * as kunobi from 'kunobi'
 import { createSynth } from './synth'
 import { KEYS, STEPS, STORE, cells, chordName, clockStep, lookOf, noteName, setCell, stepAt, type Pattern, type Track } from './pattern'
-import { localizeSeed } from './seed'
 
 /*
  * A step sequencer for a few friends. The pattern lives in the music-jam-pattern store: each track
@@ -22,7 +21,8 @@ const usePatternStatus: (name: string) => StoreStatus =
   typeof K.useStoreStatus === 'function' ? K.useStoreStatus : () => ({ status: 'refused', canEdit: false, saved: true })
 const editPattern = (change: (draft: Pattern) => void) => (typeof K.edit === 'function' ? K.edit(STORE, change) : undefined)
 
-const fill = (text: string, values: Record<string, string | number>) => text.replace(/\{(\w+)\}/g, (_, k) => String(values[k] ?? ''))
+/** A word with `{{placeholders}}` is a function of their values (lib/i18n); one without is its text. */
+const fill = (text: string | ((values: Record<string, string | number>) => string), values: Record<string, string | number>) => (typeof text === 'function' ? text(values) : text)
 const clamp = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, v))
 
 const NAME_KEY = 'music-jam.name'
@@ -96,17 +96,13 @@ const label = (t: Track, key: string | null, c: string) => {
   return t.instrument === 'chords' ? chordName(key, n) : noteName(key, n)
 }
 
-export function MusicJam({ saved, seed, translated, words }: { saved: Pattern; seed: Pattern; translated?: unknown; words: Record<string, Words> }) {
-  const w = React.useMemo(() => {
-    const tag = (typeof navigator !== 'undefined' && navigator.language) || 'en'
-    return words[tag.toLowerCase().split('-')[0]] ?? words.en
-  }, [words])
+export function MusicJam({ saved, localize, words: w }: { saved: Pattern; localize: (pattern: Pattern) => Pattern; words: Words }) {
 
   // The shared pattern while its store is open, otherwise the last saved copy. Starting track names show in the reader's language.
   const stored = usePattern(STORE)
   const status = usePatternStatus(STORE)
   const keeping = status.status === 'open' && !!stored
-  const pattern: Pattern = React.useMemo(() => localizeSeed(keeping ? stored! : saved, seed, translated), [keeping, stored, saved, seed, translated])
+  const pattern: Pattern = React.useMemo(() => localize(keeping ? stored! : saved), [keeping, stored, saved, localize])
   const canEdit = keeping && status.canEdit
   const tempo = clamp(pattern.tempo ?? 104, 60, 180)
   const key = pattern.key ?? 'A minor'

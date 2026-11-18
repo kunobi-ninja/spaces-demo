@@ -1,74 +1,58 @@
 ---
 title: Dinners this week
 description: "A household's seven dinners and the shared shopping list that follows from them, grouped by aisle."
-translations:
-  es:
-    title: Las cenas de esta semana
-    description: "Las siete cenas de una casa y la lista de la compra compartida que sale de ellas, ordenada por pasillos."
+i18n:
+  data:
+    recipes: ['recipes[*].name', 'recipes[*].ingredients[*].name']
+    shopping: ['extras[*].name']
 kunobi:
   page-layout: wide
   stores: [meals-week, meals-shopping]
 ---
 
+import * as React from 'react'
 import '@fontsource/parkinsans/600.css'
 import '@fontsource/parkinsans/800.css'
 import '@fontsource/figtree/400.css'
 import '@fontsource/figtree/600.css'
 import data from './data/recipes.json'
-import dataEs from './data/recipes.es.json'
 import startWeek from './data/week.json'
 import startShopping from './data/shopping.json'
-import shoppingEs from './data/shopping.es.json'
 import { MealPlan } from './src/MealPlan'
 import { keepKeys } from './src/plan'
+import { useI18n } from '../lib/i18n'
+import translations from './locales/index'
 
 {/* The page's own words. The week and the shopping list live in the meals-week and meals-shopping stores
     (readable copies: this-week.json, shopping-list.json); data/week.json and data/shopping.json are their
-    starting data, shown where the stores are not available; data/shopping.es.json translates the starting extras by id,
-    so an extra still as it started shows in Spanish. Recipes live in data/recipes.json, in Spanish in data/recipes.es.json
-    (same ids and order; the list keeps the English ingredient names as its ids). */}
+    starting data, shown where the stores are not available. Recipes live in data/recipes.json. Translations of the words,
+    the recipes and the starting extras (by id) are in locales/<lang>.json; an extra still as it started shows translated,
+    and the list keeps the recipes' own ingredient names as its ids. */}
 
 export const WORDS = {
-  en: {
-    eyebrow: 'Week plan · 7 dinners', title: 'Dinners this week', lede: 'Plan once, shop once. Tap a day to see what it needs.',
-    veggie: 'veggie nights', cooking: 'of cooking', cooks: 'Cooks',
-    Mon: 'Mon', Tue: 'Tue', Wed: 'Wed', Thu: 'Thu', Fri: 'Fri', Sat: 'Sat', Sun: 'Sun', pick: 'Show what this day needs',
-    list: 'Shopping list', things: 'things to buy', only: 'Only what this needs:', all: 'Whole week',
-    byAisle: 'By aisle', byRecipe: 'By recipe', basket: 'in the basket', people: 'people',
-    swap: 'Swap dinner', nothing: 'Nothing planned', extras: 'Extras', added: 'extra', Other: 'Other',
-    addPh: 'Add to the list…', aisle: 'Aisle', add: 'Add', remove: 'Remove', clear: 'Clear ticked', saving: 'Saving…',
-    howTitle: 'Make it yours.', howBody: 'The week and the list are saved for the whole house. Change them here, or ask your AI:',
-    howRead: 'This copy is read-only. Open it in Kunobi, or ask your AI:',
-    prompt1: 'Put lentil soup on Thursday',
-    prompt2: 'Add oat milk to the list',
-    prompt3: 'Add my aunt’s paella and plan it for Saturday, 6 people',
-  },
-  es: {
-    eyebrow: 'Plan semanal · 7 cenas', title: 'Las cenas de esta semana', lede: 'Planea una vez, compra una vez. Toca un día para ver qué necesita.',
-    veggie: 'noches vegetarianas', cooking: 'cocinando', cooks: 'Cocinan',
-    Mon: 'Lun', Tue: 'Mar', Wed: 'Mié', Thu: 'Jue', Fri: 'Vie', Sat: 'Sáb', Sun: 'Dom', pick: 'Ver lo que necesita este día',
-    list: 'Lista de la compra', things: 'cosas que comprar', only: 'Solo lo de:', all: 'Toda la semana',
-    byAisle: 'Por pasillo', byRecipe: 'Por receta', basket: 'en la cesta', people: 'personas',
-    swap: 'Cambiar cena', nothing: 'Nada previsto', extras: 'Extras', added: 'extra', Other: 'Otros',
-    addPh: 'Añadir a la lista…', aisle: 'Pasillo', add: 'Añadir', remove: 'Quitar', clear: 'Quitar marcados', saving: 'Guardando…',
-    howTitle: 'Hazlo tuyo.', howBody: 'La semana y la lista se guardan para toda la casa. Cámbialas aquí o pídeselo a tu IA:',
-    howRead: 'Esta copia es de solo lectura. Ábrela en Kunobi o pídeselo a tu IA:',
-    prompt1: 'Pon la sopa de lentejas el jueves',
-    prompt2: 'Añade leche de avena a la lista',
-    prompt3: 'Añade la paella de mi tía para el sábado, 6 personas',
-    tin: 'lata', tins: 'latas', jar: 'bote', jars: 'botes', loaf: 'barra', loaves: 'barras', ball: 'bola', balls: 'bolas',
-    head: 'pieza', heads: 'piezas', bunch: 'manojo', bunches: 'manojos', clove: 'diente', cloves: 'dientes', tbsp: 'cda.', tsp: 'cdta.',
-    Produce: 'Frutas y verduras', 'Meat and fish': 'Carne y pescado', 'Dairy and eggs': 'Lácteos y huevos', Bakery: 'Panadería', Pantry: 'Despensa', Frozen: 'Congelados',
-  },
+  eyebrow: 'Week plan · 7 dinners', title: 'Dinners this week', lede: 'Plan once, shop once. Tap a day to see what it needs.',
+  veggie: 'veggie nights', cooking: 'of cooking', cooks: 'Cooks',
+  Mon: 'Mon', Tue: 'Tue', Wed: 'Wed', Thu: 'Thu', Fri: 'Fri', Sat: 'Sat', Sun: 'Sun', pick: 'Show what this day needs',
+  list: 'Shopping list', things: 'things to buy', only: 'Only what this needs:', all: 'Whole week',
+  byAisle: 'By aisle', byRecipe: 'By recipe', basket: 'in the basket', people: 'people',
+  swap: 'Swap dinner', nothing: 'Nothing planned', extras: 'Extras', added: 'extra', Other: 'Other',
+  addPh: 'Add to the list…', aisle: 'Aisle', add: 'Add', remove: 'Remove', clear: 'Clear ticked', saving: 'Saving…',
+  howTitle: 'Make it yours.', howBody: 'The week and the list are saved for the whole house. Change them here, or ask your AI:',
+  howRead: 'This copy is read-only. Open it in Kunobi, or ask your AI:',
+  prompt1: 'Put lentil soup on Thursday',
+  prompt2: 'Add oat milk to the list',
+  prompt3: 'Add my aunt’s paella and plan it for Saturday, 6 people',
+  tin: 'tin', tins: 'tins', jar: 'jar', jars: 'jars', loaf: 'loaf', loaves: 'loaves', ball: 'ball', balls: 'balls',
+  head: 'head', heads: 'heads', bunch: 'bunch', bunches: 'bunches', clove: 'clove', cloves: 'cloves', tbsp: 'tbsp', tsp: 'tsp',
+  Produce: 'Produce', 'Meat and fish': 'Meat and fish', 'Dairy and eggs': 'Dairy and eggs', Bakery: 'Bakery', Pantry: 'Pantry', Frozen: 'Frozen',
 }
 
-export const DATA = { en: data, es: { ...dataEs, recipes: keepKeys(dataEs.recipes, data.recipes) } }
-export const SEED = { es: shoppingEs }
-
-export const pickLang = () => {
-  const tag = (typeof navigator !== 'undefined' && navigator.language) || 'en'
-  const lang = tag.toLowerCase().split('-')[0]
-  return WORDS[lang] ? lang : 'en'
+export const Meals = () => {
+  const t = useI18n(WORDS, translations)
+  // Translated recipes keep the list ids of the recipes as written, so ticks hold in every language.
+  const recipes = React.useMemo(() => keepKeys(t.data('recipes', data).recipes, data.recipes), [t])
+  const localize = React.useCallback((live) => t.data('shopping', live, startShopping), [t])
+  return <MealPlan startWeek={startWeek} startShopping={startShopping} localizeShopping={localize} recipes={recipes} aisles={data.aisles} words={t.w} />
 }
 
-<MealPlan startWeek={startWeek} startShopping={startShopping} translatedShopping={SEED[pickLang()]} recipes={(DATA[pickLang()] ?? DATA.en).recipes} aisles={(DATA[pickLang()] ?? DATA.en).aisles} words={WORDS[pickLang()]} />
+<Meals />

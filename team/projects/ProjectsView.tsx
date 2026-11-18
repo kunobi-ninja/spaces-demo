@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { useStore, useStoreStatus, edit } from 'kunobi'
 import type { TeamTasksStore } from '../types/team-tasks.store'
-import { localizeSeed } from '../src/seed'
 
 /*
  * One shared list of tasks, three views. The tasks live in the `team-tasks` store:
@@ -10,7 +9,7 @@ import { localizeSeed } from '../src/seed'
  * in the list, so two people moving cards at once both keep their moves.
  * Kunobi keeps a readable copy in `data/tasks.json`; the page shows that copy,
  * read-only, wherever the store cannot open (a web link, a preview).
- * Seeded task text shows in the reader's language (`translated`, keyed by task id);
+ * Seeded task text shows in the reader's language (`localize`, from the page);
  * project, status and priority values stay as stored and show through `team.labels`.
  */
 
@@ -75,9 +74,10 @@ function place(draft: Draft, id: string, status: string, before?: string | null,
 }
 
 const time = (date: string) => (date ? Date.UTC(+date.slice(0, 4), +date.slice(5, 7) - 1, +date.slice(8, 10)) : NaN)
-const lang = () => (typeof navigator !== 'undefined' && navigator.language) || 'en'
-const shortDate = (date: string) =>
-  date ? new Date(time(date)).toLocaleDateString(lang(), { month: 'short', day: 'numeric', timeZone: 'UTC' }) : ''
+/** The reader's language tag, for dates. */
+const Locale = React.createContext('en')
+const shortDate = (date: string, locale: string) =>
+  date ? new Date(time(date)).toLocaleDateString(locale, { month: 'short', day: 'numeric', timeZone: 'UTC' }) : ''
 
 function Avatar({ person, size = 24 }: { person?: Person; size?: number }) {
   return (
@@ -88,12 +88,13 @@ function Avatar({ person, size = 24 }: { person?: Person; size?: number }) {
 }
 
 function Due({ task, today, w }: { task: Task; today: number; w: Words }) {
+  const locale = React.useContext(Locale)
   if (!task.due) return null
   const left = Math.round((time(task.due) - today) / DAY)
   const done = task.status === 'Done'
   const tone = done ? 'done' : left < 0 ? 'late' : left <= 7 ? 'soon' : 'later'
   const when = done ? '' : left < 0 ? ` · ${-left}${w.dShort} ${w.late}` : left === 0 ? ` · ${w.today}` : ` · ${left}${w.dShort}`
-  return <span className={`pj-due ${tone}`}>{shortDate(task.due)}{when}</span>
+  return <span className={`pj-due ${tone}`}>{shortDate(task.due, locale)}{when}</span>
 }
 
 /** What the board can do when the store is open and this page may change it. */
@@ -327,6 +328,7 @@ function TableView({ tasks, team, today, w }: { tasks: Task[]; team: Team; today
 }
 
 function Timeline({ tasks, team, today, w }: { tasks: Task[]; team: Team; today: number; w: Words }) {
+  const locale = React.useContext(Locale)
   const opening = time(team.opening)
   const dated = tasks.filter((t) => t.due)
   const first = Math.min(today - 7 * DAY, ...dated.map((t) => time(t.start || t.due)))
@@ -342,7 +344,7 @@ function Timeline({ tasks, team, today, w }: { tasks: Task[]; team: Team; today:
     <div className="pj-tl-wrap">
       <div className="pj-tl">
         <div className="pj-tl-axis">
-          {weeks.map((at) => <span key={at} style={{ left: pct(at) }}>{shortDate(new Date(at).toISOString().slice(0, 10))}</span>)}
+          {weeks.map((at) => <span key={at} style={{ left: pct(at) }}>{shortDate(new Date(at).toISOString().slice(0, 10), locale)}</span>)}
         </div>
         <div className="pj-tl-body">
           {weeks.map((at) => <span key={at} className="pj-tl-grid" style={{ left: pct(at) }} />)}
@@ -364,7 +366,7 @@ function Timeline({ tasks, team, today, w }: { tasks: Task[]; team: Team; today:
                   <span
                     className={`pj-bar${t.status === 'Done' ? ' done' : ''}${point ? ' point' : ''}`}
                     style={{ left: pct(start), width: point ? undefined : `calc(${pct(end)} - ${pct(start)})`, ['--c' as string]: project.color }}
-                    title={`${t.id} · ${t.title} · ${t.owner} · ${shortDate(t.start)} – ${shortDate(t.due)}`}
+                    title={`${t.id} · ${t.title} · ${t.owner} · ${shortDate(t.start, locale)} – ${shortDate(t.due, locale)}`}
                   >
                     {point ? null : <Avatar person={person} size={16} />}
                     {inside ? <em>{t.title}</em> : null}
@@ -412,12 +414,20 @@ function useSend(setProblem: (reason: string | null) => void) {
   }, [setProblem])
 }
 
-export function Projects({ seed, seedStart, translated, team, w }: { seed: { tasks: Record<string, unknown>[] }; seedStart: unknown; translated?: unknown; team: Team; w: Words }) {
+export function Projects({ seed, localize, team, w, locale }: {
+  seed: { tasks: Record<string, unknown>[] }
+  /** The tasks with their starting text in the reader's language (display only). */
+  localize: (data: { tasks: Record<string, unknown>[] }) => { tasks: Record<string, unknown>[] }
+  team: Team
+  w: Words
+  /** The reader's language tag, for dates. */
+  locale: string
+}) {
   const status = useStoreStatus(STORE)
   const data = useStore(STORE) as TeamTasksStore | undefined
   const open = Boolean(status?.status === 'open' && data?.tasks)
   const source = open ? (data as unknown as { tasks: Record<string, unknown>[] }) : seed
-  const all = React.useMemo(() => localizeSeed(source, seedStart, translated).tasks.map(toTask), [source, seedStart, translated])
+  const all = React.useMemo(() => localize(source).tasks.map(toTask), [source, localize])
   const [problem, setProblem] = React.useState<string | null>(null)
   const send = useSend(setProblem)
   const act: Actions | null = open && status?.canEdit ? {
@@ -442,6 +452,7 @@ export function Projects({ seed, seedStart, translated, team, w }: { seed: { tas
   const daysLeft = Math.round((time(team.opening) - today) / DAY)
 
   return (
+    <Locale.Provider value={locale}>
     <div className="pj">
       <style>{CSS}</style>
       <header className="pj-head">
@@ -508,6 +519,7 @@ export function Projects({ seed, seedStart, translated, team, w }: { seed: { tas
         </span>
       </footer>
     </div>
+    </Locale.Provider>
   )
 }
 

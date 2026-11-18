@@ -299,7 +299,7 @@ export function Hiring({ data, pipeline: start, w }: { data: HiringData; pipelin
             <div className="hr-title">{w.title}</div>
             <div className="hr-roles">
               {roles.map((r) => (
-                <span className="hr-rolechip" key={r.id}>{r.title} <b>{w.openings(r.openings)}</b></span>
+                <span className="hr-rolechip" key={r.id}>{r.title} <b>{w.openings({ count: r.openings })}</b></span>
               ))}
             </div>
           </div>
@@ -399,7 +399,7 @@ export function Hiring({ data, pipeline: start, w }: { data: HiringData; pipelin
                               <select
                                 className={`hr-quick ${q ? tone(q.recommend) : ''}`}
                                 value={q?.recommend ?? ''}
-                                aria-label={w.quickFor(iv.name.split(' ')[0])}
+                                aria-label={w.quickFor({ name: iv.name.split(' ')[0] })}
                                 onChange={(e) => setQuick(current, iv.id, e.currentTarget.value as Recommend | '')}
                               >
                                 <option value="">{w.notYet}</option>
@@ -430,7 +430,7 @@ export function Hiring({ data, pipeline: start, w }: { data: HiringData; pipelin
                 </div>
                 {interviewers.some((iv) => !current.scorecards.find((s) => s.by === iv.id)) && current.stage !== 'declined' && current.stage !== 'hired' && (
                   <div className="hr-pending">
-                    {w.pending(interviewers.filter((iv) => !current.scorecards.find((s) => s.by === iv.id)).map((iv) => iv.name.split(' ')[0]))}
+                    {w.pending({ names: new Intl.ListFormat(w.locale, { type: 'conjunction' }).format(interviewers.filter((iv) => !current.scorecards.find((s) => s.by === iv.id)).map((iv) => iv.name.split(' ')[0])) })}
                   </div>
                 )}
                 {current.stage === 'declined' && current.declinedReason && <div className="hr-pending">{current.declinedReason}</div>}
@@ -465,10 +465,10 @@ export function Hiring({ data, pipeline: start, w }: { data: HiringData; pipelin
                         </div>
                       </div>
                       <div className="hr-meta">
-                        {live && <span className={`hr-pill${inStage > 7 ? ' slow' : ''}`}>{w.daysIn(inStage)}</span>}
+                        {live && <span className={`hr-pill${inStage > 7 ? ' slow' : ''}`}>{inStage === 0 ? w.today : w.daysIn({ count: inStage })}</span>}
                         {st === 'declined' && <span className="hr-pill">{c.declinedBy === 'candidate' ? w.theyDeclined : w.weDeclined}</span>}
-                        {c.scorecards.length > 0 && <span className="hr-pill">{w.cards(c.scorecards.length)}</span>}
-                        {d && d.count > 0 && live && <span className="hr-pill flag">{w.discuss(d.count)}</span>}
+                        {c.scorecards.length > 0 && <span className="hr-pill">{w.cards({ count: c.scorecards.length })}</span>}
+                        {d && d.count > 0 && live && <span className="hr-pill flag">{w.discuss({ count: d.count })}</span>}
                       </div>
                     </button>
                     {canEdit && live && picked === c.id && (
@@ -533,7 +533,7 @@ export function Hiring({ data, pipeline: start, w }: { data: HiringData; pipelin
                 {reviews.length > 0 && (
                   <li>
                     <div className="hr-date"><span>{w.by}</span><b>{fmt(reviews[reviews.length - 1].next!.date, { day: 'numeric' })}</b></div>
-                    <div className="hr-what">{w.reviews(reviews.length)}<span>{reviews.map((c) => c.name).join(', ')}</span></div>
+                    <div className="hr-what">{w.reviews({ count: reviews.length })}<span>{reviews.map((c) => c.name).join(', ')}</span></div>
                     <span />
                   </li>
                 )}

@@ -1,0 +1,39 @@
+{
+  "about": "What scripts/i18n-translate.mjs tells the model on every page. `keep` is written exactly as is in every language; `rules` apply to every translation. Add to it when a translation gets something wrong.",
+  "keep": [
+    "Kunobi",
+    "Kunobi Spaces",
+    "LiveStore",
+    "Ninja",
+    "Kubernetes",
+    "Flux",
+    "Helm",
+    "HelmRelease",
+    "Kustomization",
+    "GitRepository",
+    "ConfigMap",
+    "Secret",
+    "Service",
+    "PVC",
+    "PersistentVolumeClaim",
+    "StatefulSet",
+    "Deployment",
+    "Pod",
+    "kubectl",
+    "flux",
+    "three.js",
+    "GLSL",
+    "SPZ",
+    "OpenStreetMap"
+  ],
+  "rules": [
+    "Never translate people's names, pet names, team names that are names, brands, companies, products, shops, restaurants, venues or street addresses.",
+    "Cities and countries take the target language's usual name (Lisbon → Lisboa in Spanish); smaller real places keep their own name.",
+    "Keep Kubernetes and command-line output exactly: object kinds, resource names, namespaces, commands, flags, file paths, versions, field names and status values like Ready or CrashLoopBackOff.",
+    "Keep music notation exactly: chord symbols (C, Am7, G/B), note names (E3, G4), tempos and time signatures.",
+    "Keep numbers, currencies, units, dates, times, emoji and punctuation marks that carry meaning (•, ·, →) as they are, adapting only number words and the order the target language needs.",
+    "Keep every {{placeholder}} exactly as written, once each; move it where the target grammar needs it.",
+    "Keep Markdown structure (headings, lists, tables, links, code) and translate only the prose.",
+    "Write short, plain, friendly interface language a non-technical person understands, matching the length and tone of the source. Use the informal 'you' where the language has one (tú, du, tu)."
+  ]
+}

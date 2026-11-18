@@ -4,28 +4,26 @@ description: "Two friends plan three days in Lisbon on a map: where to go each d
 prompts:
   - "Add the Oceanário on Sunday at 15:00, added by Leo"
   - "Mark the Jerónimos tickets as booked"
-translations:
-  es:
-    title: Fin de semana en Lisboa
-    description: "Dos amigos planean tres días en Lisboa sobre un mapa: adónde ir cada día, qué falta reservar y cuánto le toca pagar a cada uno."
-    prompts:
-      - "Añade el Oceanário el domingo a las 15:00, de parte de Leo"
-      - "Marca las entradas de los Jerónimos como reservadas"
+i18n:
+  data:
+    places: [places.*.name, places.*.note, places.*.addedBy]
 kunobi:
   page-layout: wide
   stores: [trip-places]
 ---
 
+import * as React from 'react'
 import '@fontsource/parkinsans/600.css'
 import '@fontsource/parkinsans/800.css'
 import '@fontsource/figtree/400.css'
 import '@fontsource/figtree/600.css'
 import places from './data/places.json'
 import placesStart from './data/places.start.json'
-import placesEs from './data/places.es.json'
 import { TripPlanner } from './src/trip'
+import { useI18n } from '../lib/i18n'
+import translations from './locales/index'
 
-{/* The places live in the trip-places store; data/places.json is its saved copy. data/places.es.json translates the starting places (data/places.start.json) by id: a place still as it started shows in Spanish. The trip's frame and the page's words are below. */}
+{/* The places live in the trip-places store; data/places.json is its saved copy. The trip's frame and the page's words are below; their translations, and those of the starting places (data/places.start.json, by id), are in locales/<lang>.json. A place still as it started shows translated. */}
 
 export const TRIP = {
   friends: [
@@ -35,40 +33,24 @@ export const TRIP = {
 }
 
 export const WORDS = {
-  en: {
-    eyebrow: 'Weekend trip', city: 'Lisbon',
-    dates: 'Friday 13 to Sunday 15 November',
-    days: ['Fri 13', 'Sat 14', 'Sun 15'],
-    all: 'All days', map: 'Map of the trip',
-    places: 'places', each: 'each', toBook: 'to book', pp: 'each',
-    booked: 'Booked', notBooked: 'Not booked yet', markBooked: 'Mark booked', unbook: 'Not booked', saving: 'Saving…', addedBy: 'Added by', close: 'Close', free: 'Free',
-    stillToBook: 'Still to book', allBooked: 'Everything is booked.', budget: 'Budget per person',
-    kinds: { stay: 'Stay', food: 'Food', see: 'See', coffee: 'Coffee', viewpoint: 'Viewpoint' },
-    how: ['The plan is saved in', 'Tap a place to mark it booked, or ask your AI:', 'Ask your AI:'],
-    prompts: ['Add the Oceanário on Sunday at 15:00, added by Leo', 'Mark the Jerónimos tickets as booked'],
-  },
-  es: {
-    eyebrow: 'Fin de semana', city: 'Lisboa',
-    dates: 'Del viernes 13 al domingo 15 de noviembre',
-    days: ['Vie 13', 'Sáb 14', 'Dom 15'],
-    all: 'Todos los días', map: 'Mapa del viaje',
-    places: 'lugares', each: 'por persona', toBook: 'por reservar', pp: 'por persona',
-    booked: 'Reservado', notBooked: 'Sin reservar', markBooked: 'Marcar reservado', unbook: 'Sin reservar', saving: 'Guardando…', addedBy: 'Añadido por', close: 'Cerrar', free: 'Gratis',
-    stillToBook: 'Falta reservar', allBooked: 'Todo está reservado.', budget: 'Presupuesto por persona',
-    kinds: { stay: 'Alojamiento', food: 'Comida', see: 'Visitar', coffee: 'Café', viewpoint: 'Mirador' },
-    how: ['El plan se guarda en', 'Toca un lugar para marcarlo reservado o pide a tu IA:', 'Pide a tu IA:'],
-    prompts: ['Añade el Oceanário el domingo a las 15:00, de parte de Leo', 'Marca las entradas de los Jerónimos como reservadas'],
-  },
+  eyebrow: 'Weekend trip', city: 'Lisbon',
+  dates: 'Friday 13 to Sunday 15 November',
+  days: ['Fri 13', 'Sat 14', 'Sun 15'],
+  all: 'All days', map: 'Map of the trip',
+  places: 'places', each: 'each', toBook: 'to book', pp: 'each',
+  booked: 'Booked', notBooked: 'Not booked yet', markBooked: 'Mark booked', unbook: 'Not booked', saving: 'Saving…', addedBy: 'Added by', close: 'Close', free: 'Free',
+  stillToBook: 'Still to book', allBooked: 'Everything is booked.', budget: 'Budget per person',
+  kinds: { stay: 'Stay', food: 'Food', see: 'See', coffee: 'Coffee', viewpoint: 'Viewpoint' },
+  how: ['The plan is saved in', 'Tap a place to mark it booked, or ask your AI:', 'Ask your AI:'],
+  prompts: ['Add the Oceanário on Sunday at 15:00, added by Leo', 'Mark the Jerónimos tickets as booked'],
 }
 
-export const SEED = { es: placesEs }
-
 export const Lisbon = () => {
-  const tag = (typeof navigator !== 'undefined' && navigator.language) || 'en'
-  const lang = WORDS[tag.toLowerCase().split('-')[0]] ? tag.toLowerCase().split('-')[0] : 'en'
-  const w = WORDS[lang]
+  const t = useI18n(WORDS, translations)
+  const w = t.w
   const trip = { ...TRIP, city: w.city, days: w.days.map((label, i) => ({ day: i + 1, label })) }
-  return <TripPlanner start={places} seed={placesStart} translated={SEED[lang]} trip={trip} words={w} />
+  const localize = React.useCallback((live) => t.data('places', live, placesStart), [t])
+  return <TripPlanner start={places} localize={localize} trip={trip} words={w} />
 }
 
 <Lisbon />

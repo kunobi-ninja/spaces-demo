@@ -135,7 +135,7 @@ test('rejects an id that is not a page', async () => {
   })
 })
 
-test('translations come from the front matter, prompts only where the page has them', () => {
+test('translations come from the locale files, prompts only where the page has them', () => {
   assert.deepEqual(demo('trip').translations.es, {
     title: 'Fin de semana en Lisboa',
     description: demo('trip').translations.es.description,
@@ -144,31 +144,46 @@ test('translations come from the front matter, prompts only where the page has t
   assert.match(demo('trip').translations.es.description, /Lisboa/)
   assert.equal(demo('hiring').translations.es.title, 'Contratación en Linden & Co')
   assert.ok(!('prompts' in demo('hiring').translations.es))
+  // English pages carry no lang.
+  for (const d of catalog.demos) assert.ok(!('lang' in d), d.id)
 })
 
-async function withPage(frontMatter, run) {
+test('the shared i18n helper ships with every page that imports it', () => {
+  assert.ok(paths('trip').includes('lib/i18n.ts'))
+  assert.ok(paths('trip').includes('trip/locales/es.json'))
+  assert.ok(catalog.home.files.some((f) => f.path === 'lib/i18n.ts'))
+})
+
+async function withPage(frontMatter, locales, run) {
   await withGallery(['tiny'], async (copy) => {
-    await mkdir(join(copy, 'tiny'))
+    await mkdir(join(copy, 'tiny', 'locales'), { recursive: true })
     await writeFile(join(copy, 'tiny', 'index.mdx'), `---\ntitle: Tiny\ndescription: A tiny page\nprompts: [Hi]\n${frontMatter}---\n`)
+    for (const [lang, entries] of Object.entries(locales)) await writeFile(join(copy, 'tiny', 'locales', `${lang}.json`), JSON.stringify(entries))
     await cp(join(copy, 'assets/covers/trip.jpg'), join(copy, 'assets/covers/tiny.jpg'))
     await run(() => buildCatalog({ repo: copy, out: join(copy, 'out'), release: 'x' }))
   })
 }
 
-test('a page without translations has none in its entry', async () => {
-  await withPage('', async (build) => {
-    const built = await build()
-    assert.ok(!('translations' in built.demos.find((d) => d.id === 'tiny')))
+const t = (text) => ({ text, from: '00000000' })
+
+test('a page in another language says so; a language without a title and description is left out', async () => {
+  await withPage('lang: es\n', { en: { 'meta.title': t('Tiny'), 'meta.description': t('A tiny page'), 'meta.prompts': t(['Hi']) }, fr: { 'meta.title': t('Petit') } }, async (build) => {
+    const tiny = (await build()).demos.find((d) => d.id === 'tiny')
+    assert.equal(tiny.lang, 'es')
+    assert.deepEqual(tiny.translations, { en: { title: 'Tiny', description: 'A tiny page', prompts: ['Hi'] } })
+  })
+  await withPage('', {}, async (build) => {
+    const tiny = (await build()).demos.find((d) => d.id === 'tiny')
+    assert.ok(!('translations' in tiny) && !('lang' in tiny))
   })
 })
 
-test('rejects a translation without a title or description, or with prompts that are not a list', async () => {
-  for (const [yaml, error] of [
-    ['translations:\n  es:\n    description: Una página\n', /tiny: translations.es needs a title/],
-    ['translations:\n  es:\n    title: Mini\n', /tiny: translations.es needs a description/],
-    ['translations:\n  es:\n    title: Mini\n    description: Una página\n    prompts: Hola\n', /tiny: translations.es.prompts must be a list/],
-    ['translations: [es]\n', /tiny: translations must map a language/],
+test('rejects front matter translations, a bad lang and a broken locale file', async () => {
+  for (const [yaml, locales, error] of [
+    ['translations:\n  es:\n    title: Mini\n', {}, /tiny: front matter translations moved to tiny\/locales/],
+    ['lang: Spanish\n', {}, /tiny: lang must be a language tag/],
+    ['', { es: { 'meta.title': 'Mini' } }, /tiny: es.json: meta.title must be/],
   ]) {
-    await withPage(yaml, (build) => assert.rejects(build(), error))
+    await withPage(yaml, locales, (build) => assert.rejects(build(), error))
   }
 })

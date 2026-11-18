@@ -2,7 +2,6 @@ import * as React from 'react'
 import { edit, useStore, useStoreStatus } from 'kunobi'
 import type { OnCallHandoverItemsStore } from '../types/on-call-handover-items.store'
 import { groupEvents, useCluster, type Snapshot, type EventGroup } from './live'
-import { localizeSeed } from './seed'
 
 /*
  * An on-call handover. Cluster facts come from the cluster selected in the person's tab, or from the
@@ -18,8 +17,7 @@ type Item = Store['items'][string] & { id: string }
 type Status = 'open' | 'acked' | 'done'
 type Severity = 'high' | 'medium' | 'low'
 
-interface Note { headline: string; lines: string[] }
-export interface HandoverText { writtenAt: string; rota: string[]; en: Note; es: Note; [lang: string]: unknown }
+export interface HandoverText { writtenAt: string; rota: string[]; headline: string; lines: string[] }
 
 const C = { midnight: '#06213f', deep: '#0b2d52', sun: '#f3aa08', ocean: '#5bcbf9', tide: '#30ccd5', horizon: '#0984c8', coral: '#e2603f' }
 const SEV: Record<Severity, string> = { high: C.coral, medium: C.sun, low: C.ocean }
@@ -27,7 +25,7 @@ const STATUS: Status[] = ['open', 'acked', 'done']
 const HOUR = 3_600_000
 const KIND: Record<string, string> = { HelmRelease: 'HR', Kustomization: 'KS', StatefulSet: 'STS', HelmRepository: 'Repo' }
 
-export function Handover({ snap, text, start, seed, translated, w, lang }: { snap: Snapshot; text: HandoverText; start: Store; seed: Store; translated?: unknown; w: any; lang: string }) {
+export function Handover({ snap, text, start, localize, w }: { snap: Snapshot; text: HandoverText; start: Store; localize: (data: Store) => Store; w: any }) {
   const cluster = useCluster(snap)
   const stored = useStore(STORE) as Store | undefined
   const st = useStoreStatus(STORE) as { status?: string; canEdit?: boolean; saved?: boolean } | undefined
@@ -35,7 +33,7 @@ export function Handover({ snap, text, start, seed, translated, w, lang }: { sna
   const open = (st?.status === 'open' || st?.status === 'paused') && stored !== undefined
   const canEdit = open && st?.status === 'open' && Boolean(st?.canEdit)
   // Seeded items show in the reader's language until someone changes them; display only.
-  const data = localizeSeed((open ? stored : start) ?? start, seed, translated)
+  const data = localize((open ? stored : start) ?? start)
   const items: Item[] = Object.entries(data.items ?? {})
     .map(([id, v]) => ({ ...v, id }))
     .sort((a, b) => (a.order ?? 99) - (b.order ?? 99))
@@ -57,11 +55,10 @@ export function Handover({ snap, text, start, seed, translated, w, lang }: { sna
   const since = (iso: string) => {
     const ms = end - Date.parse(iso)
     if (!(ms >= 0)) return ''
-    if (ms < HOUR) return w.ago.min(Math.max(1, Math.round(ms / 60_000)))
-    if (ms < 48 * HOUR) return w.ago.h(Math.round(ms / HOUR))
-    return w.ago.since(fmtDay(iso))
+    if (ms < HOUR) return w.ago.min({ count: Math.max(1, Math.round(ms / 60_000)) })
+    if (ms < 48 * HOUR) return w.ago.h({ count: Math.round(ms / HOUR) })
+    return fmtDay(iso)
   }
-  const note: Note = (text[lang] as Note) ?? text.en
 
   const save = (fn: (d: Store) => void) => edit(STORE, fn)
   const setStatus = (i: Item, s: Status) =>
@@ -107,10 +104,10 @@ export function Handover({ snap, text, start, seed, translated, w, lang }: { sna
             </div>
             <div className="oc-kpis">
               <Kpi label={w.kpi.nodes} value={`${t.nodesReady}/${t.nodes}`} ok={t.nodesReady === t.nodes} />
-              <Kpi label={w.kpi.pods} value={String(t.notReady)} sub={w.kpi.podsSub(t.running)} ok={t.notReady === 0} />
-              <Kpi label={w.kpi.flux} value={String(fluxBad)} sub={w.kpi.fluxSub(cluster.ks.length, cluster.hr.length, cluster.repos.length)} ok={fluxBad === 0} />
+              <Kpi label={w.kpi.pods} value={String(t.notReady)} sub={w.kpi.podsSub({ count: t.running })} ok={t.notReady === 0} />
+              <Kpi label={w.kpi.flux} value={String(fluxBad)} sub={w.kpi.fluxSub({ ks: cluster.ks.length, hr: cluster.hr.length, repos: cluster.repos.length })} ok={fluxBad === 0} />
               <Kpi label={w.kpi.restarts} value={String(crashed.length)} sub={w.kpi.restartsSub} ok={crashed.length === 0} warn />
-              <Kpi label={w.kpi.items} value={String(counts.open)} sub={w.kpi.itemsSub(counts.acked, counts.done)} ok={counts.open === 0} />
+              <Kpi label={w.kpi.items} value={String(counts.open)} sub={w.kpi.itemsSub({ acked: counts.acked, done: counts.done })} ok={counts.open === 0} />
             </div>
           </div>
         </header>
@@ -121,14 +118,14 @@ export function Handover({ snap, text, start, seed, translated, w, lang }: { sna
               <h2 id="oc-note-h">{w.noteTitle}</h2>
               <span className="oc-sub">{fmtWhen(text.writtenAt)}</span>
             </div>
-            <p className="oc-headline">{note.headline}</p>
-            <ul className="oc-lines">{note.lines.slice(0, 3).map((p, i) => <li key={i}>{p}</li>)}</ul>
+            <p className="oc-headline">{text.headline}</p>
+            <ul className="oc-lines">{text.lines.slice(0, 3).map((p, i) => <li key={i}>{p}</li>)}</ul>
           </section>
 
           <section className="oc-panel oc-failp" aria-labelledby="oc-fail-h">
             <div className="oc-sechead">
               <h2 id="oc-fail-h">{w.failingTitle} <span className="oc-count">{fluxBad + cluster.sts.length}</span></h2>
-              <span className="oc-sub">{w.failingSub(t.kustomizations, t.helmreleases, t.helmrepositories, t.statefulsets)}</span>
+              <span className="oc-sub">{w.failingSub({ ks: t.kustomizations, hr: t.helmreleases, repos: t.helmrepositories, sts: t.statefulsets })}</span>
             </div>
             <ul className="oc-fail">
               {cluster.hr.map((h) => <FailRow key={`hr-${h.n}`} kind="HelmRelease" name={h.n} state={h.s} reason={h.reason} msg={h.m} since={since(h.t)} when={h.t ? fmtWhen(h.t) : ''} />)}
@@ -142,7 +139,7 @@ export function Handover({ snap, text, start, seed, translated, w, lang }: { sna
           <section className="oc-panel oc-itemsp" aria-labelledby="oc-items-h">
             <div className="oc-sechead">
               <h2 id="oc-items-h">{w.itemsTitle} <span className="oc-count">{counts.open}</span></h2>
-              <span className="oc-sub" aria-live="polite">{open && st?.saved === false ? w.saving : w.progressLabel(counts.acked + counts.done, items.length)}</span>
+              <span className="oc-sub" aria-live="polite">{open && st?.saved === false ? w.saving : w.progressLabel({ count: counts.acked + counts.done, total: items.length })}</span>
             </div>
             <div className="oc-itemsbar">
               <div className="oc-tabs" role="tablist">
@@ -167,7 +164,7 @@ export function Handover({ snap, text, start, seed, translated, w, lang }: { sna
 
           <section className="oc-panel oc-tlp" aria-labelledby="oc-tl-h">
             <div className="oc-sechead">
-              <h2 id="oc-tl-h">{w.timelineTitle(snap.windowHours)}</h2>
+              <h2 id="oc-tl-h">{w.timelineTitle({ hours: snap.windowHours })}</h2>
               <span className="oc-sub">{w.utc}</span>
             </div>
             <Timeline groups={groups} restarts={restarts} changes={changes} start={startT} end={end} w={w} fmtTime={fmtTime} hours={snap.windowHours} />
@@ -187,7 +184,7 @@ function SourceBadge({ cluster, w, fmtWhen }: { cluster: ReturnType<typeof useCl
   if (cluster.live) return <div className="oc-badge live"><i />{w.live}</div>
   return (
     <div className="oc-badge snap" title={cluster.reason}>
-      <b>{w.sample(fmtWhen(cluster.at))}</b>
+      <b>{w.sample({ date: fmtWhen(cluster.at) })}</b>
       {cluster.allow ? <button className="oc-btn light" onClick={cluster.allow}>{w.useLive}</button> : null}
     </div>
   )
@@ -274,7 +271,7 @@ function Timeline({ groups, restarts, changes, start, end, w, fmtTime, hours }: 
         <div key={g.key} className="oc-row" title={g.msg}>
           <div className="oc-rowlabel">
             <span className="oc-kind" title={g.kind}>{KIND[g.kind] ?? g.kind}</span> <span className="mono">{g.obj}</span>
-            <div className="oc-rowreason">{g.reason}{g.recurring ? ` · ${w.since(fmtDayShort(g.first, w.locale))}` : ''}</div>
+            <div className="oc-rowreason">{g.reason}{g.recurring ? ` · ${w.since({ date: fmtDayShort(g.first, w.locale) })}` : ''}</div>
           </div>
           <div className="oc-track">
             <Grid />

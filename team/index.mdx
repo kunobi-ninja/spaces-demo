@@ -5,14 +5,10 @@ prompts:
   - "Move 'Order the deck oven' to Done."
   - "What is still waiting on someone?"
   - "Add a decision: we open at 7:00."
-translations:
-  es:
-    title: Sol Bakery
-    description: "El espacio del equipo para abrir la tienda de Riverside de Sol Bakery: quién hace qué esta semana, cómo va cada proyecto y qué hemos decidido."
-    prompts:
-      - "Pasa 'Encargar el horno de pisos' a Hecho."
-      - "¿Qué está esperando a alguien?"
-      - "Añade una decisión: abrimos a las 7:00."
+i18n:
+  data:
+    team: [goal, 'people[*].role']
+    tasks: ['tasks[*].title', 'tasks[*].ai']
 kunobi:
   page-layout: wide
   stores: [team-tasks]
@@ -24,86 +20,46 @@ import '@fontsource/parkinsans/600.css'
 import '@fontsource/parkinsans/800.css'
 import '@fontsource/figtree/400.css'
 import '@fontsource/figtree/600.css'
-import TEAM_EN from './data/team.json'
-import TEAM_ES from './data/team.es.json'
+import TEAM_SOURCE from './data/team.json'
 import SEED from './data/tasks.json'
 import SEED_START from './data/tasks.start.json'
-import SEED_ES from './data/tasks.es.json'
-import DECISIONS_EN from './wiki/decisions.md?raw'
-import DECISIONS_ES from './wiki/decisions.es.md?raw'
-import { localizeSeed } from './src/seed'
+import DECISIONS from './wiki/decisions.md?raw'
+import { useI18n } from '../lib/i18n'
+import translations from './locales/index'
+import wikiTranslations from './wiki/locales/index'
 
-{/* Interface words per language. The team's own content lives in the team-tasks store (readable copy: data/tasks.json), data/team.json and wiki/. In Spanish: data/team.es.json (same ids, plus labels for projects and statuses), data/tasks.es.json translates the starting tasks (data/tasks.start.json) by id, and each wiki page has a <page>.es.md copy. */}
+{/* The page's words, with `labels` naming the projects as stored. The team's own content lives in the team-tasks store (readable copy: data/tasks.json), data/team.json and wiki/. Translations of the words, the team and the starting tasks (data/tasks.start.json, by id) are in locales/<lang>.json; a task still as it started shows translated. The decisions come from wiki/decisions.md, translated in wiki/locales/<lang>.json. */}
 
 export const WORDS = {
-  en: {
-    eyebrow: 'Team space',
-    daysTo: 'days to opening',
-    done: 'done',
-    team: 'The team',
-    with: 'with',
-    week: 'This week',
-    weekNote: 'Due in the next 7 days, or waiting on someone',
-    doing: 'In progress',
-    nothing: 'Nothing due this week.',
-    waiting: 'Waiting',
-    due: 'Due',
-    projects: 'Projects',
-    board: 'Open the board',
-    boardLine: 'Every task as a board, a table and a timeline.',
-    decisions: 'Recent decisions',
-    allDecisions: 'All decisions',
-    wiki: 'Wiki',
-    allPages: 'All pages',
-    pages: {
-      'how-we-work': ['How we work', 'Shifts, who decides what, and how we use our AIs.'],
-      'menu': ['Opening menu', 'Twelve items with prices and allergens.'],
-      'suppliers': ['Suppliers', 'Flour, dairy, coffee, and the oven quotes.'],
-      'people': ['People', 'Roles, and who we are still hiring.'],
-      'opening-checklist': ['Opening checklist', 'Everything that has to happen before 12 December.'],
-      'decisions': ['Decisions', 'What we decided, who decided, and why.'],
-    },
-    ask: 'Try asking your AI', md: '.md',
-    prompts: ["Move 'Order the deck oven' to Done.", 'What is still waiting on someone?', 'Add a decision: we open at 7:00.'],
+  eyebrow: 'Team space',
+  daysTo: 'days to opening',
+  done: 'done',
+  team: 'The team',
+  with: 'with',
+  week: 'This week',
+  weekNote: 'Due in the next 7 days, or waiting on someone',
+  doing: 'In progress',
+  nothing: 'Nothing due this week.',
+  waiting: 'Waiting',
+  due: 'Due',
+  projects: 'Projects',
+  board: 'Open the board',
+  boardLine: 'Every task as a board, a table and a timeline.',
+  decisions: 'Recent decisions',
+  allDecisions: 'All decisions',
+  wiki: 'Wiki',
+  allPages: 'All pages',
+  pages: {
+    'how-we-work': ['How we work', 'Shifts, who decides what, and how we use our AIs.'],
+    'menu': ['Opening menu', 'Twelve items with prices and allergens.'],
+    'suppliers': ['Suppliers', 'Flour, dairy, coffee, and the oven quotes.'],
+    'people': ['People', 'Roles, and who we are still hiring.'],
+    'opening-checklist': ['Opening checklist', 'Everything that has to happen before 12 December.'],
+    'decisions': ['Decisions', 'What we decided, who decided, and why.'],
   },
-  es: {
-    eyebrow: 'Espacio del equipo',
-    daysTo: 'días para abrir',
-    done: 'hecho',
-    team: 'El equipo',
-    with: 'con',
-    week: 'Esta semana',
-    weekNote: 'Vence en los próximos 7 días o espera a alguien',
-    doing: 'En curso',
-    nothing: 'Nada vence esta semana.',
-    waiting: 'Esperando',
-    due: 'Vence',
-    projects: 'Proyectos',
-    board: 'Abrir el tablero',
-    boardLine: 'Todas las tareas como tablero, tabla y línea de tiempo.',
-    decisions: 'Decisiones recientes',
-    allDecisions: 'Todas las decisiones',
-    wiki: 'Wiki',
-    allPages: 'Todas las páginas',
-    pages: {
-      'how-we-work': ['Cómo trabajamos', 'Turnos, quién decide qué y cómo usamos nuestras IA.'],
-      'menu': ['Menú de apertura', 'Doce productos con precios y alérgenos.'],
-      'suppliers': ['Proveedores', 'Harina, lácteos, café y los presupuestos del horno.'],
-      'people': ['Personas', 'Roles y a quién seguimos buscando.'],
-      'opening-checklist': ['Lista de apertura', 'Todo lo que tiene que pasar antes del 12 de diciembre.'],
-      'decisions': ['Decisiones', 'Qué decidimos, quién y por qué.'],
-    },
-    ask: 'Prueba a pedirle a tu IA', md: '.es.md',
-    prompts: ["Pasa 'Encargar el horno de pisos' a Hecho.", '¿Qué está esperando a alguien?', 'Añade una decisión: abrimos a las 7:00.'],
-  },
-}
-
-export const DATA = { en: { team: TEAM_EN, decisions: DECISIONS_EN }, es: { team: TEAM_ES, decisions: DECISIONS_ES, tasks: SEED_ES } }
-
-export const lang = () => {
-  const tag = (typeof navigator !== 'undefined' && navigator.language) || 'en'
-  const short = tag.toLowerCase().split('-')[0]
-  return WORDS[short] ? short : 'en'
+  ask: 'Try asking your AI',
+  prompts: ["Move 'Order the deck oven' to Done.", 'What is still waiting on someone?', 'Add a decision: we open at 7:00.'],
+  labels: { Shop: 'Shop', Menu: 'Menu', Hiring: 'Hiring', Online: 'Online', Opening: 'Opening', Money: 'Money' },
 }
 
 export const parseDecisions = (md) =>
@@ -129,22 +85,23 @@ export const Avatar = ({ person, size = 28 }) => (
 )
 
 export const TeamHome = () => {
-  const code = lang()
-  const w = WORDS[code]
-  const { team: TEAM, decisions: DECISIONS_MD, tasks: translated } = DATA[code] ?? DATA.en
-  const say = (value) => TEAM.labels?.[value] ?? value
+  const t = useI18n(WORDS, translations)
+  const wiki = useI18n({}, wikiTranslations)
+  const w = t.w
+  const TEAM = t.data('team', TEAM_SOURCE)
+  const say = (value) => w.labels[value] ?? value
   // The shared board's tasks; where the store cannot open, the readable copy Kunobi keeps of it.
   const live = useStore('team-tasks')
   const shared = useStoreStatus('team-tasks')?.status === 'open'
-  const tasks = localizeSeed(shared && live?.tasks ? live : SEED, SEED_START, translated).tasks.map((t) => Object.fromEntries(Object.entries(t).map(([k, v]) => [k, v ?? ''])))
-  const decisions = parseDecisions(DECISIONS_MD).slice(0, 3)
+  const tasks = t.data('tasks', shared && live?.tasks ? live : SEED, SEED_START).tasks.map((t) => Object.fromEntries(Object.entries(t).map(([k, v]) => [k, v ?? ''])))
+  const decisions = parseDecisions(wiki.doc('decisions.md', DECISIONS)).slice(0, 3)
   const people = Object.fromEntries(TEAM.people.map((p) => [p.id, p]))
   const projectColor = Object.fromEntries(TEAM.projects.map((p) => [p.id, p.color]))
   const today = toDate(TEAM.today)
   const opening = toDate(TEAM.opening)
   const daysLeft = Math.round((opening - today) / DAY)
-  const fmt = new Intl.DateTimeFormat(code, { weekday: 'short', day: 'numeric', month: 'short' })
-  const fmtShort = new Intl.DateTimeFormat(code, { day: 'numeric', month: 'short' })
+  const fmt = new Intl.DateTimeFormat(t.tag, { weekday: 'short', day: 'numeric', month: 'short' })
+  const fmtShort = new Intl.DateTimeFormat(t.tag, { day: 'numeric', month: 'short' })
   const doneCount = tasks.filter((t) => t.status === 'Done').length
   const share = tasks.length ? Math.round((doneCount / tasks.length) * 100) : 0
 
@@ -323,7 +280,7 @@ export const TeamHome = () => {
             </a>
           </section>
           <section className="panel">
-            <h2>{w.decisions} <a href={`wiki/decisions${w.md}`}>{w.allDecisions} →</a></h2>
+            <h2>{w.decisions} <a href="wiki/decisions.md">{w.allDecisions} →</a></h2>
             {decisions.map((d) => (
               <div className="dec" key={d.date + d.decision}>
                 <div className="meta">{fmt.format(toDate(d.date))} · {d.who}{d.task ? <span className="pill">{d.task}</span> : null}</div>
@@ -340,7 +297,7 @@ export const TeamHome = () => {
       </div>
       <div className="pages">
         {Object.entries(w.pages).map(([slug, [title, line]], i) => (
-          <a className="page" href={`wiki/${slug}${w.md}`} key={slug}>
+          <a className="page" href={`wiki/${slug}.md`} key={slug}>
             <b><i style={{ background: ['rgba(243,170,8,0.2)', 'rgba(232,121,74,0.2)', 'rgba(91,203,249,0.22)', 'rgba(48,204,213,0.22)', 'rgba(9,132,200,0.18)', 'rgba(138,108,240,0.18)'][i] }}>{['◷', '✶', '⛟', '☺', '✓', '⚑'][i]}</i>{title}</b>
             <span>{line}</span>
           </a>

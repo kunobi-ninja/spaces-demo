@@ -155,7 +155,8 @@ export function blockedBy(c: Cluster, hr: HR): KS[] {
 }
 
 export interface Words {
-  seen: Record<string, (...a: any[]) => string>
+  /** The words for what each check saw: plain strings, and functions of their `{{placeholders}}`. */
+  seen: Record<string, any>
   date: (iso: string | null) => string
 }
 
@@ -173,7 +174,7 @@ export function runChecks(c: Cluster, hr: HR, w: Words): Check[] {
   out.push({
     id: 'ready',
     result: hr.ready ? (hr.ready.s === 'True' ? 'pass' : hr.ready.s === 'False' ? 'fail' : 'unknown') : 'unknown',
-    seen: hr.ready ? `Ready=${hr.ready.s} · ${hr.ready.r ?? '–'} · ${s.since(w.date(hr.ready.t))}` : s.noCondition(),
+    seen: hr.ready ? `Ready=${hr.ready.s} · ${hr.ready.r ?? '–'} · ${s.since({ date: w.date(hr.ready.t) })}` : s.noCondition,
     detail: hr.ready?.m,
     cmd: [`flux get helmreleases -n ${ns} ${hr.n}`],
   })
@@ -182,7 +183,7 @@ export function runChecks(c: Cluster, hr: HR, w: Words): Check[] {
   out.push({
     id: 'suspend',
     result: hr.suspend ? 'fail' : 'pass',
-    seen: hr.suspend ? 'spec.suspend: true' : `spec.suspend: ${hr.suspend === false ? 'false' : s.notSet()}`,
+    seen: hr.suspend ? 'spec.suspend: true' : `spec.suspend: ${hr.suspend === false ? 'false' : s.notSet}`,
     cmd: [`kubectl -n ${ns} get helmrelease ${hr.n} -o jsonpath='{.spec.suspend}'`],
   })
 
@@ -197,7 +198,7 @@ export function runChecks(c: Cluster, hr: HR, w: Words): Check[] {
     result: !first ? 'unknown' : isReady(first.ready) ? 'pass' : first.ready?.s === 'False' ? 'fail' : 'unknown',
     seen: first
       ? `${first.kind} ${first.n} · ${isReady(first.ready) ? 'Ready' : first.ready?.r ?? '–'}${first.rev ? ` · ${short(first.rev)}` : ''}${first.chart ? ` · ${first.chart}` : ''}`
-      : s.noSource(hr.src ? `${hr.src.kind} ${hr.src.name}` : '–'),
+      : s.noSource({ name: hr.src ? `${hr.src.kind} ${hr.src.name}` : '–' }),
     detail: first && !isReady(first.ready) ? first.ready?.m : null,
     cmd: [srcCmd[hr.src?.kind ?? ''] ?? `kubectl -n ${ns} get helmrelease ${hr.n} -o yaml`],
   })
@@ -208,7 +209,7 @@ export function runChecks(c: Cluster, hr: HR, w: Words): Check[] {
   out.push({
     id: 'retries',
     result: stalled ? 'fail' : 'pass',
-    seen: stalled ? `Stalled · ${hr.stalled!.r} · ${s.failures(fails)}` : `${s.notStalled()} · ${s.failures(fails)}`,
+    seen: stalled ? `Stalled · ${hr.stalled!.r} · ${s.failures({ count: fails })}` : `${s.notStalled} · ${s.failures({ count: fails })}`,
     detail: stalled ? hr.stalled!.m : null,
     cmd: [`kubectl -n ${ns} get helmrelease ${hr.n} -o jsonpath='{.status.conditions[?(@.type=="Stalled")].message}'`],
   })
@@ -221,10 +222,10 @@ export function runChecks(c: Cluster, hr: HR, w: Words): Check[] {
     id: 'history',
     result: !latest ? 'unknown' : latest.s === 'deployed' ? 'pass' : 'fail',
     seen: !latest
-      ? s.noHistory()
+      ? s.noHistory
       : latest.s === 'deployed'
         ? `v${latest.v} deployed · ${latest.chart} · ${w.date(latest.last)}`
-        : `v${latest.v} ${latest.s} · ${latest.chart} · ${s.lastGood(good ? `v${good.v} ${good.chart}, ${w.date(good.last)}` : '–')} · ${s.failedSince(failedSince)}`,
+        : `v${latest.v} ${latest.s} · ${latest.chart} · ${s.lastGood({ release: good ? `v${good.v} ${good.chart}, ${w.date(good.last)}` : '–' })} · ${s.failedSince({ count: failedSince })}`,
     cmd: [`helm history ${rel} -n ${hr.storageNs} --max 6`],
   })
 
@@ -234,7 +235,7 @@ export function runChecks(c: Cluster, hr: HR, w: Words): Check[] {
     id: 'workloads',
     result: loads.length === 0 ? 'unknown' : notReady.length ? 'fail' : 'pass',
     seen: loads.length === 0
-      ? s.noWorkloads(hr.tns)
+      ? s.noWorkloads({ namespace: hr.tns })
       : loads.map((x) => `${x.kind} ${x.ns}/${x.n} ${x.ready}/${x.want}${x.chart ? ` · ${x.chart.replace(/_/g, '+')}` : ''}`).join('\n'),
     cmd: [`kubectl -n ${hr.tns} get deployments,statefulsets -o wide`],
   })
@@ -244,8 +245,8 @@ export function runChecks(c: Cluster, hr: HR, w: Words): Check[] {
     id: 'downstream',
     result: blocked.length ? 'fail' : 'pass',
     seen: blocked.length
-      ? `${s.blocked(blocked.length)}: ${blocked.map((k) => `${k.n} (${k.ready?.r ?? '–'}, ${s.since(w.date(k.ready?.t ?? null))})`).join(' → ')}`
-      : s.noneBlocked(),
+      ? `${s.blocked({ count: blocked.length })}: ${blocked.map((k) => `${k.n} (${k.ready?.r ?? '–'}, ${s.since({ date: w.date(k.ready?.t ?? null) })})`).join(' → ')}`
+      : s.noneBlocked,
     cmd: [blocked.length ? `kubectl -n ${ns} get kustomizations ${blocked.map((k) => k.n).join(' ')}` : `flux get kustomizations -n ${ns} --status-selector ready=false`],
   })
 
@@ -272,7 +273,7 @@ export function runChecks(c: Cluster, hr: HR, w: Words): Check[] {
   out.push({
     id: 'pending',
     result: pending.length ? 'fail' : known ? 'pass' : 'unknown',
-    seen: pending.length ? `${s.waiting()}: ${pending.join(' · ')}` : known ? s.nothingWaiting(upToDate[0] ?? (first?.rev ? short(first.rev) : '–')) : s.cannotTell(),
+    seen: pending.length ? `${s.waiting}: ${pending.join(' · ')}` : known ? s.nothingWaiting({ revision: upToDate[0] ?? (first?.rev ? short(first.rev) : '–') }) : s.cannotTell,
     cmd: blocked.length
       ? [`kubectl -n ${ns} get kustomization ${blocked[blocked.length - 1].n} -o jsonpath='{.status.lastAppliedRevision}'`]
       : upstream

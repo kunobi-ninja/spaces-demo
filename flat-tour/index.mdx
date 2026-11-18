@@ -1,115 +1,73 @@
 ---
 title: Flat tour
 description: "Noa, Sam and Ines walk a 3D model of their flat and drop pins where something needs fixing, asking or loving."
-translations:
-  es:
-    title: Recorrido por el piso
-    description: "Noa, Sam e Ines recorren un modelo 3D de su piso y dejan chinchetas donde hay algo que arreglar, que preguntar o que les encanta."
+i18n:
+  data:
+    flat: [address]
+    pins: [pins.*.text]
 kunobi:
   page-layout: wide
   stores: [flat-tour-pins]
 ---
 
+import * as React from 'react'
 import '@fontsource/parkinsans/600.css'
 import '@fontsource/parkinsans/800.css'
 import '@fontsource/figtree/400.css'
 import '@fontsource/figtree/600.css'
 import '@fontsource/figtree/700.css'
 import flat from './data/flat.json'
-import flatEs from './data/flat.es.json'
 import start from './data/pins.start.json'
-import startEs from './data/pins.es.json'
 import { Tour } from './src/Tour'
+import { useI18n } from '../lib/i18n'
+import translations from './locales/index'
 
-{/* The rooms, walls, furniture and flatmates live in data/flat.json (metres), in Spanish in data/flat.es.json (same ids). The pins are in the flat-tour-pins store (centimetres), with a readable copy in data/pins.json; data/pins.es.json translates the starting pins (data/pins.start.json) by id: a pin still as it started shows in Spanish. The page's words are below. */}
+{/* The rooms, walls, furniture and flatmates live in data/flat.json (metres). The pins are in the flat-tour-pins store (centimetres), with a readable copy in data/pins.json. The page's words are below. Their translations, and those of the address and the starting pins (data/pins.start.json, by id), are in locales/<lang>.json: a pin still as it started shows translated. */}
 
 export const WORDS = {
-  en: {
-    locale: 'en-GB',
-    eyebrow: 'Flat tour · {address}',
-    title: 'Noa, Sam & Ines',
-    titleEm: 'walk the flat',
-    stats: { issue: 'open issues', question: 'open questions', idea: 'ideas', resolved: 'resolved' },
-    kinds: { like: 'Like', issue: 'Issue', question: 'Question', idea: 'Idea' },
-    kindsPlural: { like: 'Likes', issue: 'Issues', question: 'Questions', idea: 'Ideas' },
-    rooms: { noa: "Noa's room", bath: 'Bathroom', sam: "Sam's room", ines: "Ines's room", hall: 'Hall', living: 'Living room', kitchen: 'Kitchen' },
-    hintEdit: 'Click anywhere in the flat to drop a pin · Drag to turn · Scroll to zoom',
-    hintRead: 'Drag to turn · Scroll to zoom',
-    overview: 'Whole flat',
-    noGl: 'This device could not draw the 3D flat. Every pin is still in the list.',
-    newPin: 'New pin · {room}',
-    placeholder: { like: 'What do you love here?', issue: "What's wrong?", question: 'What do you want to ask?', idea: "What's the idea?" },
-    from: 'From',
-    cancel: 'Cancel',
-    save: 'Pin it',
-    resolve: 'Mark resolved',
-    reopen: 'Reopen',
-    remove: 'Remove',
-    close: 'Close',
-    resolvedTag: 'Resolved',
-    pins: 'Pins',
-    all: 'All',
-    open: 'Open',
-    empty: 'No pins here yet.',
-    saving: 'Saving…',
-    failed: 'Not saved: {reason}',
-    readOnly: 'These are the pins as they started; they cannot be changed here.',
-    model: 'A simple 3D model of the flat, drawn in the page from',
-    change: 'How to change this',
-    how: ['Pins are saved in the', ' store, with a readable copy in', 'Ask your AI:'],
-    prompts: [
-      'List the issues people pinned and group them by room',
-      'Mark the dripping kitchen tap resolved: the plumber came on Tuesday',
-      'Move the sofa against the left wall and put the TV opposite',
-    ],
-  },
-  es: {
-    locale: 'es-ES',
-    eyebrow: 'Recorrido por el piso · {address}',
-    title: 'Noa, Sam e Ines',
-    titleEm: 'recorren el piso',
-    stats: { issue: 'problemas abiertos', question: 'preguntas abiertas', idea: 'ideas', resolved: 'resueltos' },
-    kinds: { like: 'Me gusta', issue: 'Problema', question: 'Pregunta', idea: 'Idea' },
-    kindsPlural: { like: 'Me gusta', issue: 'Problemas', question: 'Preguntas', idea: 'Ideas' },
-    rooms: { noa: 'Cuarto de Noa', bath: 'Baño', sam: 'Cuarto de Sam', ines: 'Cuarto de Ines', hall: 'Pasillo', living: 'Salón', kitchen: 'Cocina' },
-    hintEdit: 'Haz clic en cualquier parte del piso para dejar una chincheta · Arrastra para girar · Rueda para acercar',
-    hintRead: 'Arrastra para girar · Rueda para acercar',
-    overview: 'Todo el piso',
-    noGl: 'Este dispositivo no puede dibujar el piso en 3D. Todas las chinchetas siguen en la lista.',
-    newPin: 'Nueva chincheta · {room}',
-    placeholder: { like: '¿Qué te encanta de aquí?', issue: '¿Qué falla?', question: '¿Qué quieres preguntar?', idea: '¿Cuál es la idea?' },
-    from: 'De',
-    cancel: 'Cancelar',
-    save: 'Fijar',
-    resolve: 'Marcar resuelto',
-    reopen: 'Reabrir',
-    remove: 'Quitar',
-    close: 'Cerrar',
-    resolvedTag: 'Resuelto',
-    pins: 'Chinchetas',
-    all: 'Todas',
-    open: 'Abiertas',
-    empty: 'Aún no hay chinchetas aquí.',
-    saving: 'Guardando…',
-    failed: 'No se guardó: {reason}',
-    readOnly: 'Son las chinchetas iniciales; aquí no se pueden cambiar.',
-    model: 'Un modelo 3D sencillo del piso, dibujado en la página a partir de',
-    change: 'Cómo cambiarlo',
-    how: ['Las chinchetas se guardan en el almacén', ', con una copia legible en', 'Pide a tu IA:'],
-    prompts: [
-      'Haz una lista de los problemas que se han marcado, agrupados por habitación',
-      'Marca como resuelto el grifo de la cocina que gotea: el fontanero vino el martes',
-      'Pon el sofá contra la pared izquierda y la tele enfrente',
-    ],
-  },
+  eyebrow: 'Flat tour · {{address}}',
+  title: 'Noa, Sam & Ines',
+  titleEm: 'walk the flat',
+  stats: { issue: 'open issues', question: 'open questions', idea: 'ideas', resolved: 'resolved' },
+  kinds: { like: 'Like', issue: 'Issue', question: 'Question', idea: 'Idea' },
+  kindsPlural: { like: 'Likes', issue: 'Issues', question: 'Questions', idea: 'Ideas' },
+  rooms: { noa: "Noa's room", bath: 'Bathroom', sam: "Sam's room", ines: "Ines's room", hall: 'Hall', living: 'Living room', kitchen: 'Kitchen' },
+  hintEdit: 'Click anywhere in the flat to drop a pin · Drag to turn · Scroll to zoom',
+  hintRead: 'Drag to turn · Scroll to zoom',
+  overview: 'Whole flat',
+  noGl: 'This device could not draw the 3D flat. Every pin is still in the list.',
+  newPin: 'New pin · {{room}}',
+  placeholder: { like: 'What do you love here?', issue: "What's wrong?", question: 'What do you want to ask?', idea: "What's the idea?" },
+  from: 'From',
+  cancel: 'Cancel',
+  save: 'Pin it',
+  resolve: 'Mark resolved',
+  reopen: 'Reopen',
+  remove: 'Remove',
+  close: 'Close',
+  resolvedTag: 'Resolved',
+  pins: 'Pins',
+  all: 'All',
+  open: 'Open',
+  empty: 'No pins here yet.',
+  saving: 'Saving…',
+  failed: 'Not saved: {{reason}}',
+  readOnly: 'These are the pins as they started; they cannot be changed here.',
+  model: 'A simple 3D model of the flat, drawn in the page from',
+  change: 'How to change this',
+  how: ['Pins are saved in the', ' store, with a readable copy in', 'Ask your AI:'],
+  prompts: [
+    'List the issues people pinned and group them by room',
+    'Mark the dripping kitchen tap resolved: the plumber came on Tuesday',
+    'Move the sofa against the left wall and put the TV opposite',
+  ],
 }
 
-export const DATA = { en: { flat }, es: { flat: flatEs, pins: startEs } }
-
-export const pickLang = () => {
-  const tag = (typeof navigator !== 'undefined' && navigator.language) || 'en'
-  const lang = tag.toLowerCase().split('-')[0]
-  return WORDS[lang] ? lang : 'en'
+export const FlatTour = () => {
+  const t = useI18n(WORDS, translations)
+  const localized = React.useMemo(() => t.data('flat', flat), [t])
+  const localize = React.useCallback((live) => t.data('pins', live, start), [t])
+  return <Tour flat={localized} start={start} localize={localize} words={{ ...t.w, locale: t.tag }} />
 }
 
-<Tour flat={(DATA[pickLang()] ?? DATA.en).flat} start={start} translated={(DATA[pickLang()] ?? DATA.en).pins} words={WORDS[pickLang()]} />
+<FlatTour />
