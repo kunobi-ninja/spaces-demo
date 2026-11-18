@@ -12,9 +12,9 @@ import { chomp, LANE, SKY, type Kind, type World } from './world'
  * the round and the ending all draw through `meadow(...).draw`.
  */
 
-/** Words that float up over the meadow: "Yum!", "Ouch!". */
+/** Words that float up over the meadow: "Yum!", "Ouch!" (the page's words for `yum` and `ouch`). */
 export interface Pop {
-  text: string
+  word: 'yum' | 'ouch'
   x: number
   y: number
   z: number
@@ -270,8 +270,8 @@ export function meadow(scene: THREE.Scene) {
         bursts.set(key, set)
       }
       set(age / 0.55)
-      if (e.type === 'catch') pops.push({ text: 'Yum!', x: e.x, y: 30, z: 0, age, color: JUICE[e.kind as Fruit], big: e.score % 5 === 0 })
-      if (e.type === 'bonk') pops.push({ text: 'Ouch!', x: e.x, y: 32, z: 0, age, color: 0xffffff, big: true })
+      if (e.type === 'catch') pops.push({ word: 'yum', x: e.x, y: 30, z: 0, age, color: JUICE[e.kind as Fruit], big: e.score % 5 === 0 })
+      if (e.type === 'bonk') pops.push({ word: 'ouch', x: e.x, y: 32, z: 0, age, color: 0xffffff, big: true })
     }
     for (const [key, root] of burstRoots)
       if (!fresh.has(key)) {

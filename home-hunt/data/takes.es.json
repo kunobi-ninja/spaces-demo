@@ -1,0 +1,16 @@
+{
+  "takes": {
+    "H1-alex": {
+      "note": "El cobertizo ya tiene electricidad."
+    },
+    "H1-maya": {
+      "note": "Al dormitorio de atrás le da el sol toda la tarde."
+    },
+    "H2-alex": {
+      "note": "Solo se aparca en la calle, así que la furgoneta necesita permiso."
+    },
+    "H3-maya": {
+      "note": "A cuatro minutos del trabajo, pero ¿dónde pongo los caballetes?"
+    }
+  }
+}

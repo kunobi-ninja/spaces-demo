@@ -1,6 +1,10 @@
 ---
 title: pgo upgrade stuck
 description: "An open incident: Flux cannot finish upgrading a Postgres operator, and an app's rollouts are blocked behind it. Timeline, affected objects, events and a postmortem written from them."
+translations:
+  es:
+    title: Actualización de pgo atascada
+    description: "Un incidente abierto: Flux no consigue terminar de actualizar un operador de Postgres y los despliegues de una app están bloqueados detrás. Cronología, objetos afectados, eventos y un postmortem escrito a partir de ellos."
 kunobi:
   page-layout: full
   stores: [incident-timeline]
@@ -12,9 +16,10 @@ import '@fontsource/figtree/400.css'
 import '@fontsource/figtree/600.css'
 import snapshot from './data/cluster.json'
 import start from './data/timeline.start.json'
+import startEs from './data/timeline.es.json'
 import { Incident } from './src/Incident'
 
-{/* Interface words per language. The page follows the system language and falls back to English. The header, timeline and follow-ups live in the incident-timeline LiveStore (readable copy: data/timeline.json). Cluster facts come live from the cluster selected in your Kunobi tab, or from the sample in data/cluster.json, whose `scope` names the app, namespaces and release the incident is about. */}
+{/* Interface words per language. The page follows the system language and falls back to English. The header, timeline and follow-ups live in the incident-timeline LiveStore (readable copy: data/timeline.json); data/timeline.es.json translates its starting text (data/timeline.start.json) by id, and text still as it started shows in Spanish. Cluster facts come live from the cluster selected in your Kunobi tab, or from the sample in data/cluster.json, whose `scope` names the app, namespaces and release the incident is about. */}
 
 export const listEn = (xs) => (xs.length < 2 ? xs.join('') : `${xs.slice(0, -1).join(', ')} and ${xs[xs.length - 1]}`)
 export const listEs = (xs) => (xs.length < 2 ? xs.join('') : `${xs.slice(0, -1).join(', ')} y ${xs[xs.length - 1]}`)
@@ -104,7 +109,7 @@ export const WORDS = {
   },
   es: {
     locale: 'es-ES',
-    eyebrow: (cluster) => `Incidente · ${cluster}`,
+    eyebrow: (cluster) => `Incidente · ${cluster === 'Sample cluster' ? 'Clúster de ejemplo' : cluster}`,
     selectedCluster: 'Clúster seleccionado',
     sample: (t) => `Datos de ejemplo · ${t}`,
     live: 'En directo',
@@ -181,9 +186,12 @@ export const WORDS = {
   },
 }
 
-export const pickWords = () => {
+export const SEED = { es: startEs }
+
+export const pickLang = () => {
   const tag = (typeof navigator !== 'undefined' && navigator.language) || 'en'
-  return WORDS[tag.toLowerCase().split('-')[0]] ?? WORDS.en
+  const lang = tag.toLowerCase().split('-')[0]
+  return WORDS[lang] ? lang : 'en'
 }
 
-<Incident snapshot={snapshot} start={start} w={pickWords()} />
+<Incident snapshot={snapshot} start={start} translated={SEED[pickLang()]} w={WORDS[pickLang()]} />

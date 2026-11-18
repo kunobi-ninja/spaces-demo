@@ -1,0 +1,36 @@
+{
+  "to": "Elena",
+  "age": 40,
+  "from": "Sam",
+  "intro": "Una pequeña película para",
+  "memories": [
+    {
+      "icon": "tent",
+      "when": "Verano de 2009",
+      "title": "La tienda que se inundó",
+      "line": "Dos días de lluvia en Skye. Y aun así dijiste que fue el mejor viaje de tu vida."
+    },
+    {
+      "icon": "bike",
+      "when": "Primavera de 2014",
+      "title": "Ámsterdam en bici",
+      "line": "Prometiste que era llano. Nuestras piernas recuerdan otra cosa."
+    },
+    {
+      "icon": "pasta",
+      "when": "Cada domingo desde entonces",
+      "title": "El club de la pasta del domingo",
+      "line": "Catorce años, una receta y la misma discusión sobre el ajo."
+    }
+  ],
+  "wish": "Pide un deseo",
+  "colors": {
+    "sky": "#fff1dc",
+    "paper": "#fffaf2",
+    "warm": "#ff8a5c",
+    "sun": "#f3aa08",
+    "cool": "#30ccd5",
+    "deep": "#0b3a5b",
+    "ink": "#06213f"
+  }
+}

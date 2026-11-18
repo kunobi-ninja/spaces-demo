@@ -1,0 +1,13 @@
+{
+  "extras": {
+    "bananas": {
+      "name": "Plátanos"
+    },
+    "coffee": {
+      "name": "Café"
+    },
+    "dish-soap": {
+      "name": "Lavavajillas"
+    }
+  }
+}

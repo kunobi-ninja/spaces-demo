@@ -1,6 +1,10 @@
 ---
 title: Made in Kunobi Spaces
 description: "Plans, tools and games for life and work, made in Kunobi spaces. Open one, then ask your AI to make it yours."
+translations:
+  es:
+    title: Hecho en Kunobi Spaces
+    description: "Planes, herramientas y juegos para la vida y el trabajo, hechos en espacios de Kunobi. Abre uno y pide a tu IA que lo haga tuyo."
 kunobi:
   page-layout: wide
 ---
@@ -36,7 +40,7 @@ import handoverCover from './assets/covers/on-call-handover.jpg'
 import jamCover from './assets/covers/music-jam.jpg'
 import flatCover from './assets/covers/flat-tour.jpg'
 
-{/* The words on this page, per language. The page follows the system language and falls back to English. */}
+{/* The words on this page, per language. The page follows the system language and falls back to English. A tag without a translation shows as written in EXAMPLES. */}
 
 export const WORDS = {
   en: {
@@ -87,6 +91,17 @@ export const WORDS = {
     needs: { experiment: 'Experimento', 'shared-state': 'Necesita estado compartido' },
     open: 'Abrir',
     steps: ['Abre un ejemplo', 'Pide a tu IA que lo cambie', 'Compártelo con alguien'],
+    tags: {
+      '2 formats': '2 formatos', '2 looks': '2 estilos', '3 formats': '3 formatos', '3D scan': 'Escaneo 3D', 'Acks': 'Confirmaciones',
+      'Board': 'Tablero', 'Budget': 'Presupuesto', 'Calendar': 'Calendario', 'Charts': 'Gráficos', 'Checklist': 'Lista de comprobación',
+      'Checks': 'Comprobaciones', 'Decisions': 'Decisiones', 'Dependencies': 'Dependencias', 'Flatmates': 'Compañeros de piso',
+      'Health': 'Salud', 'Itinerary': 'Itinerario', 'Live round': 'Ronda en directo', 'Live': 'En directo', 'Map': 'Mapa',
+      'Motion': 'Animación', 'Multiplayer': 'Multijugador', 'Music': 'Música', 'On-call': 'Guardia', 'Orbit': 'Órbita',
+      'Pins': 'Chinchetas', 'Pipeline': 'Proceso', 'Read-only': 'Solo lectura', 'Recipes': 'Recetas', 'Rent by room': 'Alquiler por habitación',
+      'Run log': 'Registro', 'Scorecards': 'Valoraciones', 'Seating': 'Mesas', 'Sequencer': 'Secuenciador', 'Settle up': 'Saldar cuentas',
+      'Shopping list': 'Lista de la compra', 'Shortlist': 'Preselección', 'Slides': 'Diapositivas', 'Sound': 'Sonido', 'Teams': 'Equipos',
+      'Timeline': 'Cronograma', 'Touch': 'Táctil', 'Two people': 'Dos personas', 'Zoom': 'Zoom',
+    },
     items: {
       'trip': ['Un fin de semana en Lisboa', 'Dos amigos planean tres días en un mapa real.'],
       'team': ['Sol Bakery', 'La casa del equipo: la semana, las decisiones y la wiki.'],
@@ -234,7 +249,7 @@ export const Card = ({ item, w }) => {
       <span className="text">
         <span className="card-title">{title}</span>
         <span className="card-line">{line}</span>
-        <span className="tags">{item.tags.map((t) => <span key={t}>{t}</span>)}</span>
+        <span className="tags">{item.tags.map((t) => <span key={t}>{w.tags?.[t] ?? t}</span>)}</span>
       </span>
     </a>
   )

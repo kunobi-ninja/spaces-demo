@@ -1,0 +1,157 @@
+{
+  "title": "Elena cumple 40",
+  "kind": "Fiesta de 40 cumpleaños",
+  "host": "Elena y Sam Marsh",
+  "date": "2026-11-21",
+  "today": "2026-10-29",
+  "venue": "Salón comunitario Riverside",
+  "address": "14 Quay Street",
+  "currency": "USD",
+  "sides": [
+    {
+      "id": "Family",
+      "color": "#f3aa08"
+    },
+    {
+      "id": "Friends",
+      "color": "#30ccd5"
+    },
+    {
+      "id": "Work",
+      "color": "#0984c8"
+    },
+    {
+      "id": "School",
+      "color": "#8a6cf0"
+    }
+  ],
+  "tables": [
+    {
+      "id": "Head",
+      "name": "Mesa principal",
+      "seats": 10,
+      "shape": "long"
+    },
+    {
+      "id": "A",
+      "name": "Mesa A",
+      "seats": 8,
+      "shape": "round"
+    },
+    {
+      "id": "B",
+      "name": "Mesa B",
+      "seats": 8,
+      "shape": "round"
+    },
+    {
+      "id": "C",
+      "name": "Mesa C",
+      "seats": 8,
+      "shape": "round"
+    },
+    {
+      "id": "D",
+      "name": "Mesa D",
+      "seats": 8,
+      "shape": "round"
+    }
+  ],
+  "schedule": [
+    {
+      "time": "17:00",
+      "what": "Preparar el salón",
+      "detail": "Mesas, banderines y la lista de música; quien llegue pronto, ayuda",
+      "who": "Laia, Owen"
+    },
+    {
+      "time": "18:30",
+      "what": "Llegan los invitados",
+      "detail": "Zumos, té y refrescos junto a la puerta",
+      "who": "Sam"
+    },
+    {
+      "time": "19:15",
+      "what": "Todos sentados",
+      "detail": "Tarjetas con los nombres en cada mesa",
+      "who": "Laia"
+    },
+    {
+      "time": "19:30",
+      "what": "Cena",
+      "detail": "Bufé: arroz jollof, pollo asado, curry de verduras y ensaladas (las veganas y sin gluten, etiquetadas)",
+      "who": "Rosa, Ama y un catering del barrio"
+    },
+    {
+      "time": "20:15",
+      "what": "Discurso",
+      "detail": "Sam y luego un brindis corto de Owen",
+      "who": "Sam, Owen"
+    },
+    {
+      "time": "21:00",
+      "what": "Tarta y velas",
+      "detail": "Tarta casera de naranja, para todos",
+      "who": "Rosa trae las velas"
+    },
+    {
+      "time": "21:30",
+      "what": "Música y baile",
+      "detail": "La lista de Owen por los altavoces del salón",
+      "who": "Owen"
+    },
+    {
+      "time": "23:00",
+      "what": "Recoger entre todos",
+      "detail": "Devolver las llaves del salón antes de las 23:30",
+      "who": "Todos los que puedan quedarse"
+    }
+  ],
+  "budget": {
+    "total": 900,
+    "items": [
+      {
+        "item": "Alquiler del salón",
+        "planned": 180,
+        "paid": 60,
+        "note": "Tarifa de noche, señal pagada"
+      },
+      {
+        "item": "Comida del bufé",
+        "planned": 320,
+        "paid": 100,
+        "note": "Arroz y curry de un catering del barrio; el resto, casero"
+      },
+      {
+        "item": "Refrescos y zumos",
+        "planned": 90,
+        "paid": 0,
+        "note": "Se compran el mismo día"
+      },
+      {
+        "item": "Ingredientes de la tarta",
+        "planned": 35,
+        "paid": 35,
+        "note": "La hace Rosa"
+      },
+      {
+        "item": "Platos, vasos y servilletas",
+        "planned": 40,
+        "paid": 40,
+        "note": "Compostables"
+      },
+      {
+        "item": "Decoración",
+        "planned": 45,
+        "paid": 25,
+        "note": "Banderines reutilizados de la feria de verano"
+      },
+      {
+        "item": "Regalitos para los niños",
+        "planned": 30,
+        "paid": 0,
+        "note": "Uno para cada uno, 8 niños"
+      }
+    ]
+  }
+}

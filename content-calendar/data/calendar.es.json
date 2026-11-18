@@ -1,0 +1,25 @@
+{
+  "team": "Ferro Coffee",
+  "month": "2026-11",
+  "today": "2026-11-12",
+  "people": [
+    { "id": "Lucía", "role": "Dueña", "color": "#f3aa08" },
+    { "id": "Tom", "role": "Barista y vídeo", "color": "#30ccd5" },
+    { "id": "Priya", "role": "Diseño e Instagram", "color": "#ef6f6c" },
+    { "id": "Marco", "role": "Newsletter y LinkedIn", "color": "#0984c8" }
+  ],
+  "channels": [
+    { "id": "instagram", "label": "Instagram", "color": "#ef6f6c" },
+    { "id": "blog", "label": "Blog", "color": "#0984c8" },
+    { "id": "newsletter", "label": "Newsletter", "color": "#f3aa08" },
+    { "id": "linkedin", "label": "LinkedIn", "color": "#5b7cfa" },
+    { "id": "video", "label": "Vídeo", "color": "#30ccd5" }
+  ],
+  "statuses": [
+    { "id": "idea", "color": "#94a3b8" },
+    { "id": "drafting", "color": "#5bcbf9" },
+    { "id": "review", "color": "#f3aa08" },
+    { "id": "scheduled", "color": "#0984c8" },
+    { "id": "published", "color": "#30ccd5" }
+  ]
+}

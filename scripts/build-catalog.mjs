@@ -6,6 +6,8 @@
  * `*.mdx/` folders, are left out). Each demo is its entry page, every file in
  * its folder, the LiveStores its front matter names (with their view and
  * starting data) and the Fontsource CSS it imports (Latin only, font inlined).
+ * A demo's `translations` (front matter, per language) carry its title,
+ * description and prompts in that language.
  * `home` is the root `index.mdx` with the files it imports. Every file is
  * written once to `<out>/objects/<sha256>`; `<out>/catalog.json` lists them.
  *
@@ -49,6 +51,29 @@ function frontMatter(source, id) {
   const match = source.match(/^---\n([\s\S]*?)\n---/)
   if (!match) throw new Error(`${id}: the entry page has no front matter`)
   return parseYaml(match[1]) ?? {}
+}
+
+/**
+ * The front matter's `translations`, per language: `{ es: { title, description, prompts? } }`,
+ * or undefined when there are none.
+ */
+function readTranslations(translations, id) {
+  if (translations === undefined || translations === null) return undefined
+  if (typeof translations !== 'object' || Array.isArray(translations)) throw new Error(`${id}: translations must map a language to its title and description`)
+  const out = {}
+  for (const [lang, entry] of Object.entries(translations)) {
+    if (!/^[a-z]{2,3}$/.test(lang)) throw new Error(`${id}: translations.${lang} is not a language code`)
+    if (!entry || typeof entry !== 'object' || Array.isArray(entry)) throw new Error(`${id}: translations.${lang} needs a title and description`)
+    for (const field of ['title', 'description']) {
+      if (typeof entry[field] !== 'string' || !entry[field]) throw new Error(`${id}: translations.${lang} needs a ${field}`)
+    }
+    out[lang] = { title: entry.title, description: entry.description }
+    if (entry.prompts !== undefined) {
+      if (!Array.isArray(entry.prompts)) throw new Error(`${id}: translations.${lang}.prompts must be a list`)
+      out[lang].prompts = entry.prompts.map(String)
+    }
+  }
+  return Object.keys(out).length ? out : undefined
 }
 
 /** One `@fontsource/<family>/<weight>.css`, keeping its Latin face with the woff2 inlined. */
@@ -114,6 +139,7 @@ async function buildDemo(repo, { id, entry, gallery }, objects) {
   }
   const prompts = meta.prompts ?? []
   if (!Array.isArray(prompts) || (gallery && prompts.length === 0)) throw new Error(`${id}: front matter needs prompts`)
+  const translations = readTranslations(meta.translations, id)
 
   /** Repository-relative path → bytes. */
   const contents = new Map()
@@ -153,6 +179,7 @@ async function buildDemo(repo, { id, entry, gallery }, objects) {
     title: meta.title,
     description: meta.description,
     prompts: prompts.map(String),
+    ...(translations && { translations }),
     entry,
     gallery,
     cover: coverFile,

@@ -1,6 +1,10 @@
 ---
 title: Sol Bakery wiki
 description: "How Sol Bakery works: shifts, the opening menu, suppliers, people, the opening checklist and every decision."
+translations:
+  es:
+    title: Wiki de Sol Bakery
+    description: "Cómo funciona Sol Bakery: turnos, el menú de apertura, proveedores, personas, la lista de apertura y cada decisión."
 kunobi:
   page-layout: wide
 ---
@@ -11,7 +15,7 @@ import '@fontsource/parkinsans/800.css'
 import '@fontsource/figtree/400.css'
 import '@fontsource/figtree/600.css'
 
-{/* The wiki's pages, in reading order. Each page is a plain Markdown file in this folder; add one here when you add a file. */}
+{/* The wiki's pages, in reading order. Each page is a plain Markdown file in this folder, with a Spanish copy in <page>.es.md; add one here when you add a file. */}
 
 export const PAGES = [
   { slug: 'how-we-work', icon: '◷', tint: 'rgba(243,170,8,0.2)', group: 'team' },
@@ -25,7 +29,7 @@ export const PAGES = [
 export const WORDS = {
   en: {
     back: 'Sol Bakery',
-    title: 'Wiki',
+    title: 'Wiki', md: '.md',
     lede: 'How we work and what we decided. Every page is a plain Markdown file in this folder, so anyone on the team, or their AI, can edit it.',
     groups: { team: 'The team', riverside: 'Opening Riverside' },
     board: 'The board',
@@ -41,7 +45,7 @@ export const WORDS = {
   },
   es: {
     back: 'Sol Bakery',
-    title: 'Wiki',
+    title: 'Wiki', md: '.es.md',
     lede: 'Cómo trabajamos y qué decidimos. Cada página es un archivo Markdown en esta carpeta, así que cualquiera del equipo, o su IA, puede editarla.',
     groups: { team: 'El equipo', riverside: 'Abrir Riverside' },
     board: 'El tablero',
@@ -98,11 +102,11 @@ export const Wiki = () => {
             {PAGES.filter((p) => p.group === group).map((p) => {
               const [title, line] = w.pages[p.slug]
               return (
-                <a className="card" href={`${p.slug}.md`} key={p.slug}>
+                <a className="card" href={`${p.slug}${w.md}`} key={p.slug}>
                   <i style={{ background: p.tint }}>{p.icon}</i>
                   <b>{title}</b>
                   <span>{line}</span>
-                  <small>{p.slug}.md</small>
+                  <small>{p.slug}{w.md}</small>
                 </a>
               )
             })}

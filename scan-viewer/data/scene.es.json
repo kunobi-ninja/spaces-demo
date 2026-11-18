@@ -1,0 +1,48 @@
+{
+  "title": "Felipe",
+  "subtitle": "Un escaneo en 3D que puedes girar, acercar e iluminar.",
+  "orientation": [
+    0,
+    0,
+    1,
+    0
+  ],
+  "target": [
+    0,
+    1.05,
+    -0.2
+  ],
+  "presets": {
+    "front": {
+      "yaw": 3.1416,
+      "pitch": 0.1,
+      "distance": 6.4
+    },
+    "side": {
+      "yaw": 4.7124,
+      "pitch": 0.08,
+      "distance": 6.4
+    },
+    "close": {
+      "yaw": 3,
+      "pitch": 0.04,
+      "distance": 1.55,
+      "target": [
+        0,
+        1.38,
+        -0.8
+      ]
+    }
+  },
+  "limits": {
+    "minDistance": 0.9,
+    "maxDistance": 11,
+    "minPitch": -0.45,
+    "maxPitch": 1.2
+  },
+  "autoRotate": 0.1,
+  "credit": {
+    "text": "“ChatGPT dots – Felipe”, de abstrakt, CC BY 4.0. Convertido a SPZ y con menos detalle.",
+    "href": "https://superspl.at/scene/ca6a4c9b"
+  }
+}

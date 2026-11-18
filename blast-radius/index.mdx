@@ -1,6 +1,10 @@
 ---
 title: Blast radius
 description: "Pick a ConfigMap, Secret, Service, PVC or ServiceAccount and see every workload, pod, ingress and Flux object that uses it, what a change would break, and a checklist before you change it."
+translations:
+  es:
+    title: Radio de impacto
+    description: "Elige un ConfigMap, Secret, Service, PVC o ServiceAccount y mira cada workload, pod, ingress y objeto de Flux que lo usa, qué rompería un cambio y una lista de comprobación antes de tocarlo."
 kunobi:
   page-layout: full
   stores: [blast-radius-review]
@@ -10,9 +14,11 @@ import '@fontsource/parkinsans/600.css'
 import '@fontsource/parkinsans/800.css'
 import '@fontsource/figtree/400.css'
 import '@fontsource/figtree/600.css'
+import review from './data/review.json'
+import reviewEs from './data/review.es.json'
 import { BlastRadius } from './src/BlastRadius'
 
-{/* Interface words per language. Cluster data: data/cluster.json, or live after Allow in your own Space. Checks and notes: blast-radius-review store. */}
+{/* Interface words per language. Cluster data: data/cluster.json, or live after Allow in your own Space. Checks and notes: blast-radius-review store (readable copy: data/review.json); data/review.es.json translates its starting notes by id, and a note still as it started shows in Spanish. */}
 
 export const list = (xs, and) => xs.length <= 3 ? xs.join(', ') : `${xs.slice(0, 3).join(', ')} ${and(xs.length - 3)}`
 
@@ -205,15 +211,17 @@ export const WORDS = {
   },
 }
 
+export const SEED = { es: reviewEs }
+
 export const pick = () => {
   const tag = (typeof navigator !== 'undefined' && navigator.language) || 'en'
   const lang = tag.toLowerCase().split('-')[0]
-  return WORDS[lang] ? { w: WORDS[lang], locale: tag } : { w: WORDS.en, locale: 'en' }
+  return WORDS[lang] ? { w: WORDS[lang], locale: tag, lang } : { w: WORDS.en, locale: 'en', lang: 'en' }
 }
 
 export const Page = () => {
-  const { w, locale } = pick()
-  return <BlastRadius w={{ ...w, list: (xs) => list(xs, w.and) }} locale={locale} />
+  const { w, locale, lang } = pick()
+  return <BlastRadius w={{ ...w, list: (xs) => list(xs, w.and) }} locale={locale} seed={review} translated={SEED[lang]} />
 }
 
 <Page />

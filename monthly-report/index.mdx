@@ -1,6 +1,10 @@
 ---
 title: Monthly report
 description: "A small shop's month in numbers: revenue, customers, channels and best sellers, with a summary written from the data."
+translations:
+  es:
+    title: Informe mensual
+    description: "El mes de una pequeña tienda en números: ingresos, clientes, canales y lo más vendido, con un resumen escrito a partir de los datos."
 kunobi:
   page-layout: wide
 ---
@@ -10,9 +14,10 @@ import '@fontsource/parkinsans/800.css'
 import '@fontsource/figtree/400.css'
 import '@fontsource/figtree/600.css'
 import data from './data/report.json'
+import dataEs from './data/report.es.json'
 import { Report } from './src/Report'
 
-{/* The page's own words. Every number comes from data/report.json; the summary sentences are filled in from it. */}
+{/* The page's own words. Every number comes from data/report.json, in Spanish in data/report.es.json (same numbers); the summary sentences are filled in from it. */}
 
 export const pctText = (v) => `${Math.abs(v * 100).toFixed(0)}%`
 export const ptsText = (v) => `${v > 0 ? '+' : v < 0 ? '−' : '±'}${Math.abs(v * 100).toFixed(1)}`
@@ -31,7 +36,7 @@ export const WORDS = {
     firstOrder: 'First order', customers: 'New',
     productsTitle: 'Best sellers', productsHint: 'By revenue this month',
     product: 'Product', units: 'Units', revenue: 'Revenue', share: 'Share', lastSix: 'Last 6 months',
-    howTitle: 'Make it yours.', howBody: 'Everything here is computed from', howAsk: 'Replace it with your numbers, or ask your AI:',
+    howTitle: 'Make it yours.', howBody: 'Everything here is computed from', file: 'data/report.json', howAsk: 'Replace it with your numbers, or ask your AI:',
     prompt1: 'Add November 2026: revenue €21,400, 318 orders, 141 returning',
     prompt2: 'Rebuild this from my shop’s order export in exports/orders.json',
     example: 'Example data for a made-up shop. The summary, deltas and charts are computed from the file, so they change when it does.',
@@ -67,7 +72,7 @@ export const WORDS = {
     firstOrder: 'Primer pedido', customers: 'Nuevos',
     productsTitle: 'Lo más vendido', productsHint: 'Por ingresos este mes',
     product: 'Producto', units: 'Unidades', revenue: 'Ingresos', share: 'Parte', lastSix: 'Últimos 6 meses',
-    howTitle: 'Hazlo tuyo.', howBody: 'Todo se calcula a partir de', howAsk: 'Cámbialo por tus números o pídeselo a tu IA:',
+    howTitle: 'Hazlo tuyo.', howBody: 'Todo se calcula a partir de', file: 'data/report.es.json', howAsk: 'Cámbialo por tus números o pídeselo a tu IA:',
     prompt1: 'Añade noviembre de 2026: ingresos 21.400 €, 318 pedidos, 141 que repiten',
     prompt2: 'Rehaz esto con la exportación de pedidos de mi tienda en exports/orders.json',
     example: 'Datos de ejemplo de una tienda inventada. El resumen, las variaciones y los gráficos se calculan del archivo, así que cambian con él.',
@@ -92,15 +97,17 @@ export const WORDS = {
   },
 }
 
+export const DATA = { en: data, es: dataEs }
+
 export const pick = () => {
   const tag = (typeof navigator !== 'undefined' && navigator.language) || 'en'
   const lang = tag.toLowerCase().split('-')[0]
-  return WORDS[lang] ? { w: WORDS[lang], locale: tag } : { w: WORDS.en, locale: 'en' }
+  return WORDS[lang] ? { lang, w: WORDS[lang], locale: tag } : { lang: 'en', w: WORDS.en, locale: 'en' }
 }
 
 export const Page = ({ month }) => {
-  const { w, locale } = pick()
-  return <Report data={data} w={w} locale={locale} initial={month} />
+  const { lang, w, locale } = pick()
+  return <Report data={DATA[lang] ?? DATA.en} w={w} locale={locale} initial={month} />
 }
 
 <Page month={props.month} />

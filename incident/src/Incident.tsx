@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { useStore, useStoreStatus, edit, useDiagram } from 'kunobi'
 import type { IncidentTimelineStore } from '../types/incident-timeline.store'
+import { localizeSeed } from './seed'
 import { useCluster, type Cluster, type Cond, type Snapshot, type Ev } from './live'
 
 /*
@@ -306,7 +307,7 @@ function detailOf(n: GNode, f: Facts): { detail: string; since: string } {
   return { detail: '', since: '' }
 }
 
-export function Incident({ snapshot, start, w }: { snapshot: Snapshot; start: Store; w: any }) {
+export function Incident({ snapshot, start, translated, w }: { snapshot: Snapshot; start: Store; translated?: unknown; w: any }) {
   const cl = useCluster(snapshot)
   const f = React.useMemo(() => facts(cl, snapshot.scope), [cl, snapshot.scope])
   const model = React.useMemo(() => graphModel(f, w), [f, w])
@@ -314,7 +315,8 @@ export function Incident({ snapshot, start, w }: { snapshot: Snapshot; start: St
   const live = useStore(STORE) as Store | undefined
   const st = (useStoreStatus(STORE) ?? {}) as St
   const open = st.status === 'open' && !!live
-  const data: Store = (open || st.status === 'paused') && live ? live : start
+  // Seeded text shows in the reader's language until someone changes it; display only.
+  const data: Store = React.useMemo(() => localizeSeed((open || st.status === 'paused') && live ? live : start, start, translated), [open, st.status, live, start, translated])
   const canEdit = open && !!st.canEdit
   const [refused, setRefused] = React.useState(false)
   const send = (change: (d: Store) => void) =>

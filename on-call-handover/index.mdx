@@ -1,6 +1,10 @@
 ---
 title: On-call handover
 description: "Tonight's on-call handover: the last 12 hours on your cluster, what is still failing, and the open items the next person acks."
+translations:
+  es:
+    title: Relevo de guardia
+    description: "El relevo de guardia de esta noche: las últimas 12 horas en tu clúster, lo que sigue fallando y los pendientes que confirma quien recibe la guardia."
 kunobi:
   page-layout: full
   stores: [on-call-handover-items]
@@ -14,9 +18,11 @@ import '@fontsource/figtree/700.css'
 import snapshot from './data/cluster.json'
 import handover from './data/handover.json'
 import items from './data/items.json'
+import itemsStart from './data/items.start.json'
+import itemsEs from './data/items.es.json'
 import { Handover } from './src/Handover'
 
-{/* Interface words per language. The page follows the system language and falls back to English. Cluster facts come from the cluster selected in your Kunobi tab once you allow it in your own preview, otherwise from the sample in data/cluster.json. The summary is in data/handover.json. The open items, who handed over and who took over live in the on-call-handover-items store, saved to data/items.json. */}
+{/* Interface words per language. The page follows the system language and falls back to English. Cluster facts come from the cluster selected in your Kunobi tab once you allow it in your own preview, otherwise from the sample in data/cluster.json. The summary is in data/handover.json. The open items, who handed over and who took over live in the on-call-handover-items store, saved to data/items.json; data/items.es.json translates the starting items (data/items.start.json) by id, and an item still as it started shows in Spanish. */}
 
 export const WORDS = {
   en: {
@@ -116,4 +122,6 @@ export const pickLang = () => {
   return WORDS[tag] ? tag : 'en'
 }
 
-<Handover snap={snapshot} text={handover} start={items} w={WORDS[pickLang()]} lang={pickLang()} />
+export const SEED = { es: itemsEs }
+
+<Handover snap={snapshot} text={handover} start={items} seed={itemsStart} translated={SEED[pickLang()]} w={WORDS[pickLang()]} lang={pickLang()} />

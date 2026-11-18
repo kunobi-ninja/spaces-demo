@@ -1,0 +1,19 @@
+{
+  "title": "Piso 4B · octubre",
+  "from": "2026-10-01",
+  "to": "2026-10-31",
+  "currency": "USD",
+  "people": [
+    { "name": "Amara", "color": "#f3aa08" },
+    { "name": "Diego", "color": "#0984c8" },
+    { "name": "Mei", "color": "#30ccd5" },
+    { "name": "Rohan", "color": "#8a6cf0" }
+  ],
+  "categories": [
+    { "name": "Rent", "color": "#0984c8" },
+    { "name": "Bills", "color": "#5bcbf9" },
+    { "name": "Groceries", "color": "#f3aa08" },
+    { "name": "Household", "color": "#30ccd5" },
+    { "name": "Takeaway", "color": "#e8794a" }
+  ]
+}

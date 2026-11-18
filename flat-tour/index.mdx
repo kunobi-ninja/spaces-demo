@@ -1,6 +1,10 @@
 ---
 title: Flat tour
 description: "Noa, Sam and Ines walk a 3D model of their flat and drop pins where something needs fixing, asking or loving."
+translations:
+  es:
+    title: Recorrido por el piso
+    description: "Noa, Sam e Ines recorren un modelo 3D de su piso y dejan chinchetas donde hay algo que arreglar, que preguntar o que les encanta."
 kunobi:
   page-layout: wide
   stores: [flat-tour-pins]
@@ -12,10 +16,12 @@ import '@fontsource/figtree/400.css'
 import '@fontsource/figtree/600.css'
 import '@fontsource/figtree/700.css'
 import flat from './data/flat.json'
+import flatEs from './data/flat.es.json'
 import start from './data/pins.start.json'
+import startEs from './data/pins.es.json'
 import { Tour } from './src/Tour'
 
-{/* The rooms, walls, furniture and flatmates live in data/flat.json (metres). The pins are in the flat-tour-pins store (centimetres), with a readable copy in data/pins.json. The page's words are below. */}
+{/* The rooms, walls, furniture and flatmates live in data/flat.json (metres), in Spanish in data/flat.es.json (same ids). The pins are in the flat-tour-pins store (centimetres), with a readable copy in data/pins.json; data/pins.es.json translates the starting pins (data/pins.start.json) by id: a pin still as it started shows in Spanish. The page's words are below. */}
 
 export const WORDS = {
   en: {
@@ -98,9 +104,12 @@ export const WORDS = {
   },
 }
 
-export const words = () => {
+export const DATA = { en: { flat }, es: { flat: flatEs, pins: startEs } }
+
+export const pickLang = () => {
   const tag = (typeof navigator !== 'undefined' && navigator.language) || 'en'
-  return WORDS[tag.toLowerCase().split('-')[0]] ?? WORDS.en
+  const lang = tag.toLowerCase().split('-')[0]
+  return WORDS[lang] ? lang : 'en'
 }
 
-<Tour flat={flat} start={start} words={words()} />
+<Tour flat={(DATA[pickLang()] ?? DATA.en).flat} start={start} translated={(DATA[pickLang()] ?? DATA.en).pins} words={WORDS[pickLang()]} />

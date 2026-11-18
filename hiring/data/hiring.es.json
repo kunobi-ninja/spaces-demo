@@ -1,0 +1,551 @@
+{
+  "company": "Linden & Co",
+  "today": "2026-11-04",
+  "interviewers": [
+    {
+      "id": "hannah",
+      "name": "Hannah Okafor",
+      "role": "Directora de Operaciones",
+      "color": "#0984c8"
+    },
+    {
+      "id": "marco",
+      "name": "Marco Bianchi",
+      "role": "Fundador",
+      "color": "#f3aa08"
+    },
+    {
+      "id": "sofia",
+      "name": "Sofia Lind",
+      "role": "Responsable de Diseño",
+      "color": "#30ccd5"
+    }
+  ],
+  "stages": [
+    "applied",
+    "screen",
+    "interview",
+    "offer",
+    "hired"
+  ],
+  "roles": [
+    {
+      "id": "support",
+      "title": "Responsable de Atención al Cliente",
+      "short": "Soporte",
+      "openings": 1,
+      "owner": "hannah",
+      "mustHaves": [
+        "3+ años en atención al cliente",
+        "Ha dirigido o acompañado a un equipo pequeño",
+        "Escritura clara y cercana"
+      ],
+      "criteria": [
+        {
+          "id": "empathy",
+          "label": "Empatía con el cliente"
+        },
+        {
+          "id": "writing",
+          "label": "Comunicación escrita"
+        },
+        {
+          "id": "leading",
+          "label": "Liderar un equipo"
+        },
+        {
+          "id": "problems",
+          "label": "Resolución de problemas"
+        }
+      ]
+    },
+    {
+      "id": "designer",
+      "title": "Diseñador/a de Producto Junior",
+      "short": "Diseño",
+      "openings": 2,
+      "owner": "sofia",
+      "mustHaves": [
+        "Portfolio con 2+ proyectos lanzados",
+        "Se maneja bien en Figma",
+        "Explica sus decisiones de diseño"
+      ],
+      "criteria": [
+        {
+          "id": "craft",
+          "label": "Oficio visual"
+        },
+        {
+          "id": "product",
+          "label": "Visión de producto"
+        },
+        {
+          "id": "communication",
+          "label": "Comunicación"
+        },
+        {
+          "id": "collaboration",
+          "label": "Colaboración"
+        }
+      ]
+    }
+  ],
+  "candidates": [
+    {
+      "id": "C1",
+      "name": "Amara Nwosu",
+      "role": "support",
+      "source": "Recomendación",
+      "applied": "2026-10-06",
+      "scorecards": [
+        {
+          "by": "hannah",
+          "recommend": "yes",
+          "scores": {
+            "empathy": 4,
+            "writing": 3,
+            "leading": 4,
+            "problems": 3
+          },
+          "note": "Dirigió un equipo de soporte de 6 personas en una tienda de muebles. Su protocolo de escalado es el mejor que hemos visto."
+        },
+        {
+          "by": "marco",
+          "recommend": "unsure",
+          "scores": {
+            "empathy": 4,
+            "writing": 3,
+            "leading": 2,
+            "problems": 3
+          },
+          "note": "Muy buena con los clientes. Cuando le pregunté cómo gestionó a alguien con bajo rendimiento, la respuesta se quedó en lo general."
+        },
+        {
+          "by": "sofia",
+          "recommend": "yes",
+          "scores": {
+            "empathy": 4,
+            "writing": 4,
+            "leading": 3,
+            "problems": 3
+          },
+          "note": "Su ejercicio escrito fue claro y amable. Trabajaría encantada con ella en el contenido del centro de ayuda."
+        }
+      ],
+      "next": {
+        "what": "Comida con el equipo de soporte",
+        "type": "meeting",
+        "date": "2026-11-06",
+        "with": "hannah"
+      }
+    },
+    {
+      "id": "C2",
+      "name": "Tom Hendricks",
+      "role": "support",
+      "source": "LinkedIn",
+      "applied": "2026-09-29",
+      "scorecards": [
+        {
+          "by": "hannah",
+          "recommend": "strong yes",
+          "scores": {
+            "empathy": 4,
+            "writing": 4,
+            "leading": 3,
+            "problems": 4
+          },
+          "note": "Tranquilo, ordenado y ya pensando en cómo cubrir los fines de semana."
+        },
+        {
+          "by": "marco",
+          "recommend": "yes",
+          "scores": {
+            "empathy": 3,
+            "writing": 4,
+            "leading": 3,
+            "problems": 4
+          },
+          "note": "Fuerte en procesos. Hizo buenas preguntas sobre cómo medimos la calidad del soporte."
+        },
+        {
+          "by": "sofia",
+          "recommend": "yes",
+          "scores": {
+            "empathy": 4,
+            "writing": 3,
+            "leading": 3,
+            "problems": 3
+          },
+          "note": "Fácil de hablar. Dio ejemplos concretos de cómo llevar los problemas de los clientes a producto."
+        }
+      ],
+      "next": {
+        "what": "Llamada de oferta: respuesta sobre la banda salarial",
+        "type": "offer",
+        "date": "2026-11-05",
+        "with": "marco"
+      }
+    },
+    {
+      "id": "C3",
+      "name": "Inés Duarte",
+      "role": "support",
+      "source": "Portal de empleo",
+      "applied": "2026-10-14",
+      "scorecards": [
+        {
+          "by": "hannah",
+          "recommend": "yes",
+          "scores": {
+            "empathy": 4,
+            "writing": 4,
+            "leading": 3,
+            "problems": 3
+          },
+          "note": "Escribió la respuesta más clara hasta ahora al ejercicio del cliente enfadado."
+        },
+        {
+          "by": "marco",
+          "recommend": "no",
+          "scores": {
+            "empathy": 3,
+            "writing": 2,
+            "leading": 3,
+            "problems": 2
+          },
+          "note": "La respuesta era educada pero larga. No tengo claro que aguante el ritmo en temporada alta."
+        }
+      ],
+      "next": {
+        "what": "Entrevista con Sofia",
+        "type": "interview",
+        "date": "2026-11-07",
+        "with": "sofia"
+      }
+    },
+    {
+      "id": "C4",
+      "name": "Kenji Watanabe",
+      "role": "support",
+      "source": "Página de empleo",
+      "applied": "2026-10-20",
+      "scorecards": [],
+      "next": {
+        "what": "Llamada de filtro con Hannah",
+        "type": "screen",
+        "date": "2026-11-05",
+        "with": "hannah"
+      }
+    },
+    {
+      "id": "C5",
+      "name": "Laura Becker",
+      "role": "support",
+      "source": "Portal de empleo",
+      "applied": "2026-11-01",
+      "scorecards": [],
+      "next": {
+        "what": "Revisar solicitud",
+        "type": "review",
+        "date": "2026-11-06",
+        "with": "hannah"
+      }
+    },
+    {
+      "id": "C6",
+      "name": "Samuel Osei",
+      "role": "support",
+      "declinedBy": "candidate",
+      "source": "Recomendación",
+      "applied": "2026-09-22",
+      "declinedReason": "Aceptó otra oferta más cerca de casa.",
+      "scorecards": [
+        {
+          "by": "hannah",
+          "recommend": "yes",
+          "scores": {
+            "empathy": 3,
+            "writing": 3,
+            "leading": 4,
+            "problems": 3
+          },
+          "note": "Jefe de equipo con experiencia, buen instinto para los turnos."
+        },
+        {
+          "by": "marco",
+          "recommend": "yes",
+          "scores": {
+            "empathy": 3,
+            "writing": 3,
+            "leading": 4,
+            "problems": 3
+          },
+          "note": "Sólido. Habría encajado bien."
+        }
+      ]
+    },
+    {
+      "id": "C7",
+      "name": "Rosa Martín",
+      "role": "support",
+      "source": "LinkedIn",
+      "applied": "2026-10-18",
+      "scorecards": [],
+      "next": {
+        "what": "Llamada de filtro (aplazada dos veces)",
+        "type": "screen",
+        "date": "2026-11-10",
+        "with": "hannah"
+      }
+    },
+    {
+      "id": "C8",
+      "name": "Daniel Kim",
+      "role": "support",
+      "source": "Página de empleo",
+      "applied": "2026-10-30",
+      "scorecards": [],
+      "next": {
+        "what": "Revisar solicitud",
+        "type": "review",
+        "date": "2026-11-06",
+        "with": "hannah"
+      }
+    },
+    {
+      "id": "D1",
+      "name": "Mei Chen",
+      "role": "designer",
+      "source": "Web de portfolio",
+      "applied": "2026-10-09",
+      "scorecards": [
+        {
+          "by": "sofia",
+          "recommend": "strong yes",
+          "scores": {
+            "craft": 4,
+            "product": 4,
+            "communication": 3,
+            "collaboration": 4
+          },
+          "note": "El caso del rediseño del pago demuestra verdadera visión de producto: quitó pasos, midió e iteró."
+        },
+        {
+          "by": "marco",
+          "recommend": "no",
+          "scores": {
+            "craft": 4,
+            "product": 1,
+            "communication": 3,
+            "collaboration": 3
+          },
+          "note": "Trabajo precioso, pero en el ejercicio en directo saltó a las pantallas antes de preguntar quién era el usuario."
+        },
+        {
+          "by": "hannah",
+          "recommend": "yes",
+          "scores": {
+            "craft": 3,
+            "product": 3,
+            "communication": 2,
+            "collaboration": 4
+          },
+          "note": "Muy bien con el equipo de soporte en la sesión en pareja. Algo callada al presentar al grupo."
+        }
+      ],
+      "next": {
+        "what": "Reunión de decisión",
+        "type": "decision",
+        "date": "2026-11-05",
+        "with": "sofia"
+      }
+    },
+    {
+      "id": "D2",
+      "name": "Oliver Grant",
+      "role": "designer",
+      "source": "Recomendación",
+      "applied": "2026-09-15",
+      "scorecards": [
+        {
+          "by": "sofia",
+          "recommend": "strong yes",
+          "scores": {
+            "craft": 4,
+            "product": 3,
+            "communication": 4,
+            "collaboration": 4
+          },
+          "note": "Piensa con claridad, trabajo tipográfico precioso."
+        },
+        {
+          "by": "marco",
+          "recommend": "yes",
+          "scores": {
+            "craft": 3,
+            "product": 3,
+            "communication": 4,
+            "collaboration": 4
+          },
+          "note": "Hizo las mejores preguntas de todo el proceso."
+        }
+      ],
+      "next": {
+        "what": "Primer día",
+        "type": "start",
+        "date": "2026-11-16",
+        "with": "sofia"
+      }
+    },
+    {
+      "id": "D3",
+      "name": "Aisha Rahman",
+      "role": "designer",
+      "source": "Portal de empleo",
+      "applied": "2026-10-02",
+      "scorecards": [
+        {
+          "by": "sofia",
+          "recommend": "yes",
+          "scores": {
+            "craft": 3,
+            "product": 4,
+            "communication": 4,
+            "collaboration": 3
+          },
+          "note": "Buenos hábitos de investigación de sus prácticas. El acabado visual llegará."
+        },
+        {
+          "by": "marco",
+          "recommend": "yes",
+          "scores": {
+            "craft": 3,
+            "product": 4,
+            "communication": 4,
+            "collaboration": 4
+          },
+          "note": "Explicó sus compromisos mejor que algunos candidatos sénior."
+        },
+        {
+          "by": "hannah",
+          "recommend": "yes",
+          "scores": {
+            "craft": 3,
+            "product": 3,
+            "communication": 4,
+            "collaboration": 4
+          },
+          "note": "Sería fácil sumarla a las sesiones de feedback de soporte."
+        }
+      ],
+      "next": {
+        "what": "Fecha límite de la oferta",
+        "type": "offer",
+        "date": "2026-11-09",
+        "with": "sofia"
+      }
+    },
+    {
+      "id": "D4",
+      "name": "Lucas Moreau",
+      "role": "designer",
+      "source": "Dribbble",
+      "applied": "2026-10-21",
+      "scorecards": [
+        {
+          "by": "sofia",
+          "recommend": "yes",
+          "scores": {
+            "craft": 4,
+            "product": 3,
+            "communication": 3,
+            "collaboration": 3
+          },
+          "note": "Ilustración y animación excepcionales. Menos flujos de producto lanzados."
+        }
+      ],
+      "next": {
+        "what": "Ejercicio en directo con Marco",
+        "type": "interview",
+        "date": "2026-11-06",
+        "with": "marco"
+      }
+    },
+    {
+      "id": "D5",
+      "name": "Nora Lindqvist",
+      "role": "designer",
+      "source": "Web de portfolio",
+      "applied": "2026-10-25",
+      "scorecards": [],
+      "next": {
+        "what": "Llamada para revisar el portfolio",
+        "type": "screen",
+        "date": "2026-11-05",
+        "with": "sofia"
+      }
+    },
+    {
+      "id": "D6",
+      "name": "Ethan Park",
+      "role": "designer",
+      "source": "Página de empleo",
+      "applied": "2026-11-02",
+      "scorecards": [],
+      "next": {
+        "what": "Revisar portfolio",
+        "type": "review",
+        "date": "2026-11-07",
+        "with": "sofia"
+      }
+    },
+    {
+      "id": "D7",
+      "name": "Zoe Adams",
+      "role": "designer",
+      "declinedBy": "us",
+      "source": "Portal de empleo",
+      "applied": "2026-09-30",
+      "declinedReason": "Gran ilustradora; para este puesto necesitamos más experiencia en diseño de producto.",
+      "scorecards": [
+        {
+          "by": "sofia",
+          "recommend": "no",
+          "scores": {
+            "craft": 3,
+            "product": 2,
+            "communication": 3,
+            "collaboration": 3
+          },
+          "note": "Ilustración preciosa, aún poco trabajo de producto."
+        },
+        {
+          "by": "marco",
+          "recommend": "no",
+          "scores": {
+            "craft": 3,
+            "product": 2,
+            "communication": 3,
+            "collaboration": 3
+          },
+          "note": "De acuerdo con Sofia."
+        }
+      ]
+    },
+    {
+      "id": "D8",
+      "name": "Felix Wagner",
+      "role": "designer",
+      "source": "LinkedIn",
+      "applied": "2026-10-28",
+      "scorecards": [],
+      "next": {
+        "what": "Revisar portfolio",
+        "type": "review",
+        "date": "2026-11-07",
+        "with": "sofia"
+      }
+    }
+  ]
+}

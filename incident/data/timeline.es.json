@@ -1,0 +1,56 @@
+{
+  "title": "Actualización de pgo atascada, despliegues de fern bloqueados",
+  "commander": "Guardia de plataforma",
+  "entries": {
+    "e01": {
+      "text": "Flux instaló pgo 5.8.6 en fern. Es la última release que Helm registró como desplegada."
+    },
+    "e02": {
+      "text": "El OCIRepository detectó pgo 5.8.7 (semver 5.*) y Flux actualizó la release. Helm registró la actualización como fallida."
+    },
+    "e03": {
+      "text": "fern-databases dejó de reconciliar porque fern-operators no estaba Ready. fern-apps hizo lo mismo a las 15:41. Las dos siguen bloqueadas desde entonces."
+    },
+    "e04": {
+      "text": "La actualización a 5.8.8 falló de la misma manera."
+    },
+    "e05": {
+      "text": "Flux empezó la actualización a 5.8.9. El nuevo Pod del operador arrancó con 5.8.9 en menos de un segundo y sigue siendo el Pod en ejecución, así que el chart sí se desplegó."
+    },
+    "e06": {
+      "text": "Helm dejó de esperar a los cinco minutos: \"context deadline exceeded\". La release v4 quedó marcada como fallida."
+    },
+    "e07": {
+      "text": "El nuevo operador renovó los pods de fern-pg: el repo host a las 20:05 y las dos instancias a las 20:06. Los tres están listos desde entonces, sin reinicios."
+    },
+    "e08": {
+      "text": "Flux dejó de reintentar la release. Desde las 16:57, fern-operators informa HealthCheckFailed en cada reconciliación."
+    },
+    "e09": {
+      "text": "Detectado al leer los eventos Warning del clúster: fern-operators ha fallado su health check 103.785 veces desde el 31 de agosto. Nadie se había dado cuenta."
+    },
+    "e10": {
+      "text": "Todo lo que está en ejecución está sano: pgo 1/1 en 5.8.9, fern-pg 2/2 instancias, fern-api 1/1, fern-worker 9/9 y ningún evento en el namespace fern. Lo que falló es el registro de Helm de la release."
+    },
+    "e11": {
+      "text": "Git main está en f18a671 y las cuatro Kustomizations de fern aplicaron esa revisión por última vez, así que hoy no hay nada esperando para desplegarse. El próximo cambio en .infra/databases o .infra/apps no se desplegará."
+    },
+    "e12": {
+      "text": "Propuesto, sin ejecutar: comprobar que los objetos de 5.8.9 coinciden con el chart y luego hacer que Flux reintente la release una vez (flux reconcile helmrelease pgo -n flux-system --force). Necesita responsable y una decisión."
+    }
+  },
+  "followups": {
+    "f1": {
+      "text": "Devolver pgo a Ready para que fern-operators, fern-databases y fern-apps vuelvan a reconciliar."
+    },
+    "f2": {
+      "text": "Dar al HelmRelease pgo un spec.timeout explícito y remediación de actualizaciones, para que una actualización lenta se reintente en vez de quedarse detenida."
+    },
+    "f3": {
+      "text": "Avisar cuando una Kustomization de Flux pase más de un día sin estar Ready. Esta pasó ocho meses sin que nadie la viera."
+    },
+    "f4": {
+      "text": "Decidir si pgo debe seguir automáticamente cada release 5.* o fijarse y subirse de versión a propósito."
+    }
+  }
+}

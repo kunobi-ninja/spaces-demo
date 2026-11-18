@@ -681,7 +681,7 @@ export function QuizNight({ quiz, saved, words }: { quiz: Quiz; saved: Scores; w
             </p>
           )}
           <p className="qn-note">
-            <b>{w.changeTitle}</b> {w.changeBody} <code>quiz-night/data/quiz.json</code>. {w.askYourAi}
+            <b>{w.changeTitle}</b> {w.changeBody} <code>{w.dataFile}</code>. {w.askYourAi}
             {w.prompts.map((p: string) => <span className="qn-prompt" key={p}>“{p}”</span>)}
           </p>
         </div>

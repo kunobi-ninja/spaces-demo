@@ -1,0 +1,231 @@
+{
+  "company": "Pedal Club",
+  "round": "Semilla · 1,2 M€",
+  "date": "Noviembre de 2026",
+  "problem": [
+    {
+      "value": "1 de cada 3",
+      "label": "bicis urbanas están paradas porque hay algo que arreglar"
+    },
+    {
+      "value": "9 días",
+      "label": "de espera media para conseguir hora en un taller del barrio"
+    },
+    {
+      "value": "0 €",
+      "label": "es lo que gasta la mayoría en mantenimiento hasta que la bici se rompe"
+    }
+  ],
+  "steps": [
+    {
+      "title": "Suscríbete",
+      "label": "14 € al mes, cancela cuando quieras"
+    },
+    {
+      "title": "Vamos a donde estés",
+      "label": "Una furgoneta en tu puerta o en tu oficina"
+    },
+    {
+      "title": "Pedalea",
+      "label": "Revisada cada trimestre, arreglada en 48 horas"
+    }
+  ],
+  "product": {
+    "label": "Próxima visita",
+    "visit": "Mar 18:30",
+    "status": "Furgoneta en camino · 12 min",
+    "plans": [
+      {
+        "name": "Ciudad",
+        "price": "14 €",
+        "note": "1 bici"
+      },
+      {
+        "name": "Familia",
+        "price": "29 €",
+        "note": "Hasta 4 bicis"
+      },
+      {
+        "name": "Oficina",
+        "price": "9 €",
+        "note": "Por bici, desde 20"
+      }
+    ],
+    "checks": [
+      "Frenos",
+      "Cadena",
+      "Cambios",
+      "Ruedas"
+    ]
+  },
+  "market": [
+    {
+      "label": "Adultos que van en bici cada semana en nuestras 6 ciudades objetivo",
+      "value": "2,4 M"
+    },
+    {
+      "label": "Pagarían por el mantenimiento",
+      "value": "610 mil"
+    },
+    {
+      "label": "Nuestro objetivo para 2028",
+      "value": "60 mil"
+    }
+  ],
+  "traction": {
+    "unit": "Suscriptores de pago",
+    "months": [
+      "may",
+      "jun",
+      "jul",
+      "ago",
+      "sep",
+      "oct",
+      "nov",
+      "dic",
+      "ene",
+      "feb",
+      "mar",
+      "abr",
+      "may",
+      "jun",
+      "jul",
+      "ago",
+      "sep",
+      "oct"
+    ],
+    "values": [
+      120,
+      210,
+      340,
+      470,
+      610,
+      760,
+      880,
+      1010,
+      1190,
+      1400,
+      1660,
+      1980,
+      2350,
+      2790,
+      3240,
+      3710,
+      4260,
+      4880
+    ],
+    "chips": [
+      {
+        "value": "4880",
+        "label": "suscriptores"
+      },
+      {
+        "value": "2,1 %",
+        "label": "de bajas al mes"
+      },
+      {
+        "value": "71",
+        "label": "NPS"
+      }
+    ]
+  },
+  "economics": {
+    "price": 14,
+    "parts": [
+      {
+        "label": "Tiempo de mecánico",
+        "value": 3.4
+      },
+      {
+        "label": "Piezas",
+        "value": 1.6
+      },
+      {
+        "label": "Furgoneta y combustible",
+        "value": 0.9
+      }
+    ],
+    "chips": [
+      {
+        "value": "58 %",
+        "label": "de margen bruto"
+      },
+      {
+        "value": "5 meses",
+        "label": "para recuperar la inversión"
+      },
+      {
+        "value": "38 €",
+        "label": "cuesta conseguir un ciclista"
+      }
+    ],
+    "priceLabel": "Por ciclista y mes: 14 €",
+    "marginLabel": "Lo que nos queda"
+  },
+  "team": [
+    {
+      "name": "Inés Ortega",
+      "role": "CEO",
+      "note": "Dirigió las operaciones de una flota de reparto de 40 furgonetas"
+    },
+    {
+      "name": "Tom Akers",
+      "role": "Jefe de taller",
+      "note": "12 años y dos talleres de bicis propios"
+    },
+    {
+      "name": "Mei Lin",
+      "role": "Producto",
+      "note": "Creó la app de reservas que usan los ciclistas"
+    },
+    {
+      "name": "Omar Haddad",
+      "role": "Crecimiento",
+      "note": "Llevó un servicio urbano de patinetes a 30 mil usuarios"
+    }
+  ],
+  "plan": [
+    {
+      "when": "T1 2027",
+      "what": "Lyon y Burdeos",
+      "vans": 12
+    },
+    {
+      "when": "T3 2027",
+      "what": "Planes para empresas en todas las ciudades",
+      "vans": 18
+    },
+    {
+      "when": "T1 2028",
+      "what": "Marsella y Lille",
+      "vans": 26
+    },
+    {
+      "when": "T3 2028",
+      "what": "60 mil suscriptores",
+      "vans": 30
+    }
+  ],
+  "ask": {
+    "amount": "1,2 M€",
+    "uses": [
+      {
+        "label": "Furgonetas y herramientas",
+        "value": 45
+      },
+      {
+        "label": "Mecánicos",
+        "value": 30
+      },
+      {
+        "label": "Marketing",
+        "value": 15
+      },
+      {
+        "label": "Colchón",
+        "value": 10
+      }
+    ],
+    "contact": "hello@pedalclub.example"
+  }
+}

@@ -2,6 +2,7 @@ import * as React from 'react'
 import { edit, useStore, useStoreStatus } from 'kunobi'
 import type { OnCallHandoverItemsStore } from '../types/on-call-handover-items.store'
 import { groupEvents, useCluster, type Snapshot, type EventGroup } from './live'
+import { localizeSeed } from './seed'
 
 /*
  * An on-call handover. Cluster facts come from the cluster selected in the person's tab, or from the
@@ -26,14 +27,15 @@ const STATUS: Status[] = ['open', 'acked', 'done']
 const HOUR = 3_600_000
 const KIND: Record<string, string> = { HelmRelease: 'HR', Kustomization: 'KS', StatefulSet: 'STS', HelmRepository: 'Repo' }
 
-export function Handover({ snap, text, start, w, lang }: { snap: Snapshot; text: HandoverText; start: Store; w: any; lang: string }) {
+export function Handover({ snap, text, start, seed, translated, w, lang }: { snap: Snapshot; text: HandoverText; start: Store; seed: Store; translated?: unknown; w: any; lang: string }) {
   const cluster = useCluster(snap)
   const stored = useStore(STORE) as Store | undefined
   const st = useStoreStatus(STORE) as { status?: string; canEdit?: boolean; saved?: boolean } | undefined
   // Without the store (web links, renders, other builds) the page shows the saved items, read-only.
   const open = (st?.status === 'open' || st?.status === 'paused') && stored !== undefined
   const canEdit = open && st?.status === 'open' && Boolean(st?.canEdit)
-  const data = (open ? stored : start) ?? start
+  // Seeded items show in the reader's language until someone changes them; display only.
+  const data = localizeSeed((open ? stored : start) ?? start, seed, translated)
   const items: Item[] = Object.entries(data.items ?? {})
     .map(([id, v]) => ({ ...v, id }))
     .sort((a, b) => (a.order ?? 99) - (b.order ?? 99))

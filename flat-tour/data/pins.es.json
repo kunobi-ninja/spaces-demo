@@ -1,0 +1,28 @@
+{
+  "pins": {
+    "p1": {
+      "text": "El grifo gotea toda la noche. ¿Llamamos al casero esta semana?"
+    },
+    "p2": {
+      "text": "Ha vuelto el moho en la esquina de encima de la bañera."
+    },
+    "p3": {
+      "text": "¿Más plantas en este rincón? Le da el sol por la mañana."
+    },
+    "p4": {
+      "text": "El mejor sitio del piso para las pelis del domingo."
+    },
+    "p5": {
+      "text": "¿Quién tiene la llave de repuesto del cuarto de las bicis?"
+    },
+    "p6": {
+      "text": "Una balda compartida para las especias, con etiquetas."
+    },
+    "p7": {
+      "text": "Mi radiador solo funciona a tope. ¿Alguien puede mirar la válvula?"
+    },
+    "p8": {
+      "text": "La ventana grande no cierra del todo. Por la noche entra corriente."
+    }
+  }
+}

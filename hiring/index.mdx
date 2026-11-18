@@ -1,6 +1,10 @@
 ---
 title: Hiring at Linden & Co
 description: "Two open roles, three interviewers: the pipeline, the scorecards side by side with where they disagree, and what happens this week."
+translations:
+  es:
+    title: Contratación en Linden & Co
+    description: "Dos puestos abiertos, tres entrevistadores: el proceso, las valoraciones lado a lado con dónde no coinciden, y lo que pasa esta semana."
 kunobi:
   page-layout: wide
   stores: [hiring-pipeline]
@@ -11,10 +15,11 @@ import '@fontsource/parkinsans/800.css'
 import '@fontsource/figtree/400.css'
 import '@fontsource/figtree/600.css'
 import data from './data/hiring.json'
+import dataEs from './data/hiring.es.json'
 import pipeline from './data/pipeline.json'
 import { Hiring } from './src/Hiring'
 
-{/* Interface words per language. The page follows the system language and falls back to English. Roles, candidates and scorecards live in data/hiring.json; each candidate's stage and quick verdicts live in the hiring-pipeline store, saved to data/pipeline.json. */}
+{/* Interface words per language. The page follows the system language and falls back to English. Roles, candidates and scorecards live in data/hiring.json, in Spanish in data/hiring.es.json (same ids); each candidate's stage and quick verdicts live in the hiring-pipeline store, saved to data/pipeline.json. */}
 
 export const WORDS = {
   en: {
@@ -84,16 +89,19 @@ export const WORDS = {
     funnel: 'Hasta dónde llegan', movedOn: 'avanzan',
     thisWeek: 'Esta semana', nothingThisWeek: 'Nada previsto esta semana.',
     change: 'Cómo cambiar esto',
-    changeLine: 'Candidatos y valoraciones están en data/hiring.json, las etapas en data/pipeline.json. Pídeselo a tu IA:',
+    changeLine: 'Candidatos y valoraciones están en data/hiring.es.json, las etapas en data/pipeline.json. Pídeselo a tu IA:',
     changeLineEdit: 'Mueve candidatos en el tablero o deja un veredicto rápido donde falte una valoración. O pídeselo a tu IA:',
     prompts: ['“Pasa a Kenji Watanabe a entrevista y agéndalo con Marco el lunes.”', '“Marco dice que sí a Lucas Moreau por ahora.”', '“Añade la valoración de Marco para Lucas Moreau: oficio 4, producto 2, comunicación 3, colaboración 3, recomienda sí.”'],
     sample: 'Datos de ejemplo: la empresa, las personas y las notas son inventadas.',
   },
 }
 
-export const pickWords = () => {
+export const DATA = { en: data, es: dataEs }
+
+export const pickLang = () => {
   const tag = (typeof navigator !== 'undefined' && navigator.language) || 'en'
-  return WORDS[tag.toLowerCase().split('-')[0]] ?? WORDS.en
+  const lang = tag.toLowerCase().split('-')[0]
+  return WORDS[lang] ? lang : 'en'
 }
 
-<Hiring data={data} pipeline={pipeline} w={pickWords()} />
+<Hiring data={DATA[pickLang()] ?? DATA.en} pipeline={pipeline} w={WORDS[pickLang()]} />

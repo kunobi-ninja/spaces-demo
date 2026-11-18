@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { edit, useStore, useStoreStatus } from 'kunobi'
 import { amount, hours, nights, scaled, shopping, slug, type Line, type Night, type Recipe, type WeekData } from './plan'
+import { localizeSeed } from './seed'
 
 const C = { midnight: '#06213f', sun: '#f3aa08', ocean: '#5bcbf9', tide: '#30ccd5', horizon: '#0984c8' }
 const COOKS = [C.sun, C.horizon, C.tide, '#e8794a', '#8a6cf0']
@@ -140,7 +141,7 @@ function Tick({ on }: { on: boolean }) {
   )
 }
 
-export function MealPlan({ startWeek, startShopping, recipes, aisles: recipeAisles, words: w }: { startWeek: WeekData; startShopping: ShoppingData; recipes: Recipe[]; aisles: string[]; words: Words }) {
+export function MealPlan({ startWeek, startShopping, translatedShopping, recipes, aisles: recipeAisles, words: w }: { startWeek: WeekData; startShopping: ShoppingData; translatedShopping?: unknown; recipes: Recipe[]; aisles: string[]; words: Words }) {
   // The stores when Kunobi has them; the starting data where it does not (previews, builds without live editing).
   const weekStore = useStore(WEEK) as WeekData | undefined
   const shopStore = useStore(SHOP) as ShoppingData | undefined
@@ -156,7 +157,8 @@ export function MealPlan({ startWeek, startShopping, recipes, aisles: recipeAisl
   const slots = React.useMemo(() => nights(weekStore ?? startWeek, recipes), [weekStore, startWeek, recipes])
   const week = slots.filter((n): n is Night => n.recipe !== null)
   const list = React.useMemo(() => shopping(week), [slots])
-  const shop = shopStore ?? startShopping
+  // Starting extras in the reader's language; display only, edits go to the store as typed.
+  const shop = React.useMemo(() => localizeSeed(shopStore ?? startShopping, startShopping, translatedShopping), [shopStore, startShopping, translatedShopping])
   const ticks = shop.ticks ?? {}
   const extras = shop.extras ?? []
   const aisles = [...recipeAisles, 'Other']
@@ -172,7 +174,7 @@ export function MealPlan({ startWeek, startShopping, recipes, aisles: recipeAisl
   const minutes = week.reduce((sum, n) => sum + n.recipe.minutes, 0)
   const perCook = cooks.map((c) => `${c} ${week.filter((n) => n.cook === c).length}`).join(' · ')
 
-  const fromLine = (l: Line): Item => ({ key: l.key, name: l.name, qty: amount(l.qty, l.unit), aisle: l.aisle, days: l.days, got: ticks[l.key]?.got === 'yes' })
+  const fromLine = (l: Line): Item => ({ key: l.key, name: l.name, qty: amount(l.qty, l.unit, (u) => w[u] ?? u), aisle: l.aisle, days: l.days, got: ticks[l.key]?.got === 'yes' })
   const fromExtra = (x: Extra): Item => ({ key: `extra-${x.id}`, name: x.name ?? '', qty: x.qty ?? '', aisle: x.aisle ?? 'Other', days: [], got: x.got === 'yes', extra: x.id })
   const extraItems = day ? [] : extras.filter((x) => x.name).map(fromExtra)
   const shown = [...(day ? list.filter((l) => l.days.includes(day)) : list).map(fromLine), ...extraItems]

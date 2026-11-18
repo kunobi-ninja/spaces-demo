@@ -1,6 +1,10 @@
 ---
 title: Music Jam
 description: "A step sequencer for friends: each person owns a track, everyone edits the same 16 steps, and every screen plays the same groove."
+translations:
+  es:
+    title: Jam musical
+    description: "Un secuenciador para amigos: cada persona lleva una pista, todos editan los mismos 16 pasos y todas las pantallas tocan el mismo ritmo."
 kunobi:
   page-layout: wide
   stores: [music-jam-pattern]
@@ -11,12 +15,15 @@ import '@fontsource/parkinsans/800.css'
 import '@fontsource/figtree/400.css'
 import '@fontsource/figtree/600.css'
 import saved from './data/pattern.json'
+import seed from './data/pattern.start.json'
+import seedEs from './data/pattern.es.json'
 import { MusicJam } from './src/Jam'
 
 {/*
   The pattern lives in the music-jam-pattern store: the tempo, the key, and one row per track with
   its instrument, owner, volume and 16 steps. data/pattern.json is its readable copy, shown when the
-  store cannot open. In steps, "." is a rest; drums use "x" (and "X" for a loud hit); bass, chords
+  store cannot open. data/pattern.es.json translates the starting track names (data/pattern.start.json)
+  by id: a track still named as it started shows in Spanish. In steps, "." is a rest; drums use "x" (and "X" for a loud hit); bass, chords
   and lead use 1 to 9, the note's place in the key's scale. These are only the page's own words.
 */}
 
@@ -93,4 +100,12 @@ export const WORDS = {
   },
 }
 
-<MusicJam saved={saved} words={WORDS} />
+export const SEED = { es: seedEs }
+
+export const pickLang = () => {
+  const tag = (typeof navigator !== 'undefined' && navigator.language) || 'en'
+  const lang = tag.toLowerCase().split('-')[0]
+  return WORDS[lang] ? lang : 'en'
+}
+
+<MusicJam saved={saved} seed={seed} translated={SEED[pickLang()]} words={WORDS} />

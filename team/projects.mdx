@@ -1,6 +1,10 @@
 ---
 title: Projects
 description: "Every task for opening the Riverside shop on one shared board: drag cards between columns, change who owns them, add new ones. Also as a table and a timeline."
+translations:
+  es:
+    title: Proyectos
+    description: "Todas las tareas para abrir la tienda de Riverside en un tablero compartido: arrastra tarjetas entre columnas, cambia quién se encarga, añade nuevas. También como tabla y cronograma."
 kunobi:
   page-layout: wide
   stores: [team-tasks]
@@ -11,10 +15,13 @@ import '@fontsource/parkinsans/800.css'
 import '@fontsource/figtree/400.css'
 import '@fontsource/figtree/600.css'
 import tasks from './data/tasks.json'
+import tasksStart from './data/tasks.start.json'
+import tasksEs from './data/tasks.es.json'
 import team from './data/team.json'
+import teamEs from './data/team.es.json'
 import { Projects } from './projects/ProjectsView'
 
-{/* The tasks live in the team-tasks store; Kunobi keeps a readable copy in data/tasks.json, which this page shows read-only where the store cannot open. The team is in data/team.json. The words below are the page's own; add a language by adding a key. */}
+{/* The tasks live in the team-tasks store; Kunobi keeps a readable copy in data/tasks.json, which this page shows read-only where the store cannot open. The team is in data/team.json. In Spanish, data/tasks.es.json translates the starting tasks (data/tasks.start.json) by id, and data/team.es.json has the team plus display names for projects, statuses and priorities. The words below are the page's own; add a language by adding a key. */}
 
 export const WORDS = {
   en: {
@@ -45,15 +52,18 @@ export const WORDS = {
     hint: 'Arrastra una tarjeta para moverla, o usa ‹ › en la tarjeta. Con una tarjeta seleccionada, las flechas también la mueven.',
     howTitle: 'Cómo cambiarlo',
     howBody: 'El equipo comparte un solo tablero, guardado con este espacio. Hay una copia legible en',
-    prompt1: "Pasa 'Order the deck oven' a Done",
-    prompt2: "Dale 'Set up the second till' a Chloe",
+    prompt1: "Pasa 'Encargar el horno de pisos' a Hecho",
+    prompt2: "Dale 'Instalar la segunda caja' a Chloe",
     prompt3: 'Añade una tarea para Chloe: pedir bolsas de papel, para el 20 de noviembre',
   },
 }
 
-export const words = () => {
+export const DATA = { en: { team }, es: { team: teamEs, tasks: tasksEs } }
+
+export const pickLang = () => {
   const tag = (typeof navigator !== 'undefined' && navigator.language) || 'en'
-  return WORDS[tag.toLowerCase().split('-')[0]] ?? WORDS.en
+  const lang = tag.toLowerCase().split('-')[0]
+  return WORDS[lang] ? lang : 'en'
 }
 
-<Projects seed={tasks} team={team} w={words()} />
+<Projects seed={tasks} seedStart={tasksStart} translated={(DATA[pickLang()] ?? DATA.en).tasks} team={(DATA[pickLang()] ?? DATA.en).team} w={WORDS[pickLang()]} />

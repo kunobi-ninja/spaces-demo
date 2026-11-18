@@ -1,0 +1,19 @@
+{
+  "tracks": {
+    "kick": {
+      "name": "Bombo"
+    },
+    "snare": {
+      "name": "Caja"
+    },
+    "hat": {
+      "name": "Charles"
+    },
+    "bass": {
+      "name": "Bajo"
+    },
+    "chords": {
+      "name": "Acordes"
+    }
+  }
+}

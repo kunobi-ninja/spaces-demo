@@ -2,8 +2,15 @@
 title: Dino Snack
 description: A little 3D game for a child who loves dinosaurs. Catch the fruit, dodge the rocks.
 prompts:
-  - "Make a Dino Snack for Luc\u00eda: her dinosaur is purple and it loves strawberries."
+  - "Make a Dino Snack for Lucía: her dinosaur is purple and it loves strawberries."
   - "Add a golden banana that gives an extra life."
+translations:
+  es:
+    title: Dino Snack
+    description: "Un pequeño juego en 3D para alguien a quien le encantan los dinosaurios. Atrapa la fruta, esquiva las rocas."
+    prompts:
+      - "Haz un Dino Snack para Lucía: su dinosaurio es morado y le encantan las fresas."
+      - "Añade un plátano dorado que dé una vida extra."
 kunobi:
   page-layout: wide
 ---
@@ -12,13 +19,68 @@ import { DinoSnack } from './src/DinoSnack'
 
 export const KID = 'Mateo'
 
-# Dino Snack for {KID}
+{/* The page's and the game's words per language. The page follows the system language and falls back to English. */}
 
-<DinoSnack kid={KID} />
+export const WORDS = {
+  en: {
+    heading: (kid) => `Dino Snack for ${kid}`,
+    howTo: <p>Move the dinosaur with your finger, the mouse or the <strong>arrow keys</strong>. Catch ten pieces of fruit in its mouth and keep out from under the rocks: the red spot on the path shows where one is about to land. Three rocks and the dinosaur needs a nap. <strong>Space</strong> starts a round and <strong>M</strong> turns the sound off and on.</p>,
+    change: <p>Change <code>KID</code> at the top of this page to make the game for someone else.</p>,
+    game: {
+      game: 'Dino Snack game',
+      title: 'Dino Snack',
+      snacks: 'Snacks',
+      lives: (n) => `${n} ${n === 1 ? 'life' : 'lives'}`,
+      soundOn: 'Sound on · M',
+      soundOff: 'Sound off · M',
+      win: (kid) => `Well done, ${kid}!`,
+      lose: 'Oh no, rocks!',
+      intro: (kid, goal) => `Hi ${kid}! The dinosaur is hungry. Catch ${goal} snacks!`,
+      won: (goal) => `The dinosaur ate ${goal} snacks. Full and happy!`,
+      lost: (score, kid) => `You caught ${score} ${score === 1 ? 'snack' : 'snacks'}. Try again, ${kid}!`,
+      play: 'Play',
+      again: 'Play again',
+      how: 'Move with your finger, the mouse or the arrow keys. Eat the fruit, dodge the rocks!',
+      yum: 'Yum!',
+      ouch: 'Ouch!',
+    },
+  },
+  es: {
+    heading: (kid) => `Dino Snack para ${kid}`,
+    howTo: <p>Mueve el dinosaurio con el dedo, el ratón o las <strong>flechas</strong>. Atrapa diez piezas de fruta con su boca y no te quedes debajo de las rocas: la mancha roja del camino indica dónde va a caer una. Con tres rocas, el dinosaurio necesita una siesta. <strong>Espacio</strong> empieza una ronda y <strong>M</strong> quita y pone el sonido.</p>,
+    change: <p>Cambia <code>KID</code> al principio de esta página para hacer el juego para otra persona.</p>,
+    game: {
+      game: 'Juego Dino Snack',
+      title: 'Dino Snack',
+      snacks: 'Bocados',
+      lives: (n) => `${n} ${n === 1 ? 'vida' : 'vidas'}`,
+      soundOn: 'Con sonido · M',
+      soundOff: 'Sin sonido · M',
+      win: (kid) => `¡Muy bien, ${kid}!`,
+      lose: '¡Oh, no, rocas!',
+      intro: (kid, goal) => `¡Hola, ${kid}! El dinosaurio tiene hambre. ¡Atrapa ${goal} bocados!`,
+      won: (goal) => `El dinosaurio se ha comido ${goal} bocados. ¡Lleno y feliz!`,
+      lost: (score, kid) => `Has atrapado ${score} ${score === 1 ? 'bocado' : 'bocados'}. ¡Inténtalo otra vez, ${kid}!`,
+      play: 'Jugar',
+      again: 'Jugar otra vez',
+      how: 'Muévete con el dedo, el ratón o las flechas. ¡Come la fruta y esquiva las rocas!',
+      yum: '¡Ñam!',
+      ouch: '¡Ay!',
+    },
+  },
+}
 
-Move the dinosaur with your finger, the mouse or the **arrow keys**. Catch ten pieces of fruit in
-its mouth and keep out from under the rocks: the red spot on the path shows where one is about
-to land. Three rocks and the dinosaur needs a nap. **Space** starts a round and **M** turns the
-sound off and on.
+export const pickWords = () => {
+  const tag = (typeof navigator !== 'undefined' && navigator.language) || 'en'
+  return WORDS[tag.toLowerCase().split('-')[0]] ?? WORDS.en
+}
 
-Change `KID` at the top of this page to make the game for someone else.
+export const W = pickWords()
+
+# {W.heading(KID)}
+
+<DinoSnack kid={KID} w={W.game} />
+
+{W.howTo}
+
+{W.change}

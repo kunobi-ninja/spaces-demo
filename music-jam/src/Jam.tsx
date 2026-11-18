@@ -2,6 +2,7 @@ import * as React from 'react'
 import * as kunobi from 'kunobi'
 import { createSynth } from './synth'
 import { KEYS, STEPS, STORE, cells, chordName, clockStep, lookOf, noteName, setCell, stepAt, type Pattern, type Track } from './pattern'
+import { localizeSeed } from './seed'
 
 /*
  * A step sequencer for a few friends. The pattern lives in the music-jam-pattern store: each track
@@ -95,17 +96,17 @@ const label = (t: Track, key: string | null, c: string) => {
   return t.instrument === 'chords' ? chordName(key, n) : noteName(key, n)
 }
 
-export function MusicJam({ saved, words }: { saved: Pattern; words: Record<string, Words> }) {
+export function MusicJam({ saved, seed, translated, words }: { saved: Pattern; seed: Pattern; translated?: unknown; words: Record<string, Words> }) {
   const w = React.useMemo(() => {
     const tag = (typeof navigator !== 'undefined' && navigator.language) || 'en'
     return words[tag.toLowerCase().split('-')[0]] ?? words.en
   }, [words])
 
-  // The shared pattern while its store is open, otherwise the last saved copy.
+  // The shared pattern while its store is open, otherwise the last saved copy. Starting track names show in the reader's language.
   const stored = usePattern(STORE)
   const status = usePatternStatus(STORE)
   const keeping = status.status === 'open' && !!stored
-  const pattern: Pattern = keeping ? stored! : saved
+  const pattern: Pattern = React.useMemo(() => localizeSeed(keeping ? stored! : saved, seed, translated), [keeping, stored, saved, seed, translated])
   const canEdit = keeping && status.canEdit
   const tempo = clamp(pattern.tempo ?? 104, 60, 180)
   const key = pattern.key ?? 'A minor'

@@ -1,0 +1,28 @@
+{
+  "items": {
+    "agent-chart": {
+      "title": "La ruta del chart de agent ya no existe",
+      "detail": "La nueva revisión de apps (01:13 UTC) no tiene apps/agent/deploy/helm/agent-memory, así que el HelmRelease está en SourceNotReady. La revisión 1293 del 9 nov sigue en marcha; no habrá upgrades hasta que la ruta coincida con el repo."
+    },
+    "vmalertmanager-sa": {
+      "title": "Sin Alertmanager: falta el ServiceAccount",
+      "detail": "vmalertmanager-cluster quiere 1 pod y tiene 0. No se pueden crear pods: el ServiceAccount monitoring/vmalertmanager-cluster no existe. Las alertas de vmalert no se entregan."
+    },
+    "pgo-upgrade": {
+      "title": "Falló el upgrade de pgo, la cadena de shop está bloqueada",
+      "detail": "El upgrade de Helm de shop/pgo (pgo@5.8.9) acabó en context deadline exceeded. shop-operators falla su health check por eso; shop-databases y shop-apps esperan a que se resuelva."
+    },
+    "onechart-dns": {
+      "title": "El repositorio onechart no resuelve",
+      "detail": "chart.onechart.dev devuelve no such host desde el DNS del clúster. Elimina el HelmRepository si nadie lo usa."
+    },
+    "storage-api-restart": {
+      "title": "storage-api-0 se reinició a las 17:30",
+      "detail": "Un reinicio en el periodo, motivo de salida Error; 112 reinicios en total. Espera a ver si hay otro antes de actuar."
+    },
+    "node-shell-cleanup": {
+      "title": "12 pods node-shell olvidados",
+      "detail": "Pods de depuración que quedaron en kube-system. Tres de ellos terminan y se reinician en bucle (unos 2.700 reinicios cada uno). Se pueden borrar sin riesgo cuando nadie los use."
+    }
+  }
+}

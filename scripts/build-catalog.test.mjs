@@ -134,3 +134,41 @@ test('rejects an id that is not a page', async () => {
     await assert.rejects(buildCatalog({ repo: copy, out: join(copy, 'out'), release: 'x' }), /pitch-deck: not a page/)
   })
 })
+
+test('translations come from the front matter, prompts only where the page has them', () => {
+  assert.deepEqual(demo('trip').translations.es, {
+    title: 'Fin de semana en Lisboa',
+    description: demo('trip').translations.es.description,
+    prompts: ['Añade el Oceanário el domingo a las 15:00, de parte de Leo', 'Marca las entradas de los Jerónimos como reservadas'],
+  })
+  assert.match(demo('trip').translations.es.description, /Lisboa/)
+  assert.equal(demo('hiring').translations.es.title, 'Contratación en Linden & Co')
+  assert.ok(!('prompts' in demo('hiring').translations.es))
+})
+
+async function withPage(frontMatter, run) {
+  await withGallery(['tiny'], async (copy) => {
+    await mkdir(join(copy, 'tiny'))
+    await writeFile(join(copy, 'tiny', 'index.mdx'), `---\ntitle: Tiny\ndescription: A tiny page\nprompts: [Hi]\n${frontMatter}---\n`)
+    await cp(join(copy, 'assets/covers/trip.jpg'), join(copy, 'assets/covers/tiny.jpg'))
+    await run(() => buildCatalog({ repo: copy, out: join(copy, 'out'), release: 'x' }))
+  })
+}
+
+test('a page without translations has none in its entry', async () => {
+  await withPage('', async (build) => {
+    const built = await build()
+    assert.ok(!('translations' in built.demos.find((d) => d.id === 'tiny')))
+  })
+})
+
+test('rejects a translation without a title or description, or with prompts that are not a list', async () => {
+  for (const [yaml, error] of [
+    ['translations:\n  es:\n    description: Una página\n', /tiny: translations.es needs a title/],
+    ['translations:\n  es:\n    title: Mini\n', /tiny: translations.es needs a description/],
+    ['translations:\n  es:\n    title: Mini\n    description: Una página\n    prompts: Hola\n', /tiny: translations.es.prompts must be a list/],
+    ['translations: [es]\n', /tiny: translations must map a language/],
+  ]) {
+    await withPage(yaml, (build) => assert.rejects(build(), error))
+  }
+})

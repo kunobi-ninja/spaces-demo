@@ -1,0 +1,100 @@
+{
+  "guests": {
+    "G01": {
+      "note": "Cumple 40 ese mismo día"
+    },
+    "G02": {
+      "note": "Anfitrión. Da el discurso a las 20:15"
+    },
+    "G03": {
+      "note": "La madre de Elena. Trae las velas"
+    },
+    "G04": {
+      "note": "El padre de Elena. Necesita un sitio cerca de la puerta (por la cadera)"
+    },
+    "G05": {
+      "diet": "Sin gluten",
+      "household": "Marsh (padres)",
+      "note": "La madre de Sam. Celíaca, avisa a la cocina"
+    },
+    "G06": {
+      "household": "Marsh (padres)",
+      "note": "El padre de Sam"
+    },
+    "G07": {
+      "diet": "Vegetariana",
+      "note": "La hermana de Elena. Se encarga de las tarjetas de las mesas"
+    },
+    "G09": {
+      "note": "El hermano de Sam. Un brindis corto después del discurso"
+    },
+    "G10": {
+      "diet": "Vegetariana",
+      "note": "La pareja de Owen. Dijo que sí el 27 de octubre, aún sin sitio"
+    },
+    "G11": {
+      "note": "La tía de Elena, viene en avión desde Girona"
+    },
+    "G12": {
+      "note": "El primo de Elena"
+    },
+    "G13": {
+      "diet": "Pescetariana"
+    },
+    "G15": {
+      "diet": "Alergia a frutos secos",
+      "note": "Grave. Lleva un EpiPen, la cocina lo sabe"
+    },
+    "G16": {
+      "diet": "Vegetariana"
+    },
+    "G18": {
+      "diet": "Vegana"
+    },
+    "G19": {
+      "note": "Acompañante de Ines, confirmado tarde"
+    },
+    "G21": {
+      "diet": "Sin gluten"
+    },
+    "G23": {
+      "note": "Fuera por trabajo ese fin de semana"
+    },
+    "G24": {
+      "diet": "Vegetariana"
+    },
+    "G25": {
+      "note": "Vienen con sus dos hijos, de 6 y 9 años"
+    },
+    "G27": {
+      "note": "Al final no puede venir (se mudó a Berlín)"
+    },
+    "G28": {
+      "diet": "Sin gluten"
+    },
+    "G30": {
+      "note": "Pendiente de encontrar canguro"
+    },
+    "G32": {
+      "diet": "Vegana"
+    },
+    "G38": {
+      "diet": "Vegetariana"
+    },
+    "G39": {
+      "note": "Puede que esté volviendo de Lisboa"
+    },
+    "G40": {
+      "diet": "Pescetariana"
+    },
+    "G42": {
+      "diet": "Vegetariana"
+    },
+    "G43": {
+      "diet": "Sin lactosa"
+    },
+    "G45": {
+      "note": "En Montreal hasta diciembre"
+    }
+  }
+}

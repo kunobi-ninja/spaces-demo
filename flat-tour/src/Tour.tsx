@@ -3,6 +3,7 @@ import * as THREE from 'three'
 import { edit, useStore, useStoreStatus } from 'kunobi'
 import { observeGestures } from '@vixi/helpers/input'
 import type { FlatTourPinsStore } from '../types/flat-tour-pins.store'
+import { localizeSeed } from './seed'
 
 /** Pins the flatmates drop in the flat: where (x, y, z in centimetres), what kind, what they said, and whether it is dealt with. */
 export const STORE = 'flat-tour-pins'
@@ -37,13 +38,13 @@ function KindIcon({ kind, resolved }: { kind: Kind; resolved?: boolean }) {
 type Draft = { x: number; y: number; z: number; room: string }
 type Api = { flyTo(x: number, y: number, z: number): void; overview(): void }
 
-export function Tour({ flat, start, words: w }: { flat: Flat; start: FlatTourPinsStore; words: any }) {
+export function Tour({ flat, start, translated, words: w }: { flat: Flat; start: FlatTourPinsStore; translated?: unknown; words: any }) {
   const live = useStore(STORE) as FlatTourPinsStore | undefined
   const status = useStoreStatus(STORE)
   // Without the store (other builds, previews), show the starting pins, read-only.
   const open = (status?.status === 'open' || status?.status === 'paused') && live !== undefined
   const canEdit = open && status?.status === 'open' && Boolean(status?.canEdit)
-  const pins = (open ? live : start)?.pins ?? {}
+  const pins = React.useMemo(() => localizeSeed(open ? live : start, start, translated)?.pins ?? {}, [open, live, start, translated])
 
   const [selected, setSelected] = React.useState<string | null>(null)
   const [draft, setDraft] = React.useState<Draft | null>(null)

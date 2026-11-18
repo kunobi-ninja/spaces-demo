@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { edit, useStore, useStoreStatus } from 'kunobi'
 import type { ContentCalendarPostsStore } from '../types/content-calendar-posts.store'
+import { localizeSeed } from './seed'
 
 /** The posts live in this store; `data/posts.json` is its saved, readable copy. */
 export const STORE = 'content-calendar-posts'
@@ -61,13 +62,13 @@ export const toPosts = (data: ContentCalendarPostsStore | undefined): Post[] =>
     link: p.link ?? '',
   }))
 
-export function ContentCalendar({ posts: saved, settings, words, initial }: { posts: ContentCalendarPostsStore; settings: Settings; words: Words; initial?: string }) {
+export function ContentCalendar({ posts: saved, seed, translated, settings, words, initial }: { posts: ContentCalendarPostsStore; seed: ContentCalendarPostsStore; translated?: unknown; settings: Settings; words: Words; initial?: string }) {
   const stored = useStore(STORE) as ContentCalendarPostsStore | undefined
   const store = useStoreStatus(STORE)
   // Without the store (other builds, previews), show the last saved copy, read-only.
   const live = (store?.status === 'open' || store?.status === 'paused') && stored !== undefined
   const canEdit = live && store?.status === 'open' && Boolean(store?.canEdit)
-  const posts = React.useMemo(() => toPosts(live ? stored : saved), [live, stored, saved])
+  const posts = React.useMemo(() => toPosts(localizeSeed(live ? stored : saved, seed, translated)), [live, stored, saved, seed, translated])
   const change = (id: string, values: Partial<Pick<Post, 'date' | 'status'>>) =>
     edit(STORE, (d: ContentCalendarPostsStore) => {
       Object.assign(d.posts[id], values)

@@ -5,6 +5,14 @@ prompts:
   - "Add 18.50 for groceries paid by Amara, split between everyone."
   - "Diego was out for curry night: take him out of that split."
   - "Mei paid Amara back 150 today."
+translations:
+  es:
+    title: Piso 4B · octubre
+    description: "Cuatro compañeros de piso, un mes: el alquiler según el tamaño de cada habitación, facturas y compra, y los mínimos pagos para quedar en paz."
+    prompts:
+      - "Añade 18,50 de compra pagado por Amara, entre todos."
+      - "Diego no estuvo en la noche de curry: quítalo de ese gasto."
+      - "Mei le devolvió hoy 150 a Amara."
 kunobi:
   page-layout: wide
   stores: [expenses-ledger]
@@ -17,10 +25,14 @@ import '@fontsource/parkinsans/800.css'
 import '@fontsource/figtree/400.css'
 import '@fontsource/figtree/600.css'
 import saved from './data/expenses.json'
+import seedStart from './data/expenses.start.json'
+import seedEs from './data/expenses.es.json'
 import group from './data/group.json'
+import groupEs from './data/group.es.json'
 import { buildLedger, formatSplit, parseSplit } from './src/ledger'
+import { localizeSeed } from './src/seed'
 
-{/* Interface words per language. The page follows the system language and falls back to English. Expenses and payments live in the expenses-ledger store; data/expenses.json is its readable copy. */}
+{/* Interface words per language. The page follows the system language and falls back to English. Expenses and payments live in the expenses-ledger store; data/expenses.json is its readable copy. data/expenses.es.json translates the starting expenses (data/expenses.start.json) by id, so an expense still as it started shows in Spanish; categories stay as stored and show translated through WORDS cats. The group (title, people, categories) is data/group.json, in Spanish in data/group.es.json. */}
 
 export const STORE = 'expenses-ledger'
 
@@ -61,6 +73,7 @@ export const WORDS = {
     none: 'Nada coincide con estos filtros.',
     add: 'Añadir gasto', newTitle: 'Nuevo gasto', editTitle: 'Corregir gasto',
     fWhat: 'Concepto', fAmount: 'Importe', fDate: 'Fecha', fPaidBy: 'Pagó', fCategory: 'Categoría', fSplit: 'Entre',
+    cats: { Rent: 'Alquiler', Bills: 'Facturas', Groceries: 'Compra', Household: 'Hogar', Takeaway: 'Comida para llevar' },
     whatHint: 'Compra', save: 'Guardar', cancel: 'Cancelar', edit: 'Editar', del: 'Borrar', sure: '¿Borrarlo?', keep: 'No',
     incomplete: 'Falta el concepto, el importe o alguien con quien dividir.',
     notSaved: 'No se guardó', saving: 'Guardando…', readOnly: 'Copia guardada · solo lectura',
@@ -93,6 +106,10 @@ export const formatters = (code) => {
     range: (a, b) => `${range.format(date(a))} – ${range.format(date(b))}`,
   }
 }
+
+export const GROUP = { en: group, es: groupEs }
+export const SEED = { es: seedEs }
+export const catName = (w, c) => w.cats?.[c] ?? c
 
 export const PEOPLE = group.people.map((p) => p.name)
 export const COLOR = Object.fromEntries(group.people.map((p) => [p.name, p.color]))
@@ -148,7 +165,7 @@ export const ExpenseForm = ({ initial, title, w, onSave, onCancel }) => {
         <select value={paidBy} onChange={(e) => setPaidBy(e.target.value)}>{PEOPLE.map((p) => <option key={p} value={p}>{p}</option>)}</select>
       </label>
       <label className="f-cat"><span>{w.fCategory}</span>
-        <select value={category} onChange={(e) => setCategory(e.target.value)}>{group.categories.map((c) => <option key={c.name} value={c.name}>{c.name}</option>)}</select>
+        <select value={category} onChange={(e) => setCategory(e.target.value)}>{group.categories.map((c) => <option key={c.name} value={c.name}>{catName(w, c.name)}</option>)}</select>
       </label>
       <fieldset className="f-split">
         <legend>{w.fSplit}</legend>
@@ -250,7 +267,7 @@ export const ByCategory = ({ ledger, w, f }) => {
       <div className="bars">
         {rows.map((r) => (
           <div className="bar-row" key={r.name}>
-            <span className="bar-label"><i style={{ background: r.color }} />{r.name}</span>
+            <span className="bar-label"><i style={{ background: r.color }} />{catName(w, r.name)}</span>
             <span className="bar-track"><span className="bar-fill" style={{ width: `${(r.cents / max) * 100}%`, background: r.color }} /></span>
             <span className="bar-value">{f.money(r.cents)}<small>{Math.round((r.cents / Math.max(ledger.total, 1)) * 100)}%</small></span>
           </div>
@@ -313,7 +330,7 @@ export const List = ({ ledger, rows: stored, w, f, canEdit, onSave, onDelete }) 
         <button className={`chip${!cat ? ' on' : ''}`} onClick={() => setCat(null)} aria-pressed={!cat}>{w.all}</button>
         {cats.map((c) => (
           <button key={c.name} className={`chip${cat === c.name ? ' on' : ''}`} onClick={() => setCat(cat === c.name ? null : c.name)} aria-pressed={cat === c.name}>
-            <i className="dot" style={{ background: c.color }} />{c.name}
+            <i className="dot" style={{ background: c.color }} />{catName(w, c.name)}
           </button>
         ))}
       </div>
@@ -341,7 +358,7 @@ export const List = ({ ledger, rows: stored, w, f, canEdit, onSave, onDelete }) 
                 <div className="row-main">
                   <div className="row-what">{e.what}</div>
                   <div className="row-meta">
-                    <span>{e.category}</span>
+                    <span>{catName(w, e.category)}</span>
                     <span className="row-pay"><Face name={e.paidBy} size={16} />{w.paidBy} {e.paidBy}</span>
                     {!all && (
                       <span className="row-split">
@@ -388,7 +405,8 @@ export const Expenses = () => {
   const canEdit = open && Boolean(status?.canEdit)
   const saving = open && status?.saved === false
   const data = open ? live : saved
-  const ledger = React.useMemo(() => buildLedger(data, group), [data])
+  // Starting expenses in the reader's language; display only. The edit form starts from the stored row.
+  const ledger = React.useMemo(() => buildLedger(localizeSeed(data, seedStart, SEED[code]), group), [data, code])
   const last = ledger.expenses.reduce((m, e) => (e.date > m ? e.date : m), group.to)
   const span = { from: group.from, to: last }
   const [adding, setAdding] = React.useState(false)
@@ -580,7 +598,7 @@ export const Expenses = () => {
             {saving && <div className="kind saving" role="status"><i />{w.saving}</div>}
             {!open && <div className="kind">{w.readOnly}</div>}
           </div>
-          <h1>{group.title}</h1>
+          <h1>{(GROUP[code] ?? group).title}</h1>
           <div className="top-meta">{f.range(span.from, span.to)}</div>
           <div className="faces">{group.people.map((p) => <Face key={p.name} name={p.name} size={30} />)}</div>
         </div>

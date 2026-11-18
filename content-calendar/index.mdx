@@ -1,6 +1,10 @@
 ---
 title: Content calendar
 description: "A café's November posts in one place: a month view, a week list and a board, all from one file."
+translations:
+  es:
+    title: Calendario de contenido
+    description: "Las publicaciones de noviembre de una cafetería en un solo sitio: vista de mes, lista por semanas y tablero, todo desde un archivo."
 kunobi:
   page-layout: wide
   stores: [content-calendar-posts]
@@ -11,11 +15,14 @@ import '@fontsource/parkinsans/800.css'
 import '@fontsource/figtree/400.css'
 import '@fontsource/figtree/600.css'
 import posts from './data/posts.json'
+import postsStart from './data/posts.start.json'
+import postsEs from './data/posts.es.json'
 import settings from './data/calendar.json'
+import settingsEs from './data/calendar.es.json'
 import { useStoreStatus } from 'kunobi'
 import { ContentCalendar, STORE } from './src/calendar'
 
-{/* Every post lives in the content-calendar-posts store, saved to data/posts.json; the team, colours and today's date in data/calendar.json. */}
+{/* Every post lives in the content-calendar-posts store, saved to data/posts.json; data/posts.es.json translates the starting posts (data/posts.start.json) by id, and each draft in drafts/ has a <draft>.es.md copy. The team, colours and today's date are in data/calendar.json, in Spanish in data/calendar.es.json (same ids). */}
 
 export const WORDS = {
   en: {
@@ -42,18 +49,22 @@ export const WORDS = {
   },
 }
 
-export const words = () => {
+export const DATA = { en: { settings }, es: { settings: settingsEs, posts: postsEs } }
+
+export const pickLang = () => {
   const tag = (typeof navigator !== 'undefined' && navigator.language) || 'en'
-  return WORDS[tag.toLowerCase().split('-')[0]] ?? WORDS.en
+  const lang = tag.toLowerCase().split('-')[0]
+  return WORDS[lang] ? lang : 'en'
 }
 
 export const Page = ({ view }) => {
-  const w = words()
+  const w = WORDS[pickLang()]
+  const data = DATA[pickLang()] ?? DATA.en
   const store = useStoreStatus(STORE)
   const canEdit = store?.status === 'open' && Boolean(store?.canEdit)
   return (
     <>
-      <ContentCalendar posts={posts} settings={settings} words={w} initial={view} />
+      <ContentCalendar posts={posts} seed={postsStart} translated={data.posts} settings={data.settings} words={w} initial={view} />
       <div className="cc-how">
         <style>{`
           .cc-how { width: min(var(--kunobi-prose-width, 1200px), 100%); margin: 0 auto; box-sizing: border-box; padding: 0 24px 40px; font-family: Figtree, system-ui, sans-serif; color: hsl(var(--muted-foreground)); font-size: 14px; line-height: 1.5; }

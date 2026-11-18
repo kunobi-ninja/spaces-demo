@@ -1,0 +1,61 @@
+{
+  "expenses": {
+    "e01": {
+      "what": "Alquiler de octubre"
+    },
+    "e03": {
+      "what": "Compra grande"
+    },
+    "e04": {
+      "what": "Productos de limpieza"
+    },
+    "e05": {
+      "what": "Papel higiénico y jabón de manos"
+    },
+    "e06": {
+      "what": "Verduras del mercado"
+    },
+    "e07": {
+      "what": "Noche de comida para llevar (Mei no estaba)"
+    },
+    "e08": {
+      "what": "Luz (factura de septiembre)"
+    },
+    "e09": {
+      "what": "Arroz, aceite y especias"
+    },
+    "e10": {
+      "what": "Agua"
+    },
+    "e12": {
+      "what": "Recambio de fregona"
+    },
+    "e13": {
+      "what": "Pizza para el cumpleaños de Diego"
+    },
+    "e14": {
+      "what": "Pan, huevos y leche"
+    },
+    "e15": {
+      "what": "Bombona de gas"
+    },
+    "e16": {
+      "what": "Detergente para la ropa"
+    },
+    "e17": {
+      "what": "Compra grande"
+    },
+    "e18": {
+      "what": "Fontanero para el desagüe de la ducha"
+    },
+    "e19": {
+      "what": "Noche de curry"
+    },
+    "e20": {
+      "what": "Fruta y café"
+    },
+    "e21": {
+      "what": "Bolsas de basura y lavavajillas"
+    }
+  }
+}

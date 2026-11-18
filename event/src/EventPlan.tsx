@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { useStore, useStoreStatus, edit } from 'kunobi'
 import type { EventGuestsStore } from '../types/event-guests.store'
+import { localizeSeed } from './seed'
 
 /*
  * The event page: a header, the seating plan with what needs attention, replies and dietary
@@ -72,6 +73,13 @@ const DIET_COLORS: Record<string, string> = {
   'Lactose-free': '#b07a4f',
   Halal: '#8a6cf0',
   'Nut allergy': C.coral,
+  // The same diets as data/guests.es.json words them.
+  Vegetariana: '#5fb36b',
+  Vegana: '#2f8f5b',
+  Pescetariana: C.ocean,
+  'Sin gluten': C.sun,
+  'Sin lactosa': '#b07a4f',
+  'Alergia a frutos secos': C.coral,
 }
 const DARK_TEXT = new Set([C.sun, C.tide, C.ocean, '#5fb36b'])
 
@@ -154,7 +162,7 @@ function seatPositions(table: Table, count: number) {
 
 /* ---------- the page ---------- */
 
-export function EventPlan({ event, start, w }: { event: EventData; start: EventGuestsStore; w: any }) {
+export function EventPlan({ event, start, seed, translated, w }: { event: EventData; start: EventGuestsStore; seed: EventGuestsStore; translated?: unknown; w: any }) {
   const [selected, setSelected] = React.useState<string | null>(null)
   const [hovered, setHovered] = React.useState<string | null>(null)
   const [active, setActive] = React.useState<string | null>(null)
@@ -166,7 +174,9 @@ export function EventPlan({ event, start, w }: { event: EventData; start: EventG
   const status = (useStoreStatus(STORE) ?? {}) as Status
   const open = status.status === 'open' && !!live?.guests
   const paused = status.status === 'paused' && !!live?.guests
-  const rows = open || paused ? (live as EventGuestsStore).guests : start.guests
+  const raw = open || paused ? (live as EventGuestsStore) : start
+  // Starting guests in the reader's language; display only, edits go to the store as typed.
+  const rows = React.useMemo(() => localizeSeed(raw, seed, translated).guests, [raw, seed, translated])
   const actor = open ? status.actor : undefined
   const isVisitor = actor?.kind === 'visitor'
   const host = open && !!status.canEdit && !isVisitor
@@ -257,7 +267,7 @@ export function EventPlan({ event, start, w }: { event: EventData; start: EventG
 
   const selectedGuest = selected ? byId.get(selected) : null
   const moving = host && selectedGuest ? selectedGuest : null
-  const mine = answerOwn && actor ? rows[actor.id] : undefined
+  const mine = answerOwn && actor ? raw.guests[actor.id] : undefined
 
   return (
     <div className="ev">
@@ -413,7 +423,7 @@ export function EventPlan({ event, start, w }: { event: EventData; start: EventG
                   ? event.sides.map((s) => (
                       <span key={s.id}>
                         <i style={{ background: s.color }} />
-                        {s.id}
+                        {w.sides?.[s.id] ?? s.id}
                       </span>
                     ))
                   : [...dietsUsed.map((d) => (
@@ -612,7 +622,7 @@ function GuestCard({ g, guests, tables, color, w, host, onChange, onClose, onPic
         </span>
         <div>
           <b>{g.name}</b>
-          <span className="ev-muted">{g.side || w.fromLink}</span>
+          <span className="ev-muted">{g.side ? (w.sides?.[g.side] ?? g.side) : w.fromLink}</span>
         </div>
       </div>
       {host ? (
@@ -752,7 +762,7 @@ function Replies({ guests, w, host, onAnswer, onPick }: { guests: Guest[]; w: an
               <button className="ev-name" onClick={() => onPick(g.id)}>
                 {g.name}
               </button>
-              <span className="ev-muted">{g.note ?? g.side}</span>
+              <span className="ev-muted">{g.note ?? (w.sides?.[g.side] ?? g.side)}</span>
               {host && (
                 <span className="ev-quick">
                   <button className="yes" onClick={() => onAnswer(g.id, 'yes')}>

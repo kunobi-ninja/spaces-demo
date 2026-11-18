@@ -3,6 +3,7 @@ import { useDiagram, useSource, useStore, useStoreStatus, edit } from 'kunobi'
 import SNAP from '../data/cluster.json'
 import { buildIndex } from './build.js'
 import { projectLive } from './project.js'
+import { localizeSeed } from './seed'
 import {
   type Index, type Referrer, type Effect, TARGET_KINDS, SHORT,
   decodeSnapshot, finalizeLive, parseId, referrersOf, summarize, podCounts, refCounts, rowKey, restartCmd,
@@ -68,7 +69,7 @@ const fmtWhen = (iso: string, locale: string) => {
   }
 }
 
-export const BlastRadius = ({ w, locale }: { w: any; locale: string }) => {
+export const BlastRadius = ({ w, locale, seed, translated }: { w: any; locale: string; seed?: unknown; translated?: unknown }) => {
   const { index, live, allow } = useIndex()
   const [q, setQ] = React.useState('')
   const [kind, setKind] = React.useState<string>('all')
@@ -76,7 +77,9 @@ export const BlastRadius = ({ w, locale }: { w: any; locale: string }) => {
   const [limit, setLimit] = React.useState(60)
   const pods = React.useMemo(() => podCounts(index), [index])
   const refsN = React.useMemo(() => refCounts(index), [index])
-  const review = useStore(STORE) as any
+  const stored = useStore(STORE)
+  // Seeded notes show in the reader's language until someone changes them; display only.
+  const review = React.useMemo(() => localizeSeed(stored, seed, translated), [stored, seed, translated]) as any
   const status = useStoreStatus(STORE) as any
   const canEdit = status?.status === 'open' && !!status?.canEdit
   const saving = status?.status === 'open' && status?.saved === false

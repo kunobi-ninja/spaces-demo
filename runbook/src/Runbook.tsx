@@ -3,6 +3,7 @@ import { edit, useStore, useStoreStatus } from 'kunobi'
 import type { RunbookRunsStore } from '../types/runbook-runs.store'
 import { STEP_IDS, blockedBy, chartSources, nextAction, runChecks, type Check, type Cluster, type HR, type Result, type StepId } from './cluster'
 import { useCluster } from './live'
+import { localizeSeed } from './seed'
 
 /*
  * A runbook for a stuck Flux HelmRelease. Each step reads the cluster selected in the tab (live in
@@ -68,14 +69,15 @@ function Command({ cmd, w }: { cmd: string; w: any }) {
   )
 }
 
-export function Runbook({ snapshot, saved, w }: { snapshot: Cluster; saved: RunbookRunsStore; w: any }) {
+export function Runbook({ snapshot, saved, translated, w }: { snapshot: Cluster; saved: RunbookRunsStore; translated?: unknown; w: any }) {
   const src = useCluster(snapshot)
   const cluster = src.cluster
   const stored = useStore(STORE) as RunbookRunsStore | undefined
   const status = useStoreStatus(STORE) as any
   const open = (status?.status === 'open' || status?.status === 'paused') && stored !== undefined
   const canEdit = open && status?.status === 'open' && Boolean(status?.canEdit)
-  const log: RunbookRunsStore = (open ? stored : saved) ?? { runs: {}, checks: {} }
+  // Seeded runs show in the reader's language until someone changes them; display only.
+  const log: RunbookRunsStore = localizeSeed((open ? stored : saved) ?? { runs: {}, checks: {} }, saved, translated)
 
   const stuck = cluster.helmreleases.filter((h) => h.ready?.s !== 'True')
   const [pick, setPick] = React.useState<string | null>(null)

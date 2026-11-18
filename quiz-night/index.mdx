@@ -1,6 +1,10 @@
 ---
 title: Quiz Night
 description: "A team quiz for the living room: the host shows the questions, everyone answers from their own phone or laptop, and the scores stay from one Friday to the next."
+translations:
+  es:
+    title: Noche de preguntas
+    description: "Un concurso por equipos para el salón: quien presenta muestra las preguntas, cada uno responde desde su móvil o portátil, y los puntos se guardan de un viernes al siguiente."
 kunobi:
   page-layout: wide
   stores: [quiz-night-scores]
@@ -19,11 +23,13 @@ import '@fontsource/parkinsans/800.css'
 import '@fontsource/figtree/400.css'
 import '@fontsource/figtree/600.css'
 import quiz from './data/quiz.json'
+import quizEs from './data/quiz.es.json'
 import saved from './data/scores.json'
 import { QuizNight } from './src/QuizNight'
 
 {/*
-  The questions and teams are in data/quiz.json. The scores live in the quiz-night-scores store;
+  The questions and teams are in data/quiz.json, in Spanish in data/quiz.es.json (same ids and
+  answers). The scores live in the quiz-night-scores store;
   data/scores.json is its readable copy, shown when the store cannot open. The round itself runs in
   the quiz-night-round room: only the host moves it on (stage), each player picks their own team,
   and each answer is set once. These are only the page's own words.
@@ -86,6 +92,7 @@ export const WORDS = {
     shareBody: 'Share a link to this page. Each player picks a team and answers on their own screen.',
     changeTitle: 'Make it yours.',
     changeBody: 'The questions, rounds and teams are in',
+    dataFile: 'quiz-night/data/quiz.json',
     askYourAi: 'Edit it, or ask your AI:',
     prompts: ['Give the Owls 2 points', 'Replace round 3 with four questions about the 90s', 'Add a team called the Badgers in green'],
   },
@@ -112,7 +119,7 @@ export const WORDS = {
     wins0: 'Sin victorias',
     wins1: '1 victoria',
     winsN: '{n} victorias',
-    lastQuiz: 'Última noche: ganaron {team} con {n}.',
+    lastQuiz: 'La última noche ganó el equipo {team}, con {n}.',
     roundOf: 'Ronda {n} de {total}',
     questionOf: 'Pregunta {n} de {total}',
     questionsInRound: '{n} preguntas',
@@ -145,9 +152,18 @@ export const WORDS = {
     shareBody: 'Comparte un enlace a esta página. Cada jugador elige equipo y responde en su pantalla.',
     changeTitle: 'Hazlo tuyo.',
     changeBody: 'Las preguntas, rondas y equipos están en',
+    dataFile: 'quiz-night/data/quiz.es.json',
     askYourAi: 'Edítalo o pide a tu IA:',
-    prompts: ['Da 2 puntos a los Owls', 'Cambia la ronda 3 por cuatro preguntas sobre los 90', 'Añade un equipo llamado Badgers en verde'],
+    prompts: ['Da 2 puntos a los Búhos', 'Cambia la ronda 3 por cuatro preguntas sobre los 90', 'Añade un equipo llamado Tejones en verde'],
   },
 }
 
-<QuizNight quiz={quiz} saved={saved} words={WORDS} />
+export const DATA = { en: quiz, es: quizEs }
+
+export const pickLang = () => {
+  const tag = (typeof navigator !== 'undefined' && navigator.language) || 'en'
+  const lang = tag.toLowerCase().split('-')[0]
+  return WORDS[lang] ? lang : 'en'
+}
+
+<QuizNight quiz={DATA[pickLang()] ?? DATA.en} saved={saved} words={WORDS} />

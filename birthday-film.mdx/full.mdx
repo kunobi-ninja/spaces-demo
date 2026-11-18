@@ -2,6 +2,10 @@
 presentation: timeline
 title: A birthday film
 description: "A 30-second birthday film for a friend, made from a name, an age and three memories."
+translations:
+  es:
+    title: Una película de cumpleaños
+    description: "Una película de cumpleaños de 30 segundos para una amiga, hecha con un nombre, una edad y tres recuerdos."
 size: 1920x1080
 fps: 30
 targets:
@@ -16,7 +20,8 @@ targets:
 export { createCut } from "./src/index"
 import { Opening, Memory, Cake, Finale } from "./src/index"
 import song from "./music/song.mdx"
-import film from "./data/film.json"
+import filmEn from "./data/film.json"
+import filmEs from "./data/film.es.json"
 
 export const music = { score: song, gain: 0.8 }
 
@@ -25,17 +30,34 @@ export const ordinal = (n) => {
   return `${n}${s}`
 }
 
+{/* The film's own words. It follows the system language and falls back to English. */}
+
+export const WORDS = {
+  en: { turns: (age) => `turns ${age}`, happy: (age, to) => `Happy ${ordinal(age)}, ${to}`, from: (name) => `from ${name}` },
+  es: { turns: (age) => `cumple ${age}`, happy: (age, to) => `¡Felices ${age}, ${to}!`, from: (name) => `de parte de ${name}` },
+}
+
+export const DATA = { en: filmEn, es: filmEs }
+
+export const pickLang = () => {
+  const tag = (typeof navigator !== "undefined" && navigator.language) || "en"
+  const lang = tag.toLowerCase().split("-")[0]
+  return WORDS[lang] ? lang : "en"
+}
+
+export const w = WORDS[pickLang()]
+export const film = DATA[pickLang()] ?? DATA.en
 export const m = film.memories
 
 A thirty-second birthday film in a paper-cut world: the name pops up over the
 hills, three memories unfold as pop-up cards, candles shaped like the age light
 on the beat, and a card signs off. Change `data/film.json` (the name, the age,
-three memories and who it is from) and the whole film follows. Icons: tent,
-bike, pasta, plane, music, heart, star.
+three memories and who it is from; `data/film.es.json` in Spanish) and the whole
+film follows. Icons: tent, bike, pasta, plane, music, heart, star.
 
 {/* Opening: the hills rise, the bunting drops, the name pops on the bar. */}
 <Scene id="open" duration="4s" music="intro" energy={1}>
-<Opening eyebrow={film.intro} name={film.to} line={`turns ${film.age}`} pop="1.4s" colors={film.colors} offset={0} />
+<Opening eyebrow={film.intro} name={film.to} line={w.turns(film.age)} pop="1.4s" colors={film.colors} offset={0} />
 <Sound at="0.1s" name="paper.slide" gain={0.45} />
 <Sound at="0.55s" name="paper.rustle" gain={0.35} />
 <Sound at="@pop" name="pop" gain={0.55} />
@@ -75,7 +97,7 @@ bike, pasta, plane, music, heart, star.
 
 {/* The card signs off on the final chord. */}
 <Scene id="finale" duration="4s" music="outro" energy={3}>
-<Finale headline={`Happy ${ordinal(film.age)}, ${film.to}`} from={`from ${film.from}`} burst="0.3s" colors={film.colors} offset={26} />
+<Finale headline={w.happy(film.age, film.to)} from={w.from(film.from)} burst="0.3s" colors={film.colors} offset={26} />
 <Sound at="0.05s" name="paper.swish" gain={0.4} />
 <Sound at="@burst" name="sparkle" gain={0.5} />
 <Sound at="@burst" name="impact.bell" gain={0.3} />

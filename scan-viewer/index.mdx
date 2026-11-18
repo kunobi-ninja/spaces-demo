@@ -1,6 +1,10 @@
 ---
 title: Felipe in 3D
 description: "A 3D Gaussian splat scan you can turn, zoom and light, right in the page."
+translations:
+  es:
+    title: Felipe, en 3D
+    description: "Un escaneo 3D con Gaussian splats que puedes girar, acercar e iluminar, aquí mismo en la página."
 kunobi:
   page-layout: wide
 ---
@@ -10,11 +14,12 @@ import '@fontsource/figtree/400.css'
 import '@fontsource/figtree/600.css'
 import { Viewer } from './src/Viewer'
 import scene from './data/scene.json'
+import sceneEs from './data/scene.es.json'
 import part1 from './assets/felipe-1.spz'
 import part2 from './assets/felipe-2.spz'
 import part3 from './assets/felipe-3.spz'
 
-{/* The scan, in parts under 16 MiB each. To show your own scan, convert it to SPZ v3, put it in assets/, import it here, and adjust data/scene.json. */}
+{/* The scan, in parts under 16 MiB each. To show your own scan, convert it to SPZ v3, put it in assets/, import it here, and adjust data/scene.json (its words in Spanish are in data/scene.es.json). */}
 
 export const MODELS = [part1, part2, part3]
 
@@ -36,21 +41,25 @@ export const WORDS = {
     front: 'Frente', side: 'Lado', close: 'Primer plano',
     reveal: 'Revelar', points: 'Dispersar', light: 'Luz',
     change: 'Cómo cambiarlo',
-    changeLine: 'La cámara, el título y el crédito están en data/scene.json. Pide a tu IA:',
+    changeLine: 'La cámara, el título y el crédito están en data/scene.es.json. Pide a tu IA:',
     prompts: ['“Añade una vista desde arriba al visor.”', '“Usa mi escaneo assets/silla.spz, encuadrado de frente.”'],
   },
 }
 
-export const words = () => {
+export const DATA = { en: scene, es: sceneEs }
+
+export const pickLang = () => {
   const tag = (typeof navigator !== 'undefined' && navigator.language) || 'en'
-  return WORDS[tag.toLowerCase().split('-')[0]] ?? WORDS.en
+  const lang = tag.toLowerCase().split('-')[0]
+  return WORDS[lang] ? lang : 'en'
 }
 
 export const Page = () => {
-  const w = words()
+  const lang = pickLang()
+  const w = WORDS[lang]
   return (
     <>
-      <Viewer scene={scene} models={MODELS} words={w} />
+      <Viewer scene={DATA[lang] ?? DATA.en} models={MODELS} words={w} />
       <div className="change">
         <style>{`
           .change { width: min(var(--kunobi-prose-width, 1200px), 100%); margin: 0 auto; box-sizing: border-box; padding: 0 24px 40px; font-family: Figtree, system-ui, sans-serif; }

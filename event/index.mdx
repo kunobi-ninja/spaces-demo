@@ -5,6 +5,14 @@ prompts:
   - "Mark Erin Walsh as coming and seat her at table D."
   - "Lena can’t come: free her seat and put Raf Costa there."
   - "Seat Priya Shah at table A, next to the Novaks."
+translations:
+  es:
+    title: Elena cumple 40
+    description: "Una fiesta de 40 cumpleaños en el salón del barrio para 45 invitados: quién viene, dónde se sienta cada uno, la noche hora a hora y un presupuesto pequeño."
+    prompts:
+      - "Marca a Erin Walsh como que viene y siéntala en la mesa D."
+      - "Lena no viene: libera su sitio y pon ahí a Raf Costa."
+      - "Sienta a Priya Shah en la mesa A, junto a los Novak."
 kunobi:
   page-layout: wide
   stores: [event-guests]
@@ -16,10 +24,13 @@ import '@fontsource/parkinsans/800.css'
 import '@fontsource/figtree/400.css'
 import '@fontsource/figtree/600.css'
 import event from './data/event.json'
+import eventEs from './data/event.es.json'
 import guests from './data/guests.json'
+import guestsStart from './data/guests.start.json'
+import guestsEs from './data/guests.es.json'
 import { EventPlan } from './src/EventPlan'
 
-{/* Interface words per language. The page follows the system language and falls back to English. Replies, party sizes, diets and tables live in the event-guests LiveStore (readable copy: data/guests.json); the tables, evening and budget live in data/event.json. */}
+{/* Interface words per language. The page follows the system language and falls back to English. Replies, party sizes, diets and tables live in the event-guests LiveStore (readable copy: data/guests.json); data/guests.es.json translates the starting guests (data/guests.start.json) by id, so a guest still as they started shows in Spanish. The tables, evening and budget live in data/event.json, in Spanish in data/event.es.json (same ids). */}
 
 export const WORDS = {
   en: {
@@ -68,6 +79,7 @@ export const WORDS = {
     declined: (name, t) => `${name} no viene pero sigue teniendo sitio en ${t}`,
     split: (h, ts) => `La familia ${h} está repartida entre ${ts}`,
     notSeated: 'Sin sitio todavía', legend: 'Grupos',
+    sides: { Family: 'Familia', Friends: 'Amigos', Work: 'Trabajo', School: 'Colegio' },
     doorHint: 'Entrada', dance: 'Pista de baile', bar: 'Bufé y bebidas', cake: 'Tarta',
     rsvp: { yes: 'Vienen', maybe: 'Quizás', no: 'No vienen', none: 'Sin respuesta' },
     household: 'Familia', table: 'Mesa', noTable: 'Sin sitio todavía', plusOneOf: 'Acompañante de', close: 'Cerrar',
@@ -76,15 +88,19 @@ export const WORDS = {
     caterer: 'Para la cocina', dinners: 'platos', standard: 'Sin dieta especial',
     evening: 'La noche', budget: 'Presupuesto', planned: 'Previsto', paid: 'Pagado', leftToPay: 'Falta pagar', perGuest: 'por invitado',
     change: 'Cómo cambiar esto',
-    changeLine: 'Las respuestas y los sitios se guardan al cambiarlos aquí. La noche y el presupuesto están en data/event.json. O pídeselo a tu IA:',
+    changeLine: 'Las respuestas y los sitios se guardan al cambiarlos aquí. La noche y el presupuesto están en data/event.es.json. O pídeselo a tu IA:',
     prompts: ['“Marca a Erin Walsh como que viene y siéntala en la mesa D.”', '“Lena no viene: libera su sitio y pon ahí a Raf Costa.”', '“Sienta a Priya Shah en la mesa A, junto a los Novak.”'],
     linkLine: 'Quien abra un enlace que compartas desde este ordenador solo puede responder por sí mismo.',
   },
 }
 
-export const pickWords = () => {
+export const DATA = { en: event, es: eventEs }
+export const SEED = { es: guestsEs }
+
+export const pickLang = () => {
   const tag = (typeof navigator !== 'undefined' && navigator.language) || 'en'
-  return WORDS[tag.toLowerCase().split('-')[0]] ?? WORDS.en
+  const lang = tag.toLowerCase().split('-')[0]
+  return WORDS[lang] ? lang : 'en'
 }
 
-<EventPlan event={event} start={guests} w={pickWords()} />
+<EventPlan event={DATA[pickLang()] ?? DATA.en} start={guests} seed={guestsStart} translated={SEED[pickLang()]} w={WORDS[pickLang()]} />

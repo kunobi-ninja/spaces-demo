@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { TileMap, edit, useStore, useStoreStatus } from 'kunobi'
 import type { HomeHuntTakesStore } from '../types/home-hunt-takes.store'
+import { localizeSeed } from './seed'
 
 /** Each person's take on a home (keen, maybe, no, and a note), saved for both of them. */
 export const STORE = 'home-hunt-takes'
@@ -174,14 +175,15 @@ function Meter({ p, f, w }: { p: Person; f: Fit; w: any }) {
   )
 }
 
-export function HomeHunt({ homes, setup, takes: start, words: w }: { homes: Home[]; setup: Setup; takes: HomeHuntTakesStore; words: any }) {
+export function HomeHunt({ homes, setup, takes: start, seed, translated, words: w }: { homes: Home[]; setup: Setup; takes: HomeHuntTakesStore; seed: HomeHuntTakesStore; translated?: unknown; words: any }) {
   const people = setup.people
   const live = useStore(STORE) as HomeHuntTakesStore | undefined
   const status = useStoreStatus(STORE)
   // Without the store (other builds, previews), show the last saved takes, read-only.
   const open = (status?.status === 'open' || status?.status === 'paused') && live !== undefined
   const canEdit = open && status?.status === 'open' && Boolean(status?.canEdit)
-  const takes = (open ? live : start)?.takes ?? {}
+  // Starting notes in the reader's language; display only, edits go to the store as typed.
+  const takes = React.useMemo(() => localizeSeed(open ? live : start, seed, translated)?.takes ?? {}, [open, live, start, seed, translated])
   const takeOf = (home: string, person: string) => takes[`${home}-${person}`]
   const setTake = (home: string, person: string, change: Partial<Take>) =>
     edit(STORE, (d: HomeHuntTakesStore) => {
@@ -588,7 +590,7 @@ export function HomeHunt({ homes, setup, takes: start, words: w }: { homes: Home
         </section>
 
         <div className="how">
-          {w.how[0]} <code>home-hunt/data/homes.json</code> {w.how[1]} <code>home-hunt/data/people.json</code>. {w.how[3]}{' '}
+          {w.how[0]} <code>{w.files.homes}</code> {w.how[1]} <code>{w.files.people}</code>. {w.how[3]}{' '}
           <code>home-hunt/data/takes.json</code>.{canEdit ? ` ${w.how[4]}` : ''} {w.how[2]}
           {w.prompts.map((p: string) => <q key={p}>“{p}”</q>)}
         </div>

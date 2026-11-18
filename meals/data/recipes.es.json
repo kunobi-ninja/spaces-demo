@@ -1,0 +1,115 @@
+{
+  "aisles": ["Produce", "Meat and fish", "Dairy and eggs", "Bakery", "Pantry", "Frozen"],
+  "recipes": [
+    {
+      "id": "lentil-soup", "name": "Sopa de lentejas rojas", "minutes": 35, "serves": 4, "icon": "pot", "tags": ["veggie", "kid-friendly"],
+      "ingredients": [
+        { "name": "Lentejas rojas", "qty": 300, "unit": "g", "aisle": "Pantry" },
+        { "name": "Zanahorias", "qty": 3, "unit": "pcs", "aisle": "Produce" },
+        { "name": "Cebolla", "qty": 1, "unit": "pcs", "aisle": "Produce" },
+        { "name": "Ajo", "qty": 2, "unit": "cloves", "aisle": "Produce" },
+        { "name": "Tomate troceado", "qty": 1, "unit": "tin", "aisle": "Pantry" },
+        { "name": "Caldo de verduras", "qty": 1000, "unit": "ml", "aisle": "Pantry" },
+        { "name": "Pan de corteza crujiente", "qty": 1, "unit": "loaf", "aisle": "Bakery" }
+      ]
+    },
+    {
+      "id": "chicken-traybake", "name": "Pollo al limón en bandeja", "minutes": 50, "serves": 4, "icon": "tray", "tags": ["kid-friendly"],
+      "ingredients": [
+        { "name": "Contramuslos de pollo", "qty": 800, "unit": "g", "aisle": "Meat and fish" },
+        { "name": "Patatas nuevas", "qty": 750, "unit": "g", "aisle": "Produce" },
+        { "name": "Limones", "qty": 2, "unit": "pcs", "aisle": "Produce" },
+        { "name": "Cebolla morada", "qty": 2, "unit": "pcs", "aisle": "Produce" },
+        { "name": "Ajo", "qty": 4, "unit": "cloves", "aisle": "Produce" },
+        { "name": "Aceite de oliva", "qty": 3, "unit": "tbsp", "aisle": "Pantry" }
+      ]
+    },
+    {
+      "id": "veggie-tacos", "name": "Tacos de frijoles negros", "minutes": 25, "serves": 4, "icon": "taco", "tags": ["veggie", "quick"],
+      "ingredients": [
+        { "name": "Frijoles negros", "qty": 2, "unit": "tins", "aisle": "Pantry" },
+        { "name": "Tortillas de maíz", "qty": 12, "unit": "pcs", "aisle": "Bakery" },
+        { "name": "Aguacates", "qty": 2, "unit": "pcs", "aisle": "Produce" },
+        { "name": "Limas", "qty": 2, "unit": "pcs", "aisle": "Produce" },
+        { "name": "Cebolla morada", "qty": 1, "unit": "pcs", "aisle": "Produce" },
+        { "name": "Feta", "qty": 150, "unit": "g", "aisle": "Dairy and eggs" },
+        { "name": "Maíz dulce", "qty": 200, "unit": "g", "aisle": "Frozen" }
+      ]
+    },
+    {
+      "id": "salmon-rice", "name": "Salmón teriyaki con arroz", "minutes": 30, "serves": 4, "icon": "bowl", "tags": ["quick"],
+      "ingredients": [
+        { "name": "Lomos de salmón", "qty": 4, "unit": "pcs", "aisle": "Meat and fish" },
+        { "name": "Arroz jazmín", "qty": 300, "unit": "g", "aisle": "Pantry" },
+        { "name": "Brócoli", "qty": 1, "unit": "head", "aisle": "Produce" },
+        { "name": "Salsa de soja", "qty": 4, "unit": "tbsp", "aisle": "Pantry" },
+        { "name": "Miel", "qty": 2, "unit": "tbsp", "aisle": "Pantry" },
+        { "name": "Cebolletas", "qty": 1, "unit": "bunch", "aisle": "Produce" }
+      ]
+    },
+    {
+      "id": "homemade-pizza", "name": "Noche de pizza casera", "minutes": 45, "serves": 4, "icon": "pizza", "tags": ["veggie", "kid-friendly"],
+      "ingredients": [
+        { "name": "Masa de pizza", "qty": 4, "unit": "pcs", "aisle": "Bakery" },
+        { "name": "Tomate triturado", "qty": 500, "unit": "ml", "aisle": "Pantry" },
+        { "name": "Mozzarella", "qty": 2, "unit": "balls", "aisle": "Dairy and eggs" },
+        { "name": "Tomates cherry", "qty": 250, "unit": "g", "aisle": "Produce" },
+        { "name": "Albahaca", "qty": 1, "unit": "bunch", "aisle": "Produce" },
+        { "name": "Pimientos", "qty": 2, "unit": "pcs", "aisle": "Produce" }
+      ]
+    },
+    {
+      "id": "mushroom-risotto", "name": "Risotto de champiñones", "minutes": 40, "serves": 4, "icon": "pan", "tags": ["veggie"],
+      "ingredients": [
+        { "name": "Arroz arborio", "qty": 320, "unit": "g", "aisle": "Pantry" },
+        { "name": "Champiñones marrones", "qty": 400, "unit": "g", "aisle": "Produce" },
+        { "name": "Cebolla", "qty": 1, "unit": "pcs", "aisle": "Produce" },
+        { "name": "Caldo de verduras", "qty": 1200, "unit": "ml", "aisle": "Pantry" },
+        { "name": "Parmesano", "qty": 80, "unit": "g", "aisle": "Dairy and eggs" },
+        { "name": "Mantequilla", "qty": 40, "unit": "g", "aisle": "Dairy and eggs" },
+        { "name": "Ajo", "qty": 2, "unit": "cloves", "aisle": "Produce" }
+      ]
+    },
+    {
+      "id": "roast-chicken", "name": "Pollo asado de domingo", "minutes": 95, "serves": 5, "icon": "roast", "tags": ["family"],
+      "ingredients": [
+        { "name": "Pollo entero", "qty": 1, "unit": "pcs", "aisle": "Meat and fish" },
+        { "name": "Patatas", "qty": 1200, "unit": "g", "aisle": "Produce" },
+        { "name": "Zanahorias", "qty": 4, "unit": "pcs", "aisle": "Produce" },
+        { "name": "Judías verdes", "qty": 300, "unit": "g", "aisle": "Produce" },
+        { "name": "Salsa gravy en gránulos", "qty": 1, "unit": "jar", "aisle": "Pantry" },
+        { "name": "Limones", "qty": 1, "unit": "pcs", "aisle": "Produce" }
+      ]
+    },
+    {
+      "id": "pesto-pasta", "name": "Pasta al pesto con guisantes", "minutes": 15, "serves": 4, "icon": "bowl", "tags": ["veggie", "quick", "kid-friendly"],
+      "ingredients": [
+        { "name": "Penne", "qty": 400, "unit": "g", "aisle": "Pantry" },
+        { "name": "Pesto verde", "qty": 1, "unit": "jar", "aisle": "Pantry" },
+        { "name": "Guisantes", "qty": 300, "unit": "g", "aisle": "Frozen" },
+        { "name": "Parmesano", "qty": 50, "unit": "g", "aisle": "Dairy and eggs" }
+      ]
+    },
+    {
+      "id": "chickpea-curry", "name": "Curry de garbanzos y espinacas", "minutes": 30, "serves": 4, "icon": "pot", "tags": ["veggie"],
+      "ingredients": [
+        { "name": "Garbanzos", "qty": 2, "unit": "tins", "aisle": "Pantry" },
+        { "name": "Leche de coco", "qty": 1, "unit": "tin", "aisle": "Pantry" },
+        { "name": "Espinacas", "qty": 200, "unit": "g", "aisle": "Produce" },
+        { "name": "Pasta de curry", "qty": 3, "unit": "tbsp", "aisle": "Pantry" },
+        { "name": "Arroz basmati", "qty": 300, "unit": "g", "aisle": "Pantry" },
+        { "name": "Panes naan", "qty": 4, "unit": "pcs", "aisle": "Bakery" }
+      ]
+    },
+    {
+      "id": "fish-tacos", "name": "Tacos de pescado crujiente", "minutes": 30, "serves": 4, "icon": "taco", "tags": ["quick"],
+      "ingredients": [
+        { "name": "Filetes de pescado blanco", "qty": 500, "unit": "g", "aisle": "Meat and fish" },
+        { "name": "Tortillas de trigo", "qty": 8, "unit": "pcs", "aisle": "Bakery" },
+        { "name": "Lombarda", "qty": 0.5, "unit": "head", "aisle": "Produce" },
+        { "name": "Yogur griego", "qty": 200, "unit": "g", "aisle": "Dairy and eggs" },
+        { "name": "Limas", "qty": 2, "unit": "pcs", "aisle": "Produce" }
+      ]
+    }
+  ]
+}

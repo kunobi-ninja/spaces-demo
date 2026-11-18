@@ -5,6 +5,14 @@ prompts:
   - "Move 'Order the deck oven' to Done."
   - "What is still waiting on someone?"
   - "Add a decision: we open at 7:00."
+translations:
+  es:
+    title: Sol Bakery
+    description: "El espacio del equipo para abrir la tienda de Riverside de Sol Bakery: quién hace qué esta semana, cómo va cada proyecto y qué hemos decidido."
+    prompts:
+      - "Pasa 'Encargar el horno de pisos' a Hecho."
+      - "¿Qué está esperando a alguien?"
+      - "Añade una decisión: abrimos a las 7:00."
 kunobi:
   page-layout: wide
   stores: [team-tasks]
@@ -16,11 +24,16 @@ import '@fontsource/parkinsans/600.css'
 import '@fontsource/parkinsans/800.css'
 import '@fontsource/figtree/400.css'
 import '@fontsource/figtree/600.css'
-import TEAM from './data/team.json'
+import TEAM_EN from './data/team.json'
+import TEAM_ES from './data/team.es.json'
 import SEED from './data/tasks.json'
-import DECISIONS_MD from './wiki/decisions.md?raw'
+import SEED_START from './data/tasks.start.json'
+import SEED_ES from './data/tasks.es.json'
+import DECISIONS_EN from './wiki/decisions.md?raw'
+import DECISIONS_ES from './wiki/decisions.es.md?raw'
+import { localizeSeed } from './src/seed'
 
-{/* Interface words per language. The team's own content lives in the team-tasks store (readable copy: data/tasks.json), data/team.json and wiki/. */}
+{/* Interface words per language. The team's own content lives in the team-tasks store (readable copy: data/tasks.json), data/team.json and wiki/. In Spanish: data/team.es.json (same ids, plus labels for projects and statuses), data/tasks.es.json translates the starting tasks (data/tasks.start.json) by id, and each wiki page has a <page>.es.md copy. */}
 
 export const WORDS = {
   en: {
@@ -50,7 +63,7 @@ export const WORDS = {
       'opening-checklist': ['Opening checklist', 'Everything that has to happen before 12 December.'],
       'decisions': ['Decisions', 'What we decided, who decided, and why.'],
     },
-    ask: 'Try asking your AI',
+    ask: 'Try asking your AI', md: '.md',
     prompts: ["Move 'Order the deck oven' to Done.", 'What is still waiting on someone?', 'Add a decision: we open at 7:00.'],
   },
   es: {
@@ -80,10 +93,12 @@ export const WORDS = {
       'opening-checklist': ['Lista de apertura', 'Todo lo que tiene que pasar antes del 12 de diciembre.'],
       'decisions': ['Decisiones', 'Qué decidimos, quién y por qué.'],
     },
-    ask: 'Prueba a pedirle a tu IA',
-    prompts: ["Pasa 'Order the deck oven' a Done.", '¿Qué está esperando a alguien?', 'Añade una decisión: abrimos a las 7:00.'],
+    ask: 'Prueba a pedirle a tu IA', md: '.es.md',
+    prompts: ["Pasa 'Encargar el horno de pisos' a Hecho.", '¿Qué está esperando a alguien?', 'Añade una decisión: abrimos a las 7:00.'],
   },
 }
+
+export const DATA = { en: { team: TEAM_EN, decisions: DECISIONS_EN }, es: { team: TEAM_ES, decisions: DECISIONS_ES, tasks: SEED_ES } }
 
 export const lang = () => {
   const tag = (typeof navigator !== 'undefined' && navigator.language) || 'en'
@@ -116,10 +131,12 @@ export const Avatar = ({ person, size = 28 }) => (
 export const TeamHome = () => {
   const code = lang()
   const w = WORDS[code]
+  const { team: TEAM, decisions: DECISIONS_MD, tasks: translated } = DATA[code] ?? DATA.en
+  const say = (value) => TEAM.labels?.[value] ?? value
   // The shared board's tasks; where the store cannot open, the readable copy Kunobi keeps of it.
   const live = useStore('team-tasks')
   const shared = useStoreStatus('team-tasks')?.status === 'open'
-  const tasks = (shared && live?.tasks ? live.tasks : SEED.tasks).map((t) => Object.fromEntries(Object.entries(t).map(([k, v]) => [k, v ?? ''])))
+  const tasks = localizeSeed(shared && live?.tasks ? live : SEED, SEED_START, translated).tasks.map((t) => Object.fromEntries(Object.entries(t).map(([k, v]) => [k, v ?? ''])))
   const decisions = parseDecisions(DECISIONS_MD).slice(0, 3)
   const people = Object.fromEntries(TEAM.people.map((p) => [p.id, p]))
   const projectColor = Object.fromEntries(TEAM.projects.map((p) => [p.id, p.color]))
@@ -152,7 +169,7 @@ export const TeamHome = () => {
     const days = t.due ? Math.round((toDate(t.due) - today) / DAY) : null
     return (
       <a className="task" href={`projects.mdx#${t.id}`}>
-        <span className="pdot" style={{ background: projectColor[t.project] }} title={t.project} />
+        <span className="pdot" style={{ background: projectColor[t.project] }} title={say(t.project)} />
         <span className="ttitle">{t.title}</span>
         {t.status === 'Waiting' ? <span className="pill warn">{w.waiting}</span> : null}
         {t.ai ? <span className="pill ai"><i />{t.ai}</span> : null}
@@ -292,7 +309,7 @@ export const TeamHome = () => {
             <div style={{ marginTop: 10 }}>
               {progress.map((p) => (
                 <div className="proj" key={p.id}>
-                  <b><span className="pdot" style={{ background: p.color }} />{p.id}</b>
+                  <b><span className="pdot" style={{ background: p.color }} />{say(p.id)}</b>
                   <div className="track"><i style={{ width: `${(p.done / p.total) * 100}%`, background: p.color }} /></div>
                   <span>{p.done}/{p.total}</span>
                 </div>
@@ -306,7 +323,7 @@ export const TeamHome = () => {
             </a>
           </section>
           <section className="panel">
-            <h2>{w.decisions} <a href="wiki/decisions.md">{w.allDecisions} →</a></h2>
+            <h2>{w.decisions} <a href={`wiki/decisions${w.md}`}>{w.allDecisions} →</a></h2>
             {decisions.map((d) => (
               <div className="dec" key={d.date + d.decision}>
                 <div className="meta">{fmt.format(toDate(d.date))} · {d.who}{d.task ? <span className="pill">{d.task}</span> : null}</div>
@@ -323,7 +340,7 @@ export const TeamHome = () => {
       </div>
       <div className="pages">
         {Object.entries(w.pages).map(([slug, [title, line]], i) => (
-          <a className="page" href={`wiki/${slug}.md`} key={slug}>
+          <a className="page" href={`wiki/${slug}${w.md}`} key={slug}>
             <b><i style={{ background: ['rgba(243,170,8,0.2)', 'rgba(232,121,74,0.2)', 'rgba(91,203,249,0.22)', 'rgba(48,204,213,0.22)', 'rgba(9,132,200,0.18)', 'rgba(138,108,240,0.18)'][i] }}>{['◷', '✶', '⛟', '☺', '✓', '⚑'][i]}</i>{title}</b>
             <span>{line}</span>
           </a>
