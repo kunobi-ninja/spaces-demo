@@ -1,0 +1,16 @@
+{
+  "meta.title": { "text": "Caccia al gatto", "from": "1d438cc8" },
+  "meta.description": { "text": "Ognuno muove il proprio gatto per casa. Prendi i pesci, fai rotolare il gomitolo; il primo a cinque pesci vince il round.", "from": "0d372c7e" },
+  "meta.prompts": { "text": ["Crea una Caccia al gatto per la nostra famiglia: un gatto a testa, con i nostri nomi, nel nostro soggiorno.", "Vince il primo a tre pesci, e il gomitolo rotola più veloce."], "from": "0a45852c" },
+  "words.title": { "text": "Caccia al gatto", "from": "1d438cc8" },
+  "words.you": { "text": "Tu", "from": "8a79a5f8" },
+  "words.guest": { "text": "Ospite", "from": "2585146e" },
+  "words.meow": { "text": "Miao!", "from": "15b4e067" },
+  "words.jump": { "text": "Salta", "from": "8647784d" },
+  "words.youWin": { "text": "Hai vinto il round!", "from": "a1974c01" },
+  "words.theyWin": { "text": "{{name}} vince il round!", "from": "c7634006" },
+  "words.alone": { "text": "In attesa di un altro gatto.", "from": "30625d47" },
+  "words.solo": { "text": "Stai giocando da solo. Aprilo in Kunobi con gli amici per giocare insieme.", "from": "86c29ac5" },
+  "words.paused": { "text": "Riconnessione…", "from": "2d2ad1e0" },
+  "words.how": { "text": "Frecce o tocca per muoverti · Spazio per saltare · scorri per lo zoom · M per miagolare · vince il primo a {{count}} pesci", "from": "0bae9e64" }
+}

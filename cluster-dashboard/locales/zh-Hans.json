@@ -1,0 +1,22 @@
+{
+  "meta.title": { "text": "集群仪表盘", "from": "e9469e10" },
+  "meta.description": { "text": "集群里哪里坏了、坏在哪、为什么坏。", "from": "d1a2e10f" },
+  "words.sample": { "text": "示例集群", "from": "59783d6d" },
+  "words.selected": { "text": "你的集群", "from": "db3a2e4c" },
+  "words.sampleData": { "text": "示例数据", "from": "0fada9af" },
+  "words.useLive": { "text": "使用我的集群", "from": "70fe5169" },
+  "words.sampleTip": { "text": "采集于 {{when}}。只读。", "from": "4d49eae8" },
+  "words.broken": { "text": "故障", "from": "dfef76f6" },
+  "words.toCheck": { "text": "待检查", "from": "5a3bc732" },
+  "words.allGood": { "text": "一切正常", "from": "804c323b" },
+  "words.podsOk": { "text": "个 Pod 正常", "from": "fb9863a2" },
+  "words.map": { "text": "按命名空间查看 Pod", "from": "2381d145" },
+  "words.problems": { "text": "问题", "from": "009537e9" },
+  "words.all": { "text": "全部", "from": "9a9877c8" },
+  "words.none": { "text": "这里什么都没有。", "from": "fcc41fa4" },
+  "words.back": { "text": "返回", "from": "357885fe" },
+  "words.mark": { "text": "标记为已知", "from": "2bcfdfa5" },
+  "words.unmark": { "text": "取消已知", "from": "0c770638" },
+  "words.known": { "text": "已知", "from": "5235ede1" },
+  "words.saving": { "text": "正在保存…", "from": "53ca6040" }
+}

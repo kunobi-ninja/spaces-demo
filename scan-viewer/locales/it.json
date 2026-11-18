@@ -1,0 +1,19 @@
+{
+  "meta.title": { "text": "Felipe in 3D", "from": "3df4de65" },
+  "meta.description": { "text": "Una scansione 3D a Gaussian splat che puoi ruotare, ingrandire e illuminare, direttamente nella pagina.", "from": "f640c262" },
+  "words.loading": { "text": "Caricamento della scansione…", "from": "2a0825ce" },
+  "words.failed": { "text": "Non è stato possibile caricare la scansione.", "from": "4db8ae0d" },
+  "words.hint": { "text": "Trascina per ruotare · Scorri o pizzica per lo zoom", "from": "772ec230" },
+  "words.front": { "text": "Davanti", "from": "0272e7ae" },
+  "words.side": { "text": "Lato", "from": "159051dc" },
+  "words.close": { "text": "Primo piano", "from": "dffdb8a3" },
+  "words.reveal": { "text": "Rivela", "from": "945f4fe4" },
+  "words.points": { "text": "Dispersione", "from": "92d4a70f" },
+  "words.light": { "text": "Luce", "from": "5170ad83" },
+  "words.change": { "text": "Come modificarlo", "from": "37c68600" },
+  "words.changeLine": { "text": "La fotocamera, il titolo e i crediti sono in data/scene.json. Chiedi alla tua IA:", "from": "40903cf5" },
+  "words.prompts": { "text": ["“Aggiungi al visualizzatore una vista dall'alto predefinita.”", "“Usa invece la mia scansione assets/chair.spz, inquadrata da davanti.”"], "from": "b74874fa" },
+  "data.scene.title": { "text": "Felipe", "from": "1a2f7fda" },
+  "data.scene.subtitle": { "text": "Una scansione 3D che puoi ruotare, ingrandire e illuminare.", "from": "f614e45d" },
+  "data.scene.credit.text": { "text": "“ChatGPT dots – Felipe” di abstrakt, CC BY 4.0. Convertito in SPZ e con dettaglio ridotto.", "from": "8b1851f0" }
+}

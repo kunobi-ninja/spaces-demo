@@ -1,0 +1,22 @@
+{
+  "meta.title": { "text": "クラスターダッシュボード", "from": "e9469e10" },
+  "meta.description": { "text": "クラスターのどこで何が壊れていて、なぜなのか。", "from": "d1a2e10f" },
+  "words.sample": { "text": "サンプルクラスター", "from": "59783d6d" },
+  "words.selected": { "text": "あなたのクラスター", "from": "db3a2e4c" },
+  "words.sampleData": { "text": "サンプルデータ", "from": "0fada9af" },
+  "words.useLive": { "text": "自分のクラスターを使う", "from": "70fe5169" },
+  "words.sampleTip": { "text": "{{when}}に取得。読み取り専用です。", "from": "4d49eae8" },
+  "words.broken": { "text": "異常", "from": "dfef76f6" },
+  "words.toCheck": { "text": "要確認", "from": "5a3bc732" },
+  "words.allGood": { "text": "すべて正常", "from": "804c323b" },
+  "words.podsOk": { "text": "個の Pod が正常", "from": "fb9863a2" },
+  "words.map": { "text": "namespace ごとの Pod", "from": "2381d145" },
+  "words.problems": { "text": "問題", "from": "009537e9" },
+  "words.all": { "text": "すべて", "from": "9a9877c8" },
+  "words.none": { "text": "ここには何もありません。", "from": "fcc41fa4" },
+  "words.back": { "text": "戻る", "from": "357885fe" },
+  "words.mark": { "text": "既知にする", "from": "2bcfdfa5" },
+  "words.unmark": { "text": "既知ではない", "from": "0c770638" },
+  "words.known": { "text": "既知", "from": "5235ede1" },
+  "words.saving": { "text": "保存中…", "from": "53ca6040" }
+}

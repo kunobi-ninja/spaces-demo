@@ -1,0 +1,22 @@
+{
+  "meta.title": { "text": "클러스터 대시보드", "from": "e9469e10" },
+  "meta.description": { "text": "클러스터에서 무엇이, 어디서, 왜 고장 났는지 보여줘요.", "from": "d1a2e10f" },
+  "words.sample": { "text": "샘플 클러스터", "from": "59783d6d" },
+  "words.selected": { "text": "내 클러스터", "from": "db3a2e4c" },
+  "words.sampleData": { "text": "샘플 데이터", "from": "0fada9af" },
+  "words.useLive": { "text": "내 클러스터 사용", "from": "70fe5169" },
+  "words.sampleTip": { "text": "{{when}}에 가져왔어요. 읽기 전용이에요.", "from": "4d49eae8" },
+  "words.broken": { "text": "고장", "from": "dfef76f6" },
+  "words.toCheck": { "text": "확인 필요", "from": "5a3bc732" },
+  "words.allGood": { "text": "모두 정상", "from": "804c323b" },
+  "words.podsOk": { "text": "정상 파드", "from": "fb9863a2" },
+  "words.map": { "text": "네임스페이스별 파드", "from": "2381d145" },
+  "words.problems": { "text": "문제", "from": "009537e9" },
+  "words.all": { "text": "전체", "from": "9a9877c8" },
+  "words.none": { "text": "여기엔 아무것도 없어요.", "from": "fcc41fa4" },
+  "words.back": { "text": "뒤로", "from": "357885fe" },
+  "words.mark": { "text": "알고 있음으로 표시", "from": "2bcfdfa5" },
+  "words.unmark": { "text": "모름", "from": "0c770638" },
+  "words.known": { "text": "알고 있음", "from": "5235ede1" },
+  "words.saving": { "text": "저장 중…", "from": "53ca6040" }
+}

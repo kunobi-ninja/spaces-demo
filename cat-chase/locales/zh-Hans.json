@@ -1,0 +1,16 @@
+{
+  "meta.title": { "text": "猫咪追逐", "from": "1d438cc8" },
+  "meta.description": { "text": "每个人在房子里操控自己的猫。抓鱼、拨弄毛线球；先抓到五条鱼的人赢下这一局。", "from": "0d372c7e" },
+  "meta.prompts": { "text": ["给我们家做一个猫咪追逐：每人一只猫，用我们的名字命名，场景在我们的客厅。", "先抓到三条鱼的人赢，毛线球滚得更快些。"], "from": "0a45852c" },
+  "words.title": { "text": "猫咪追逐", "from": "1d438cc8" },
+  "words.you": { "text": "你", "from": "8a79a5f8" },
+  "words.guest": { "text": "访客", "from": "2585146e" },
+  "words.meow": { "text": "喵！", "from": "15b4e067" },
+  "words.jump": { "text": "跳", "from": "8647784d" },
+  "words.youWin": { "text": "你赢了这一局！", "from": "a1974c01" },
+  "words.theyWin": { "text": "{{name}} 赢了这一局！", "from": "c7634006" },
+  "words.alone": { "text": "正在等另一只猫。", "from": "30625d47" },
+  "words.solo": { "text": "正在一个人玩。在 Kunobi 里和朋友一起打开，就能一起玩。", "from": "86c29ac5" },
+  "words.paused": { "text": "正在重新连接…", "from": "2d2ad1e0" },
+  "words.how": { "text": "方向键或轻点移动 · 空格跳跃 · 滚动缩放 · M 键喵一声 · 先抓到 {{count}} 条鱼的人赢", "from": "0bae9e64" }
+}

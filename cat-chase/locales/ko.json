@@ -1,0 +1,16 @@
+{
+  "meta.title": { "text": "고양이 술래잡기", "from": "1d438cc8" },
+  "meta.description": { "text": "모두 자기 고양이를 움직이며 집 안을 돌아다녀요. 물고기를 잡고 털실을 굴려 보세요. 물고기 다섯 마리를 먼저 잡으면 그 판을 이겨요.", "from": "0d372c7e" },
+  "meta.prompts": { "text": ["우리 가족용 고양이 술래잡기를 만들어 줘: 한 사람당 고양이 한 마리씩, 우리 이름으로, 우리 거실에서.", "물고기 세 마리를 먼저 잡으면 이기고, 털실은 더 빨리 굴러가게 해 줘."], "from": "0a45852c" },
+  "words.title": { "text": "고양이 술래잡기", "from": "1d438cc8" },
+  "words.you": { "text": "나", "from": "8a79a5f8" },
+  "words.guest": { "text": "게스트", "from": "2585146e" },
+  "words.meow": { "text": "야옹!", "from": "15b4e067" },
+  "words.jump": { "text": "점프", "from": "8647784d" },
+  "words.youWin": { "text": "이번 판은 내가 이겼어요!", "from": "a1974c01" },
+  "words.theyWin": { "text": "이번 판은 {{name}} 님이 이겼어요!", "from": "c7634006" },
+  "words.alone": { "text": "다른 고양이를 기다리는 중이에요.", "from": "30625d47" },
+  "words.solo": { "text": "혼자 플레이 중이에요. 친구들과 함께하려면 Kunobi에서 열어 보세요.", "from": "86c29ac5" },
+  "words.paused": { "text": "다시 연결 중…", "from": "2d2ad1e0" },
+  "words.how": { "text": "화살표나 탭으로 이동 · Space로 점프 · 스크롤로 확대 · M으로 야옹 · 물고기 {{count}}마리를 먼저 잡으면 승리", "from": "0bae9e64" }
+}

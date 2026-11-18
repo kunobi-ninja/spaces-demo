@@ -1,0 +1,19 @@
+{
+  "meta.title": { "text": "3D 版的 Felipe", "from": "3df4de65" },
+  "meta.description": { "text": "一个 3D 高斯泼溅扫描，可以直接在页面里旋转、缩放和打光。", "from": "f640c262" },
+  "words.loading": { "text": "正在加载扫描…", "from": "2a0825ce" },
+  "words.failed": { "text": "无法加载扫描。", "from": "4db8ae0d" },
+  "words.hint": { "text": "拖动旋转 · 滚动或双指缩放", "from": "772ec230" },
+  "words.front": { "text": "正面", "from": "0272e7ae" },
+  "words.side": { "text": "侧面", "from": "159051dc" },
+  "words.close": { "text": "特写", "from": "dffdb8a3" },
+  "words.reveal": { "text": "显现", "from": "945f4fe4" },
+  "words.points": { "text": "散点", "from": "92d4a70f" },
+  "words.light": { "text": "光照", "from": "5170ad83" },
+  "words.change": { "text": "如何修改", "from": "37c68600" },
+  "words.changeLine": { "text": "相机、标题和署名都在 data/scene.json 里。问问你的 AI：", "from": "40903cf5" },
+  "words.prompts": { "text": ["“给扫描查看器加一个俯视预设。”", "“改用我的扫描 assets/chair.spz，从正面取景。”"], "from": "b74874fa" },
+  "data.scene.title": { "text": "Felipe", "from": "1a2f7fda" },
+  "data.scene.subtitle": { "text": "一个可以旋转、缩放和打光的 3D 扫描。", "from": "f614e45d" },
+  "data.scene.credit.text": { "text": "“ChatGPT dots – Felipe”，作者 abstrakt，CC BY 4.0。已转换为 SPZ 并降低了细节。", "from": "8b1851f0" }
+}

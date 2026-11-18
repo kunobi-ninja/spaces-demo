@@ -1,0 +1,18 @@
+{
+  "meta.title": { "text": "誕生日ムービー", "from": "1dcf872e" },
+  "meta.description": { "text": "名前と年齢、3つの思い出から作る、友だちへの30秒の誕生日ムービー。", "from": "0cc5516f" },
+  "words.turns": { "text": "{{age}}歳に", "from": "a776e3e2" },
+  "words.happy": { "text": "{{to}}、{{age}}歳おめでとう", "from": "2f3db709" },
+  "words.from": { "text": "{{name}}より", "from": "a7386474" },
+  "data.film.intro": { "text": "ささやかなムービーを", "from": "9c39a1d9" },
+  "data.film.memories[0].when": { "text": "2009年の夏", "from": "244d80c4" },
+  "data.film.memories[0].title": { "text": "水浸しになったテント", "from": "5d118c19" },
+  "data.film.memories[0].line": { "text": "スカイ島で2日間ずっと雨。それでも最高の旅だったって言ってたよね。", "from": "51e6e951" },
+  "data.film.memories[1].when": { "text": "2014年の春", "from": "4e4e6d8c" },
+  "data.film.memories[1].title": { "text": "自転車でアムステルダム", "from": "75e6b0c0" },
+  "data.film.memories[1].line": { "text": "平らだって約束したよね。脚はそうは覚えていないけど。", "from": "fa12a0b0" },
+  "data.film.memories[2].when": { "text": "それから毎週日曜日", "from": "17a89a52" },
+  "data.film.memories[2].title": { "text": "日曜パスタクラブ", "from": "022e90d8" },
+  "data.film.memories[2].line": { "text": "14年間、レシピはひとつ、ニンニクをめぐる言い合いもずっと同じ。", "from": "df434d95" },
+  "data.film.wish": { "text": "願いごとをしてね", "from": "48338aa2" }
+}

@@ -1,0 +1,16 @@
+{
+  "meta.title": { "text": "Chasse au chat", "from": "1d438cc8" },
+  "meta.description": { "text": "Chacun déplace son propre chat dans une maison. Attrape des poissons, fais rouler la pelote ; le premier à cinq poissons gagne la manche.", "from": "0d372c7e" },
+  "meta.prompts": { "text": ["Fais une Chasse au chat pour notre famille : un chat chacun, à nos prénoms, dans notre salon.", "Le premier à trois poissons gagne, et la pelote roule plus vite."], "from": "0a45852c" },
+  "words.title": { "text": "Chasse au chat", "from": "1d438cc8" },
+  "words.you": { "text": "Toi", "from": "8a79a5f8" },
+  "words.guest": { "text": "Invité", "from": "2585146e" },
+  "words.meow": { "text": "Miaou !", "from": "15b4e067" },
+  "words.jump": { "text": "Sauter", "from": "8647784d" },
+  "words.youWin": { "text": "Tu gagnes la manche !", "from": "a1974c01" },
+  "words.theyWin": { "text": "{{name}} gagne la manche !", "from": "c7634006" },
+  "words.alone": { "text": "En attente d'un autre chat.", "from": "30625d47" },
+  "words.solo": { "text": "Tu joues seul. Ouvre-le dans Kunobi avec des amis pour jouer ensemble.", "from": "86c29ac5" },
+  "words.paused": { "text": "Reconnexion…", "from": "2d2ad1e0" },
+  "words.how": { "text": "Flèches ou touche pour bouger · Espace pour sauter · molette pour zoomer · M pour miauler · le premier à {{count}} poissons gagne", "from": "0bae9e64" }
+}

@@ -1,0 +1,16 @@
+{
+  "meta.title": { "text": "ネコの追いかけっこ", "from": "1d438cc8" },
+  "meta.description": { "text": "みんなが自分のネコを家の中で動かします。魚をつかまえて、毛糸玉を転がそう。先に魚を5匹取った人がラウンドの勝ちです。", "from": "0d372c7e" },
+  "meta.prompts": { "text": ["家族用のネコの追いかけっこを作って。ひとり1匹、名前は私たちにして、場所はうちのリビングで。", "魚を先に3匹取った人の勝ちにして、毛糸玉はもっと速く転がるように。"], "from": "0a45852c" },
+  "words.title": { "text": "ネコの追いかけっこ", "from": "1d438cc8" },
+  "words.you": { "text": "あなた", "from": "8a79a5f8" },
+  "words.guest": { "text": "ゲスト", "from": "2585146e" },
+  "words.meow": { "text": "ニャー！", "from": "15b4e067" },
+  "words.jump": { "text": "ジャンプ", "from": "8647784d" },
+  "words.youWin": { "text": "このラウンドはあなたの勝ち！", "from": "a1974c01" },
+  "words.theyWin": { "text": "このラウンドは {{name}} の勝ち！", "from": "c7634006" },
+  "words.alone": { "text": "ほかのネコを待っています。", "from": "30625d47" },
+  "words.solo": { "text": "ひとりで遊んでいます。友だちと一緒に遊ぶには Kunobi で開いてください。", "from": "86c29ac5" },
+  "words.paused": { "text": "再接続中…", "from": "2d2ad1e0" },
+  "words.how": { "text": "矢印キーかタップで移動 · Space でジャンプ · スクロールでズーム · M でニャー · 魚を先に {{count}} 匹取った人の勝ち", "from": "0bae9e64" }
+}

@@ -1,0 +1,22 @@
+{
+  "meta.title": { "text": "Painel do cluster", "from": "e9469e10" },
+  "meta.description": { "text": "O que está quebrado no seu cluster, onde e por quê.", "from": "d1a2e10f" },
+  "words.sample": { "text": "Cluster de exemplo", "from": "59783d6d" },
+  "words.selected": { "text": "Seu cluster", "from": "db3a2e4c" },
+  "words.sampleData": { "text": "Dados de exemplo", "from": "0fada9af" },
+  "words.useLive": { "text": "Usar meu cluster", "from": "70fe5169" },
+  "words.sampleTip": { "text": "Capturado em {{when}}. Somente leitura.", "from": "4d49eae8" },
+  "words.broken": { "text": "quebrados", "from": "dfef76f6" },
+  "words.toCheck": { "text": "para conferir", "from": "5a3bc732" },
+  "words.allGood": { "text": "Tudo saudável", "from": "804c323b" },
+  "words.podsOk": { "text": "pods saudáveis", "from": "fb9863a2" },
+  "words.map": { "text": "Pods por namespace", "from": "2381d145" },
+  "words.problems": { "text": "Problemas", "from": "009537e9" },
+  "words.all": { "text": "Todos", "from": "9a9877c8" },
+  "words.none": { "text": "Nada aqui.", "from": "fcc41fa4" },
+  "words.back": { "text": "Voltar", "from": "357885fe" },
+  "words.mark": { "text": "Marcar como conhecido", "from": "2bcfdfa5" },
+  "words.unmark": { "text": "Desmarcar", "from": "0c770638" },
+  "words.known": { "text": "Conhecidos", "from": "5235ede1" },
+  "words.saving": { "text": "Salvando…", "from": "53ca6040" }
+}

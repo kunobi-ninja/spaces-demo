@@ -1,0 +1,18 @@
+{
+  "meta.title": { "text": "Ein Geburtstagsfilm", "from": "1dcf872e" },
+  "meta.description": { "text": "Ein 30-Sekunden-Geburtstagsfilm für einen Freund, gemacht aus einem Namen, einem Alter und drei Erinnerungen.", "from": "0cc5516f" },
+  "words.turns": { "text": "wird {{age}}", "from": "a776e3e2" },
+  "words.happy": { "text": "Alles Gute zum {{age}}., {{to}}", "from": "2f3db709" },
+  "words.from": { "text": "von {{name}}", "from": "a7386474" },
+  "data.film.intro": { "text": "Ein kleiner Film für", "from": "9c39a1d9" },
+  "data.film.memories[0].when": { "text": "Sommer 2009", "from": "244d80c4" },
+  "data.film.memories[0].title": { "text": "Das Zelt, das abgesoffen ist", "from": "5d118c19" },
+  "data.film.memories[0].line": { "text": "Zwei Tage Regen auf Skye. Du hast es trotzdem die beste Reise aller Zeiten genannt.", "from": "51e6e951" },
+  "data.film.memories[1].when": { "text": "Frühling 2014", "from": "4e4e6d8c" },
+  "data.film.memories[1].title": { "text": "Amsterdam mit dem Rad", "from": "75e6b0c0" },
+  "data.film.memories[1].line": { "text": "Du hast versprochen, es sei flach. Unsere Beine erinnern sich anders.", "from": "fa12a0b0" },
+  "data.film.memories[2].when": { "text": "Seitdem jeden Sonntag", "from": "17a89a52" },
+  "data.film.memories[2].title": { "text": "Sonntags-Pasta-Club", "from": "022e90d8" },
+  "data.film.memories[2].line": { "text": "Vierzehn Jahre, ein Rezept und immer derselbe Streit über Knoblauch.", "from": "df434d95" },
+  "data.film.wish": { "text": "Wünsch dir was", "from": "48338aa2" }
+}

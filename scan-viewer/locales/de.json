@@ -1,0 +1,19 @@
+{
+  "meta.title": { "text": "Felipe in 3D", "from": "3df4de65" },
+  "meta.description": { "text": "Ein 3D-Gaussian-Splat-Scan, den du direkt auf der Seite drehen, zoomen und beleuchten kannst.", "from": "f640c262" },
+  "words.loading": { "text": "Scan wird geladen…", "from": "2a0825ce" },
+  "words.failed": { "text": "Der Scan konnte nicht geladen werden.", "from": "4db8ae0d" },
+  "words.hint": { "text": "Ziehen zum Drehen · Scrollen oder Zwei-Finger-Geste zum Zoomen", "from": "772ec230" },
+  "words.front": { "text": "Vorne", "from": "0272e7ae" },
+  "words.side": { "text": "Seite", "from": "159051dc" },
+  "words.close": { "text": "Nahaufnahme", "from": "dffdb8a3" },
+  "words.reveal": { "text": "Einblenden", "from": "945f4fe4" },
+  "words.points": { "text": "Streuen", "from": "92d4a70f" },
+  "words.light": { "text": "Licht", "from": "5170ad83" },
+  "words.change": { "text": "So änderst du das", "from": "37c68600" },
+  "words.changeLine": { "text": "Kamera, Titel und Credits stehen in data/scene.json. Frag deine KI:", "from": "40903cf5" },
+  "words.prompts": { "text": ["„Füg dem Scan-Viewer eine Ansicht von oben hinzu.“", "„Nutz stattdessen meinen Scan assets/chair.spz, von vorne gezeigt.“"], "from": "b74874fa" },
+  "data.scene.title": { "text": "Felipe", "from": "1a2f7fda" },
+  "data.scene.subtitle": { "text": "Ein 3D-Scan, den du drehen, zoomen und beleuchten kannst.", "from": "f614e45d" },
+  "data.scene.credit.text": { "text": "„ChatGPT dots – Felipe“ von abstrakt, CC BY 4.0. In SPZ umgewandelt und im Detail reduziert.", "from": "8b1851f0" }
+}
