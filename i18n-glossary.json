@@ -1,5 +1,5 @@
 {
-  "about": "What scripts/i18n-translate.mjs tells the model on every page. `keep` is written exactly as is in every language; `rules` apply to every translation. Add to it when a translation gets something wrong.",
+  "about": "For whoever translates a page. `keep` is written exactly as is in every language; `rules` apply to every translation. Add to it when a translation gets something wrong.",
   "keep": [
     "Kunobi",
     "Kunobi Spaces",

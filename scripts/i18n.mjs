@@ -1,6 +1,6 @@
 /**
  * The translatable text of every page and its translations, shared by the catalog builder,
- * `i18n-check.mjs` and `i18n-translate.mjs`. The page side is `lib/i18n.ts`; CONTRIBUTING.md
+ * `i18n-check.mjs` and `i18n-sync.mjs`. The page side is `lib/i18n.ts`; CONTRIBUTING.md
  * ("Languages") describes the files.
  *
  * A page is an `.mdx` file with front matter. It is written in one language (`lang`, default `en`)

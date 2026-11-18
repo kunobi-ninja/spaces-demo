@@ -2,8 +2,8 @@ name: Translations
 
 # Reports which translations are missing or stale on every pull request, as the
 # job summary and one comment kept up to date. Missing translations never fail
-# it (pages show their own language, and the Translate workflow fills them in
-# after merge); a broken locale file or a key that points at nothing does.
+# it (pages show their own language until the maintainers translate them by
+# hand); a broken locale file or a key that points at nothing does.
 on:
   pull_request:
 

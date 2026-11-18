@@ -36,7 +36,7 @@ Thanks for making something for Kunobi spaces. Every demo here is a page people 
 
 Kunobi shows each page in the reader's language (the app's language), falling back from the exact language (`pt-BR`) to its base (`pt`), to English, and then to the language the page is written in. Pages are translated into every language Kunobi speaks: en, es, pt, it, fr, de, ja, ko and zh-Hans.
 
-**You never have to translate.** After a page is merged, the Translate workflow translates what is new or changed with Claude and opens a pull request for a person to review. Translations by hand are welcome too: edit or add the locale file.
+**You never have to translate.** Write your page in one language; the maintainers translate it into the others after it is merged. To translate by hand, `node scripts/i18n-sync.mjs --export <lang>` lists what a language is missing or has stale, and `--import <file>` writes the translated list back into the locale files (with their hashes). Editing a locale file directly works too.
 
 ### What a page translates
 

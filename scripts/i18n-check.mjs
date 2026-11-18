@@ -2,7 +2,7 @@
 /**
  * Reports, for every page and every language Kunobi speaks, which translations are missing and
  * which are stale (their source text changed since). Missing and stale translations never fail:
- * pages fall back to their own language, and the Translate workflow fills them in. It fails only
+ * pages fall back to their own language, and the maintainers translate them by hand (scripts/i18n-sync.mjs). It fails only
  * on what is broken: a locale file that does not parse or has the wrong shape, a key that points
  * at nothing, a `locales/index.ts` that does not list the locale files, or a page whose
  * translatable text cannot be read (WORDS, `i18n.data`, `i18n.docs`).
@@ -71,7 +71,7 @@ export function renderReport(results) {
   const warnings = results.flatMap((result) => result.warnings.map((warning) => `- \`${result.page}\`: ${warning}`))
   const lines = ['## Translations', '']
   if (errors.length) lines.push(`**${errors.length} to fix** (these fail the check):`, '', ...errors, '')
-  lines.push('Missing or stale translations never block a pull request: the page shows its own language, and the Translate workflow fills them in after merge.', '')
+  lines.push('Missing or stale translations never block a pull request: the page shows its own language, and the maintainers translate it after merge.', '')
   lines.push(`| Page | Written in | ${LANGUAGES.join(' | ')} |`, `| --- | --- | ${LANGUAGES.map(() => '---').join(' | ')} |`)
   for (const result of results) {
     const cells = LANGUAGES.map((lang) => {

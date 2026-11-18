@@ -50,7 +50,7 @@ LiveStores need a Kunobi build with live editing, and live editing turned on for
 
 ## Languages
 
-Every page follows Kunobi's language. Each is written in one language and translated by the files in its `locales/` folder; a translation workflow fills in new languages and changed text with Claude, for a person to review. See [Languages](CONTRIBUTING.md#languages).
+Every page follows Kunobi's language. Each is written in one language and translated by the files in its `locales/` folder; the maintainers translate new and changed text. See [Languages](CONTRIBUTING.md#languages).
 
 ## Contributing
 

@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { test } from 'node:test'
 import { checkRepo, renderReport } from './i18n-check.mjs'
-import { batches, problem, translateRepo } from './i18n-translate.mjs'
+import { batches, problem, translateRepo } from './i18n-sync.mjs'
 import { compareLocale, expandPattern, extractPage, hash, localeDir, renderIndex, renderLocale } from './i18n.mjs'
 
 // lib/i18n.ts imports React for its hook; the tests use the plain functions, so a stub will do.
