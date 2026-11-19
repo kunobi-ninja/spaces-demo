@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
+import { readFileSync } from 'node:fs'
 import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join, resolve } from 'node:path'
@@ -148,10 +149,34 @@ test('translations come from the locale files, prompts only where the page has t
   for (const d of catalog.demos) assert.ok(!('lang' in d), d.id)
 })
 
-test('the shared i18n helper ships with every page that imports it', () => {
-  assert.ok(paths('trip').includes('lib/i18n.ts'))
+const published = (id, path) => readFileSync(join(out, 'objects', demo(id).files.find((f) => f.path === path).sha256), 'utf8')
+
+test('the shared i18n helper ships inside every demo that imports it, which imports it from there', () => {
+  assert.ok(paths('trip').includes('trip/lib/i18n.ts'))
   assert.ok(paths('trip').includes('trip/locales/es.json'))
+  assert.match(published('trip', 'trip/index.mdx'), /from '\.\/lib\/i18n'/)
+  assert.equal(published('trip', 'trip/lib/i18n.ts'), readFileSync(join(repo, 'lib/i18n.ts'), 'utf8'))
+  // A page deeper in the folder reaches the same copy.
+  assert.match(published('team', 'team/wiki/index.mdx'), /from '\.\.\/lib\/i18n'/)
+  // The home page is the repository root: it keeps the original where it is.
   assert.ok(catalog.home.files.some((f) => f.path === 'lib/i18n.ts'))
+})
+
+test('every demo is its folder alone, as "Make this mine" copies only the folder', () => {
+  for (const d of catalog.demos) {
+    const folder = d.entry.slice(0, d.entry.lastIndexOf('/') + 1)
+    for (const f of d.files) {
+      assert.ok(f.path.startsWith(folder) || f.path.startsWith('.kunobi/') || f.path.startsWith('@fontsource/'), `${d.id}: ${f.path}`)
+    }
+  }
+})
+
+test('rejects a shared file that a demo file of the same path would hide', async () => {
+  await withGallery(['trip'], async (copy) => {
+    await mkdir(join(copy, 'trip', 'lib'))
+    await writeFile(join(copy, 'trip', 'lib', 'i18n.ts'), 'export {}\n')
+    await assert.rejects(buildCatalog({ repo: copy, out: join(copy, 'out'), release: 'x' }), /trip: trip\/lib\/i18n\.ts would hide the shared lib\/i18n\.ts/)
+  })
 })
 
 async function withPage(frontMatter, locales, run) {
