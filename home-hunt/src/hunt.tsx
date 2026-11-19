@@ -54,7 +54,8 @@ export function fitFor(h: Home, p: Person) {
 type Fit = ReturnType<typeof fitFor>
 
 const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
-const fill = (t: string, v: Record<string, string | number>) => t.replace(/\{(\w+)\}/g, (_, k) => String(v[k] ?? ''))
+/** A word with `{{placeholders}}` is a function of their values (lib/i18n); one without is its text. */
+const fill = (t: string | ((v: Record<string, string | number>) => string), v: Record<string, string | number>) => (typeof t === 'function' ? t(v) : t)
 
 /** One plain sentence with the trade-off, derived from the data so it cannot drift from it. */
 export function tradeOff(h: Home, people: Person[], fits: Fit[], w: any, money: (n: number) => string): string {
@@ -174,14 +175,15 @@ function Meter({ p, f, w }: { p: Person; f: Fit; w: any }) {
   )
 }
 
-export function HomeHunt({ homes, setup, takes: start, words: w }: { homes: Home[]; setup: Setup; takes: HomeHuntTakesStore; words: any }) {
+export function HomeHunt({ homes, setup, takes: start, localize, words: w }: { homes: Home[]; setup: Setup; takes: HomeHuntTakesStore; localize: (data: HomeHuntTakesStore) => HomeHuntTakesStore; words: any }) {
   const people = setup.people
   const live = useStore(STORE) as HomeHuntTakesStore | undefined
   const status = useStoreStatus(STORE)
   // Without the store (other builds, previews), show the last saved takes, read-only.
   const open = (status?.status === 'open' || status?.status === 'paused') && live !== undefined
   const canEdit = open && status?.status === 'open' && Boolean(status?.canEdit)
-  const takes = (open ? live : start)?.takes ?? {}
+  // Starting notes in the reader's language; display only, edits go to the store as typed.
+  const takes = React.useMemo(() => localize((open ? live : start) as HomeHuntTakesStore)?.takes ?? {}, [open, live, start, localize])
   const takeOf = (home: string, person: string) => takes[`${home}-${person}`]
   const setTake = (home: string, person: string, change: Partial<Take>) =>
     edit(STORE, (d: HomeHuntTakesStore) => {

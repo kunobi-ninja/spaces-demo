@@ -94,7 +94,7 @@ export const Report = ({ data, w, locale, initial }: Props) => {
             <h2>{w.revenueTitle}</h2>
             <span className="mr-muted">{w.revenueHint}</span>
           </div>
-          <RevenueChart months={months} at={i} onPick={setI} label={monthShort} money={money} />
+          <RevenueChart months={months} at={i} onPick={setI} label={monthShort} money={money} title={w.revenueTitle} />
           <ol className="mr-notes">
             {months.map((mm, n) => ({ mm, n })).filter(({ mm }) => mm.note).map((x, k) => ({ ...x, k: k + 1 })).filter(({ n }) => n <= i).slice(-4).reverse().map(({ mm, n, k }) => (
               <li key={mm.month} className={n === i ? 'on' : ''}>
@@ -189,7 +189,7 @@ export const Report = ({ data, w, locale, initial }: Props) => {
         </section>
 
         <footer className="mr-foot">
-          <p><b>{w.howTitle}</b> {w.howBody} <code>data/report.json</code>. {w.howAsk}</p>
+          <p><b>{w.howTitle}</b> {w.howBody} <code>{w.file}</code>. {w.howAsk}</p>
           <ul>
             <li>“{w.prompt1}”</li>
             <li>“{w.prompt2}”</li>
@@ -225,7 +225,7 @@ const Spark = ({ values, at, small }: { values: number[]; at: number; small?: bo
   )
 }
 
-const RevenueChart = ({ months, at, onPick, label, money }: { months: Data['months']; at: number; onPick: (n: number) => void; label: (s: string) => string; money: Intl.NumberFormat }) => {
+const RevenueChart = ({ months, at, onPick, label, money, title }: { months: Data['months']; at: number; onPick: (n: number) => void; label: (s: string) => string; money: Intl.NumberFormat; title: string }) => {
   const box = React.useRef<HTMLDivElement>(null)
   const [W, setW] = React.useState(900)
   React.useEffect(() => {
@@ -246,7 +246,7 @@ const RevenueChart = ({ months, at, onPick, label, money }: { months: Data['mont
   let noteN = 0
   return (
     <div className="mr-chart" ref={box}>
-      <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} role="img" aria-label="Revenue by month">
+      <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} role="img" aria-label={title}>
         {ticks.map((t) => (
           <g key={t}>
             <line x1={pad.l} x2={W - pad.r} y1={y(t)} y2={y(t)} className="mr-grid" />

@@ -28,10 +28,32 @@ const hex = (c: number) => `#${c.toString(16).padStart(6, '0')}`
 
 const SOUND: Record<GameEvent['type'], Effect> = { catch: 'chomp', bonk: 'bonk', splat: 'splat', thud: 'thud' }
 
-export function DinoSnack({ kid = 'Mateo', goal = 10, lives = 3 }: { kid?: string; goal?: number; lives?: number }) {
+/** The game's words in the reader's language; the page passes them in. */
+export interface Words {
+  game: string
+  title: string
+  snacks: string
+  lives: (n: number) => string
+  soundOn: string
+  soundOff: string
+  win: (kid: string) => string
+  lose: string
+  intro: (kid: string, goal: number) => string
+  won: (goal: number) => string
+  lost: (score: number, kid: string) => string
+  play: string
+  again: string
+  how: string
+  yum: string
+  ouch: string
+}
+
+export function DinoSnack({ kid = 'Mateo', goal = 10, lives = 3, w }: { kid?: string; goal?: number; lives?: number; w: Words }) {
   const box = React.useRef<HTMLDivElement>(null)
   const canvas = React.useRef<HTMLCanvasElement>(null)
   const popRefs = React.useRef<(HTMLDivElement | null)[]>([])
+  const words = React.useRef(w)
+  words.current = w
   const [phase, setPhase] = React.useState<Phase>('title')
   const [hud, setHud] = React.useState({ score: 0, lives })
   const [muted, setMuted] = React.useState(false)
@@ -172,7 +194,7 @@ export function DinoSnack({ kid = 'Mateo', goal = 10, lives = 3 }: { kid?: strin
         div.hidden = !p || p.age > 1.1
         if (!p || div.hidden) return
         const [u, v] = light.onScreen(p.x, p.y, p.z)
-        div.textContent = p.text
+        div.textContent = words.current[p.word]
         div.style.left = `${u * 100}%`
         div.style.top = `calc(${v * 100}% - ${Math.min(1, p.age / 0.6) * 36}px)`
         div.style.opacity = String(p.age < 0.8 ? 1 : Math.max(0, 1 - (p.age - 0.8) / 0.3))
@@ -213,7 +235,7 @@ export function DinoSnack({ kid = 'Mateo', goal = 10, lives = 3 }: { kid?: strin
     <div
       ref={box}
       tabIndex={0}
-      aria-label="Dino Snack game"
+      aria-label={w.game}
       onPointerMove={(e) => {
         if (control.current.phase === 'play' && (e.pointerType === 'mouse' || e.buttons)) control.current.aim(e.clientX, e.clientY)
       }}
@@ -263,7 +285,7 @@ export function DinoSnack({ kid = 'Mateo', goal = 10, lives = 3 }: { kid?: strin
       {phase === 'play' && (
         <div style={{ position: 'absolute', insetInline: 0, top: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', padding: 'clamp(10px, 2cqw, 20px)', pointerEvents: 'none' }}>
           <div style={pill}>
-            <span>Snacks</span>
+            <span>{w.snacks}</span>
             <span style={{ display: 'flex', gap: 'clamp(3px, 0.6cqw, 6px)', flexWrap: 'wrap', maxWidth: narrow ? 120 : 'none' }}>
               {Array.from({ length: goal }, (_, i) => (
                 <span
@@ -280,7 +302,7 @@ export function DinoSnack({ kid = 'Mateo', goal = 10, lives = 3 }: { kid?: strin
               ))}
             </span>
           </div>
-          <div style={{ ...pill, color: C.heart, letterSpacing: 2 }} aria-label={`${hud.lives} lives`}>
+          <div style={{ ...pill, color: C.heart, letterSpacing: 2 }} aria-label={w.lives({ count: hud.lives })}>
             {Array.from({ length: lives }, (_, i) => (
               <span key={i} style={{ opacity: i < hud.lives ? 1 : 0.25, transition: 'opacity 300ms' }}>
                 ♥
@@ -306,7 +328,7 @@ export function DinoSnack({ kid = 'Mateo', goal = 10, lives = 3 }: { kid?: strin
           fontFamily: FONT,
         }}
       >
-        {muted ? 'Sound off · M' : 'Sound on · M'}
+        {muted ? w.soundOff : w.soundOn}
       </button>
 
       {phase !== 'play' && (
@@ -334,14 +356,10 @@ export function DinoSnack({ kid = 'Mateo', goal = 10, lives = 3 }: { kid?: strin
           }}
         >
           <span style={{ fontSize: phase === 'title' ? 'clamp(40px, 9cqw, 96px)' : 'clamp(32px, 7cqw, 76px)', fontWeight: 700, lineHeight: 1, color: phase === 'lose' ? C.ocean : C.sun, textShadow: outline(4) }}>
-            {phase === 'title' ? 'Dino Snack' : phase === 'win' ? `Well done, ${kid}!` : 'Oh no, rocks!'}
+            {phase === 'title' ? w.title : phase === 'win' ? w.win({ kid }) : w.lose}
           </span>
           <span style={{ fontSize: 'clamp(17px, 3cqw, 30px)', fontWeight: 700, textShadow: outline(2), maxWidth: 640 }}>
-            {phase === 'title'
-              ? `Hi ${kid}! The dinosaur is hungry. Catch ${goal} snacks!`
-              : phase === 'win'
-                ? `The dinosaur ate ${goal} snacks. Full and happy!`
-                : `You caught ${hud.score} ${hud.score === 1 ? 'snack' : 'snacks'}. Try again, ${kid}!`}
+            {phase === 'title' ? w.intro({ kid, goal }) : phase === 'win' ? w.won({ goal }) : w.lost({ count: hud.score, kid })}
           </span>
           <span
             style={{
@@ -355,11 +373,11 @@ export function DinoSnack({ kid = 'Mateo', goal = 10, lives = 3 }: { kid?: strin
               boxShadow: `0 5px 0 ${C.midnight}`,
             }}
           >
-            {phase === 'title' ? 'Play' : 'Play again'}
+            {phase === 'title' ? w.play : w.again}
           </span>
           {phase === 'title' && (
             <span style={{ fontSize: 'clamp(13px, 1.9cqw, 19px)', fontWeight: 500, textShadow: outline(2), maxWidth: 560, lineHeight: 1.35 }}>
-              Move with your finger, the mouse or the arrow keys. Eat the fruit, dodge the rocks!
+              {w.how}
             </span>
           )}
         </button>

@@ -9,6 +9,8 @@ import type { TeamTasksStore } from '../types/team-tasks.store'
  * in the list, so two people moving cards at once both keep their moves.
  * Kunobi keeps a readable copy in `data/tasks.json`; the page shows that copy,
  * read-only, wherever the store cannot open (a web link, a preview).
+ * Seeded task text shows in the reader's language (`localize`, from the page);
+ * project, status and priority values stay as stored and show through `team.labels`.
  */
 
 export interface Person { id: string; role: string; color: string; ai: string }
@@ -21,6 +23,8 @@ export interface Team {
   people: Person[]
   projects: Project[]
   statuses: string[]
+  /** Display names for project, status and priority values, by value. */
+  labels?: Record<string, string>
 }
 export interface Task {
   id: string
@@ -48,6 +52,8 @@ const KEYS = ['id', 'title', 'project', 'owner', 'status', 'start', 'due', 'prio
 /** A store row with every field present: a field the store has not set reads as ''. */
 const toTask = (row: Record<string, unknown>): Task =>
   Object.fromEntries(KEYS.map((k) => [k, String(row[k] ?? '')])) as unknown as Task
+/** A project, status or priority value as the reader sees it. */
+const say = (team: Team, value: string) => team.labels?.[value] ?? value
 
 /** Put task `id` in column `status`: just before `before`, just after `after`, or else last in that column. */
 function place(draft: Draft, id: string, status: string, before?: string | null, after?: string | null) {
@@ -68,9 +74,10 @@ function place(draft: Draft, id: string, status: string, before?: string | null,
 }
 
 const time = (date: string) => (date ? Date.UTC(+date.slice(0, 4), +date.slice(5, 7) - 1, +date.slice(8, 10)) : NaN)
-const lang = () => (typeof navigator !== 'undefined' && navigator.language) || 'en'
-const shortDate = (date: string) =>
-  date ? new Date(time(date)).toLocaleDateString(lang(), { month: 'short', day: 'numeric', timeZone: 'UTC' }) : ''
+/** The reader's language tag, for dates. */
+const Locale = React.createContext('en')
+const shortDate = (date: string, locale: string) =>
+  date ? new Date(time(date)).toLocaleDateString(locale, { month: 'short', day: 'numeric', timeZone: 'UTC' }) : ''
 
 function Avatar({ person, size = 24 }: { person?: Person; size?: number }) {
   return (
@@ -81,12 +88,13 @@ function Avatar({ person, size = 24 }: { person?: Person; size?: number }) {
 }
 
 function Due({ task, today, w }: { task: Task; today: number; w: Words }) {
+  const locale = React.useContext(Locale)
   if (!task.due) return null
   const left = Math.round((time(task.due) - today) / DAY)
   const done = task.status === 'Done'
   const tone = done ? 'done' : left < 0 ? 'late' : left <= 7 ? 'soon' : 'later'
   const when = done ? '' : left < 0 ? ` · ${-left}${w.dShort} ${w.late}` : left === 0 ? ` · ${w.today}` : ` · ${left}${w.dShort}`
-  return <span className={`pj-due ${tone}`}>{shortDate(task.due)}{when}</span>
+  return <span className={`pj-due ${tone}`}>{shortDate(task.due, locale)}{when}</span>
 }
 
 /** What the board can do when the store is open and this page may change it. */
@@ -122,22 +130,22 @@ function Card({ task, team, today, w, act, dragging, onKey, onDragStart, onDragE
       data-task={task.id}
       tabIndex={act ? 0 : undefined}
       draggable={act ? true : undefined}
-      aria-label={act ? `${task.title} · ${task.status}. ${w.keys}` : undefined}
+      aria-label={act ? `${task.title} · ${say(team, task.status)}. ${w.keys}` : undefined}
       onKeyDown={act ? (e) => onKey(e, task) : undefined}
       onDragStart={act ? (e) => { e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', task.id); onDragStart(task) } : undefined}
       onDragEnd={act ? onDragEnd : undefined}
       onDragOver={act ? (e) => onDragOver(e, task) : undefined}
     >
       <span className="pj-card-top">
-        <span className="pj-tag"><i style={{ background: project?.color }} />{task.project}</span>
+        <span className="pj-tag"><i style={{ background: project?.color }} />{say(team, task.project)}</span>
         <span className="pj-id">
           {task.priority === 'High' && !done ? <span className="pj-high" title={w.high}>▲</span> : null}
           {task.id}
           {act ? (
             <span className="pj-move">
-              <button type="button" disabled={!prev} aria-label={prev ? `${w.moveTo} ${prev}` : undefined} title={prev ? `${w.moveTo} ${prev}` : undefined}
+              <button type="button" disabled={!prev} aria-label={prev ? `${w.moveTo} ${say(team, prev)}` : undefined} title={prev ? `${w.moveTo} ${say(team, prev)}` : undefined}
                 onClick={() => prev && act.move(task.id, prev)}>‹</button>
-              <button type="button" disabled={!next} aria-label={next ? `${w.moveTo} ${next}` : undefined} title={next ? `${w.moveTo} ${next}` : undefined}
+              <button type="button" disabled={!next} aria-label={next ? `${w.moveTo} ${say(team, next)}` : undefined} title={next ? `${w.moveTo} ${say(team, next)}` : undefined}
                 onClick={() => next && act.move(task.id, next)}>›</button>
             </span>
           ) : null}
@@ -182,7 +190,7 @@ function AddTask({ status, team, w, act }: { status: string; team: Team; w: Word
           {team.people.map((p) => <option key={p.id} value={p.id}>{p.id}</option>)}
         </select>
         <select value={project} onChange={(e) => setProject(e.target.value)} aria-label={w.project}>
-          {team.projects.map((p) => <option key={p.id} value={p.id}>{p.id}</option>)}
+          {team.projects.map((p) => <option key={p.id} value={p.id}>{say(team, p.id)}</option>)}
         </select>
         <input type="date" value={due} onChange={(e) => setDue(e.target.value)} aria-label={w.due} />
       </div>
@@ -253,7 +261,7 @@ function Board({ tasks, team, today, w, act }: { tasks: Task[]; team: Team; toda
           onDragOver={act ? (e) => overColumn(e, status) : undefined}
           onDrop={act ? onDrop : undefined}
         >
-          <header><i style={{ background: STATUS_COLOR[status] }} />{status}<b>{cards.length}</b></header>
+          <header><i style={{ background: STATUS_COLOR[status] }} />{say(team, status)}<b>{cards.length}</b></header>
           <div className="pj-cards">
             {cards.map((task) => (
               <React.Fragment key={task.id}>
@@ -304,11 +312,11 @@ function TableView({ tasks, team, today, w }: { tasks: Task[]; team: Team; today
               <tr key={t.id}>
                 <td className="pj-muted">{t.id}</td>
                 <td className="pj-title-cell">{t.page ? <a href={t.page}>{t.title}</a> : t.title}</td>
-                <td><span className="pj-tag"><i style={{ background: project?.color }} />{t.project}</span></td>
+                <td><span className="pj-tag"><i style={{ background: project?.color }} />{say(team, t.project)}</span></td>
                 <td><span className="pj-owner"><Avatar person={person} size={22} />{t.owner}</span></td>
-                <td><span className="pj-status" style={{ ['--s' as string]: STATUS_COLOR[t.status] }}>{t.status}</span></td>
+                <td><span className="pj-status" style={{ ['--s' as string]: STATUS_COLOR[t.status] }}>{say(team, t.status)}</span></td>
                 <td><Due task={t} today={today} w={w} /></td>
-                <td className={t.priority === 'High' ? 'pj-strong' : 'pj-muted'}>{t.priority}</td>
+                <td className={t.priority === 'High' ? 'pj-strong' : 'pj-muted'}>{say(team, t.priority)}</td>
                 <td className="pj-muted">{t.ai}</td>
               </tr>
             )
@@ -320,6 +328,7 @@ function TableView({ tasks, team, today, w }: { tasks: Task[]; team: Team; today
 }
 
 function Timeline({ tasks, team, today, w }: { tasks: Task[]; team: Team; today: number; w: Words }) {
+  const locale = React.useContext(Locale)
   const opening = time(team.opening)
   const dated = tasks.filter((t) => t.due)
   const first = Math.min(today - 7 * DAY, ...dated.map((t) => time(t.start || t.due)))
@@ -335,7 +344,7 @@ function Timeline({ tasks, team, today, w }: { tasks: Task[]; team: Team; today:
     <div className="pj-tl-wrap">
       <div className="pj-tl">
         <div className="pj-tl-axis">
-          {weeks.map((at) => <span key={at} style={{ left: pct(at) }}>{shortDate(new Date(at).toISOString().slice(0, 10))}</span>)}
+          {weeks.map((at) => <span key={at} style={{ left: pct(at) }}>{shortDate(new Date(at).toISOString().slice(0, 10), locale)}</span>)}
         </div>
         <div className="pj-tl-body">
           {weeks.map((at) => <span key={at} className="pj-tl-grid" style={{ left: pct(at) }} />)}
@@ -343,7 +352,7 @@ function Timeline({ tasks, team, today, w }: { tasks: Task[]; team: Team; today:
           <span className="pj-tl-open" style={{ left: pct(opening) }}><b>{w.opening}</b></span>
           {lanes.map(({ project, tasks: laneTasks }) => (
             <div className="pj-lane" key={project.id}>
-              <div className="pj-lane-name"><i style={{ background: project.color }} />{project.id}</div>
+              <div className="pj-lane-name"><i style={{ background: project.color }} />{say(team, project.id)}</div>
               {laneTasks.map((t) => {
                 const start = t.start ? time(t.start) : time(t.due)
                 const end = time(t.due) + DAY
@@ -357,7 +366,7 @@ function Timeline({ tasks, team, today, w }: { tasks: Task[]; team: Team; today:
                   <span
                     className={`pj-bar${t.status === 'Done' ? ' done' : ''}${point ? ' point' : ''}`}
                     style={{ left: pct(start), width: point ? undefined : `calc(${pct(end)} - ${pct(start)})`, ['--c' as string]: project.color }}
-                    title={`${t.id} · ${t.title} · ${t.owner} · ${shortDate(t.start)} – ${shortDate(t.due)}`}
+                    title={`${t.id} · ${t.title} · ${t.owner} · ${shortDate(t.start, locale)} – ${shortDate(t.due, locale)}`}
                   >
                     {point ? null : <Avatar person={person} size={16} />}
                     {inside ? <em>{t.title}</em> : null}
@@ -405,12 +414,20 @@ function useSend(setProblem: (reason: string | null) => void) {
   }, [setProblem])
 }
 
-export function Projects({ seed, team, w }: { seed: { tasks: Record<string, unknown>[] }; team: Team; w: Words }) {
+export function Projects({ seed, localize, team, w, locale }: {
+  seed: { tasks: Record<string, unknown>[] }
+  /** The tasks with their starting text in the reader's language (display only). */
+  localize: (data: { tasks: Record<string, unknown>[] }) => { tasks: Record<string, unknown>[] }
+  team: Team
+  w: Words
+  /** The reader's language tag, for dates. */
+  locale: string
+}) {
   const status = useStoreStatus(STORE)
   const data = useStore(STORE) as TeamTasksStore | undefined
   const open = Boolean(status?.status === 'open' && data?.tasks)
-  const source = open ? (data!.tasks as unknown as Record<string, unknown>[]) : seed.tasks
-  const all = React.useMemo(() => source.map(toTask), [source])
+  const source = open ? (data as unknown as { tasks: Record<string, unknown>[] }) : seed
+  const all = React.useMemo(() => localize(source).tasks.map(toTask), [source, localize])
   const [problem, setProblem] = React.useState<string | null>(null)
   const send = useSend(setProblem)
   const act: Actions | null = open && status?.canEdit ? {
@@ -435,6 +452,7 @@ export function Projects({ seed, team, w }: { seed: { tasks: Record<string, unkn
   const daysLeft = Math.round((time(team.opening) - today) / DAY)
 
   return (
+    <Locale.Provider value={locale}>
     <div className="pj">
       <style>{CSS}</style>
       <header className="pj-head">
@@ -449,7 +467,7 @@ export function Projects({ seed, team, w }: { seed: { tasks: Record<string, unkn
             <span className="pj-progress-bar">
               {team.statuses.map((s) => {
                 const n = all.filter((t) => t.status === s).length
-                return n ? <i key={s} style={{ flex: n, background: STATUS_COLOR[s] }} title={`${s}: ${n}`} /> : null
+                return n ? <i key={s} style={{ flex: n, background: STATUS_COLOR[s] }} title={`${say(team, s)}: ${n}`} /> : null
               })}
             </span>
           </div>
@@ -478,7 +496,7 @@ export function Projects({ seed, team, w }: { seed: { tasks: Record<string, unkn
             const n = all.filter((t) => t.project === p.id && byPerson(t)).length
             return n || projects.includes(p.id) ? (
               <button key={p.id} className={`pj-chip${projects.includes(p.id) ? ' on' : ''}`} onClick={() => toggle(projects, setProjects, p.id)} aria-pressed={projects.includes(p.id)}>
-                <i style={{ background: p.color }} />{p.id}<small>{n}</small>
+                <i style={{ background: p.color }} />{say(team, p.id)}<small>{n}</small>
               </button>
             ) : null
           })}
@@ -501,6 +519,7 @@ export function Projects({ seed, team, w }: { seed: { tasks: Record<string, unkn
         </span>
       </footer>
     </div>
+    </Locale.Provider>
   )
 }
 

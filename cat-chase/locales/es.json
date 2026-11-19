@@ -1,0 +1,16 @@
+{
+  "meta.title": { "text": "A por el pez", "from": "1d438cc8" },
+  "meta.description": { "text": "Cada uno mueve su propio gato por una casa. Atrapa peces, empuja los ovillos; quien coma cinco peces primero gana la ronda.", "from": "0d372c7e" },
+  "meta.prompts": { "text": ["Haz una partida de A por el pez para nuestra familia: un gato para cada uno, con nuestros nombres, en nuestro salón.", "Gana quien coma tres peces primero, y los ovillos ruedan más rápido."], "from": "0a45852c" },
+  "words.title": { "text": "A por el pez", "from": "1d438cc8" },
+  "words.you": { "text": "Tú", "from": "8a79a5f8" },
+  "words.guest": { "text": "Invitado", "from": "2585146e" },
+  "words.meow": { "text": "¡Miau!", "from": "15b4e067" },
+  "words.jump": { "text": "Saltar", "from": "8647784d" },
+  "words.youWin": { "text": "¡Ganas la ronda!", "from": "a1974c01" },
+  "words.theyWin": { "text": "¡{{name}} gana la ronda!", "from": "c7634006" },
+  "words.alone": { "text": "Esperando a otro gato.", "from": "30625d47" },
+  "words.solo": { "text": "Juegas solo. Ábrelo en Kunobi con amigos para jugar juntos.", "from": "86c29ac5" },
+  "words.paused": { "text": "Reconectando…", "from": "2d2ad1e0" },
+  "words.how": { "text": "Flechas o toca para moverte · Espacio para saltar · rueda para zoom · M para maullar · gana quien coma {{count}} peces", "from": "0bae9e64" }
+}

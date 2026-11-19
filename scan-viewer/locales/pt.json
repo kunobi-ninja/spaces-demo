@@ -1,0 +1,19 @@
+{
+  "meta.title": { "text": "Felipe em 3D", "from": "3df4de65" },
+  "meta.description": { "text": "Um escaneamento 3D em Gaussian splats que você pode girar, dar zoom e iluminar, direto na página.", "from": "f640c262" },
+  "words.loading": { "text": "Carregando o escaneamento…", "from": "2a0825ce" },
+  "words.failed": { "text": "Não foi possível carregar o escaneamento.", "from": "4db8ae0d" },
+  "words.hint": { "text": "Arraste para girar · Role ou faça pinça para dar zoom", "from": "772ec230" },
+  "words.front": { "text": "Frente", "from": "0272e7ae" },
+  "words.side": { "text": "Lado", "from": "159051dc" },
+  "words.close": { "text": "Close", "from": "dffdb8a3" },
+  "words.reveal": { "text": "Revelar", "from": "945f4fe4" },
+  "words.points": { "text": "Dispersar", "from": "92d4a70f" },
+  "words.light": { "text": "Luz", "from": "5170ad83" },
+  "words.change": { "text": "Como mudar isto", "from": "37c68600" },
+  "words.changeLine": { "text": "A câmera, o título e o crédito ficam em data/scene.json. Peça para a sua IA:", "from": "40903cf5" },
+  "words.prompts": { "text": ["“Adicione uma vista de cima ao visualizador do escaneamento.”", "“Use o meu escaneamento assets/chair.spz, enquadrado de frente.”"], "from": "b74874fa" },
+  "data.scene.title": { "text": "Felipe", "from": "1a2f7fda" },
+  "data.scene.subtitle": { "text": "Um escaneamento 3D que você pode girar, dar zoom e iluminar.", "from": "f614e45d" },
+  "data.scene.credit.text": { "text": "“ChatGPT dots – Felipe”, de abstrakt, CC BY 4.0. Convertido para SPZ e com menos detalhes.", "from": "8b1851f0" }
+}

@@ -1,0 +1,16 @@
+{
+  "meta.title": { "text": "Katzenjagd", "from": "1d438cc8" },
+  "meta.description": { "text": "Jeder steuert seine eigene Katze durch ein Haus. Fang Fische, schubs das Wollknäuel herum; wer zuerst fünf Fische hat, gewinnt die Runde.", "from": "0d372c7e" },
+  "meta.prompts": { "text": ["Mach eine Katzenjagd für unsere Familie: eine Katze pro Person, nach uns benannt, in unserem Wohnzimmer.", "Wer zuerst drei Fische hat, gewinnt, und das Wollknäuel rollt schneller."], "from": "0a45852c" },
+  "words.title": { "text": "Katzenjagd", "from": "1d438cc8" },
+  "words.you": { "text": "Du", "from": "8a79a5f8" },
+  "words.guest": { "text": "Gast", "from": "2585146e" },
+  "words.meow": { "text": "Miau!", "from": "15b4e067" },
+  "words.jump": { "text": "Springen", "from": "8647784d" },
+  "words.youWin": { "text": "Du gewinnst die Runde!", "from": "a1974c01" },
+  "words.theyWin": { "text": "{{name}} gewinnt die Runde!", "from": "c7634006" },
+  "words.alone": { "text": "Warte auf eine andere Katze.", "from": "30625d47" },
+  "words.solo": { "text": "Du spielst allein. Öffne es in Kunobi mit Freunden, um zusammen zu spielen.", "from": "86c29ac5" },
+  "words.paused": { "text": "Verbinde neu…", "from": "2d2ad1e0" },
+  "words.how": { "text": "Pfeiltasten oder Tippen zum Bewegen · Leertaste zum Springen · Scrollen zum Zoomen · M zum Miauen · wer zuerst {{count}} Fische hat, gewinnt", "from": "0bae9e64" }
+}

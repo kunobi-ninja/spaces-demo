@@ -1,6 +1,8 @@
 ---
 title: Sol Bakery wiki
 description: "How Sol Bakery works: shifts, the opening menu, suppliers, people, the opening checklist and every decision."
+i18n:
+  docs: [how-we-work.md, people.md, decisions.md, menu.md, suppliers.md, opening-checklist.md]
 kunobi:
   page-layout: wide
 ---
@@ -10,8 +12,10 @@ import '@fontsource/parkinsans/600.css'
 import '@fontsource/parkinsans/800.css'
 import '@fontsource/figtree/400.css'
 import '@fontsource/figtree/600.css'
+import { useI18n } from '../../lib/i18n'
+import translations from './locales/index'
 
-{/* The wiki's pages, in reading order. Each page is a plain Markdown file in this folder; add one here when you add a file. */}
+{/* The wiki's pages, in reading order. Each page is a plain Markdown file in this folder; add one here and to `i18n.docs` when you add a file. Their translations, and the words below, are in locales/<lang>.json. */}
 
 export const PAGES = [
   { slug: 'how-we-work', icon: '◷', tint: 'rgba(243,170,8,0.2)', group: 'team' },
@@ -23,47 +27,24 @@ export const PAGES = [
 ]
 
 export const WORDS = {
-  en: {
-    back: 'Sol Bakery',
-    title: 'Wiki',
-    lede: 'How we work and what we decided. Every page is a plain Markdown file in this folder, so anyone on the team, or their AI, can edit it.',
-    groups: { team: 'The team', riverside: 'Opening Riverside' },
-    board: 'The board',
-    boardLine: 'Tasks, owners and dates',
-    pages: {
-      'how-we-work': ['How we work', 'Shifts, who decides what, the Monday check-in, and how we use our AIs here.'],
-      'people': ['People', 'Who owns what, and the two roles we are still hiring for.'],
-      'decisions': ['Decisions', 'A dated log: what we decided, who decided, and why.'],
-      'menu': ['Opening menu', 'Twelve items with prices and allergens, and what is left to do.'],
-      'suppliers': ['Suppliers', 'Flour, dairy, coffee and packaging, and the oven quotes.'],
-      'opening-checklist': ['Opening checklist', 'Everything that has to happen before Friday 12 December.'],
-    },
+  back: 'Sol Bakery',
+  title: 'Wiki',
+  lede: 'How we work and what we decided. Every page is a plain Markdown file in this folder, so anyone on the team, or their AI, can edit it.',
+  groups: { team: 'The team', riverside: 'Opening Riverside' },
+  board: 'The board',
+  boardLine: 'Tasks, owners and dates',
+  pages: {
+    'how-we-work': ['How we work', 'Shifts, who decides what, the Monday check-in, and how we use our AIs here.'],
+    'people': ['People', 'Who owns what, and the two roles we are still hiring for.'],
+    'decisions': ['Decisions', 'A dated log: what we decided, who decided, and why.'],
+    'menu': ['Opening menu', 'Twelve items with prices and allergens, and what is left to do.'],
+    'suppliers': ['Suppliers', 'Flour, dairy, coffee and packaging, and the oven quotes.'],
+    'opening-checklist': ['Opening checklist', 'Everything that has to happen before Friday 12 December.'],
   },
-  es: {
-    back: 'Sol Bakery',
-    title: 'Wiki',
-    lede: 'Cómo trabajamos y qué decidimos. Cada página es un archivo Markdown en esta carpeta, así que cualquiera del equipo, o su IA, puede editarla.',
-    groups: { team: 'El equipo', riverside: 'Abrir Riverside' },
-    board: 'El tablero',
-    boardLine: 'Tareas, responsables y fechas',
-    pages: {
-      'how-we-work': ['Cómo trabajamos', 'Turnos, quién decide qué, la reunión de los lunes y cómo usamos nuestras IA.'],
-      'people': ['Personas', 'Quién se encarga de qué y los dos puestos que seguimos buscando.'],
-      'decisions': ['Decisiones', 'Un registro con fecha: qué decidimos, quién y por qué.'],
-      'menu': ['Menú de apertura', 'Doce productos con precios y alérgenos, y lo que falta.'],
-      'suppliers': ['Proveedores', 'Harina, lácteos, café y embalaje, y los presupuestos del horno.'],
-      'opening-checklist': ['Lista de apertura', 'Todo lo que tiene que pasar antes del viernes 12 de diciembre.'],
-    },
-  },
-}
-
-export const words = () => {
-  const tag = (typeof navigator !== 'undefined' && navigator.language) || 'en'
-  return WORDS[tag.toLowerCase().split('-')[0]] ?? WORDS.en
 }
 
 export const Wiki = () => {
-  const w = words()
+  const w = useI18n(WORDS, translations).w
   return (
     <div className="wiki">
       <style>{`

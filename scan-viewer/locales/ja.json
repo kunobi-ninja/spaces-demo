@@ -1,0 +1,19 @@
+{
+  "meta.title": { "text": "3Dの Felipe", "from": "3df4de65" },
+  "meta.description": { "text": "ページの中で回したり、ズームしたり、光を当てたりできる3Dガウシアンスプラットのスキャン。", "from": "f640c262" },
+  "words.loading": { "text": "スキャンを読み込み中…", "from": "2a0825ce" },
+  "words.failed": { "text": "スキャンを読み込めませんでした。", "from": "4db8ae0d" },
+  "words.hint": { "text": "ドラッグで回転 · スクロールかピンチでズーム", "from": "772ec230" },
+  "words.front": { "text": "正面", "from": "0272e7ae" },
+  "words.side": { "text": "横", "from": "159051dc" },
+  "words.close": { "text": "アップ", "from": "dffdb8a3" },
+  "words.reveal": { "text": "表示", "from": "945f4fe4" },
+  "words.points": { "text": "点で表示", "from": "92d4a70f" },
+  "words.light": { "text": "ライト", "from": "5170ad83" },
+  "words.change": { "text": "変更のしかた", "from": "37c68600" },
+  "words.changeLine": { "text": "カメラ、タイトル、クレジットは data/scene.json にあります。AI に頼んでみてください：", "from": "40903cf5" },
+  "words.prompts": { "text": ["「スキャンビューアーに真上からの視点のプリセットを追加して。」", "「代わりに私のスキャン assets/chair.spz を使って、正面から映して。」"], "from": "b74874fa" },
+  "data.scene.title": { "text": "Felipe", "from": "1a2f7fda" },
+  "data.scene.subtitle": { "text": "回したり、ズームしたり、光を当てたりできる3Dスキャン。", "from": "f614e45d" },
+  "data.scene.credit.text": { "text": "「ChatGPT dots – Felipe」by abstrakt、CC BY 4.0。SPZ に変換し、細部を減らしています。", "from": "8b1851f0" }
+}

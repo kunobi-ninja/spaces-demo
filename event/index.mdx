@@ -5,86 +5,66 @@ prompts:
   - "Mark Erin Walsh as coming and seat her at table D."
   - "Lena can’t come: free her seat and put Raf Costa there."
   - "Seat Priya Shah at table A, next to the Novaks."
+i18n:
+  data:
+    event: [title, kind, host, venue, 'tables[*].name', 'schedule[*].what', 'schedule[*].detail', 'schedule[*].who', 'budget.items[*].item', 'budget.items[*].note']
+    guests: [guests.*.note, guests.*.diet, guests.*.household]
 kunobi:
   page-layout: wide
   stores: [event-guests]
   webEdits: write
 ---
 
+import * as React from 'react'
 import '@fontsource/parkinsans/600.css'
 import '@fontsource/parkinsans/800.css'
 import '@fontsource/figtree/400.css'
 import '@fontsource/figtree/600.css'
 import event from './data/event.json'
 import guests from './data/guests.json'
+import guestsStart from './data/guests.start.json'
 import { EventPlan } from './src/EventPlan'
+import { useI18n } from '../lib/i18n'
+import translations from './locales/index'
 
-{/* Interface words per language. The page follows the system language and falls back to English. Replies, party sizes, diets and tables live in the event-guests LiveStore (readable copy: data/guests.json); the tables, evening and budget live in data/event.json. */}
+{/* The page's words. Replies, party sizes, diets and tables live in the event-guests LiveStore (readable copy: data/guests.json); the tables, evening and budget live in data/event.json. Their translations, and those of the starting guests (data/guests.start.json, by id), are in locales/<lang>.json; a guest still as they started shows translated. */}
 
 export const WORDS = {
-  en: {
-    locale: 'en-GB',
-    daysToGo: 'days to go', coming: 'coming', seatsLeft: 'seats left',
-    of: 'of', seats: 'seats',
-    seating: 'Seating plan', seatingLine: 'Click anyone to see their details. Their household lights up with them.',
-    seatingLineHost: 'Click anyone to change their reply, party or table.',
-    moveHint: (name) => `Click a table to seat ${name} there.`, seatHere: (name) => `Seat ${name} here`,
-    saving: 'Saving…', refused: 'Not saved. Try again.',
-    answer: 'Reply', party: 'People', noSeat: 'No seat', dietHint: 'e.g. Vegan, Nut allergy', withMore: (n) => `+${n} with them`, fromLink: 'Replied from a link',
-    yourReply: 'Your reply', yourName: 'Your name', nameFirst: 'Add your name, then pick a reply.',
-    colourBy: 'Colour by', side: 'Side', diet: 'Diet', none: 'No needs',
-    attention: 'Needs attention', allGood: 'Everyone has a seat and every table fits.',
-    over: (t, n, s) => `${t} has ${n} guests for ${s} seats`,
-    unseated: (n) => `${n} confirmed ${n === 1 ? 'guest has' : 'guests have'} no seat`,
-    declined: (name, t) => `${name} can't come but still has a seat at ${t}`,
-    split: (h, ts) => `The ${h} household is split across ${ts}`,
-    notSeated: 'Not seated yet', legend: 'Sides',
-    doorHint: 'Main doors', dance: 'Dance floor', bar: 'Buffet and drinks', cake: 'Cake',
-    rsvp: { yes: 'Coming', maybe: 'Maybe', no: "Can't come", none: 'No reply' },
-    household: 'Household', table: 'Table', noTable: 'No seat yet', plusOneOf: 'Plus-one of', close: 'Close',
-    replies: 'Replies', repliesLine: (n) => `${n} invited`,
-    waiting: 'Still to hear from', waitingNone: 'Everyone has replied.',
-    caterer: 'For the cooks', dinners: 'plates', standard: 'No special diet',
-    evening: 'The evening', budget: 'Budget', planned: 'Planned', paid: 'Paid', leftToPay: 'Left to pay', perGuest: 'per guest coming',
-    change: 'How to change this',
-    changeLine: 'Replies and seats save as you change them here. The evening and budget are in data/event.json. Or ask your AI:',
-    prompts: ['“Mark Erin Walsh as coming and seat her at table D.”', '“Lena can’t come: free her seat and put Raf Costa there.”', '“Seat Priya Shah at table A, next to the Novaks.”'],
-    linkLine: 'Guests who open a link you share from this computer can answer only for themselves.',
-  },
-  es: {
-    locale: 'es-ES',
-    daysToGo: 'días', coming: 'vienen', seatsLeft: 'sitios libres',
-    of: 'de', seats: 'asientos',
-    seating: 'Plano de mesas', seatingLine: 'Haz clic en alguien para ver sus datos. Su familia se ilumina con él.',
-    seatingLineHost: 'Haz clic en alguien para cambiar su respuesta, cuántos vienen o su mesa.',
-    moveHint: (name) => `Haz clic en una mesa para sentar ahí a ${name}.`, seatHere: (name) => `Sentar aquí a ${name}`,
-    saving: 'Guardando…', refused: 'No se guardó. Inténtalo otra vez.',
-    answer: 'Respuesta', party: 'Personas', noSeat: 'Sin sitio', dietHint: 'p. ej. Vegana, Alergia a frutos secos', withMore: (n) => `+${n} con él`, fromLink: 'Respondió desde un enlace',
-    yourReply: 'Tu respuesta', yourName: 'Tu nombre', nameFirst: 'Escribe tu nombre y elige una respuesta.',
-    colourBy: 'Color por', side: 'Grupo', diet: 'Dieta', none: 'Sin restricciones',
-    attention: 'Por revisar', allGood: 'Todos tienen sitio y todas las mesas caben.',
-    over: (t, n, s) => `${t} tiene ${n} invitados para ${s} asientos`,
-    unseated: (n) => `${n} ${n === 1 ? 'invitado confirmado no tiene' : 'invitados confirmados no tienen'} sitio`,
-    declined: (name, t) => `${name} no viene pero sigue teniendo sitio en ${t}`,
-    split: (h, ts) => `La familia ${h} está repartida entre ${ts}`,
-    notSeated: 'Sin sitio todavía', legend: 'Grupos',
-    doorHint: 'Entrada', dance: 'Pista de baile', bar: 'Bufé y bebidas', cake: 'Tarta',
-    rsvp: { yes: 'Vienen', maybe: 'Quizás', no: 'No vienen', none: 'Sin respuesta' },
-    household: 'Familia', table: 'Mesa', noTable: 'Sin sitio todavía', plusOneOf: 'Acompañante de', close: 'Cerrar',
-    replies: 'Respuestas', repliesLine: (n) => `${n} invitados`,
-    waiting: 'Falta saber de', waitingNone: 'Todos han respondido.',
-    caterer: 'Para la cocina', dinners: 'platos', standard: 'Sin dieta especial',
-    evening: 'La noche', budget: 'Presupuesto', planned: 'Previsto', paid: 'Pagado', leftToPay: 'Falta pagar', perGuest: 'por invitado',
-    change: 'Cómo cambiar esto',
-    changeLine: 'Las respuestas y los sitios se guardan al cambiarlos aquí. La noche y el presupuesto están en data/event.json. O pídeselo a tu IA:',
-    prompts: ['“Marca a Erin Walsh como que viene y siéntala en la mesa D.”', '“Lena no viene: libera su sitio y pon ahí a Raf Costa.”', '“Sienta a Priya Shah en la mesa A, junto a los Novak.”'],
-    linkLine: 'Quien abra un enlace que compartas desde este ordenador solo puede responder por sí mismo.',
-  },
+  daysToGo: 'days to go', coming: 'coming', seatsLeft: 'seats left',
+  of: 'of', seats: 'seats',
+  seating: 'Seating plan', seatingLine: 'Click anyone to see their details. Their household lights up with them.',
+  seatingLineHost: 'Click anyone to change their reply, party or table.',
+  moveHint: 'Click a table to seat {{name}} there.', seatHere: 'Seat {{name}} here',
+  saving: 'Saving…', refused: 'Not saved. Try again.',
+  answer: 'Reply', party: 'People', noSeat: 'No seat', dietHint: 'e.g. Vegan, Nut allergy', withMore: '+{{count}} with them', fromLink: 'Replied from a link',
+  yourReply: 'Your reply', yourName: 'Your name', nameFirst: 'Add your name, then pick a reply.',
+  colourBy: 'Colour by', side: 'Side', diet: 'Diet', none: 'No needs',
+  attention: 'Needs attention', allGood: 'Everyone has a seat and every table fits.',
+  over: '{{table}} has {{count}} guests for {{seats}} seats',
+  unseated_one: '{{count}} confirmed guest has no seat',
+  unseated_other: '{{count}} confirmed guests have no seat',
+  declined: "{{name}} can't come but still has a seat at {{table}}",
+  split: 'The {{household}} household is split across {{tables}}',
+  notSeated: 'Not seated yet', legend: 'Sides',
+  sides: { Family: 'Family', Friends: 'Friends', Work: 'Work', School: 'School' },
+  doorHint: 'Main doors', dance: 'Dance floor', bar: 'Buffet and drinks', cake: 'Cake',
+  rsvp: { yes: 'Coming', maybe: 'Maybe', no: "Can't come", none: 'No reply' },
+  household: 'Household', table: 'Table', noTable: 'No seat yet', plusOneOf: 'Plus-one of', close: 'Close',
+  replies: 'Replies', repliesLine: '{{count}} invited',
+  waiting: 'Still to hear from', waitingNone: 'Everyone has replied.',
+  caterer: 'For the cooks', dinners: 'plates', standard: 'No special diet',
+  evening: 'The evening', budget: 'Budget', planned: 'Planned', paid: 'Paid', leftToPay: 'Left to pay', perGuest: 'per guest coming',
+  change: 'How to change this',
+  changeLine: 'Replies and seats save as you change them here. The evening and budget are in data/event.json. Or ask your AI:',
+  prompts: ['“Mark Erin Walsh as coming and seat her at table D.”', '“Lena can’t come: free her seat and put Raf Costa there.”', '“Seat Priya Shah at table A, next to the Novaks.”'],
+  linkLine: 'Guests who open a link you share from this computer can answer only for themselves.',
 }
 
-export const pickWords = () => {
-  const tag = (typeof navigator !== 'undefined' && navigator.language) || 'en'
-  return WORDS[tag.toLowerCase().split('-')[0]] ?? WORDS.en
+export const Party = () => {
+  const t = useI18n(WORDS, translations)
+  const localize = React.useCallback((live) => t.data('guests', live, guestsStart), [t])
+  const plan = React.useMemo(() => t.data('event', event), [t])
+  return <EventPlan event={plan} start={guests} localize={localize} locale={t.tag} w={t.w} />
 }
 
-<EventPlan event={event} start={guests} w={pickWords()} />
+<Party />

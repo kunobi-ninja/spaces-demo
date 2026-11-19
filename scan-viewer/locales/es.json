@@ -1,0 +1,19 @@
+{
+  "meta.title": { "text": "Felipe, en 3D", "from": "3df4de65" },
+  "meta.description": { "text": "Un escaneo 3D con Gaussian splats que puedes girar, acercar e iluminar, aquí mismo en la página.", "from": "f640c262" },
+  "words.loading": { "text": "Cargando el escaneo…", "from": "2a0825ce" },
+  "words.failed": { "text": "No se pudo cargar el escaneo.", "from": "4db8ae0d" },
+  "words.hint": { "text": "Arrastra para girar · Rueda o pellizca para acercar", "from": "772ec230" },
+  "words.front": { "text": "Frente", "from": "0272e7ae" },
+  "words.side": { "text": "Lado", "from": "159051dc" },
+  "words.close": { "text": "Primer plano", "from": "dffdb8a3" },
+  "words.reveal": { "text": "Revelar", "from": "945f4fe4" },
+  "words.points": { "text": "Dispersar", "from": "92d4a70f" },
+  "words.light": { "text": "Luz", "from": "5170ad83" },
+  "words.change": { "text": "Cómo cambiarlo", "from": "37c68600" },
+  "words.changeLine": { "text": "La cámara, el título y el crédito están en data/scene.json. Pide a tu IA:", "from": "40903cf5" },
+  "words.prompts": { "text": ["“Añade una vista desde arriba al visor.”", "“Usa mi escaneo assets/silla.spz, encuadrado de frente.”"], "from": "b74874fa" },
+  "data.scene.title": { "text": "Felipe", "from": "1a2f7fda" },
+  "data.scene.subtitle": { "text": "Un escaneo en 3D que puedes girar, acercar e iluminar.", "from": "f614e45d" },
+  "data.scene.credit.text": { "text": "“ChatGPT dots – Felipe”, de abstrakt, CC BY 4.0. Convertido a SPZ y con menos detalle.", "from": "8b1851f0" }
+}

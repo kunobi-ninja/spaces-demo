@@ -1,0 +1,18 @@
+{
+  "meta.title": { "text": "Una película de cumpleaños", "from": "1dcf872e" },
+  "meta.description": { "text": "Una película de cumpleaños de 30 segundos para una amiga, hecha con un nombre, una edad y tres recuerdos.", "from": "0cc5516f" },
+  "words.turns": { "text": "cumple {{age}}", "from": "a776e3e2" },
+  "words.happy": { "text": "¡Felices {{age}}, {{to}}!", "from": "2f3db709" },
+  "words.from": { "text": "de parte de {{name}}", "from": "a7386474" },
+  "data.film.intro": { "text": "Una pequeña película para", "from": "9c39a1d9" },
+  "data.film.memories[0].when": { "text": "Verano de 2009", "from": "244d80c4" },
+  "data.film.memories[0].title": { "text": "La tienda que se inundó", "from": "5d118c19" },
+  "data.film.memories[0].line": { "text": "Dos días de lluvia en Skye. Y aun así dijiste que fue el mejor viaje de tu vida.", "from": "51e6e951" },
+  "data.film.memories[1].when": { "text": "Primavera de 2014", "from": "4e4e6d8c" },
+  "data.film.memories[1].title": { "text": "Ámsterdam en bici", "from": "75e6b0c0" },
+  "data.film.memories[1].line": { "text": "Prometiste que era llano. Nuestras piernas recuerdan otra cosa.", "from": "fa12a0b0" },
+  "data.film.memories[2].when": { "text": "Cada domingo desde entonces", "from": "17a89a52" },
+  "data.film.memories[2].title": { "text": "El club de la pasta del domingo", "from": "022e90d8" },
+  "data.film.memories[2].line": { "text": "Catorce años, una receta y la misma discusión sobre el ajo.", "from": "df434d95" },
+  "data.film.wish": { "text": "Pide un deseo", "from": "48338aa2" }
+}

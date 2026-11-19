@@ -88,13 +88,13 @@ function useWidth(ref: React.RefObject<HTMLElement | null>) {
 
 const euro = (n: number) => `€${Math.round(n)}`
 
-export function TripPlanner({ start, trip, words: w }: { start: TripPlacesStore; trip: Trip; words: Record<string, any> }) {
+export function TripPlanner({ start, localize, trip, words: w }: { start: TripPlacesStore; localize: (data: TripPlacesStore) => TripPlacesStore; trip: Trip; words: Record<string, any> }) {
   const live = useStore(STORE) as TripPlacesStore | undefined
   const status = useStoreStatus(STORE)
   // Without the store (other builds, previews), show the last saved copy, read-only.
   const open = (status?.status === 'open' || status?.status === 'paused') && live !== undefined
   const canEdit = open && status?.status === 'open' && Boolean(status?.canEdit)
-  const places = React.useMemo(() => toPlaces(open ? live : start), [open, live, start])
+  const places = React.useMemo(() => toPlaces(localize(open ? live : start)), [open, live, start, localize])
   const setBooking = (id: string, booking: Place['booking']) =>
     edit(STORE, (d: TripPlacesStore) => {
       d.places[id].booking = booking

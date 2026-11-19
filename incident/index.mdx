@@ -1,11 +1,16 @@
 ---
 title: pgo upgrade stuck
 description: "An open incident: Flux cannot finish upgrading a Postgres operator, and an app's rollouts are blocked behind it. Timeline, affected objects, events and a postmortem written from them."
+i18n:
+  data:
+    timeline: [title, commander, entries.*.text, followups.*.text]
+    cluster: [cluster.label]
 kunobi:
   page-layout: full
   stores: [incident-timeline]
 ---
 
+import * as React from 'react'
 import '@fontsource/parkinsans/600.css'
 import '@fontsource/parkinsans/800.css'
 import '@fontsource/figtree/400.css'
@@ -13,11 +18,11 @@ import '@fontsource/figtree/600.css'
 import snapshot from './data/cluster.json'
 import start from './data/timeline.start.json'
 import { Incident } from './src/Incident'
+import { useI18n } from '../lib/i18n'
+import translations from './locales/index'
 
-{/* Interface words per language. The page follows the system language and falls back to English. The header, timeline and follow-ups live in the incident-timeline LiveStore (readable copy: data/timeline.json). Cluster facts come live from the cluster selected in your Kunobi tab, or from the sample in data/cluster.json, whose `scope` names the app, namespaces and release the incident is about. */}
+{/* The page's words. Their translations, and those of the starting header, timeline and follow-ups (data/timeline.start.json, by id), are in locales/<lang>.json; text still as it started shows translated. The header, timeline and follow-ups live in the incident-timeline LiveStore (readable copy: data/timeline.json). Cluster facts come live from the cluster selected in your Kunobi tab, or from the sample in data/cluster.json, whose `scope` names the app, namespaces and release the incident is about. */}
 
-export const listEn = (xs) => (xs.length < 2 ? xs.join('') : `${xs.slice(0, -1).join(', ')} and ${xs[xs.length - 1]}`)
-export const listEs = (xs) => (xs.length < 2 ? xs.join('') : `${xs.slice(0, -1).join(', ')} y ${xs[xs.length - 1]}`)
 export const span = (ms) => {
   const m = Math.max(0, Math.floor(ms / 60000))
   const h = Math.floor(m / 60)
@@ -25,165 +30,107 @@ export const span = (ms) => {
 }
 
 export const WORDS = {
-  en: {
-    locale: 'en-GB',
-    eyebrow: (cluster) => `Incident · ${cluster}`,
-    selectedCluster: 'Selected cluster',
-    sample: (t) => `Sample data · ${t}`,
-    live: 'Live',
-    partial: 'Partly live',
-    missing: 'Not in the selected cluster · sample data',
-    useLive: 'Use live data',
-    severity: 'Severity', statusLabel: 'Status', commander: 'Commander', started: 'Started',
-    openFor: 'Open for', resolvedAfter: 'Resolved after',
-    status: { investigating: 'Investigating', mitigated: 'Mitigated', resolved: 'Resolved' },
-    duration: (ms) => { const s = span(ms); return s.d >= 2 ? `${s.d} days` : s.h >= 1 ? `${s.h} h ${s.m} min` : `${s.m} min` },
-    ago: (ms) => { const s = span(ms); return s.d >= 1 ? `${s.d} d ago` : s.h >= 1 ? `${s.h} h ago` : s.m >= 1 ? `${s.m} min ago` : 'just now' },
-    refused: 'Not saved. Try again.', saving: 'Saving…', someone: 'Someone', storeSource: 'Incident header',
-    statusChanged: (label) => `Status set to ${label}.`,
+  eyebrow: 'Incident · {{cluster}}',
+  selectedCluster: 'Selected cluster',
+  sample: 'Sample data · {{date}}',
+  live: 'Live',
+  partial: 'Partly live',
+  missing: 'Not in the selected cluster · sample data',
+  useLive: 'Use live data',
+  severity: 'Severity', statusLabel: 'Status', commander: 'Commander', started: 'Started',
+  openFor: 'Open for', resolvedAfter: 'Resolved after',
+  status: { investigating: 'Investigating', mitigated: 'Mitigated', resolved: 'Resolved' },
+  durationDays: '{{count}} days', durationHours: '{{hours}} h {{minutes}} min', durationMinutes: '{{count}} min',
+  agoDays: '{{count}} d ago', agoHours: '{{count}} h ago', agoMinutes: '{{count}} min ago', justNow: 'just now',
+  refused: 'Not saved. Try again.', saving: 'Saving…', someone: 'Someone', storeSource: 'Incident header',
+  statusChanged: 'Status set to {{status}}.',
 
-    plainTitle: 'In plain words',
-    plain: (pm) => pm.status === 'resolved'
-      ? `Fixed on ${pm.date(pm.resolved)}. Changes to ${pm.app} were blocked for ${pm.openDays} days by a stuck database update.`
-      : `${pm.app} runs normally, but changes to it cannot ship: the update to its database software has been stuck since ${pm.date(pm.started)}.`,
+  plainTitle: 'In plain words',
+  plainResolved: 'Fixed on {{date}}. Changes to {{app}} were blocked for {{days}} days by a stuck database update.',
+  plainOpen: '{{app}} runs normally, but changes to it cannot ship: the update to its database software has been stuck since {{date}}.',
 
-    graphTitle: 'Affected objects',
-    graphHint: 'Click a node for details',
-    health: { ok: 'Healthy', failed: 'Failed', blocked: 'Blocked', progressing: 'In progress', unknown: 'Unknown' },
-    rel: { gates: 'gates', checks: 'health check', chart: 'chart', installs: 'installs', applies: 'applies', runs: 'runs', operates: 'operates' },
-    pods: (n) => `${n} pods`,
-    podStatus: (r, n, restarts) => `${r}/${n} ready${restarts ? ` · ${restarts} restarts` : ''}`,
-    replicas: (r, n) => `${r}/${n} ready`,
-    instances: (r, n) => `${r}/${n} instances`,
+  graphTitle: 'Affected objects',
+  graphHint: 'Click a node for details',
+  health: { ok: 'Healthy', failed: 'Failed', blocked: 'Blocked', progressing: 'In progress', unknown: 'Unknown' },
+  rel: { gates: 'gates', checks: 'health check', chart: 'chart', installs: 'installs', applies: 'applies', runs: 'runs', operates: 'operates' },
+  pods: '{{count}} pods',
+  podStatus: '{{ready}}/{{total}} ready',
+  restarts: '{{count}} restarts',
+  replicas: '{{ready}}/{{total}} ready',
+  instances: '{{ready}}/{{total}} instances',
 
-    timelineTitle: 'Timeline',
-    timelineHint: 'Each entry cites its source.',
-    timelineReadOnly: 'Each entry cites its source. Read-only here.',
-    filterOn: (name, n) => `${n} ${n === 1 ? 'entry' : 'entries'} · ${name}`,
-    clear: 'Show all', source: 'Source', noEntries: 'No entries about this object yet.',
-    kinds: { detect: 'Detected', finding: 'Finding', action: 'Action', decision: 'Decision', note: 'Note' },
-    addKind: 'Kind', addText: 'What happened or what you found', addSource: 'Source', addAuthor: 'Your name', add: 'Add',
+  timelineTitle: 'Timeline',
+  timelineHint: 'Each entry cites its source.',
+  timelineReadOnly: 'Each entry cites its source. Read-only here.',
+  filterOn_one: '{{count}} entry · {{name}}', filterOn_other: '{{count}} entries · {{name}}',
+  clear: 'Show all', source: 'Source', noEntries: 'No entries about this object yet.',
+  kinds: { detect: 'Detected', finding: 'Finding', action: 'Action', decision: 'Decision', note: 'Note' },
+  addKind: 'Kind', addText: 'What happened or what you found', addSource: 'Source', addAuthor: 'Your name', add: 'Add',
 
-    resourcesTitle: 'Resources',
-    resourcesLive: 'Live',
-    since: (t) => `Since ${t}`,
-    eventsTitle: 'Events', eventsNone: 'No events for these objects.', warning: 'Warning', normal: 'Normal',
+  resourcesTitle: 'Resources',
+  resourcesLive: 'Live',
+  since: 'Since {{date}}',
+  eventsTitle: 'Events', eventsNone: 'No events for these objects.', warning: 'Warning', normal: 'Normal',
 
-    pmTitle: 'Postmortem',
-    pmHint: 'Written from the timeline and the cluster.',
-    pmState: { investigating: 'Draft · open', mitigated: 'Draft · mitigated', resolved: 'Final' },
-    pmSummary: 'Summary', pmImpact: 'Impact', pmChanged: 'What we changed', pmDecisions: 'Decisions', pmTimeline: 'Timeline', pmFollow: 'Follow-ups',
-    summary: (pm) => {
-      const n = pm.failed.length
-      const p1 = n
-        ? `Helm has marked every ${pm.release} upgrade since ${pm.date(pm.started)} as failed (${listEn(pm.failed)}), so it still counts ${pm.lastGood} as the last good release.${pm.stalledAt ? ` Flux stopped retrying on ${pm.date(pm.stalledAt)}.` : ''}`
-        : `Helm no longer has a failed ${pm.release} upgrade on record.`
-      const p2 = `${pm.running ? `The operator itself runs ${pm.running} and ${pm.podsReady} of ${pm.pods} pods are ready. ` : ''}${pm.blocked.length ? `What broke is delivery: ${listEn(pm.blocked)} wait on ${pm.gate} and apply nothing.` : ''}`
-      const lag = pm.detectLagDays != null ? `Unnoticed for ${pm.detectLagDays} days. ` : ''
-      const state = pm.status === 'resolved' ? `Resolved on ${pm.date(pm.resolved)}.` : pm.status === 'mitigated' ? 'Mitigated, not resolved.' : pm.actions.length ? 'Open; changes so far below.' : 'Open; nothing changed on the cluster yet.'
-      return [p1, p2, lag + state]
-    },
-    kpi: { blocked: 'Blocked KS', failed: 'Failed upgrades', pods: 'Pods ready', postgres: 'Postgres', pending: 'Commits waiting', warnings: 'App warnings' },
-    entriesN: (n) => `${n} ${n === 1 ? 'entry' : 'entries'}`,
-    impact: (pm) => [
-      pm.blocked.length ? `Delivery: ${listEn(pm.blocked)} blocked for ${pm.blockedDays} days.` : `Delivery: no ${pm.app} Kustomization is blocked.`,
-      pm.nothingWaiting ? `Nothing in Git is waiting yet: every ${pm.app} Kustomization last applied ${pm.rev}.` : `Git has moved past what the ${pm.app} Kustomizations last applied, and those changes are waiting.`,
-      `Workloads: ${pm.podsReady} of ${pm.pods} pods ready; ${pm.pg} has ${pm.pgReady} of ${pm.pgWant} Postgres instances ready.`,
-      pm.appWarnings ? `${pm.appWarnings} Warning events in the ${pm.ns} namespace.` : `No Warning events in the ${pm.ns} namespace.`,
-    ],
-    changedNone: 'Nothing yet. No change has been made to the cluster during this incident.',
-    noOwner: 'No owner', followPh: 'Add a follow-up',
-
-    howTitle: 'How to change this',
-    howLine: 'Changes here save for everyone with the space. Or ask your AI:',
-    prompts: [
-      '“Add what the flux-system events say about pgo to the incident timeline, with each event as its source.”',
-      '“Check the pgo HelmRelease again and add a finding if anything changed since the last entry.”',
-      '“Mark the incident mitigated, make me the commander, and add a decision entry saying why.”',
-    ],
+  pmTitle: 'Postmortem',
+  pmHint: 'Written from the timeline and the cluster.',
+  pmState: { investigating: 'Draft · open', mitigated: 'Draft · mitigated', resolved: 'Final' },
+  pmSummary: 'Summary', pmImpact: 'Impact', pmChanged: 'What we changed', pmDecisions: 'Decisions', pmTimeline: 'Timeline', pmFollow: 'Follow-ups',
+  story: {
+    failed: 'Helm has marked every {{release}} upgrade since {{date}} as failed ({{versions}}), so it still counts {{lastGood}} as the last good release.',
+    stalled: 'Flux stopped retrying on {{date}}.',
+    noFailed: 'Helm no longer has a failed {{release}} upgrade on record.',
+    running: 'The operator itself runs {{version}} and {{ready}} of {{pods}} pods are ready.',
+    delivery: 'What broke is delivery: {{blocked}} wait on {{gate}} and apply nothing.',
+    unnoticed: 'Unnoticed for {{days}} days.',
+    resolved: 'Resolved on {{date}}.',
+    mitigated: 'Mitigated, not resolved.',
+    openChanged: 'Open; changes so far below.',
+    openUnchanged: 'Open; nothing changed on the cluster yet.',
+    and: '{{list}} and {{last}}',
   },
-  es: {
-    locale: 'es-ES',
-    eyebrow: (cluster) => `Incidente · ${cluster}`,
-    selectedCluster: 'Clúster seleccionado',
-    sample: (t) => `Datos de ejemplo · ${t}`,
-    live: 'En directo',
-    partial: 'En directo en parte',
-    missing: 'No está en el clúster seleccionado · datos de ejemplo',
-    useLive: 'Usar datos en directo',
-    severity: 'Gravedad', statusLabel: 'Estado', commander: 'Responsable', started: 'Empezó',
-    openFor: 'Abierto', resolvedAfter: 'Resuelto tras',
-    status: { investigating: 'Investigando', mitigated: 'Mitigado', resolved: 'Resuelto' },
-    duration: (ms) => { const s = span(ms); return s.d >= 2 ? `${s.d} días` : s.h >= 1 ? `${s.h} h ${s.m} min` : `${s.m} min` },
-    ago: (ms) => { const s = span(ms); return s.d >= 1 ? `hace ${s.d} d` : s.h >= 1 ? `hace ${s.h} h` : s.m >= 1 ? `hace ${s.m} min` : 'ahora' },
-    refused: 'No se guardó. Inténtalo otra vez.', saving: 'Guardando…', someone: 'Alguien', storeSource: 'Cabecera del incidente',
-    statusChanged: (label) => `Estado cambiado a ${label}.`,
+  kpi: { blocked: 'Blocked KS', failed: 'Failed upgrades', pods: 'Pods ready', postgres: 'Postgres', pending: 'Commits waiting', warnings: 'App warnings' },
+  entriesN_one: '{{count}} entry', entriesN_other: '{{count}} entries',
+  changedNone: 'Nothing yet. No change has been made to the cluster during this incident.',
+  noOwner: 'No owner', followPh: 'Add a follow-up',
 
-    plainTitle: 'En pocas palabras',
-    plain: (pm) => pm.status === 'resolved'
-      ? `Resuelto el ${pm.date(pm.resolved)}. Una actualización atascada de la base de datos bloqueó los cambios de ${pm.app} durante ${pm.openDays} días.`
-      : `${pm.app} funciona con normalidad, pero sus cambios no pueden salir: la actualización del software de su base de datos está atascada desde el ${pm.date(pm.started)}.`,
-
-    graphTitle: 'Objetos afectados',
-    graphHint: 'Haz clic en un nodo para ver detalles',
-    health: { ok: 'Sano', failed: 'Fallido', blocked: 'Bloqueado', progressing: 'En curso', unknown: 'Desconocido' },
-    rel: { gates: 'da paso a', checks: 'comprueba', chart: 'chart', installs: 'instala', applies: 'aplica', runs: 'ejecuta', operates: 'opera' },
-    pods: (n) => `${n} pods`,
-    podStatus: (r, n, restarts) => `${r}/${n} listos${restarts ? ` · ${restarts} reinicios` : ''}`,
-    replicas: (r, n) => `${r}/${n} listos`,
-    instances: (r, n) => `${r}/${n} instancias`,
-
-    timelineTitle: 'Cronología',
-    timelineHint: 'Cada entrada cita su fuente.',
-    timelineReadOnly: 'Cada entrada cita su fuente. Solo lectura aquí.',
-    filterOn: (name, n) => `${n} ${n === 1 ? 'entrada' : 'entradas'} · ${name}`,
-    clear: 'Ver todas', source: 'Fuente', noEntries: 'Aún no hay entradas sobre este objeto.',
-    kinds: { detect: 'Detección', finding: 'Hallazgo', action: 'Acción', decision: 'Decisión', note: 'Nota' },
-    addKind: 'Tipo', addText: 'Qué pasó o qué has encontrado', addSource: 'Fuente', addAuthor: 'Tu nombre', add: 'Añadir',
-
-    resourcesTitle: 'Recursos',
-    resourcesLive: 'En directo',
-    since: (t) => `Desde el ${t}`,
-    eventsTitle: 'Eventos', eventsNone: 'No hay eventos de estos objetos.', warning: 'Aviso', normal: 'Normal',
-
-    pmTitle: 'Postmortem',
-    pmHint: 'Escrito a partir de la cronología y del clúster.',
-    pmState: { investigating: 'Borrador · abierto', mitigated: 'Borrador · mitigado', resolved: 'Definitivo' },
-    pmSummary: 'Resumen', pmImpact: 'Impacto', pmChanged: 'Qué cambiamos', pmDecisions: 'Decisiones', pmTimeline: 'Cronología', pmFollow: 'Tareas pendientes',
-    summary: (pm) => {
-      const n = pm.failed.length
-      const p1 = n
-        ? `Helm marca como fallidas todas las actualizaciones de ${pm.release} desde el ${pm.date(pm.started)} (${listEs(pm.failed)}), así que sigue dando por buena la ${pm.lastGood}.${pm.stalledAt ? ` Flux dejó de reintentarlo el ${pm.date(pm.stalledAt)}.` : ''}`
-        : `Helm ya no tiene ninguna actualización fallida de ${pm.release}.`
-      const p2 = `${pm.running ? `El operador ejecuta la ${pm.running} y ${pm.podsReady} de ${pm.pods} pods están listos. ` : ''}${pm.blocked.length ? `Lo que se rompió fue la entrega: ${listEs(pm.blocked)} esperan a ${pm.gate} y no aplican nada.` : ''}`
-      const lag = pm.detectLagDays != null ? `${pm.detectLagDays} días sin detectarse. ` : ''
-      const state = pm.status === 'resolved' ? `Resuelto el ${pm.date(pm.resolved)}.` : pm.status === 'mitigated' ? 'Mitigado, aún no resuelto.' : pm.actions.length ? 'Abierto; los cambios hechos, abajo.' : 'Abierto; aún no se ha cambiado nada en el clúster.'
-      return [p1, p2, lag + state]
-    },
-    kpi: { blocked: 'KS bloqueadas', failed: 'Actualiz. fallidas', pods: 'Pods listos', postgres: 'Postgres', pending: 'Commits en espera', warnings: 'Avisos app' },
-    entriesN: (n) => `${n} ${n === 1 ? 'entrada' : 'entradas'}`,
-    impact: (pm) => [
-      pm.blocked.length ? `Entrega: ${listEs(pm.blocked)} bloqueadas desde hace ${pm.blockedDays} días.` : `Entrega: ninguna Kustomization de ${pm.app} está bloqueada.`,
-      pm.nothingWaiting ? `En Git aún no hay nada esperando: todas las Kustomizations de ${pm.app} aplicaron por última vez ${pm.rev}.` : `Git va por delante de lo que aplicaron las Kustomizations de ${pm.app}, y esos cambios están esperando.`,
-      `Cargas: ${pm.podsReady} de ${pm.pods} pods listos; ${pm.pg} tiene ${pm.pgReady} de ${pm.pgWant} instancias de Postgres listas.`,
-      pm.appWarnings ? `${pm.appWarnings} eventos de aviso en el namespace ${pm.ns}.` : `Ningún evento de aviso en el namespace ${pm.ns}.`,
-    ],
-    changedNone: 'Nada todavía. No se ha hecho ningún cambio en el clúster durante este incidente.',
-    noOwner: 'Sin responsable', followPh: 'Añadir una tarea',
-
-    howTitle: 'Cómo cambiar esto',
-    howLine: 'Lo que cambies aquí se guarda para todos los que tienen el espacio. O pídeselo a tu IA:',
-    prompts: [
-      '“Añade a la cronología del incidente lo que dicen los eventos de flux-system sobre pgo, con cada evento como fuente.”',
-      '“Vuelve a revisar la HelmRelease pgo y añade un hallazgo si algo ha cambiado desde la última entrada.”',
-      '“Marca el incidente como mitigado, ponme como responsable y añade una decisión explicando por qué.”',
-    ],
-  },
+  howTitle: 'How to change this',
+  howLine: 'Changes here save for everyone with the space. Or ask your AI:',
+  prompts: [
+    '“Add what the flux-system events say about pgo to the incident timeline, with each event as its source.”',
+    '“Check the pgo HelmRelease again and add a finding if anything changed since the last entry.”',
+    '“Mark the incident mitigated, make me the commander, and add a decision entry saying why.”',
+  ],
 }
 
-export const pickWords = () => {
-  const tag = (typeof navigator !== 'undefined' && navigator.language) || 'en'
-  return WORDS[tag.toLowerCase().split('-')[0]] ?? WORDS.en
+{/* The sentences that depend on the incident's numbers, built from the words above. */}
+
+export const sentences = (w) => {
+  const list = (xs) => (xs.length < 2 ? xs.join('') : w.story.and({ list: xs.slice(0, -1).join(', '), last: xs[xs.length - 1] }))
+  return {
+    duration: (ms) => { const s = span(ms); return s.d >= 2 ? w.durationDays({ count: s.d }) : s.h >= 1 ? w.durationHours({ hours: s.h, minutes: s.m }) : w.durationMinutes({ count: s.m }) },
+    ago: (ms) => { const s = span(ms); return s.d >= 1 ? w.agoDays({ count: s.d }) : s.h >= 1 ? w.agoHours({ count: s.h }) : s.m >= 1 ? w.agoMinutes({ count: s.m }) : w.justNow },
+    plain: (pm) => pm.status === 'resolved'
+      ? w.plainResolved({ date: pm.date(pm.resolved), app: pm.app, days: pm.openDays })
+      : w.plainOpen({ app: pm.app, date: pm.date(pm.started) }),
+    summary: (pm) => {
+      const p1 = pm.failed.length
+        ? [w.story.failed({ release: pm.release, date: pm.date(pm.started), versions: list(pm.failed), lastGood: pm.lastGood }), pm.stalledAt ? w.story.stalled({ date: pm.date(pm.stalledAt) }) : ''].filter(Boolean).join(' ')
+        : w.story.noFailed({ release: pm.release })
+      const p2 = [pm.running ? w.story.running({ version: pm.running, ready: pm.podsReady, pods: pm.pods }) : '', pm.blocked.length ? w.story.delivery({ blocked: list(pm.blocked), gate: pm.gate }) : ''].filter(Boolean).join(' ')
+      const lag = pm.detectLagDays != null ? w.story.unnoticed({ days: pm.detectLagDays }) : ''
+      const state = pm.status === 'resolved' ? w.story.resolved({ date: pm.date(pm.resolved) }) : pm.status === 'mitigated' ? w.story.mitigated : pm.actions.length ? w.story.openChanged : w.story.openUnchanged
+      return [p1, p2, [lag, state].filter(Boolean).join(' ')]
+    },
+  }
 }
 
-<Incident snapshot={snapshot} start={start} w={pickWords()} />
+export const Page = () => {
+  const t = useI18n(WORDS, translations)
+  const w = React.useMemo(() => ({ ...t.w, ...sentences(t.w), locale: t.lang === 'en' ? 'en-GB' : t.tag }), [t])
+  const sample = React.useMemo(() => t.data('cluster', snapshot), [t])
+  const localize = React.useCallback((live) => t.data('timeline', live, start), [t])
+  return <Incident snapshot={sample} start={start} localize={localize} w={w} />
+}
+
+<Page />

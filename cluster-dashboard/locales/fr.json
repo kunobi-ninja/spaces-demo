@@ -1,0 +1,22 @@
+{
+  "meta.title": { "text": "Tableau de bord du cluster", "from": "e9469e10" },
+  "meta.description": { "text": "Ce qui est cassé dans ton cluster, où, et pourquoi.", "from": "d1a2e10f" },
+  "words.sample": { "text": "Cluster d'exemple", "from": "59783d6d" },
+  "words.selected": { "text": "Ton cluster", "from": "db3a2e4c" },
+  "words.sampleData": { "text": "Données d'exemple", "from": "0fada9af" },
+  "words.useLive": { "text": "Utiliser mon cluster", "from": "70fe5169" },
+  "words.sampleTip": { "text": "Pris {{when}}. Lecture seule.", "from": "4d49eae8" },
+  "words.broken": { "text": "cassé", "from": "dfef76f6" },
+  "words.toCheck": { "text": "à vérifier", "from": "5a3bc732" },
+  "words.allGood": { "text": "Tout va bien", "from": "804c323b" },
+  "words.podsOk": { "text": "pods en bonne santé", "from": "fb9863a2" },
+  "words.map": { "text": "Pods par namespace", "from": "2381d145" },
+  "words.problems": { "text": "Problèmes", "from": "009537e9" },
+  "words.all": { "text": "Tous", "from": "9a9877c8" },
+  "words.none": { "text": "Rien ici.", "from": "fcc41fa4" },
+  "words.back": { "text": "Retour", "from": "357885fe" },
+  "words.mark": { "text": "Marquer comme connu", "from": "2bcfdfa5" },
+  "words.unmark": { "text": "Pas connu", "from": "0c770638" },
+  "words.known": { "text": "Connu", "from": "5235ede1" },
+  "words.saving": { "text": "Enregistrement…", "from": "53ca6040" }
+}

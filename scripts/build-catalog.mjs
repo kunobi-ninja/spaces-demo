@@ -6,6 +6,11 @@
  * `*.mdx/` folders, are left out). Each demo is its entry page, every file in
  * its folder, the LiveStores its front matter names (with their view and
  * starting data) and the Fontsource CSS it imports (Latin only, font inlined).
+ * A demo written in another language than English says so in `lang`
+ * (front matter `lang`); its `translations` carry its title, description and
+ * prompts per language, from the page's `locales/<lang>.json` (`meta.*`). Files
+ * outside the demo's folder that its sources import (the shared `lib/i18n.ts`)
+ * are included too.
  * `home` is the root `index.mdx` with the files it imports. Every file is
  * written once to `<out>/objects/<sha256>`; `<out>/catalog.json` lists them.
  *
@@ -17,6 +22,7 @@ import { mkdir, readdir, readFile, rm, stat, writeFile } from 'node:fs/promises'
 import { dirname, join, posix as posixPath, relative, resolve, sep } from 'node:path'
 import { parseArgs } from 'node:util'
 import { parse as parseYaml } from 'yaml'
+import { localeDir, readLocales } from './i18n.mjs'
 
 export const CATALOG_VERSION = 1
 /** The most a gallery pick may weigh, cover included: the app downloads these ahead. */
@@ -27,9 +33,11 @@ export const PAGE_SIZE_CAP = 32 * 1024 * 1024
 const MIN_APP_VERSION = '2.0.0'
 
 const SKIPPED = [/\.DS_Store$/, /\.status\.json$/]
-const SOURCE = /\.(mdx|md|tsx?|jsx?)$/
+const SCRIPT = /\.(tsx?|jsx?)$/
 const FONT_IMPORT = /['"](@fontsource\/[a-z0-9-]+\/[a-z0-9-]+\.css)['"]/g
 const RELATIVE_IMPORT = /(?:from|import)\s+['"](\.{1,2}\/[^'"]+)['"]/g
+/** How an import without an extension resolves, in order. */
+const IMPORT_SUFFIXES = ['', '.ts', '.tsx', '.d.ts', '.js', '.jsx', '.mdx', '.json', '/index.ts', '/index.tsx', '/index.js']
 const EXAMPLE = /\{\s*id:\s*'([^']+)',\s*href:\s*'([^']+)'/g
 
 const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex')
@@ -49,6 +57,92 @@ function frontMatter(source, id) {
   const match = source.match(/^---\n([\s\S]*?)\n---/)
   if (!match) throw new Error(`${id}: the entry page has no front matter`)
   return parseYaml(match[1]) ?? {}
+}
+
+/**
+ * A demo's `translations` from its locale files: `{ es: { title, description, prompts? } }`, for
+ * each language whose file translates the title and description; undefined when none does.
+ */
+async function readTranslations(repo, entry, id) {
+  const out = {}
+  for (const [lang, { entries, errors }] of Object.entries(await readLocales(repo, localeDir(entry)))) {
+    if (errors.length) throw new Error(`${id}: ${errors[0]}`)
+    const title = entries['meta.title']?.text
+    const description = entries['meta.description']?.text
+    if (typeof title !== 'string' || typeof description !== 'string') continue
+    out[lang] = { title, description }
+    if (Array.isArray(entries['meta.prompts']?.text)) out[lang].prompts = entries['meta.prompts'].text.map(String)
+  }
+  return Object.keys(out).length ? out : undefined
+}
+
+/** `code` without its comments; strings, which may hold `/*` or `//`, are kept whole. */
+export function stripComments(code) {
+  let out = ''
+  for (let i = 0; i < code.length; i++) {
+    const ch = code[i]
+    if (ch === '"' || ch === "'" || ch === '`') {
+      const start = i
+      for (i++; i < code.length && code[i] !== ch && (ch === '`' || code[i] !== '\n'); i++) if (code[i] === '\\') i++
+      out += code.slice(start, i + 1)
+    } else if (ch === '/' && code[i + 1] === '/') {
+      const end = code.indexOf('\n', i)
+      i = end < 0 ? code.length : end - 1
+    } else if (ch === '/' && code[i + 1] === '*') {
+      const end = code.indexOf('*/', i + 2)
+      i = end < 0 ? code.length : end + 1
+    } else out += ch
+  }
+  return out
+}
+
+/**
+ * The code of the file at `path` that can import: a script whole, and of an MDX page only its ESM
+ * blocks (paragraphs starting with `import` or `export`, outside code fences), without comments.
+ * Markdown and the page's prose import nothing, whatever they quote.
+ */
+export function importingCode(path, text) {
+  if (SCRIPT.test(path)) return stripComments(text)
+  if (!path.endsWith('.mdx')) return ''
+  const blocks = []
+  let fence = null
+  let block = null
+  for (const line of text.split(/\r?\n/)) {
+    const marker = line.match(/^\s{0,3}(`{3,}|~{3,})/)?.[1]
+    if (fence) {
+      if (marker && marker[0] === fence[0] && marker.length >= fence.length) fence = null
+    } else if (marker) {
+      fence = marker
+      block = null
+    } else if (!line.trim()) block = null
+    else if (block) block.push(line)
+    else if (/^(import|export)\b/.test(line)) blocks.push((block = [line]))
+  }
+  return blocks.map((lines) => stripComments(lines.join('\n'))).join('\n')
+}
+
+/** Where `specifier`, imported from `from`, lives (repository-relative), or undefined. */
+async function resolveImport(repo, from, specifier) {
+  const path = posixPath.normalize(posixPath.join(posixPath.dirname(from), specifier))
+  for (const suffix of IMPORT_SUFFIXES) {
+    if ((await stat(join(repo, path + suffix)).catch(() => null))?.isFile()) return path + suffix
+  }
+  return undefined
+}
+
+/** Adds to `contents` every file its sources import from outside them, and what those import. */
+async function addImports(repo, contents) {
+  const pending = [...contents.keys()]
+  while (pending.length) {
+    const path = pending.pop()
+    for (const [, specifier] of importingCode(path, contents.get(path).toString('utf8')).matchAll(RELATIVE_IMPORT)) {
+      const target = await resolveImport(repo, path, specifier.replace(/\?raw$/, ''))
+      if (!target) throw new Error(`${path}: ${specifier} is imported but missing`)
+      if (contents.has(target)) continue
+      contents.set(target, await readFile(join(repo, target)))
+      pending.push(target)
+    }
+  }
 }
 
 /** One `@fontsource/<family>/<weight>.css`, keeping its Latin face with the woff2 inlined. */
@@ -74,8 +168,7 @@ async function fontCss(repo, specifier) {
 async function addFonts(repo, contents) {
   const fonts = new Set()
   for (const [path, bytes] of contents) {
-    if (!SOURCE.test(path)) continue
-    for (const match of bytes.toString('utf8').matchAll(FONT_IMPORT)) fonts.add(match[1])
+    for (const match of importingCode(path, bytes.toString('utf8')).matchAll(FONT_IMPORT)) fonts.add(match[1])
   }
   for (const specifier of [...fonts].sort()) contents.set(specifier, Buffer.from(await fontCss(repo, specifier)))
 }
@@ -114,6 +207,10 @@ async function buildDemo(repo, { id, entry, gallery }, objects) {
   }
   const prompts = meta.prompts ?? []
   if (!Array.isArray(prompts) || (gallery && prompts.length === 0)) throw new Error(`${id}: front matter needs prompts`)
+  if (meta.translations !== undefined) throw new Error(`${id}: front matter translations moved to ${localeDir(entry)}/<lang>.json`)
+  const lang = meta.lang ?? 'en'
+  if (typeof lang !== 'string' || !/^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$/.test(lang)) throw new Error(`${id}: lang must be a language tag`)
+  const translations = await readTranslations(repo, entry, id)
 
   /** Repository-relative path → bytes. */
   const contents = new Map()
@@ -132,6 +229,7 @@ async function buildDemo(repo, { id, entry, gallery }, objects) {
     }
   }
 
+  await addImports(repo, contents)
   await addFonts(repo, contents)
 
   const coverPath = `assets/covers/${id}.jpg`
@@ -153,6 +251,8 @@ async function buildDemo(repo, { id, entry, gallery }, objects) {
     title: meta.title,
     description: meta.description,
     prompts: prompts.map(String),
+    ...(lang !== 'en' && { lang }),
+    ...(translations && { translations }),
     entry,
     gallery,
     cover: coverFile,
@@ -163,19 +263,8 @@ async function buildDemo(repo, { id, entry, gallery }, objects) {
 
 /** The root `index.mdx` and every file it reaches through relative imports, with its fonts. */
 async function buildHome(repo, objects) {
-  const contents = new Map()
-  const visit = async (path) => {
-    if (contents.has(path)) return
-    const bytes = await readFile(join(repo, path)).catch(() => {
-      throw new Error(`home: ${path} is imported but missing`)
-    })
-    contents.set(path, bytes)
-    if (!SOURCE.test(path)) return
-    for (const [, specifier] of bytes.toString('utf8').matchAll(RELATIVE_IMPORT)) {
-      await visit(posixPath.normalize(posixPath.join(posixPath.dirname(path), specifier)))
-    }
-  }
-  await visit('index.mdx')
+  const contents = new Map([['index.mdx', await readFile(join(repo, 'index.mdx'))]])
+  await addImports(repo, contents)
   await addFonts(repo, contents)
   const record = recorder(objects)
   return { entry: 'index.mdx', files: [...contents.keys()].sort().map((path) => record(path, contents.get(path))) }

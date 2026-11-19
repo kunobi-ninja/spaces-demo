@@ -2,23 +2,68 @@
 title: Dino Snack
 description: A little 3D game for a child who loves dinosaurs. Catch the fruit, dodge the rocks.
 prompts:
-  - "Make a Dino Snack for Luc\u00eda: her dinosaur is purple and it loves strawberries."
+  - "Make a Dino Snack for Lucía: her dinosaur is purple and it loves strawberries."
   - "Add a golden banana that gives an extra life."
 kunobi:
   page-layout: wide
 ---
 
 import { DinoSnack } from './src/DinoSnack'
+import { useI18n } from '../lib/i18n'
+import translations from './locales/index'
 
 export const KID = 'Mateo'
 
-# Dino Snack for {KID}
+{/* The page's and the game's words, in English; their translations are in locales/<lang>.json. The page follows Kunobi's language and falls back to English. In `howTo` and `change`, **text** shows bold and `text` as code. */}
 
-<DinoSnack kid={KID} />
+export const WORDS = {
+  heading: 'Dino Snack for {{kid}}',
+  howTo: 'Move the dinosaur with your finger, the mouse or the **arrow keys**. Catch ten pieces of fruit in its mouth and keep out from under the rocks: the red spot on the path shows where one is about to land. Three rocks and the dinosaur needs a nap. **Space** starts a round and **M** turns the sound off and on.',
+  change: 'Change `KID` at the top of this page to make the game for someone else.',
+  game: {
+    game: 'Dino Snack game',
+    title: 'Dino Snack',
+    snacks: 'Snacks',
+    lives_one: '{{count}} life',
+    lives_other: '{{count}} lives',
+    soundOn: 'Sound on · M',
+    soundOff: 'Sound off · M',
+    win: 'Well done, {{kid}}!',
+    lose: 'Oh no, rocks!',
+    intro: 'Hi {{kid}}! The dinosaur is hungry. Catch {{goal}} snacks!',
+    won: 'The dinosaur ate {{goal}} snacks. Full and happy!',
+    lost_one: 'You caught {{count}} snack. Try again, {{kid}}!',
+    lost_other: 'You caught {{count}} snacks. Try again, {{kid}}!',
+    play: 'Play',
+    again: 'Play again',
+    how: 'Move with your finger, the mouse or the arrow keys. Eat the fruit, dodge the rocks!',
+    yum: 'Yum!',
+    ouch: 'Ouch!',
+  },
+}
 
-Move the dinosaur with your finger, the mouse or the **arrow keys**. Catch ten pieces of fruit in
-its mouth and keep out from under the rocks: the red spot on the path shows where one is about
-to land. Three rocks and the dinosaur needs a nap. **Space** starts a round and **M** turns the
-sound off and on.
+{/* A word with **bold** and `code` parts, as a paragraph. */}
+export const Rich = ({ text }) => (
+  <p>
+    {text.split(/(\*\*[^*]+\*\*|`[^`]+`)/).map((part, i) =>
+      part.startsWith('**') ? <strong key={i}>{part.slice(2, -2)}</strong> : part.startsWith('`') ? <code key={i}>{part.slice(1, -1)}</code> : part
+    )}
+  </p>
+)
 
-Change `KID` at the top of this page to make the game for someone else.
+export const Heading = () => useI18n(WORDS, translations).w.heading({ kid: KID })
+
+export const Page = () => {
+  const { w } = useI18n(WORDS, translations)
+  return (
+    <>
+      <DinoSnack kid={KID} w={w.game} />
+      <Rich text={w.howTo} />
+      <Rich text={w.change} />
+    </>
+  )
+}
+
+# <Heading />
+
+<Page />

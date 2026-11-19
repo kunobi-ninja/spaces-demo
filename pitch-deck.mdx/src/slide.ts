@@ -5,7 +5,8 @@ import type { Theme } from "./index";
 
 /*
  * One slide of the deck. The words come from the scene's Markdown (## kicker,
- * # title, a paragraph, list items); the figures come from data/deck.json.
+ * # title, a paragraph, list items), or from a `words` prop that replaces them
+ * in another language; the figures come from data/deck.json.
  * Everything is built once and posed from the scene's clock in seek(t).
  */
 
@@ -23,7 +24,8 @@ const ramp = (t: number, at: number, len = 0.5) => smooth((t - at) / len);
 type Box = { x: number; y: number; w: number; h: number };
 type Pose = (t: number) => void;
 type Figure = { root: Container; seek: Pose };
-type Kit = { th: Theme; u: number; portrait: boolean };
+type Kit = { th: Theme; u: number; portrait: boolean; locale: string };
+type Words = { kicker?: string; title?: string; sub?: string; bullets?: string[] };
 
 function label(value: string, size: number, color: number, weight = "400", font = BODY): Text {
   return text(value, { font, size: Math.round(size), weight, color });
@@ -350,7 +352,7 @@ function traction(b: Box, k: Kit, d: any): Figure {
   [0, 2500, 5000].forEach((v) => {
     const y = ch - (v / max) * ch;
     grid.moveTo(0, y).lineTo(cw, y);
-    const l = label(v === 0 ? "0" : `${v / 1000}k`, 18 * k.u, k.th.muted);
+    const l = label(v === 0 ? "0" : `${(v / 1000).toLocaleString(k.locale)}k`, 18 * k.u, k.th.muted);
     l.anchor.set(1, 0.5);
     l.position.set(-14 * k.u, y);
     labels.addChild(l);
@@ -398,7 +400,7 @@ function traction(b: Box, k: Kit, d: any): Figure {
       area.lineTo(ex, ey).lineTo(ex, ch).closePath().fill({ color: k.th.horizon, alpha: 0.14 });
       line.lineTo(ex, ey).stroke({ color: k.th.horizon, width: 6 * k.u, cap: "round", join: "round" });
       dot.position.set(ex, ey);
-      nowV.text = Math.round(ev).toLocaleString("en-US");
+      nowV.text = Math.round(ev).toLocaleString(k.locale);
       now.position.set(Math.min(ex - nowV.width / 2, cw - nowV.width), ey - 66 * k.u);
     },
   };
@@ -409,6 +411,7 @@ function economics(b: Box, k: Kit, d: any): Figure {
   const price: number = d.price;
   const parts: { label: string; value: number }[] = d.parts;
   const margin = Math.round((price - parts.reduce((s, p) => s + p.value, 0)) * 100) / 100;
+  const euro = new Intl.NumberFormat(k.locale, { style: "currency", currency: "EUR", minimumFractionDigits: 2, maximumFractionDigits: 2 });
   const segs = [...parts.map((p, i) => ({ ...p, color: [k.th.horizon, k.th.tide, k.th.ocean][i % 3], ink: 0xffffff })), { label: d.marginLabel ?? "Margin", value: margin, color: k.th.sun, ink: k.th.onSun }];
   const barY = 70 * k.u;
   const barH = 120 * k.u;
@@ -427,7 +430,7 @@ function economics(b: Box, k: Kit, d: any): Figure {
     const g = new Graphics();
     bar.addChild(g);
     fills.push({ g, x, w, at: 0.2 + i * 0.35 });
-    const v = label(`€${s.value.toFixed(2)}`, 30 * k.u, s.ink, "800", HEAD);
+    const v = label(euro.format(s.value), 30 * k.u, s.ink, "800", HEAD);
     v.anchor.set(0.5);
     v.position.set(x + w / 2, barH / 2);
     v.visible = w > v.width + 20 * k.u;
@@ -437,7 +440,7 @@ function economics(b: Box, k: Kit, d: any): Figure {
     item.addChild(new Graphics().roundRect(0, 6 * k.u, 18 * k.u, 18 * k.u, 5 * k.u).fill(s.color));
     const l = wrap(s.label, 22 * k.u, k.th.ink, colW - 44 * k.u, 2, "600");
     l.x = 28 * k.u;
-    const val = label(`€${s.value.toFixed(2)}`, 26 * k.u, k.th.muted, "600", HEAD);
+    const val = label(euro.format(s.value), 26 * k.u, k.th.muted, "600", HEAD);
     val.position.set(28 * k.u, l.height + 6 * k.u);
     item.addChild(l, val);
     legend.addChild(item);
@@ -632,7 +635,7 @@ export const Slide = defineVisual<any, Theme>({
     const th = ctx.theme;
     const portrait = H > W;
     const u = Math.min(W, H) / 1080;
-    const k: Kit = { th, u, portrait };
+    const k: Kit = { th, u, portrait, locale: p.locale ?? "en-US" };
     const ins = (ctx.target?.safeArea ?? {}) as { top?: number; bottom?: number; left?: number; right?: number };
     const area = safeArea(W, H, {
       top: (ins.top ?? 0) + (portrait ? 64 : 78) * u,
@@ -646,10 +649,16 @@ export const Slide = defineVisual<any, Theme>({
     const poses: Pose[] = [];
 
     const blocks = ctx.scene.blocks;
-    const kicker = blocks.find((b) => b.tag === "h2")?.text ?? "";
-    const title = blocks.find((b) => b.tag === "h1")?.text ?? "";
-    const sub = blocks.find((b) => b.tag === "p")?.text ?? "";
-    const bullets = blocks.filter((b) => b.tag === "li").map((b) => b.text);
+    const words: Words = p.words ?? {
+      kicker: blocks.find((b) => b.tag === "h2")?.text,
+      title: blocks.find((b) => b.tag === "h1")?.text,
+      sub: blocks.find((b) => b.tag === "p")?.text,
+      bullets: blocks.filter((b) => b.tag === "li").map((b) => b.text),
+    };
+    const kicker = words.kicker ?? "";
+    const title = words.title ?? "";
+    const sub = words.sub ?? "";
+    const bullets = words.bullets ?? [];
     const isTitle = p.kind === "title";
 
     // Header: page number and kicker.

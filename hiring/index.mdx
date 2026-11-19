@@ -1,11 +1,24 @@
 ---
 title: Hiring at Linden & Co
 description: "Two open roles, three interviewers: the pipeline, the scorecards side by side with where they disagree, and what happens this week."
+i18n:
+  data:
+    hiring:
+      - interviewers[*].role
+      - roles[*].title
+      - roles[*].short
+      - roles[*].mustHaves
+      - roles[*].criteria[*].label
+      - candidates[*].source
+      - candidates[*].scorecards[*].note
+      - candidates[*].next.what
+      - candidates[*].declinedReason
 kunobi:
   page-layout: wide
   stores: [hiring-pipeline]
 ---
 
+import * as React from 'react'
 import '@fontsource/parkinsans/600.css'
 import '@fontsource/parkinsans/800.css'
 import '@fontsource/figtree/400.css'
@@ -13,87 +26,51 @@ import '@fontsource/figtree/600.css'
 import data from './data/hiring.json'
 import pipeline from './data/pipeline.json'
 import { Hiring } from './src/Hiring'
+import { useI18n } from '../lib/i18n'
+import translations from './locales/index'
 
-{/* Interface words per language. The page follows the system language and falls back to English. Roles, candidates and scorecards live in data/hiring.json; each candidate's stage and quick verdicts live in the hiring-pipeline store, saved to data/pipeline.json. */}
+{/* The page's words. Roles, candidates and scorecards live in data/hiring.json; each candidate's stage and quick verdicts live in the hiring-pipeline store, saved to data/pipeline.json. Their translations (the fields listed under i18n in the front matter) and the words' are in locales/<lang>.json. */}
 
 export const WORDS = {
-  en: {
-    locale: 'en-GB',
-    hiring: 'Hiring',
-    title: 'Two roles, one team deciding',
-    openings: (n) => `${n} ${n === 1 ? 'opening' : 'openings'}`,
-    inProcess: 'in process', thisWeekShort: 'talks this week', offersOut: 'offers out', toDiscuss: 'to discuss',
-    role: 'Role', allRoles: 'Both roles',
-    boardHint: 'Click a candidate with scorecards to compare them above.',
-    boardHintEdit: 'Click a candidate to move them on.',
-    decline: 'Decline', saving: 'Saving…',
-    quickFor: (name) => `${name}'s quick verdict`, quickTitle: 'Quick verdict, scorecard to follow',
-    stage: { applied: 'Applied', screen: 'Screen', interview: 'Interview', offer: 'Offer', hired: 'Hired', declined: 'Closed' },
-    daysIn: (n) => (n === 0 ? 'today' : `${n}d in stage`),
-    theyDeclined: 'They declined', weDeclined: 'We declined',
-    cards: (n) => `${n} ${n === 1 ? 'scorecard' : 'scorecards'}`,
-    discuss: (n) => `${n} to discuss`,
-    compareTitle: 'Where the interviewers differ',
-    compareHint: 'Scores 1 to 4. Rows two or more points apart are marked so the team talks about them.',
-    applied: 'applied',
-    splitVerdict: 'Verdicts split',
-    verdictAgreeButScores: 'Same verdict, different scores',
-    agree: 'Interviewers agree',
-    criterion: 'Criterion', gap: 'Gap', talk: 'Talk about it:', vs: 'vs', close: 'Close',
-    recommends: 'Recommends',
-    rec: { 'strong yes': 'Strong yes', yes: 'Yes', unsure: 'Unsure', no: 'No' },
-    notYet: 'Not yet',
-    pending: (names) => `Still waiting for ${names.join(' and ')}'s scorecard.`,
-    pipeline: 'Pipeline', by: 'By', reviews: (n) => `Review ${n} new ${n === 1 ? 'application' : 'applications'}`,
-    funnel: 'How far candidates get', movedOn: 'moved on',
-    thisWeek: 'This week', nothingThisWeek: 'Nothing booked this week.',
-    change: 'How to change this',
-    changeLine: 'Candidates and scorecards are in data/hiring.json, stages in data/pipeline.json. Ask your AI:',
-    changeLineEdit: 'Move candidates on the board, or leave a quick verdict where a scorecard is missing. Or ask your AI:',
-    prompts: ['“Move Kenji Watanabe to interview and book him with Marco on Monday.”', '“Marco says yes to Lucas Moreau for now.”', '“Add Marco’s scorecard for Lucas Moreau: craft 4, product 2, communication 3, collaboration 3, recommend yes.”'],
-    sample: 'Sample data: the company, people and scores are made up.',
-  },
-  es: {
-    locale: 'es-ES',
-    hiring: 'Contratación',
-    title: 'Dos puestos, un equipo que decide',
-    openings: (n) => `${n} ${n === 1 ? 'vacante' : 'vacantes'}`,
-    inProcess: 'en proceso', thisWeekShort: 'charlas esta semana', offersOut: 'ofertas enviadas', toDiscuss: 'por hablar',
-    role: 'Puesto', allRoles: 'Ambos puestos',
-    boardHint: 'Haz clic en un candidato con valoraciones para compararlas arriba.',
-    boardHintEdit: 'Haz clic en un candidato para pasarlo a la siguiente etapa.',
-    decline: 'Descartar', saving: 'Guardando…',
-    quickFor: (name) => `Veredicto rápido de ${name}`, quickTitle: 'Veredicto rápido, valoración pendiente',
-    stage: { applied: 'Recibidos', screen: 'Filtro', interview: 'Entrevista', offer: 'Oferta', hired: 'Contratado', declined: 'Cerrado' },
-    daysIn: (n) => (n === 0 ? 'hoy' : `${n} d en la etapa`),
-    theyDeclined: 'Rechazó', weDeclined: 'Descartado',
-    cards: (n) => `${n} ${n === 1 ? 'valoración' : 'valoraciones'}`,
-    discuss: (n) => `${n} por hablar`,
-    compareTitle: 'Dónde difieren los entrevistadores',
-    compareHint: 'Puntuaciones de 1 a 4. Las filas con dos o más puntos de diferencia se marcan para hablarlas en equipo.',
-    applied: 'solicitó el',
-    splitVerdict: 'Veredictos divididos',
-    verdictAgreeButScores: 'Mismo veredicto, notas distintas',
-    agree: 'Los entrevistadores coinciden',
-    criterion: 'Criterio', gap: 'Diferencia', talk: 'Hablarlo:', vs: 'vs', close: 'Parecidas',
-    recommends: 'Recomienda',
-    rec: { 'strong yes': 'Sí, claro', yes: 'Sí', unsure: 'No sé', no: 'No' },
-    notYet: 'Pendiente',
-    pending: (names) => `Falta la valoración de ${names.join(' y ')}.`,
-    pipeline: 'Proceso', by: 'Hasta', reviews: (n) => `Revisar ${n} ${n === 1 ? 'solicitud nueva' : 'solicitudes nuevas'}`,
-    funnel: 'Hasta dónde llegan', movedOn: 'avanzan',
-    thisWeek: 'Esta semana', nothingThisWeek: 'Nada previsto esta semana.',
-    change: 'Cómo cambiar esto',
-    changeLine: 'Candidatos y valoraciones están en data/hiring.json, las etapas en data/pipeline.json. Pídeselo a tu IA:',
-    changeLineEdit: 'Mueve candidatos en el tablero o deja un veredicto rápido donde falte una valoración. O pídeselo a tu IA:',
-    prompts: ['“Pasa a Kenji Watanabe a entrevista y agéndalo con Marco el lunes.”', '“Marco dice que sí a Lucas Moreau por ahora.”', '“Añade la valoración de Marco para Lucas Moreau: oficio 4, producto 2, comunicación 3, colaboración 3, recomienda sí.”'],
-    sample: 'Datos de ejemplo: la empresa, las personas y las notas son inventadas.',
-  },
+  hiring: 'Hiring',
+  title: 'Two roles, one team deciding',
+  openings_one: '{{count}} opening', openings_other: '{{count}} openings',
+  inProcess: 'in process', thisWeekShort: 'talks this week', offersOut: 'offers out', toDiscuss: 'to discuss',
+  role: 'Role', allRoles: 'Both roles',
+  boardHint: 'Click a candidate with scorecards to compare them above.',
+  boardHintEdit: 'Click a candidate to move them on.',
+  decline: 'Decline', saving: 'Saving…',
+  quickFor: "{{name}}'s quick verdict", quickTitle: 'Quick verdict, scorecard to follow',
+  stage: { applied: 'Applied', screen: 'Screen', interview: 'Interview', offer: 'Offer', hired: 'Hired', declined: 'Closed' },
+  today: 'today', daysIn: '{{count}}d in stage',
+  theyDeclined: 'They declined', weDeclined: 'We declined',
+  cards_one: '{{count}} scorecard', cards_other: '{{count}} scorecards',
+  discuss: '{{count}} to discuss',
+  compareTitle: 'Where the interviewers differ',
+  compareHint: 'Scores 1 to 4. Rows two or more points apart are marked so the team talks about them.',
+  applied: 'applied',
+  splitVerdict: 'Verdicts split',
+  verdictAgreeButScores: 'Same verdict, different scores',
+  agree: 'Interviewers agree',
+  criterion: 'Criterion', gap: 'Gap', talk: 'Talk about it:', vs: 'vs', close: 'Close',
+  recommends: 'Recommends',
+  rec: { 'strong yes': 'Strong yes', yes: 'Yes', unsure: 'Unsure', no: 'No' },
+  notYet: 'Not yet',
+  pending: "Still waiting for {{names}}'s scorecard.",
+  pipeline: 'Pipeline', by: 'By', reviews_one: 'Review {{count}} new application', reviews_other: 'Review {{count}} new applications',
+  funnel: 'How far candidates get', movedOn: 'moved on',
+  thisWeek: 'This week', nothingThisWeek: 'Nothing booked this week.',
+  change: 'How to change this',
+  changeLine: 'Candidates and scorecards are in data/hiring.json, stages in data/pipeline.json. Ask your AI:',
+  changeLineEdit: 'Move candidates on the board, or leave a quick verdict where a scorecard is missing. Or ask your AI:',
+  prompts: ['“Move Kenji Watanabe to interview and book him with Marco on Monday.”', '“Marco says yes to Lucas Moreau for now.”', '“Add Marco’s scorecard for Lucas Moreau: craft 4, product 2, communication 3, collaboration 3, recommend yes.”'],
+  sample: 'Sample data: the company, people and scores are made up.',
 }
 
-export const pickWords = () => {
-  const tag = (typeof navigator !== 'undefined' && navigator.language) || 'en'
-  return WORDS[tag.toLowerCase().split('-')[0]] ?? WORDS.en
+export const HiringPage = () => {
+  const t = useI18n(WORDS, translations)
+  const localized = React.useMemo(() => t.data('hiring', data), [t])
+  return <Hiring data={localized} pipeline={pipeline} w={{ ...t.w, locale: t.tag }} />
 }
 
-<Hiring data={data} pipeline={pipeline} w={pickWords()} />
+<HiringPage />

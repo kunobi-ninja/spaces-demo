@@ -1,96 +1,74 @@
 ---
 title: Music Jam
 description: "A step sequencer for friends: each person owns a track, everyone edits the same 16 steps, and every screen plays the same groove."
+i18n:
+  data:
+    pattern:
+      - tracks[*].name
 kunobi:
   page-layout: wide
   stores: [music-jam-pattern]
 ---
 
+import * as React from 'react'
 import '@fontsource/parkinsans/600.css'
 import '@fontsource/parkinsans/800.css'
 import '@fontsource/figtree/400.css'
 import '@fontsource/figtree/600.css'
 import saved from './data/pattern.json'
+import seed from './data/pattern.start.json'
 import { MusicJam } from './src/Jam'
+import { useI18n } from '../lib/i18n'
+import translations from './locales/index'
 
 {/*
   The pattern lives in the music-jam-pattern store: the tempo, the key, and one row per track with
   its instrument, owner, volume and 16 steps. data/pattern.json is its readable copy, shown when the
-  store cannot open. In steps, "." is a rest; drums use "x" (and "X" for a loud hit); bass, chords
+  store cannot open. locales/<lang>.json translates the starting track names (data/pattern.start.json)
+  by id, and the page's words: a track still named as it started shows translated. In steps, "." is a rest; drums use "x" (and "X" for a loud hit); bass, chords
   and lead use 1 to 9, the note's place in the key's scale. These are only the page's own words.
 */}
 
 export const WORDS = {
-  en: {
-    eyebrow: 'Live jam',
-    bar: 'bar {n}',
-    title: 'The Friday groove',
-    listen: 'Play',
-    mute: 'Stop',
-    tempo: 'Tempo',
-    bpm: 'bpm',
-    slower: 'Slower',
-    faster: 'Faster',
-    key: 'Key',
-    keys: { 'C major': 'C major', 'D minor': 'D minor', 'E minor': 'E minor', 'F major': 'F major', 'G major': 'G major', 'A minor': 'A minor' },
-    gridLabel: 'The pattern: one row per track, 16 steps',
-    stepLabel: '{name}, step {n}',
-    note: 'Note for new steps',
-    lower: 'Lower note',
-    higher: 'Higher note',
-    volume: '{name} volume',
-    yours: 'Yours',
-    free: 'Free to take',
-    take: 'Take it',
-    guest: 'Guest',
-    yourName: 'You are',
-    namePh: 'Your name',
-    hint: 'Arrows move · Space turns a step on or off · 1 to 9 picks the note',
-    sharedTitle: 'Everyone hears this pattern.',
-    sharedBody: 'Each of you owns a track. Tap a step, and every screen plays it on the next loop.',
-    savedTitle: 'Last saved pattern.',
-    savedBody: 'Open this page in Kunobi to jam together.',
-    saving: 'Saving…',
-    changeTitle: 'Make it yours.',
-    changeBody: 'The pattern is kept in',
-    askYourAi: 'Tap the grid, or ask your AI:',
-    prompts: ['Make the bass line busier', 'Speed it up to 120 and move it to D minor', 'Add a clap track for Ana on 2 and 4'],
-  },
-  es: {
-    eyebrow: 'En directo',
-    bar: 'compás {n}',
-    title: 'El groove del viernes',
-    listen: 'Tocar',
-    mute: 'Parar',
-    tempo: 'Tempo',
-    bpm: 'bpm',
-    slower: 'Más lento',
-    faster: 'Más rápido',
-    key: 'Tono',
-    keys: { 'C major': 'Do mayor', 'D minor': 'Re menor', 'E minor': 'Mi menor', 'F major': 'Fa mayor', 'G major': 'Sol mayor', 'A minor': 'La menor' },
-    gridLabel: 'El patrón: una fila por pista, 16 pasos',
-    stepLabel: '{name}, paso {n}',
-    note: 'Nota de los pasos nuevos',
-    lower: 'Nota más grave',
-    higher: 'Nota más aguda',
-    volume: 'Volumen de {name}',
-    yours: 'Tuya',
-    free: 'Libre',
-    take: 'Tomarla',
-    guest: 'Invitado',
-    yourName: 'Eres',
-    namePh: 'Tu nombre',
-    hint: 'Flechas para moverte · Espacio activa o quita un paso · 1 a 9 elige la nota',
-    sharedTitle: 'Todos oyen este patrón.',
-    sharedBody: 'Cada persona lleva una pista. Toca un paso y todas las pantallas lo tocan en la siguiente vuelta.',
-    savedTitle: 'Último patrón guardado.',
-    savedBody: 'Abre esta página en Kunobi para tocar juntos.',
-    saving: 'Guardando…',
-    changeTitle: 'Hazlo tuyo.',
-    changeBody: 'El patrón está en',
-    askYourAi: 'Toca la cuadrícula o pide a tu IA:',
-    prompts: ['Haz la línea de bajo más movida', 'Súbelo a 120 y pásalo a re menor', 'Añade una pista de palmas para Ana en el 2 y el 4'],
-  },
+  eyebrow: 'Live jam',
+  bar: 'bar {{n}}',
+  title: 'The Friday groove',
+  listen: 'Play',
+  mute: 'Stop',
+  tempo: 'Tempo',
+  bpm: 'bpm',
+  slower: 'Slower',
+  faster: 'Faster',
+  key: 'Key',
+  keys: { 'C major': 'C major', 'D minor': 'D minor', 'E minor': 'E minor', 'F major': 'F major', 'G major': 'G major', 'A minor': 'A minor' },
+  gridLabel: 'The pattern: one row per track, 16 steps',
+  stepLabel: '{{name}}, step {{n}}',
+  note: 'Note for new steps',
+  lower: 'Lower note',
+  higher: 'Higher note',
+  volume: '{{name}} volume',
+  yours: 'Yours',
+  free: 'Free to take',
+  take: 'Take it',
+  guest: 'Guest',
+  yourName: 'You are',
+  namePh: 'Your name',
+  hint: 'Arrows move · Space turns a step on or off · 1 to 9 picks the note',
+  sharedTitle: 'Everyone hears this pattern.',
+  sharedBody: 'Each of you owns a track. Tap a step, and every screen plays it on the next loop.',
+  savedTitle: 'Last saved pattern.',
+  savedBody: 'Open this page in Kunobi to jam together.',
+  saving: 'Saving…',
+  changeTitle: 'Make it yours.',
+  changeBody: 'The pattern is kept in',
+  askYourAi: 'Tap the grid, or ask your AI:',
+  prompts: ['Make the bass line busier', 'Speed it up to 120 and move it to D minor', 'Add a clap track for Ana on 2 and 4'],
 }
 
-<MusicJam saved={saved} words={WORDS} />
+export const Jam = () => {
+  const t = useI18n(WORDS, translations)
+  const localize = React.useCallback((pattern) => t.data('pattern', pattern, seed), [t])
+  return <MusicJam saved={saved} localize={localize} words={t.w} />
+}
+
+<Jam />

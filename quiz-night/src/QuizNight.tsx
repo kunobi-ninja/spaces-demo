@@ -45,7 +45,6 @@ const useScoresStatus: (name: string) => StoreStatus =
 const editScores = (change: (draft: Scores) => void) => (typeof K.edit === 'function' ? K.edit(game.STORE, change) : undefined)
 
 
-const fill = (text: string, values: Record<string, string | number>) => text.replace(/\{(\w+)\}/g, (_, k) => String(values[k] ?? ''))
 
 function Shape({ shape, size = 22 }: { shape: string; size?: number }) {
   return (
@@ -115,11 +114,7 @@ const today = () => {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 }
 
-export function QuizNight({ quiz, saved, words }: { quiz: Quiz; saved: Scores; words: Record<string, Words> }) {
-  const w = React.useMemo(() => {
-    const tag = (typeof navigator !== 'undefined' && navigator.language) || 'en'
-    return words[tag.toLowerCase().split('-')[0]] ?? words.en
-  }, [words])
+export function QuizNight({ quiz, saved, words: w }: { quiz: Quiz; saved: Scores; words: Words }) {
 
   // The lasting scores: the store while it is open, otherwise the last saved copy.
   const stored = useScores(game.STORE)
@@ -336,7 +331,7 @@ export function QuizNight({ quiz, saved, words }: { quiz: Quiz; saved: Scores; w
   const nights = Object.values(scores.nights ?? {}).sort((a, b) => String(b.date).localeCompare(String(a.date)))
   const last = nights[0]
   const wins = (team: string) => nights.filter((n) => n.winner === team).length
-  const winsLabel = (n: number) => (n === 0 ? w.wins0 : n === 1 ? w.wins1 : fill(w.winsN, { n }))
+  const winsLabel = (n: number) => (n === 0 ? w.wins0 : w.wins({ count: n }))
   const waitText = !live ? w.offline : st.quizmaster ? w.waitingHost : w.noHost
 
   const joinRow = canAct && !mine && stage.phase !== 'lobby' && (
@@ -364,7 +359,7 @@ export function QuizNight({ quiz, saved, words }: { quiz: Quiz; saved: Scores; w
             ) : (
               <span className="qn-chip">
                 <span className="qn-dot" style={{ background: round.color }} />
-                {fill(w.roundOf, { n: stage.round + 1, total: quiz.rounds.length })} · {round.theme}
+                {w.roundOf({ n: stage.round + 1, total: quiz.rounds.length })} · {round.theme}
               </span>
             )}
             <div className="qn-top-right">
@@ -374,7 +369,7 @@ export function QuizNight({ quiz, saved, words }: { quiz: Quiz; saved: Scores; w
                   {mine.name} · {teamOf(mine.team).name}
                 </span>
               )}
-              {(stage.phase === 'question' || stage.phase === 'reveal') && <span className="qn-count">{fill(w.questionOf, { n: number, total: count })}</span>}
+              {(stage.phase === 'question' || stage.phase === 'reveal') && <span className="qn-count">{w.questionOf({ n: number, total: count })}</span>}
               <button
                 className="qn-icon"
                 onClick={() => {
@@ -398,8 +393,8 @@ export function QuizNight({ quiz, saved, words }: { quiz: Quiz; saved: Scores; w
               <div className="qn-lobby-main">
                 <h1 className="qn-title">{quiz.title}</h1>
                 <p className="qn-sub">
-                  {fill(w.summary, { rounds: quiz.rounds.length, questions: count })}
-                  {quiz.host ? ` · ${fill(w.hostedBy, { host: quiz.host })}` : ''}
+                  {w.summary({ rounds: quiz.rounds.length, questions: count })}
+                  {quiz.host ? ` · ${w.hostedBy({ host: quiz.host })}` : ''}
                 </p>
                 <ol className="qn-rounds">
                   {quiz.rounds.map((r, i) => (
@@ -422,7 +417,7 @@ export function QuizNight({ quiz, saved, words }: { quiz: Quiz; saved: Scores; w
                     <button className="qn-btn" onClick={go}>
                       {w.start} <Arrow />
                     </button>
-                    <span className="qn-hint">{fill(w.joined, { n: players.length })}</span>
+                    <span className="qn-hint">{w.joined({ n: players.length })}</span>
                   </div>
                 ) : (
                   <p className="qn-wait">{waitText}</p>
@@ -482,7 +477,7 @@ export function QuizNight({ quiz, saved, words }: { quiz: Quiz; saved: Scores; w
                   })}
                 </ol>
                 {last?.winner && (
-                  <p className="qn-last">{fill(w.lastQuiz, { team: teamOf(last.winner).name, n: last.points ?? 0, date: last.date ?? '' })}</p>
+                  <p className="qn-last">{w.lastQuiz({ team: teamOf(last.winner).name, n: last.points ?? 0, date: last.date ?? '' })}</p>
                 )}
               </aside>
             </section>
@@ -490,9 +485,9 @@ export function QuizNight({ quiz, saved, words }: { quiz: Quiz; saved: Scores; w
 
           {stage.phase === 'round' && (
             <section className="qn-round" onClick={go}>
-              <span className="qn-round-label">{fill(w.roundOf, { n: stage.round + 1, total: quiz.rounds.length })}</span>
+              <span className="qn-round-label">{w.roundOf({ n: stage.round + 1, total: quiz.rounds.length })}</span>
               <h1 className="qn-round-title" style={{ color: round.color }}>{round.theme}</h1>
-              <p className="qn-sub">{fill(w.questionsInRound, { n: round.questions.length })}</p>
+              <p className="qn-sub">{w.questionsInRound({ n: round.questions.length })}</p>
             </section>
           )}
 
@@ -604,7 +599,7 @@ export function QuizNight({ quiz, saved, words }: { quiz: Quiz; saved: Scores; w
 
           {stage.phase === 'board' && (
             <section className="qn-board">
-              <h1 className="qn-board-title">{fill(w.afterRound, { n: stage.round + 1 })}</h1>
+              <h1 className="qn-board-title">{w.afterRound({ n: stage.round + 1 })}</h1>
               <ol className="qn-table">
                 {ranks.map((t, place) => {
                   const shift = before.indexOf(t) - place
@@ -625,7 +620,7 @@ export function QuizNight({ quiz, saved, words }: { quiz: Quiz; saved: Scores; w
                 {joinRow}
                 {host && (
                   <button className="qn-btn" onClick={go}>
-                    {fill(w.nextRound, { n: stage.round + 2, theme: quiz.rounds[stage.round + 1]?.theme ?? '' })} <Arrow />
+                    {w.nextRound({ n: stage.round + 2, theme: quiz.rounds[stage.round + 1]?.theme ?? '' })} <Arrow />
                   </button>
                 )}
               </div>
@@ -681,7 +676,7 @@ export function QuizNight({ quiz, saved, words }: { quiz: Quiz; saved: Scores; w
             </p>
           )}
           <p className="qn-note">
-            <b>{w.changeTitle}</b> {w.changeBody} <code>quiz-night/data/quiz.json</code>. {w.askYourAi}
+            <b>{w.changeTitle}</b> {w.changeBody} <code>{w.dataFile}</code>. {w.askYourAi}
             {w.prompts.map((p: string) => <span className="qn-prompt" key={p}>“{p}”</span>)}
           </p>
         </div>

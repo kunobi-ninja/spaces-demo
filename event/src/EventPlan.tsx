@@ -24,11 +24,16 @@ export interface Guest {
   party: number
   table?: string
   diet: string[]
+  /** The diets as stored (the page's own words), for their colours. */
+  dietKeys: string[]
   note?: string
   plusOneOf?: string
 }
 
-const toGuest = (id: string, r: Row): Guest => ({
+const diets = (diet?: string) => (diet ?? '').split(',').map((d) => d.trim()).filter(Boolean)
+
+/** One guest as shown (`r`, maybe translated), with the diets as stored (`stored`) for their colours. */
+const toGuest = (id: string, r: Row, stored: Row = r): Guest => ({
   id,
   name: r.name || '?',
   household: r.household || r.name || id,
@@ -36,7 +41,8 @@ const toGuest = (id: string, r: Row): Guest => ({
   rsvp: (r.rsvp ?? 'none') as Rsvp,
   party: Math.max(1, r.party ?? 1),
   table: r.table || undefined,
-  diet: (r.diet ?? '').split(',').map((d) => d.trim()).filter(Boolean),
+  diet: diets(r.diet),
+  dietKeys: diets(stored.diet),
   note: r.note || undefined,
   plusOneOf: r.plusOneOf || undefined,
 })
@@ -73,6 +79,10 @@ const DIET_COLORS: Record<string, string> = {
   Halal: '#8a6cf0',
   'Nut allergy': C.coral,
 }
+/** Each shown diet's stored word, so a translated diet keeps its colour. */
+const dietKeyMap = (guests: Guest[]) => new Map(guests.flatMap((g) => g.diet.map((d, i): [string, string] => [d, g.dietKeys[i] ?? d])))
+const dietColor = (key: string) => DIET_COLORS[key] ?? C.horizon
+
 const DARK_TEXT = new Set([C.sun, C.tide, C.ocean, '#5fb36b'])
 
 const initials = (name: string) =>
@@ -154,7 +164,7 @@ function seatPositions(table: Table, count: number) {
 
 /* ---------- the page ---------- */
 
-export function EventPlan({ event, start, w }: { event: EventData; start: EventGuestsStore; w: any }) {
+export function EventPlan({ event, start, localize, locale, w }: { event: EventData; start: EventGuestsStore; localize: (data: EventGuestsStore) => EventGuestsStore; locale: string; w: any }) {
   const [selected, setSelected] = React.useState<string | null>(null)
   const [hovered, setHovered] = React.useState<string | null>(null)
   const [active, setActive] = React.useState<string | null>(null)
@@ -166,7 +176,9 @@ export function EventPlan({ event, start, w }: { event: EventData; start: EventG
   const status = (useStoreStatus(STORE) ?? {}) as Status
   const open = status.status === 'open' && !!live?.guests
   const paused = status.status === 'paused' && !!live?.guests
-  const rows = open || paused ? (live as EventGuestsStore).guests : start.guests
+  const raw = open || paused ? (live as EventGuestsStore) : start
+  // Starting guests in the reader's language; display only, edits go to the store as typed.
+  const rows = React.useMemo(() => localize(raw).guests, [raw, localize])
   const actor = open ? status.actor : undefined
   const isVisitor = actor?.kind === 'visitor'
   const host = open && !!status.canEdit && !isVisitor
@@ -174,8 +186,8 @@ export function EventPlan({ event, start, w }: { event: EventData; start: EventG
   const saving = open && status.saved === false
 
   const guests = React.useMemo(
-    () => Object.entries(rows ?? {}).map(([id, r]) => toGuest(id, r)).sort((a, b) => a.id.localeCompare(b.id)),
-    [rows],
+    () => Object.entries(rows ?? {}).map(([id, r]) => toGuest(id, r, raw.guests?.[id])).sort((a, b) => a.id.localeCompare(b.id)),
+    [rows, raw],
   )
 
   const send = (change: (d: EventGuestsStore) => void) => {
@@ -201,8 +213,8 @@ export function EventPlan({ event, start, w }: { event: EventData; start: EventG
   const seatTotal = event.tables.reduce((n, t) => n + t.seats, 0)
   const seatsLeft = Math.max(0, seatTotal - people(guests.filter((g) => g.table && event.tables.some((t) => t.id === g.table))))
   const toGo = days(event.today, event.date)
-  const money = new Intl.NumberFormat(w.locale, { style: 'currency', currency: event.currency, maximumFractionDigits: 0 })
-  const dateLabel = new Intl.DateTimeFormat(w.locale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(event.date))
+  const money = new Intl.NumberFormat(locale, { style: 'currency', currency: event.currency, maximumFractionDigits: 0 })
+  const dateLabel = new Intl.DateTimeFormat(locale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(event.date))
 
   // Who is in focus: the hovered or selected guest's household, or the guests of the active conflict.
   const focusGuest = hovered ?? selected
@@ -224,7 +236,7 @@ export function EventPlan({ event, start, w }: { event: EventData; start: EventG
 
   const colorOf = (g: Guest) => {
     if (colourBy === 'side') return sideColor.get(g.side) ?? C.horizon
-    return g.diet.length ? (DIET_COLORS[g.diet[0]] ?? C.horizon) : 'hsl(var(--muted))'
+    return g.dietKeys.length ? dietColor(g.dietKeys[0]) : 'hsl(var(--muted))'
   }
   const ink = (fill: string) => (DARK_TEXT.has(fill) ? C.midnight : fill.startsWith('hsl') ? 'hsl(var(--muted-foreground))' : '#fff')
 
@@ -238,12 +250,13 @@ export function EventPlan({ event, start, w }: { event: EventData; start: EventG
   }
 
   const conflictText = (c: Conflict) => {
-    if (c.kind === 'over') return w.over(c.table.name, c.count, c.table.seats)
-    if (c.kind === 'unseated') return w.unseated(c.ids.length)
-    if (c.kind === 'declined') return w.declined(c.guest.name, c.table.name)
-    return w.split(c.household, c.tables.map((t) => t.name).join(' & '))
+    if (c.kind === 'over') return w.over({ table: c.table.name, count: c.count, seats: c.table.seats })
+    if (c.kind === 'unseated') return w.unseated({ count: c.ids.length })
+    if (c.kind === 'declined') return w.declined({ name: c.guest.name, table: c.table.name })
+    return w.split({ household: c.household, tables: c.tables.map((t) => t.name).join(' & ') })
   }
 
+  const dietKeys = dietKeyMap(guests)
   const dietsUsed = [...new Set(yes.flatMap((g) => g.diet))].sort((a, b) => yes.filter((g) => g.diet.includes(b)).length - yes.filter((g) => g.diet.includes(a)).length)
   const hoveredGuest = hovered ? byId.get(hovered) : null
   const hoveredPos = React.useMemo(() => {
@@ -257,7 +270,7 @@ export function EventPlan({ event, start, w }: { event: EventData; start: EventG
 
   const selectedGuest = selected ? byId.get(selected) : null
   const moving = host && selectedGuest ? selectedGuest : null
-  const mine = answerOwn && actor ? rows[actor.id] : undefined
+  const mine = answerOwn && actor ? raw.guests[actor.id] : undefined
 
   return (
     <div className="ev">
@@ -298,7 +311,7 @@ export function EventPlan({ event, start, w }: { event: EventData; start: EventG
           <div className="ev-head">
             <div>
               <h2>{w.seating}</h2>
-              <p>{moving ? w.moveHint(moving.name.split(' ')[0]) : host ? w.seatingLineHost : w.seatingLine}</p>
+              <p>{moving ? w.moveHint({ name: moving.name.split(' ')[0] }) : host ? w.seatingLineHost : w.seatingLine}</p>
             </div>
             <div className="ev-head-right">
               {saving && <span className="ev-saving">{w.saving}</span>}
@@ -387,7 +400,7 @@ export function EventPlan({ event, start, w }: { event: EventData; start: EventG
                                 {k ? `+${k}` : labels.get(g.id)}
                               </text>
                               {declined && <line x1={p.x - 13} y1={p.y + 13} x2={p.x + 13} y2={p.y - 13} stroke={C.coral} strokeWidth="2.5" strokeLinecap="round" />}
-                              {!k && colourBy === 'side' && g.diet.length > 0 && !declined && <circle cx={p.x + 14} cy={p.y - 14} r="5.5" fill={DIET_COLORS[g.diet[0]] ?? C.horizon} stroke="hsl(var(--card))" strokeWidth="2" />}
+                              {!k && colourBy === 'side' && g.diet.length > 0 && !declined && <circle cx={p.x + 14} cy={p.y - 14} r="5.5" fill={dietColor(g.dietKeys[0])} stroke="hsl(var(--card))" strokeWidth="2" />}
                             </g>
                           )
                         })}
@@ -413,12 +426,12 @@ export function EventPlan({ event, start, w }: { event: EventData; start: EventG
                   ? event.sides.map((s) => (
                       <span key={s.id}>
                         <i style={{ background: s.color }} />
-                        {s.id}
+                        {w.sides?.[s.id] ?? s.id}
                       </span>
                     ))
                   : [...dietsUsed.map((d) => (
                       <span key={d}>
-                        <i style={{ background: DIET_COLORS[d] ?? C.horizon }} />
+                        <i style={{ background: dietColor(dietKeys.get(d) ?? d) }} />
                         {d}
                       </span>
                     )), (
@@ -451,7 +464,7 @@ export function EventPlan({ event, start, w }: { event: EventData; start: EventG
                         ))}
                         {target && (
                           <button className="ev-chip ev-seat-here" onClick={() => update(moving.id, { table: t.id })}>
-                            {w.seatHere(moving.name.split(' ')[0])}
+                            {w.seatHere({ name: moving.name.split(' ')[0] })}
                           </button>
                         )}
                       </div>
@@ -612,7 +625,7 @@ function GuestCard({ g, guests, tables, color, w, host, onChange, onClose, onPic
         </span>
         <div>
           <b>{g.name}</b>
-          <span className="ev-muted">{g.side || w.fromLink}</span>
+          <span className="ev-muted">{g.side ? (w.sides?.[g.side] ?? g.side) : w.fromLink}</span>
         </div>
       </div>
       {host ? (
@@ -645,10 +658,10 @@ function GuestCard({ g, guests, tables, color, w, host, onChange, onClose, onPic
         <div className="ev-pills">
           <span className={`ev-rsvp ${g.rsvp}`}>{w.rsvp[g.rsvp]}</span>
           <span className="ev-pill">{table ? table.name : w.noTable}</span>
-          {g.party > 1 && <span className="ev-pill">{w.withMore(g.party - 1)}</span>}
-          {g.diet.map((d) => (
+          {g.party > 1 && <span className="ev-pill">{w.withMore({ count: g.party - 1 })}</span>}
+          {g.diet.map((d, i) => (
             <span key={d} className="ev-pill dot">
-              <i style={{ background: DIET_COLORS[d] ?? C.horizon }} />
+              <i style={{ background: dietColor(g.dietKeys[i] ?? d) }} />
               {d}
             </span>
           ))}
@@ -723,7 +736,7 @@ function Replies({ guests, w, host, onAnswer, onPick }: { guests: Guest[]; w: an
     <div className="ev-card big">
       <div className="ev-card-title">
         <h2>{w.replies}</h2>
-        <span className="ev-muted">{w.repliesLine(people(guests))}</span>
+        <span className="ev-muted">{w.repliesLine({ count: people(guests) })}</span>
       </div>
       <div className="ev-replies">
         {order.map((k) => (
@@ -752,7 +765,7 @@ function Replies({ guests, w, host, onAnswer, onPick }: { guests: Guest[]; w: an
               <button className="ev-name" onClick={() => onPick(g.id)}>
                 {g.name}
               </button>
-              <span className="ev-muted">{g.note ?? g.side}</span>
+              <span className="ev-muted">{g.note ?? (w.sides?.[g.side] ?? g.side)}</span>
               {host && (
                 <span className="ev-quick">
                   <button className="yes" onClick={() => onAnswer(g.id, 'yes')}>
@@ -772,9 +785,10 @@ function Replies({ guests, w, host, onAnswer, onPick }: { guests: Guest[]; w: an
 }
 
 function Caterer({ guests, w }: { guests: Guest[]; w: any }) {
-  const diets = new Map<string, Guest[]>()
-  for (const g of guests) for (const d of g.diet) diets.set(d, [...(diets.get(d) ?? []), g])
-  const rows = [...diets.entries()].sort((a, b) => b[1].length - a[1].length)
+  const byDiet = new Map<string, Guest[]>()
+  for (const g of guests) for (const d of g.diet) byDiet.set(d, [...(byDiet.get(d) ?? []), g])
+  const keys = dietKeyMap(guests)
+  const rows = [...byDiet.entries()].sort((a, b) => b[1].length - a[1].length)
   const plates = people(guests)
   const standard = plates - guests.filter((g) => g.diet.length > 0).length
   return (
@@ -793,8 +807,8 @@ function Caterer({ guests, w }: { guests: Guest[]; w: any }) {
           <span className="ev-count">{standard}</span>
         </li>
         {rows.map(([d, list]) => (
-          <li key={d} className={/allerg/i.test(d) ? 'alert' : ''}>
-            <i style={{ background: DIET_COLORS[d] ?? C.horizon }} />
+          <li key={d} className={/allerg/i.test(keys.get(d) ?? d) ? 'alert' : ''}>
+            <i style={{ background: dietColor(keys.get(d) ?? d) }} />
             <b>{d}</b>
             <span className="ev-names">{list.map((g) => g.name.split(' ')[0]).join(', ')}</span>
             <span className="ev-count">{list.length}</span>

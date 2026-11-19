@@ -46,8 +46,6 @@ const weekNumber = (d: Date) => {
   return Math.ceil(((t.getTime() - start.getTime()) / 86400000 + 1) / 7)
 }
 
-const lang = () => (typeof navigator !== 'undefined' && navigator.language) || 'en'
-
 /** The store's posts as a list, oldest first. */
 export const toPosts = (data: ContentCalendarPostsStore | undefined): Post[] =>
   Object.entries(data?.posts ?? {}).map(([id, p]) => ({
@@ -61,13 +59,22 @@ export const toPosts = (data: ContentCalendarPostsStore | undefined): Post[] =>
     link: p.link ?? '',
   }))
 
-export function ContentCalendar({ posts: saved, settings, words, initial }: { posts: ContentCalendarPostsStore; settings: Settings; words: Words; initial?: string }) {
+export function ContentCalendar({ posts: saved, localize, settings, words, locale, initial }: {
+  posts: ContentCalendarPostsStore
+  /** The posts with their starting text in the reader's language (display only). */
+  localize: (data: ContentCalendarPostsStore) => ContentCalendarPostsStore
+  settings: Settings
+  words: Words
+  /** The reader's language tag, for dates. */
+  locale: string
+  initial?: string
+}) {
   const stored = useStore(STORE) as ContentCalendarPostsStore | undefined
   const store = useStoreStatus(STORE)
   // Without the store (other builds, previews), show the last saved copy, read-only.
   const live = (store?.status === 'open' || store?.status === 'paused') && stored !== undefined
   const canEdit = live && store?.status === 'open' && Boolean(store?.canEdit)
-  const posts = React.useMemo(() => toPosts(live ? stored : saved), [live, stored, saved])
+  const posts = React.useMemo(() => toPosts(localize(live ? stored : saved)), [live, stored, saved, localize])
   const change = (id: string, values: Partial<Pick<Post, 'date' | 'status'>>) =>
     edit(STORE, (d: ContentCalendarPostsStore) => {
       Object.assign(d.posts[id], values)
@@ -87,7 +94,7 @@ export function ContentCalendar({ posts: saved, settings, words, initial }: { po
   const today = day(settings.today)
   const monthStart = day(`${settings.month}-01`)
   const monthEnd = iso(new Date(monthStart.getFullYear(), monthStart.getMonth() + 1, 0))
-  const fmt = (opts: Intl.DateTimeFormatOptions, d: Date) => new Intl.DateTimeFormat(lang(), opts).format(d)
+  const fmt = (opts: Intl.DateTimeFormatOptions, d: Date) => new Intl.DateTimeFormat(locale, opts).format(d)
 
   const shown = posts
     .filter((p) => (channels.size === 0 || channels.has(p.channel)) && (owners.size === 0 || owners.has(p.owner)))

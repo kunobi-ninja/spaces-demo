@@ -25,7 +25,8 @@ export interface Flat {
 const C = { midnight: '#06213f', deep: '#0b2d52', sun: '#f3aa08', ocean: '#5bcbf9', tide: '#30ccd5', horizon: '#0984c8', cut: '#d9654b', leaf: '#2fb37a' }
 const KIND_COLOR: Record<Kind, string> = { issue: C.cut, question: C.horizon, idea: C.sun, like: C.leaf }
 const clamp = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v))
-const fill = (t: string, v: Record<string, string | number>) => t.replace(/\{(\w+)\}/g, (_, k) => String(v[k] ?? ''))
+/** A word with `{{placeholders}}` is a function of their values (lib/i18n); one without is its text. */
+const fill = (t: string | ((v: Record<string, string | number>) => string), v: Record<string, string | number>) => (typeof t === 'function' ? t(v) : t)
 
 function KindIcon({ kind, resolved }: { kind: Kind; resolved?: boolean }) {
   if (resolved) return <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
@@ -37,13 +38,13 @@ function KindIcon({ kind, resolved }: { kind: Kind; resolved?: boolean }) {
 type Draft = { x: number; y: number; z: number; room: string }
 type Api = { flyTo(x: number, y: number, z: number): void; overview(): void }
 
-export function Tour({ flat, start, words: w }: { flat: Flat; start: FlatTourPinsStore; words: any }) {
+export function Tour({ flat, start, localize, words: w }: { flat: Flat; start: FlatTourPinsStore; localize: (data: FlatTourPinsStore) => FlatTourPinsStore; words: any }) {
   const live = useStore(STORE) as FlatTourPinsStore | undefined
   const status = useStoreStatus(STORE)
   // Without the store (other builds, previews), show the starting pins, read-only.
   const open = (status?.status === 'open' || status?.status === 'paused') && live !== undefined
   const canEdit = open && status?.status === 'open' && Boolean(status?.canEdit)
-  const pins = (open ? live : start)?.pins ?? {}
+  const pins = React.useMemo(() => localize((open ? live : start) as FlatTourPinsStore)?.pins ?? {}, [open, live, start, localize])
 
   const [selected, setSelected] = React.useState<string | null>(null)
   const [draft, setDraft] = React.useState<Draft | null>(null)

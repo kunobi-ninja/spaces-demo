@@ -121,7 +121,7 @@ export function Dashboard({ snap, savedAcks, w }: { snap: Snapshot; savedAcks: C
         <div>
           <div className="name">
             {live ? w.selected : w.sample}
-            {!live && <span className="tag" title={w.sampleTip(snap.takenAt)}>{w.sampleData}</span>}
+            {!live && <span className="tag" title={w.sampleTip({ when: new Date(snap.takenAt).toUTCString() })}>{w.sampleData}</span>}
             {!live && allow && <button className="live" onClick={allow}>{w.useLive}</button>}
           </div>
           <h1>

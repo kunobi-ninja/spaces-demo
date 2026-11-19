@@ -1,0 +1,16 @@
+{
+  "meta.title": { "text": "Caça ao peixe", "from": "1d438cc8" },
+  "meta.description": { "text": "Cada um move o próprio gato pela casa. Pegue peixes, empurre os novelos; quem pegar cinco peixes primeiro ganha a rodada.", "from": "0d372c7e" },
+  "meta.prompts": { "text": ["Faça uma Caça ao peixe para a nossa família: um gato para cada um, com nossos nomes, na nossa sala.", "Ganha quem pegar três peixes primeiro, e os novelos rolam mais rápido."], "from": "0a45852c" },
+  "words.title": { "text": "Caça ao peixe", "from": "1d438cc8" },
+  "words.you": { "text": "Você", "from": "8a79a5f8" },
+  "words.guest": { "text": "Convidado", "from": "2585146e" },
+  "words.meow": { "text": "Miau!", "from": "15b4e067" },
+  "words.jump": { "text": "Pular", "from": "8647784d" },
+  "words.youWin": { "text": "Você ganhou a rodada!", "from": "a1974c01" },
+  "words.theyWin": { "text": "{{name}} ganhou a rodada!", "from": "c7634006" },
+  "words.alone": { "text": "Esperando outro gato.", "from": "30625d47" },
+  "words.solo": { "text": "Jogando sozinho. Abra no Kunobi com amigos para jogarem juntos.", "from": "86c29ac5" },
+  "words.paused": { "text": "Reconectando…", "from": "2d2ad1e0" },
+  "words.how": { "text": "Setas ou toque para mover · Espaço para pular · role para dar zoom · M para miar · ganha quem pegar {{count}} peixes", "from": "0bae9e64" }
+}

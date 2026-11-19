@@ -8,8 +8,10 @@ prompts:
 
 import * as React from 'react'
 import '@fontsource/press-start-2p/400.css'
+import { useI18n } from '../lib/i18n'
+import translations from './locales/index'
 
-{/* Week Quest: Sam's week as a turn-based pixel battle. The three bosses are what gave Sam trouble this week: a bug, the inbox, Monday. */}
+{/* Week Quest: Sam's week as a turn-based pixel battle. The three bosses are what gave Sam trouble this week: a bug, the inbox, Monday. The bosses' and moves' numbers are below; their names and every line the game shows are in WORDS, in English; their translations are in locales/<lang>.json. The page follows Kunobi's language and falls back to English. */}
 
 export const HERO = 'Sam'
 
@@ -25,17 +27,43 @@ export const SPRITES = {
 export const PALETTE = { k: '#0b0820', y: '#ffd6a5', s: '#120f2a', b: C.blue, w: '#ffffff', g: C.green, r: C.red, p: C.pink, o: '#ff9f1c' }
 
 export const BOSSES = [
-  { id: 'bug', name: 'The Heisenbug', hp: 40, hits: ['vanishes when observed', 'reappears in production'] },
-  { id: 'inbox', name: 'Inbox Hydra', hp: 55, hits: ['grows two threads', 'replies all'] },
-  { id: 'monday', name: 'Monday, Again', hp: 70, hits: ['casts 9 AM meeting', 'drains your coffee'] },
+  { id: 'bug', hp: 40 },
+  { id: 'inbox', hp: 55 },
+  { id: 'monday', hp: 70 },
 ]
 
 export const MOVES = [
-  { id: 'fix', label: 'Hotfix', power: [10, 16], text: 'pushes a hotfix' },
-  { id: 'coffee', label: 'Coffee', heal: 18, text: 'drinks a coffee' },
-  { id: 'mute', label: 'Mute', power: [6, 10], text: 'mutes the channel' },
-  { id: 'ship', label: 'Ship it', power: [18, 26], miss: 0.35, text: 'ships it on Friday' },
+  { id: 'fix', power: [10, 16] },
+  { id: 'coffee', heal: 18 },
+  { id: 'mute', power: [6, 10] },
+  { id: 'ship', power: [18, 26], miss: 0.35 },
 ]
+
+export const WORDS = {
+  bosses: {
+    bug: { name: 'The Heisenbug', hits: ['vanishes when observed', 'reappears in production'] },
+    inbox: { name: 'Inbox Hydra', hits: ['grows two threads', 'replies all'] },
+    monday: { name: 'Monday, Again', hits: ['casts 9 AM meeting', 'drains your coffee'] },
+  },
+  moves: {
+    fix: { label: 'Hotfix', text: 'pushes a hotfix' },
+    coffee: { label: 'Coffee', text: 'drinks a coffee' },
+    mute: { label: 'Mute', text: 'mutes the channel' },
+    ship: { label: 'Ship it', text: 'ships it on Friday' },
+  },
+  title: 'WEEK QUEST · {{hero}} VS THE WEEK',
+  hp: 'HP',
+  appears: '{{foe}} appears!',
+  heal: '{{hero}} {{move}}. +{{n}} HP!',
+  miss: '{{hero}} {{move}}... it breaks the build. Miss!',
+  hit: '{{hero}} {{move}}! {{n}} damage.',
+  hurt: '{{foe}} {{move}}! {{n}} damage.',
+  beaten: '{{foe}} is defeated! Next: {{next}}',
+  over: '{{foe}} is defeated. The week is over!',
+  survived: 'YOU SURVIVED THE WEEK!',
+  levelUp: 'LEVEL UP · WEEKEND UNLOCKED',
+  again: 'Play again',
+}
 
 export const Sprite = ({ map, size = 8, flash = false }) => (
   <svg width={map[0].length * size} height={map.length * size} viewBox={`0 0 ${map[0].length} ${map.length}`} shapeRendering="crispEdges" style={{ filter: flash ? 'brightness(3)' : 'none', imageRendering: 'pixelated' }}>
@@ -64,16 +92,19 @@ export const blip = (ctx, freq, dur = 0.08, type = 'square') => {
 
 export const WeekQuest = () => {
   const { useState, useRef } = React
+  const { w } = useI18n(WORDS, translations)
+  const bosses = BOSSES.map((b) => ({ ...b, ...w.bosses[b.id] }))
+  const moves = MOVES.map((m) => ({ ...m, ...w.moves[m.id] }))
   const audio = useRef(null)
   const [stage, setStage] = useState(0)
   const [hero, setHero] = useState(60)
-  const [boss, setBoss] = useState(BOSSES[0].hp)
-  const [log, setLog] = useState(`${BOSSES[0].name} appears!`)
+  const [boss, setBoss] = useState(bosses[0].hp)
+  const [log, setLog] = useState(w.appears({ foe: bosses[0].name }))
   const [busy, setBusy] = useState(false)
   const [hit, setHit] = useState(null)
   const [pop, setPop] = useState(null)
   const [won, setWon] = useState(false)
-  const foe = BOSSES[Math.min(stage, BOSSES.length - 1)]
+  const foe = bosses[Math.min(stage, bosses.length - 1)]
   const sfx = (f, d, t) => {
     if (!audio.current) audio.current = new (window.AudioContext || window.webkitAudioContext)()
     blip(audio.current, f, d, t)
@@ -87,11 +118,11 @@ export const WeekQuest = () => {
     let left = boss
     if (move.heal) {
       setHero((h) => Math.min(60, h + move.heal))
-      setLog(`${HERO} ${move.text}. +${move.heal} HP!`)
+      setLog(w.heal({ hero: HERO, move: move.text, n: move.heal }))
       setPop({ who: 'hero', text: `+${move.heal}`, color: C.green })
       sfx(660, 0.15, 'triangle')
     } else if (move.miss && Math.random() < move.miss) {
-      setLog(`${HERO} ${move.text}... it breaks the build. Miss!`)
+      setLog(w.miss({ hero: HERO, move: move.text }))
       sfx(110, 0.25, 'sawtooth')
     } else {
       const dmg = roll(move.power)
@@ -99,7 +130,7 @@ export const WeekQuest = () => {
       setBoss(left)
       setHit('boss')
       setPop({ who: 'boss', text: `-${dmg}`, color: C.gold })
-      setLog(`${HERO} ${move.text}! ${dmg} damage.`)
+      setLog(w.hit({ hero: HERO, move: move.text, n: dmg }))
       sfx(880, 0.06)
       setTimeout(() => sfx(990, 0.08), 70)
     }
@@ -110,21 +141,21 @@ export const WeekQuest = () => {
       sfx(523, 0.1, 'triangle')
       setTimeout(() => sfx(659, 0.1, 'triangle'), 110)
       setTimeout(() => sfx(784, 0.2, 'triangle'), 220)
-      if (stage + 1 >= BOSSES.length) {
-        setLog(`${foe.name} is defeated. The week is over!`)
+      if (stage + 1 >= bosses.length) {
+        setLog(w.over({ foe: foe.name }))
         await wait(900)
         setWon(true)
       } else {
-        setLog(`${foe.name} is defeated! Next: ${BOSSES[stage + 1].name}`)
+        setLog(w.beaten({ foe: foe.name, next: bosses[stage + 1].name }))
         await wait(1100)
         setStage(stage + 1)
-        setBoss(BOSSES[stage + 1].hp)
+        setBoss(bosses[stage + 1].hp)
       }
       setBusy(false)
       return
     }
     const dmg = roll([5, 11])
-    setLog(`${foe.name} ${foe.hits[Math.floor(Math.random() * foe.hits.length)]}! ${dmg} damage.`)
+    setLog(w.hurt({ foe: foe.name, move: foe.hits[Math.floor(Math.random() * foe.hits.length)], n: dmg }))
     setHero((h) => Math.max(1, h - dmg))
     setHit('hero')
     setPop({ who: 'hero', text: `-${dmg}`, color: C.red })
@@ -138,9 +169,9 @@ export const WeekQuest = () => {
   const restart = () => {
     setStage(0)
     setHero(60)
-    setBoss(BOSSES[0].hp)
+    setBoss(bosses[0].hp)
     setWon(false)
-    setLog(`${BOSSES[0].name} appears!`)
+    setLog(w.appears({ foe: bosses[0].name }))
   }
 
   return (
@@ -169,7 +200,7 @@ export const WeekQuest = () => {
         @keyframes wq-pop { from { opacity: 1; transform: translateY(0) } to { opacity: 0; transform: translateY(-34px) } }
         @keyframes wq-in { from { opacity: 0 } }
       `}</style>
-      <h1>WEEK QUEST · {HERO.toUpperCase()} VS THE WEEK</h1>
+      <h1>{w.title({ hero: HERO.toUpperCase() })}</h1>
       <div className="field">
         <div className={`slot foe ${hit === 'boss' ? 'shake' : 'bob'}`}>
           <span>{foe.name} · {stage + 1}/3</span>
@@ -179,24 +210,24 @@ export const WeekQuest = () => {
         </div>
         <div className={`slot me ${hit === 'hero' ? 'shake' : ''}`}>
           <Sprite map={SPRITES.hero} size={8} flash={hit === 'hero'} />
-          <span>{HERO} · HP {hero}/60</span>
+          <span>{HERO} · {w.hp} {hero}/60</span>
           <Bar value={hero} max={60} color={C.green} />
           {pop?.who === 'hero' ? <span className="pop" style={{ color: pop.color, left: 110, top: 0 }}>{pop.text}</span> : null}
         </div>
       </div>
       <div className="log">{log}</div>
       <div className="moves">
-        {MOVES.map((m) => (
+        {moves.map((m) => (
           <button key={m.id} type="button" disabled={busy || won} onClick={() => act(m)}>▶ {m.label}</button>
         ))}
       </div>
       {won ? (
         <div className="win">
           <div>
-            <h2>YOU SURVIVED THE WEEK!</h2>
+            <h2>{w.survived}</h2>
             <p className="stars" style={{ fontSize: 18 }}>{[...'★★★'].map((s, i) => <span key={i} style={{ animationDelay: `${i * 0.2}s`, color: C.gold }}>{s}</span>)}</p>
-            <p style={{ fontSize: 10, color: C.dim, margin: '14px 0 20px' }}>{HERO} · LEVEL UP · WEEKEND UNLOCKED</p>
-            <button type="button" onClick={restart} style={{ textAlign: 'center' }}>▶ Play again</button>
+            <p style={{ fontSize: 10, color: C.dim, margin: '14px 0 20px' }}>{HERO} · {w.levelUp}</p>
+            <button type="button" onClick={restart} style={{ textAlign: 'center' }}>▶ {w.again}</button>
           </div>
         </div>
       ) : null}

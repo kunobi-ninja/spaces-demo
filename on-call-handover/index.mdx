@@ -1,11 +1,16 @@
 ---
 title: On-call handover
 description: "Tonight's on-call handover: the last 12 hours on your cluster, what is still failing, and the open items the next person acks."
+i18n:
+  data:
+    handover: [headline, lines]
+    items: [items.*.title, items.*.detail]
 kunobi:
   page-layout: full
   stores: [on-call-handover-items]
 ---
 
+import * as React from 'react'
 import '@fontsource/parkinsans/600.css'
 import '@fontsource/parkinsans/800.css'
 import '@fontsource/figtree/400.css'
@@ -14,106 +19,64 @@ import '@fontsource/figtree/700.css'
 import snapshot from './data/cluster.json'
 import handover from './data/handover.json'
 import items from './data/items.json'
+import itemsStart from './data/items.start.json'
 import { Handover } from './src/Handover'
+import { useI18n } from '../lib/i18n'
+import translations from './locales/index'
 
-{/* Interface words per language. The page follows the system language and falls back to English. Cluster facts come from the cluster selected in your Kunobi tab once you allow it in your own preview, otherwise from the sample in data/cluster.json. The summary is in data/handover.json. The open items, who handed over and who took over live in the on-call-handover-items store, saved to data/items.json. */}
+{/* The page's words. Their translations, and those of the summary and of the starting items (data/items.start.json, by id), are in locales/<lang>.json; an item still as it started shows translated. Cluster facts come from the cluster selected in your Kunobi tab once you allow it in your own preview, otherwise from the sample in data/cluster.json. The summary is in data/handover.json. The open items, who handed over and who took over live in the on-call-handover-items store, saved to data/items.json. */}
 
 export const WORDS = {
-  en: {
-    locale: 'en-GB',
-    eyebrow: 'On-call handover',
-    sampleCluster: 'Sample cluster',
-    title: 'Tonight’s handover',
-    handedBy: 'Handed over', takenBy: 'Taken over', notTaken: 'Not yet',
-    whoTakes: 'Who takes over', takeOver: 'Take over', undo: 'Undo',
-    window: 'Window',
-    sample: (d) => `Sample data · ${d}`, useLive: 'Use live data', live: 'Live',
-    kpi: {
-      nodes: 'Nodes ready',
-      pods: 'Pods not ready', podsSub: (n) => `${n} running`,
-      flux: 'Flux failing', fluxSub: (k, h, r) => `${k} KS · ${h} HR · ${r} repo`,
-      restarts: 'Crashed pods', restartsSub: 'Error · OOM',
-      items: 'Open items', itemsSub: (a, d) => `${a} acked · ${d} done`,
-    },
-    noteTitle: 'Summary',
-    failingTitle: 'Still failing',
-    failingSub: (k, h, r, s) => `of ${k} KS · ${h} HR · ${r} repos · ${s} STS`,
-    ready: 'ready', stsMsg: 'Pods are not being created.',
-    nothingFailing: 'Nothing is failing.',
-    timelineTitle: (h) => `Last ${h} hours`,
-    utc: 'UTC',
-    since: (d) => `since ${d}`,
-    estimated: 'est.', exact: 'in window',
-    restarts: 'Restarts', changes: 'New revisions',
-    legend: { event: 'Warning', recurring: 'Recurring', restart: 'Restart (Completed)', change: 'New revision' },
-    ago: { min: (n) => `${n} min`, h: (n) => `${n} h`, since: (d) => d },
-    itemsTitle: 'Open items',
-    saving: 'Saving…',
-    progressLabel: (n, total) => `${n}/${total} acked`,
-    all: 'All',
-    status: { open: 'Open', acked: 'Acked', done: 'Done' },
-    statusAction: { open: 'Open', acked: 'Ack', done: 'Done' },
-    statusLabel: 'Status',
-    severity: { high: 'High', medium: 'Med', low: 'Low' },
-    more: 'Details', check: 'Check', owner: 'Owner', nobody: 'Nobody', comment: 'Comment', commentPh: 'What you found or did',
-    noItems: 'No items here.',
-    change: 'How to change this',
-    prompts: [
-      '“Write tonight’s handover from the last 12 hours of events.”',
-      '“Add an open item for the pgo upgrade and give it to Ana.”',
-      '“Close every item that is no longer failing in the cluster.”',
-    ],
+  eyebrow: 'On-call handover',
+  sampleCluster: 'Sample cluster',
+  title: 'Tonight’s handover',
+  handedBy: 'Handed over', takenBy: 'Taken over', notTaken: 'Not yet',
+  whoTakes: 'Who takes over', takeOver: 'Take over', undo: 'Undo',
+  window: 'Window',
+  sample: 'Sample data · {{date}}', useLive: 'Use live data', live: 'Live',
+  kpi: {
+    nodes: 'Nodes ready',
+    pods: 'Pods not ready', podsSub: '{{count}} running',
+    flux: 'Flux failing', fluxSub: '{{ks}} KS · {{hr}} HR · {{repos}} repo',
+    restarts: 'Crashed pods', restartsSub: 'Error · OOM',
+    items: 'Open items', itemsSub: '{{acked}} acked · {{done}} done',
   },
-  es: {
-    locale: 'es-ES',
-    eyebrow: 'Relevo de guardia',
-    sampleCluster: 'Clúster de ejemplo',
-    title: 'Relevo de esta noche',
-    handedBy: 'Entrega', takenBy: 'Recibe', notTaken: 'Aún nadie',
-    whoTakes: 'Quién recibe la guardia', takeOver: 'Recibir', undo: 'Deshacer',
-    window: 'Periodo',
-    sample: (d) => `Datos de ejemplo · ${d}`, useLive: 'Usar datos en vivo', live: 'En vivo',
-    kpi: {
-      nodes: 'Nodos listos',
-      pods: 'Pods no listos', podsSub: (n) => `${n} en marcha`,
-      flux: 'Flux con fallos', fluxSub: (k, h, r) => `${k} KS · ${h} HR · ${r} repo`,
-      restarts: 'Pods caídos', restartsSub: 'Error · OOM',
-      items: 'Pendientes', itemsSub: (a, d) => `${a} vistos · ${d} hechos`,
-    },
-    noteTitle: 'Resumen',
-    failingTitle: 'Sigue fallando',
-    failingSub: (k, h, r, s) => `de ${k} KS · ${h} HR · ${r} repos · ${s} STS`,
-    ready: 'listos', stsMsg: 'No se crean pods.',
-    nothingFailing: 'No falla nada.',
-    timelineTitle: (h) => `Últimas ${h} horas`,
-    utc: 'UTC',
-    since: (d) => `desde el ${d}`,
-    estimated: 'est.', exact: 'en el periodo',
-    restarts: 'Reinicios', changes: 'Revisiones nuevas',
-    legend: { event: 'Warning', recurring: 'Recurrente', restart: 'Reinicio (Completed)', change: 'Revisión nueva' },
-    ago: { min: (n) => `${n} min`, h: (n) => `${n} h`, since: (d) => d },
-    itemsTitle: 'Pendientes',
-    saving: 'Guardando…',
-    progressLabel: (n, total) => `${n}/${total} vistos`,
-    all: 'Todos',
-    status: { open: 'Abierto', acked: 'Visto', done: 'Hecho' },
-    statusAction: { open: 'Abierto', acked: 'Visto', done: 'Hecho' },
-    statusLabel: 'Estado',
-    severity: { high: 'Alta', medium: 'Media', low: 'Baja' },
-    more: 'Detalles', check: 'Comprobar', owner: 'Responsable', nobody: 'Nadie', comment: 'Comentario', commentPh: 'Qué has visto o hecho',
-    noItems: 'No hay pendientes aquí.',
-    change: 'Cómo cambiar esto',
-    prompts: [
-      '“Escribe el relevo de esta noche a partir de los eventos de las últimas 12 horas.”',
-      '“Añade un pendiente para el upgrade de pgo y asígnaselo a Ana.”',
-      '“Cierra los pendientes que ya no fallan en el clúster.”',
-    ],
-  },
+  noteTitle: 'Summary',
+  failingTitle: 'Still failing',
+  failingSub: 'of {{ks}} KS · {{hr}} HR · {{repos}} repos · {{sts}} STS',
+  ready: 'ready', stsMsg: 'Pods are not being created.',
+  nothingFailing: 'Nothing is failing.',
+  timelineTitle: 'Last {{hours}} hours',
+  utc: 'UTC',
+  since: 'since {{date}}',
+  estimated: 'est.', exact: 'in window',
+  restarts: 'Restarts', changes: 'New revisions',
+  legend: { event: 'Warning', recurring: 'Recurring', restart: 'Restart (Completed)', change: 'New revision' },
+  ago: { min: '{{count}} min', h: '{{count}} h' },
+  itemsTitle: 'Open items',
+  saving: 'Saving…',
+  progressLabel: '{{count}}/{{total}} acked',
+  all: 'All',
+  status: { open: 'Open', acked: 'Acked', done: 'Done' },
+  statusAction: { open: 'Open', acked: 'Ack', done: 'Done' },
+  statusLabel: 'Status',
+  severity: { high: 'High', medium: 'Med', low: 'Low' },
+  more: 'Details', check: 'Check', owner: 'Owner', nobody: 'Nobody', comment: 'Comment', commentPh: 'What you found or did',
+  noItems: 'No items here.',
+  change: 'How to change this',
+  prompts: [
+    '“Write tonight’s handover from the last 12 hours of events.”',
+    '“Add an open item for the pgo upgrade and give it to Ana.”',
+    '“Close every item that is no longer failing in the cluster.”',
+  ],
 }
 
-export const pickLang = () => {
-  const tag = ((typeof navigator !== 'undefined' && navigator.language) || 'en').toLowerCase().split('-')[0]
-  return WORDS[tag] ? tag : 'en'
+export const Page = () => {
+  const t = useI18n(WORDS, translations)
+  const w = React.useMemo(() => ({ ...t.w, locale: t.lang === 'en' ? 'en-GB' : t.tag }), [t])
+  const text = React.useMemo(() => t.data('handover', handover), [t])
+  const localize = React.useCallback((live) => t.data('items', live, itemsStart), [t])
+  return <Handover snap={snapshot} text={text} start={items} localize={localize} w={w} />
 }
 
-<Handover snap={snapshot} text={handover} start={items} w={WORDS[pickLang()]} lang={pickLang()} />
+<Page />

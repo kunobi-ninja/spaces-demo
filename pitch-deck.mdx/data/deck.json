@@ -31,6 +31,7 @@
     }
   ],
   "product": {
+    "label": "Next visit",
     "visit": "Tue 18:30",
     "status": "Van on the way · 12 min",
     "plans": [

@@ -1,0 +1,19 @@
+{
+  "meta.title": { "text": "3D로 보는 Felipe", "from": "3df4de65" },
+  "meta.description": { "text": "페이지 안에서 바로 돌리고, 확대하고, 조명을 비출 수 있는 3D 가우시안 스플랫 스캔이에요.", "from": "f640c262" },
+  "words.loading": { "text": "스캔 불러오는 중…", "from": "2a0825ce" },
+  "words.failed": { "text": "스캔을 불러올 수 없어요.", "from": "4db8ae0d" },
+  "words.hint": { "text": "드래그로 돌리기 · 스크롤이나 핀치로 확대", "from": "772ec230" },
+  "words.front": { "text": "정면", "from": "0272e7ae" },
+  "words.side": { "text": "측면", "from": "159051dc" },
+  "words.close": { "text": "클로즈업", "from": "dffdb8a3" },
+  "words.reveal": { "text": "드러내기", "from": "945f4fe4" },
+  "words.points": { "text": "흩뿌리기", "from": "92d4a70f" },
+  "words.light": { "text": "조명", "from": "5170ad83" },
+  "words.change": { "text": "바꾸는 방법", "from": "37c68600" },
+  "words.changeLine": { "text": "카메라, 제목, 출처 표시는 data/scene.json에 있어요. AI에게 물어보세요:", "from": "40903cf5" },
+  "words.prompts": { "text": ["“스캔 뷰어에 위에서 보기 프리셋을 추가해 줘.”", "“대신 내 스캔 assets/chair.spz를 정면에서 보이게 써 줘.”"], "from": "b74874fa" },
+  "data.scene.title": { "text": "Felipe", "from": "1a2f7fda" },
+  "data.scene.subtitle": { "text": "돌리고, 확대하고, 조명을 비출 수 있는 3D 스캔.", "from": "f614e45d" },
+  "data.scene.credit.text": { "text": "abstrakt의 “ChatGPT dots – Felipe”, CC BY 4.0. SPZ로 변환하고 디테일을 줄였어요.", "from": "8b1851f0" }
+}

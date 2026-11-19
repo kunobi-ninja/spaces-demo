@@ -1,0 +1,18 @@
+{
+  "meta.title": { "text": "Un film d'anniversaire", "from": "1dcf872e" },
+  "meta.description": { "text": "Un film d'anniversaire de 30 secondes pour un ami, fait à partir d'un prénom, d'un âge et de trois souvenirs.", "from": "0cc5516f" },
+  "words.turns": { "text": "fête ses {{age}} ans", "from": "a776e3e2" },
+  "words.happy": { "text": "Joyeux {{age}} ans, {{to}}", "from": "2f3db709" },
+  "words.from": { "text": "de la part de {{name}}", "from": "a7386474" },
+  "data.film.intro": { "text": "Un petit film pour", "from": "9c39a1d9" },
+  "data.film.memories[0].when": { "text": "Été 2009", "from": "244d80c4" },
+  "data.film.memories[0].title": { "text": "La tente inondée", "from": "5d118c19" },
+  "data.film.memories[0].line": { "text": "Deux jours de pluie sur Skye. Tu dis encore que c'était le meilleur voyage de ta vie.", "from": "51e6e951" },
+  "data.film.memories[1].when": { "text": "Printemps 2014", "from": "4e4e6d8c" },
+  "data.film.memories[1].title": { "text": "Amsterdam à vélo", "from": "75e6b0c0" },
+  "data.film.memories[1].line": { "text": "Tu avais promis que c'était plat. Nos jambes s'en souviennent autrement.", "from": "fa12a0b0" },
+  "data.film.memories[2].when": { "text": "Chaque dimanche depuis", "from": "17a89a52" },
+  "data.film.memories[2].title": { "text": "Le club des pâtes du dimanche", "from": "022e90d8" },
+  "data.film.memories[2].line": { "text": "Quatorze ans, une recette, et toujours la même dispute sur l'ail.", "from": "df434d95" },
+  "data.film.wish": { "text": "Fais un vœu", "from": "48338aa2" }
+}

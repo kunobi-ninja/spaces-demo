@@ -1,0 +1,22 @@
+{
+  "meta.title": { "text": "Cluster-Dashboard", "from": "e9469e10" },
+  "meta.description": { "text": "Was in deinem Cluster kaputt ist, wo und warum.", "from": "d1a2e10f" },
+  "words.sample": { "text": "Beispiel-Cluster", "from": "59783d6d" },
+  "words.selected": { "text": "Dein Cluster", "from": "db3a2e4c" },
+  "words.sampleData": { "text": "Beispieldaten", "from": "0fada9af" },
+  "words.useLive": { "text": "Meinen Cluster nutzen", "from": "70fe5169" },
+  "words.sampleTip": { "text": "Aufgenommen {{when}}. Nur lesen.", "from": "4d49eae8" },
+  "words.broken": { "text": "kaputt", "from": "dfef76f6" },
+  "words.toCheck": { "text": "zu prüfen", "from": "5a3bc732" },
+  "words.allGood": { "text": "Alles in Ordnung", "from": "804c323b" },
+  "words.podsOk": { "text": "Pods in Ordnung", "from": "fb9863a2" },
+  "words.map": { "text": "Pods nach Namespace", "from": "2381d145" },
+  "words.problems": { "text": "Probleme", "from": "009537e9" },
+  "words.all": { "text": "Alle", "from": "9a9877c8" },
+  "words.none": { "text": "Hier ist nichts.", "from": "fcc41fa4" },
+  "words.back": { "text": "Zurück", "from": "357885fe" },
+  "words.mark": { "text": "Als bekannt markieren", "from": "2bcfdfa5" },
+  "words.unmark": { "text": "Nicht bekannt", "from": "0c770638" },
+  "words.known": { "text": "Bekannt", "from": "5235ede1" },
+  "words.saving": { "text": "Speichern…", "from": "53ca6040" }
+}

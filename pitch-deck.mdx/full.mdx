@@ -1,6 +1,39 @@
 ---
 title: Pedal Club · Seed deck
 description: "A ten-slide seed deck for a bike-repair subscription, presented slide by slide."
+i18n:
+  data:
+    deck:
+      - "round"
+      - "date"
+      - "problem[*].value"
+      - "problem[*].label"
+      - "steps[*].title"
+      - "steps[*].label"
+      - "product.label"
+      - "product.visit"
+      - "product.status"
+      - "product.plans[*].name"
+      - "product.plans[*].price"
+      - "product.plans[*].note"
+      - "product.checks"
+      - "market[*].label"
+      - "market[*].value"
+      - "traction.unit"
+      - "traction.months"
+      - "traction.chips[*].value"
+      - "traction.chips[*].label"
+      - "economics.parts[*].label"
+      - "economics.chips[*].value"
+      - "economics.chips[*].label"
+      - "economics.priceLabel"
+      - "economics.marginLabel"
+      - "team[*].note"
+      - "team[*].role"
+      - "plan[*].when"
+      - "plan[*].what"
+      - "ask.amount"
+      - "ask.uses[*].label"
 presentation: timeline
 size: 1920x1080
 fps: 30
@@ -15,16 +48,43 @@ targets:
 
 export { createCut } from "./src/index"
 import { Slide } from "./src/slide"
-import deck from "./data/deck.json"
+import deckData from "./data/deck.json"
+import { i18n } from "../lib/i18n"
+import translations from "./locales/index"
 
 export const variants = ["cloud", "midnight"]
 export const OF = 10
 
 {/*
   One scene is one slide. Presenting pauses at the end of each scene (stops: scenes);
-  the exported video plays straight through. The words are written here; the
-  figures read data/deck.json. Change either and the slide follows.
+  the exported video plays straight through. The slides show the words in WORDS.slides
+  (by scene id); the Markdown under each scene is the same text, as the scene's outline,
+  so keep the two in step. The figures read data/deck.json. Translations of both are in
+  locales/<lang>.json. The deck is in the app's language when it opens; after a language
+  change it shows the new one once reopened.
 */}
+
+export const WORDS = {
+  vans: "vans",
+  slides: {
+    title: { kicker: "Seed round", title: "Pedal Club", sub: "Bike repair by subscription. We come to you." },
+    problem: { kicker: "The problem", title: "Bikes break. Fixing them is a chore.", sub: "City riders lose their bike for days every time something goes wrong, so most just stop riding." },
+    solution: { kicker: "Our answer", title: "Upkeep that comes to the bike.", sub: "One monthly price covers regular tune-ups and fast repairs where the bike already is." },
+    product: { kicker: "The product", title: "Book in ten seconds. Watch the van arrive.", bullets: ["Pick a slot that suits you", "Follow the van on the map", "See what was checked and fixed"] },
+    market: { kicker: "The market", title: "Six cities, 610,000 riders who would pay.", sub: "We start where people already commute by bike and repair shops are full." },
+    traction: { kicker: "Traction", title: "4,880 riders in 18 months.", sub: "Grown in Lyon and Bordeaux with word of mouth and office plans." },
+    model: { kicker: "Business model", title: "Each rider pays for themselves in five months.", sub: "Visits are planned in routes, so one van serves a neighbourhood a day." },
+    team: { kicker: "The team", title: "People who have run vans and fixed bikes." },
+    plan: { kicker: "The plan", title: "From two cities to six by 2028." },
+    ask: { kicker: "The ask", title: "We are raising €1.2M.", sub: "Enough for 18 more vans, the mechanics to run them, and 24 months of runway." },
+  },
+}
+
+export const t = i18n(WORDS, translations)
+export const w = t.w
+export const deck = t.data("deck", deckData)
+export const S = w.slides
+export const LOCALE = t.locale
 
 <Scene id="title" duration="6s">
 
@@ -34,7 +94,7 @@ export const OF = 10
 
 Bike repair by subscription. We come to you.
 
-<Slide kind="title" n={1} of={OF} company={deck.company} round={`${deck.round} · ${deck.date}`} />
+<Slide kind="title" n={1} of={OF} company={deck.company} round={`${deck.round} · ${deck.date}`} words={S.title} locale={LOCALE} />
 
 </Scene>
 
@@ -46,7 +106,7 @@ Bike repair by subscription. We come to you.
 
 City riders lose their bike for days every time something goes wrong, so most just stop riding.
 
-<Slide kind="problem" n={2} of={OF} company={deck.company} data={deck.problem} />
+<Slide kind="problem" n={2} of={OF} company={deck.company} data={deck.problem} words={S.problem} locale={LOCALE} />
 
 </Scene>
 
@@ -58,7 +118,7 @@ City riders lose their bike for days every time something goes wrong, so most ju
 
 One monthly price covers regular tune-ups and fast repairs where the bike already is.
 
-<Slide kind="solution" n={3} of={OF} company={deck.company} data={deck.steps} />
+<Slide kind="solution" n={3} of={OF} company={deck.company} data={deck.steps} words={S.solution} locale={LOCALE} />
 
 </Scene>
 
@@ -72,7 +132,7 @@ One monthly price covers regular tune-ups and fast repairs where the bike alread
 - Follow the van on the map
 - See what was checked and fixed
 
-<Slide kind="product" n={4} of={OF} company={deck.company} data={deck.product} />
+<Slide kind="product" n={4} of={OF} company={deck.company} data={deck.product} words={S.product} locale={LOCALE} />
 
 </Scene>
 
@@ -84,7 +144,7 @@ One monthly price covers regular tune-ups and fast repairs where the bike alread
 
 We start where people already commute by bike and repair shops are full.
 
-<Slide kind="market" n={5} of={OF} company={deck.company} data={deck.market} />
+<Slide kind="market" n={5} of={OF} company={deck.company} data={deck.market} words={S.market} locale={LOCALE} />
 
 </Scene>
 
@@ -96,7 +156,7 @@ We start where people already commute by bike and repair shops are full.
 
 Grown in Lyon and Bordeaux with word of mouth and office plans.
 
-<Slide kind="traction" n={6} of={OF} company={deck.company} data={deck.traction} />
+<Slide kind="traction" n={6} of={OF} company={deck.company} data={deck.traction} words={S.traction} locale={LOCALE} />
 
 </Scene>
 
@@ -108,7 +168,7 @@ Grown in Lyon and Bordeaux with word of mouth and office plans.
 
 Visits are planned in routes, so one van serves a neighbourhood a day.
 
-<Slide kind="economics" n={7} of={OF} company={deck.company} data={deck.economics} />
+<Slide kind="economics" n={7} of={OF} company={deck.company} data={deck.economics} words={S.model} locale={LOCALE} />
 
 </Scene>
 
@@ -118,7 +178,7 @@ Visits are planned in routes, so one van serves a neighbourhood a day.
 
 # People who have run vans and fixed bikes.
 
-<Slide kind="team" n={8} of={OF} company={deck.company} data={deck.team} />
+<Slide kind="team" n={8} of={OF} company={deck.company} data={deck.team} words={S.team} locale={LOCALE} />
 
 </Scene>
 
@@ -128,7 +188,7 @@ Visits are planned in routes, so one van serves a neighbourhood a day.
 
 # From two cities to six by 2028.
 
-<Slide kind="plan" n={9} of={OF} company={deck.company} data={deck.plan} vansLabel="vans" />
+<Slide kind="plan" n={9} of={OF} company={deck.company} data={deck.plan} vansLabel={w.vans} words={S.plan} locale={LOCALE} />
 
 </Scene>
 
@@ -140,6 +200,6 @@ Visits are planned in routes, so one van serves a neighbourhood a day.
 
 Enough for 18 more vans, the mechanics to run them, and 24 months of runway.
 
-<Slide kind="ask" n={10} of={OF} company={deck.company} data={deck.ask} />
+<Slide kind="ask" n={10} of={OF} company={deck.company} data={deck.ask} words={S.ask} locale={LOCALE} />
 
 </Scene>
