@@ -24,7 +24,7 @@ import saved from './data/expenses.json'
 import seedStart from './data/expenses.start.json'
 import group from './data/group.json'
 import { buildLedger, formatSplit, parseSplit } from './src/ledger'
-import { useI18n } from '../lib/i18n'
+import { useI18n } from './lib/i18n'
 import translations from './locales/index'
 
 {/* The page's words. Expenses and payments live in the expenses-ledger store; data/expenses.json is its readable copy. The group (title, people, categories) is data/group.json. Translations of the words, the group's title and the starting expenses (data/expenses.start.json, by id) are in locales/<lang>.json: an expense still as it started shows translated, and categories stay as stored and show through WORDS cats. */}

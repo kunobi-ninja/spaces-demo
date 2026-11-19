@@ -19,7 +19,7 @@ import tasks from './data/tasks.json'
 import tasksStart from './data/tasks.start.json'
 import team from './data/team.json'
 import { Projects } from './projects/ProjectsView'
-import { useI18n } from '../lib/i18n'
+import { useI18n } from './lib/i18n'
 import translations from './projects/locales/index'
 
 {/* The tasks live in the team-tasks store; Kunobi keeps a readable copy in data/tasks.json, which this page shows read-only where the store cannot open. The team is in data/team.json. The words below are the page's own, with `labels` naming projects, statuses and priorities as stored. Their translations, the team's and those of the starting tasks (data/tasks.start.json, by id) are in projects/locales/<lang>.json; a task still as it started shows translated. */}

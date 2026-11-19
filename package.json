@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "build:catalog": "node scripts/build-catalog.mjs",
+    "sync:lib": "node scripts/sync-lib.mjs",
     "test": "node --test scripts/*.test.mjs"
   },
   "devDependencies": {

@@ -8,9 +8,10 @@
  * starting data) and the Fontsource CSS it imports (Latin only, font inlined).
  * A demo written in another language than English says so in `lang`
  * (front matter `lang`); its `translations` carry its title, description and
- * prompts per language, from the page's `locales/<lang>.json` (`meta.*`). Files
- * outside the demo's folder that its sources import (the shared `lib/i18n.ts`)
- * are included too.
+ * prompts per language, from the page's `locales/<lang>.json` (`meta.*`). A demo
+ * imports nothing from outside its folder, as "Make this mine" copies only the
+ * folder: the shared `lib/i18n.ts` lives in it as a copy, which must equal the
+ * original (`npm run sync:lib`).
  * `home` is the root `index.mdx` with the files it imports. Every file is
  * written once to `<out>/objects/<sha256>`; `<out>/catalog.json` lists them.
  *
@@ -23,6 +24,7 @@ import { dirname, join, posix as posixPath, relative, resolve, sep } from 'node:
 import { parseArgs } from 'node:util'
 import { parse as parseYaml } from 'yaml'
 import { localeDir, readLocales } from './i18n.mjs'
+import { copies, SHARED } from './sync-lib.mjs'
 
 export const CATALOG_VERSION = 1
 /** The most a gallery pick may weigh, cover included: the app downloads these ahead. */
@@ -231,6 +233,12 @@ async function buildDemo(repo, { id, entry, gallery }, objects) {
 
   await addImports(repo, contents)
   await addFonts(repo, contents)
+  const own = posix(relative(repo, folder))
+  for (const path of contents.keys()) {
+    if (path.startsWith(`${own}/`) || path.startsWith('.kunobi/') || path.startsWith('@fontsource/')) continue
+    const fix = path === SHARED ? `: import its copy, ./lib/i18n (npm run sync:lib -- ${own})` : ': move it into the folder'
+    throw new Error(`${id}: ${path} is outside the demo's folder, and "Make this mine" copies only the folder${fix}`)
+  }
 
   const coverPath = `assets/covers/${id}.jpg`
   const cover = await readFile(join(repo, coverPath)).catch(() => {
@@ -271,6 +279,12 @@ async function buildHome(repo, objects) {
 }
 
 export async function buildCatalog({ repo, out, release }) {
+  const original = await readFile(join(repo, SHARED))
+  for (const folder of await copies(repo)) {
+    if (!original.equals(await readFile(join(repo, folder, SHARED)))) {
+      throw new Error(`${folder}/${SHARED} differs from ${SHARED}: edit the original and run npm run sync:lib`)
+    }
+  }
   const objects = new Map()
   const demos = []
   for (const demo of await listDemos(repo)) demos.push(await buildDemo(repo, demo, objects))

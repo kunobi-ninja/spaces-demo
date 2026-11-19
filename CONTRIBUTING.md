@@ -29,6 +29,7 @@ Thanks for making something for Kunobi spaces. Every demo here is a page people 
 - **Made-up content only**: no real people, addresses, companies or data, and nothing private.
 - **Credit what you did not make** (images, 3D models, music, fonts) in a `CREDITS.md` in the demo's folder. Only use material whose license allows reuse.
 - **Keep it light**: a demo, cover included, stays under 10 MB (the build refuses one over 32 MB, and only demos under 10 MB can be picked for the gallery).
+- **Self-contained**: a demo imports nothing from outside its folder (fonts from `@fontsource` aside), as "Make this mine" copies only the folder. The build checks it.
 - **One language per page**, the one it is written in. Other languages are translations (see [Languages](#languages)); names of people, brands and places stay as they are.
 - **No network calls** beyond what Kunobi pages already allow (map tiles).
 
@@ -52,10 +53,10 @@ Kunobi shows each page in the reader's language (the app's language), falling ba
   `*` matches every key of an object and every row of a list; quote a path with `[` in it, as YAML reads `[` as the start of a list. A list of strings is translated as one text. Ids, numbers and values the code compares are never declared: they stay as they are in every language.
 - **Documents**: a Markdown file the page shows, listed in `i18n.docs` (`docs: [menu.md]`, relative to the page's folder), is translated whole.
 
-The page reads all of it through the shared helper, `lib/i18n.ts`:
+The page reads all of it through the helper `lib/i18n.ts`. "Make this mine" copies only a demo's folder into the person's space, so a demo imports nothing from outside it: each demo has its own copy of the helper. Give a new demo its copy with `npm run sync:lib -- <folder>`, and change the helper only in the original at the repository root, then run `npm run sync:lib` to update every copy (the build refuses a copy that differs).
 
 ```mdx
-import { useI18n } from '../lib/i18n'
+import { useI18n } from './lib/i18n'
 import translations from './locales/index'
 
 export const WORDS = { title: 'Lisbon weekend', places_one: '{{count}} place', places_other: '{{count}} places' }

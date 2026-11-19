@@ -5,6 +5,7 @@ import { tmpdir } from 'node:os'
 import { join, resolve } from 'node:path'
 import { after, before, test } from 'node:test'
 import { buildCatalog, importingCode, stripComments } from './build-catalog.mjs'
+import { syncLib } from './sync-lib.mjs'
 
 const repo = resolve(import.meta.dirname, '..')
 let out
@@ -119,6 +120,26 @@ async function withGallery(ids, run) {
   }
 }
 
+test('rejects a demo that imports from outside its folder', async () => {
+  await withGallery(['trip'], async (copy) => {
+    const page = join(copy, 'trip', 'index.mdx')
+    await writeFile(page, (await readFile(page, 'utf8')).replace("from './lib/i18n'", "from '../lib/i18n'"))
+    await assert.rejects(
+      buildCatalog({ repo: copy, out: join(copy, 'out'), release: 'x' }),
+      /trip: lib\/i18n\.ts is outside the demo's folder.*npm run sync:lib -- trip/
+    )
+  })
+})
+
+test('rejects a copy of the i18n helper that differs from the original, until synced', async () => {
+  await withGallery(['trip'], async (copy) => {
+    await writeFile(join(copy, 'trip', 'lib', 'i18n.ts'), '// stale\n')
+    await assert.rejects(buildCatalog({ repo: copy, out: join(copy, 'out'), release: 'x' }), /trip\/lib\/i18n\.ts differs from lib\/i18n\.ts/)
+    await syncLib(copy)
+    await buildCatalog({ repo: copy, out: join(copy, 'out'), release: 'x' })
+  })
+})
+
 test('rejects a demo over 10 MB', async () => {
   await withGallery(['big'], async (copy) => {
     await mkdir(join(copy, 'big'))
@@ -148,9 +169,15 @@ test('translations come from the locale files, prompts only where the page has t
   for (const d of catalog.demos) assert.ok(!('lang' in d), d.id)
 })
 
-test('the shared i18n helper ships with every page that imports it', () => {
-  assert.ok(paths('trip').includes('lib/i18n.ts'))
+test('every demo is self-contained, as Make this mine copies only its folder', () => {
+  assert.ok(paths('trip').includes('trip/lib/i18n.ts'))
   assert.ok(paths('trip').includes('trip/locales/es.json'))
+  for (const d of catalog.demos) {
+    const folder = d.entry.slice(0, d.entry.lastIndexOf('/') + 1)
+    for (const f of d.files) {
+      assert.ok(f.path.startsWith(folder) || f.path.startsWith('.kunobi/') || f.path.startsWith('@fontsource/'), `${d.id}: ${f.path}`)
+    }
+  }
   assert.ok(catalog.home.files.some((f) => f.path === 'lib/i18n.ts'))
 })
 
