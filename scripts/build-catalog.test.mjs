@@ -4,7 +4,7 @@ import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join, resolve } from 'node:path'
 import { after, before, test } from 'node:test'
-import { buildCatalog, importingCode, stripComments } from './build-catalog.mjs'
+import { buildCatalog, CATEGORIES, importingCode, readPlayers, stripComments } from './build-catalog.mjs'
 
 const repo = resolve(import.meta.dirname, '..')
 let out
@@ -122,7 +122,7 @@ async function withGallery(ids, run) {
 test('rejects a demo over 10 MB', async () => {
   await withGallery(['big'], async (copy) => {
     await mkdir(join(copy, 'big'))
-    await writeFile(join(copy, 'big', 'index.mdx'), '---\ntitle: Big\ndescription: Too big\nprompts: [Hi]\n---\n')
+    await writeFile(join(copy, 'big', 'index.mdx'), '---\ntitle: Big\ndescription: Too big\ncategory: play\nprompts: [Hi]\n---\n')
     await writeFile(join(copy, 'big', 'blob.json'), Buffer.alloc(11 * 1024 * 1024))
     await cp(join(copy, 'assets/covers/trip.jpg'), join(copy, 'assets/covers/big.jpg'))
     await assert.rejects(buildCatalog({ repo: copy, out: join(copy, 'out'), release: 'x' }), /big: \d+ bytes is over the/)
@@ -157,7 +157,7 @@ test('the shared i18n helper ships with every page that imports it', () => {
 async function withPage(frontMatter, locales, run) {
   await withGallery(['tiny'], async (copy) => {
     await mkdir(join(copy, 'tiny', 'locales'), { recursive: true })
-    await writeFile(join(copy, 'tiny', 'index.mdx'), `---\ntitle: Tiny\ndescription: A tiny page\nprompts: [Hi]\n${frontMatter}---\n`)
+    await writeFile(join(copy, 'tiny', 'index.mdx'), `---\ntitle: Tiny\ndescription: A tiny page\ncategory: play\nprompts: [Hi]\n${frontMatter}---\n`)
     for (const [lang, entries] of Object.entries(locales)) await writeFile(join(copy, 'tiny', 'locales', `${lang}.json`), JSON.stringify(entries))
     await cp(join(copy, 'assets/covers/trip.jpg'), join(copy, 'assets/covers/tiny.jpg'))
     await run(() => buildCatalog({ repo: copy, out: join(copy, 'out'), release: 'x' }))
@@ -213,4 +213,45 @@ test('only code imports: an MDX page\'s ESM blocks and scripts, never prose, cod
 test('comments go, strings that look like comments stay', () => {
   const code = "const glob = 'src/**/*.ts'\nimport a from './a'\n/* import b from './b' */\nconst url = \"http://x\" // trailing\nimport c from './c' // */"
   assert.equal(stripComments(code), "const glob = 'src/**/*.ts'\nimport a from './a'\n\nconst url = \"http://x\" \nimport c from './c' ")
+})
+
+test('every demo has a category, the same as its kind in the index', async () => {
+  const index = await readFile(join(repo, 'index.mdx'), 'utf8')
+  for (const d of catalog.demos) {
+    assert.ok(CATEGORIES.includes(d.category), d.id)
+    const kind = index.match(new RegExp(`id: '${d.id}',[^}]*?kind: '([a-z]+)'`))?.[1]
+    if (kind) assert.equal(d.category, kind, d.id)
+  }
+  assert.equal(demo('week-quest').category, 'play')
+  assert.equal(demo('cluster-dashboard').category, 'ninja')
+})
+
+test('only demos made for several people at once carry players', () => {
+  const multiplayer = Object.fromEntries(catalog.demos.filter((d) => d.players).map((d) => [d.id, d.players]))
+  assert.deepEqual(multiplayer, {
+    'cat-chase': { min: 2 },
+    'home-hunt': { min: 2, max: 2 },
+    'flat-tour': { min: 2 },
+    'quiz-night': { min: 2 },
+    'music-jam': { min: 2 },
+  })
+})
+
+test('players must be a sensible range', () => {
+  assert.equal(readPlayers(undefined, 'x'), undefined)
+  assert.deepEqual(readPlayers({ min: 2, max: 4 }, 'x'), { min: 2, max: 4 })
+  for (const bad of [null, {}, { min: 1 }, { min: 3, max: 2 }, { min: 2.5 }, { min: 2, people: 3 }]) {
+    assert.throws(() => readPlayers(bad, 'x'), /x: players must be/, JSON.stringify(bad))
+  }
+})
+
+test('rejects a demo whose category is missing or differs from the index', async () => {
+  await withGallery(['trip'], async (copy) => {
+    const page = join(copy, 'trip', 'index.mdx')
+    const source = await readFile(page, 'utf8')
+    await writeFile(page, source.replace('category: life\n', ''))
+    await assert.rejects(buildCatalog({ repo: copy, out: join(copy, 'out'), release: 'x' }), /trip: front matter needs a category/)
+    await writeFile(page, source.replace('category: life', 'category: work'))
+    await assert.rejects(buildCatalog({ repo: copy, out: join(copy, 'out'), release: 'x' }), /trip: category work is not its kind life/)
+  })
 })

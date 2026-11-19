@@ -10,6 +10,8 @@ Thanks for making something for Kunobi spaces. Every demo here is a page people 
    ---
    title: Garden planner
    description: "What it is, in one sentence someone who will not read would still get."
+   category: life        # its shelf: life, work, ninja, play, film or study (its `kind` in the root EXAMPLES)
+   players: { min: 2 }   # only for a page made for several people at once; add max: when it has one
    prompts:
      - "A first thing someone can ask their AI to change."
      - "A second one."
