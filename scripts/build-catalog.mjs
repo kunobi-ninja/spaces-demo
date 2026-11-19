@@ -22,9 +22,10 @@ import { createHash } from 'node:crypto'
 import { mkdir, readdir, readFile, rm, stat, writeFile } from 'node:fs/promises'
 import { dirname, join, posix as posixPath, relative, resolve, sep } from 'node:path'
 import { parseArgs } from 'node:util'
+import { pathToFileURL } from 'node:url'
 import { parse as parseYaml } from 'yaml'
 import { localeDir, readLocales } from './i18n.mjs'
-import { copies, SHARED } from './sync-lib.mjs'
+import { copies, copyOf, SHARED } from './sync-lib.mjs'
 
 export const CATALOG_VERSION = 1
 /** The most a gallery pick may weigh, cover included: the app downloads these ahead. */
@@ -279,9 +280,9 @@ async function buildHome(repo, objects) {
 }
 
 export async function buildCatalog({ repo, out, release }) {
-  const original = await readFile(join(repo, SHARED))
+  const copy = copyOf(await readFile(join(repo, SHARED), 'utf8'))
   for (const folder of await copies(repo)) {
-    if (!original.equals(await readFile(join(repo, folder, SHARED)))) {
+    if ((await readFile(join(repo, folder, SHARED), 'utf8')) !== copy) {
       throw new Error(`${folder}/${SHARED} differs from ${SHARED}: edit the original and run npm run sync:lib`)
     }
   }
@@ -297,7 +298,7 @@ export async function buildCatalog({ repo, out, release }) {
   return catalog
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (import.meta.url === pathToFileURL(process.argv[1]).href) {
   const { values } = parseArgs({ options: { out: { type: 'string', default: 'out' }, release: { type: 'string' } } })
   if (!values.release) {
     console.error('Usage: node scripts/build-catalog.mjs --out out --release <tag>')

@@ -19,6 +19,7 @@ import { appendFile, readFile, writeFile } from 'node:fs/promises'
 import { existsSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import { parseArgs } from 'node:util'
+import { pathToFileURL } from 'node:url'
 import { LANGUAGES, compareLocale, extractPage, findPages, readLocales, renderIndex, renderLocale } from './i18n.mjs'
 
 /** Every page's state: `[{ page, source, errors, langs: { lang: { missing, stale } } }]`. */
@@ -89,7 +90,7 @@ export function renderReport(results) {
   return `${lines.join('\n')}\n`
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (import.meta.url === pathToFileURL(process.argv[1]).href) {
   const { values } = parseArgs({ options: { fix: { type: 'boolean', default: false }, markdown: { type: 'string' } } })
   const repo = resolve(import.meta.dirname, '..')
   const results = await checkRepo(repo, { fix: values.fix })

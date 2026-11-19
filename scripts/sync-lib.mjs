@@ -8,10 +8,16 @@
  *   npm run sync:lib -- my-demo   # also gives my-demo its first copy
  */
 
-import { copyFile, mkdir, readdir, stat } from 'node:fs/promises'
+import { mkdir, readdir, readFile, stat, writeFile } from 'node:fs/promises'
 import { join, resolve } from 'node:path'
+import { pathToFileURL } from 'node:url'
 
 export const SHARED = 'lib/i18n.ts'
+
+/** What a demo's copy holds: the original, after a line saying not to edit it. */
+export function copyOf(original) {
+  return `// A copy of ${SHARED} at the repository root. Do not edit it here: edit the original, then run npm run sync:lib.\n${original}`
+}
 
 /** The folders, repository-relative, whose `lib/i18n.ts` is a copy of the shared one. */
 export async function copies(repo) {
@@ -31,14 +37,15 @@ export async function copies(repo) {
 
 export async function syncLib(repo, extra = []) {
   const folders = [...new Set([...(await copies(repo)), ...extra.map((folder) => folder.replace(/\/+$/, ''))])]
+  const copy = copyOf(await readFile(join(repo, SHARED), 'utf8'))
   for (const folder of folders) {
     await mkdir(join(repo, folder, 'lib'), { recursive: true })
-    await copyFile(join(repo, SHARED), join(repo, folder, SHARED))
+    await writeFile(join(repo, folder, SHARED), copy)
   }
   return folders
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (import.meta.url === pathToFileURL(process.argv[1]).href) {
   const repo = resolve(import.meta.dirname, '..')
   const folders = await syncLib(repo, process.argv.slice(2))
   console.log(`lib/i18n.ts copied into ${folders.length} demos`)

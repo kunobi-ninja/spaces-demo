@@ -3,9 +3,9 @@
  * `en` when absent) and translated by `locales/<lang>.json` files next to it, listed in
  * `locales/index.ts`. See CONTRIBUTING.md ("Languages") for the files and their keys.
  *
- * Every demo carries its own copy in `<demo>/lib/i18n.ts`, as "Make this mine" copies only the
- * demo's folder. This file at the repository root is the original: edit it here, then run
- * `npm run sync:lib` to update the copies (the catalog build refuses a copy that differs).
+ * Every demo carries a copy at `<demo>/lib/i18n.ts`, as "Make this mine" copies only the demo's
+ * folder. The original is `lib/i18n.ts` at the repository root; `npm run sync:lib` updates the
+ * copies, and the catalog build refuses one that differs.
  *
  *   import { useI18n } from './lib/i18n'
  *   import translations from './locales/index'

@@ -19,6 +19,7 @@ import { existsSync } from 'node:fs'
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { join, resolve } from 'node:path'
 import { parseArgs } from 'node:util'
+import { pathToFileURL } from 'node:url'
 import { LANGUAGES, compareLocale, extractPage, findPages, hash, readLocales, renderIndex, renderLocale, samePlaceholders } from './i18n.mjs'
 
 /** Why `text` cannot stand for `source` (the text of `key`), or undefined when it can. */
@@ -103,7 +104,7 @@ export async function importAnswers(repo, answers, { log = () => {} } = {}) {
   return { written, skipped }
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (import.meta.url === pathToFileURL(process.argv[1]).href) {
   const { values } = parseArgs({ options: { export: { type: 'string' }, import: { type: 'string' }, page: { type: 'string', multiple: true } } })
   const repo = resolve(import.meta.dirname, '..')
   if (values.export) {
