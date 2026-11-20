@@ -31,7 +31,7 @@ test('catalog lists the gallery picks first, then every other page in the index 
       ...GALLERY,
       'home-hunt', 'team', 'expenses', 'meals', 'flat-tour', 'monthly-report', 'hiring', 'content-calendar',
       'projects', 'cluster-dashboard', 'runbook', 'incident', 'blast-radius', 'on-call-handover', 'quiz-night',
-      'music-jam', 'scan-viewer',
+      'music-jam', 'scan-viewer', 'castillos', 'kunobitos', 'juego-de-la-oca', 'pasalacabra',
     ]
   )
   for (const d of catalog.demos) assert.equal(d.gallery, GALLERY.includes(d.id), d.id)
@@ -87,6 +87,8 @@ test('fontsource imports are resolved to a Latin css with the font inlined', asy
     ['trip', '@fontsource/figtree/400.css', 'Figtree'],
     ['week-quest', '@fontsource/press-start-2p/400.css', 'Press Start 2P'],
     ['dino-snack', '@fontsource/fredoka/700.css', 'Fredoka'],
+    // An italic weight: Fontsource names its face `fraunces-latin-500-italic`, not `…-normal`.
+    ['castillos', '@fontsource/fraunces/500-italic.css', 'Fraunces'],
   ]) {
     const font = demo(id).files.find((f) => f.path === specifier)
     assert.ok(font, `${id}: ${specifier} missing`)
@@ -145,8 +147,9 @@ test('translations come from the locale files, prompts only where the page has t
   assert.match(demo('trip').translations.es.description, /Lisboa/)
   assert.equal(demo('hiring').translations.es.title, 'Contratación en Linden & Co')
   assert.ok(!('prompts' in demo('hiring').translations.es))
-  // English pages carry no lang.
-  for (const d of catalog.demos) assert.ok(!('lang' in d), d.id)
+  // English pages carry no lang; the pages written in Spanish say so.
+  const spanish = ['castillos', 'kunobitos', 'juego-de-la-oca', 'pasalacabra']
+  for (const d of catalog.demos) assert.equal(d.lang, spanish.includes(d.id) ? 'es' : undefined, d.id)
 })
 
 const published = (id, path) => readFileSync(join(out, 'objects', demo(id).files.find((f) => f.path === path).sha256), 'utf8')
