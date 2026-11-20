@@ -72,7 +72,7 @@
   "words.sala.espera": { "text": "Waiting room", "from": "34c061e3" },
   "words.sala.segundoJugador": { "text": "Second player", "from": "f6f5dd1d" },
   "words.sala.invitado": { "text": "Guest", "from": "6c4b85ee" },
-  "words.sala.pideUnirse": { "text": "Ask the other player to open this page in Kunobi or from the web link, choose “Online” and press “Join the game”.", "from": "b806b391" },
+  "words.sala.pideUnirse": { "text": "Ask the other player to open this page in Kunobi or from the web link, choose “Play with a friend” and press “Join the game”.", "from": "2e8a6c8f" },
   "words.sala.enSala": { "text": "You are in the waiting room. Waiting for the host to start.", "from": "9a291528" },
   "words.sala.unirme": { "text": "Join the game", "from": "8891cedf" },
   "words.sala.salir": { "text": "Leave the waiting room", "from": "fcb8e1f4" },

@@ -72,7 +72,7 @@
   "words.sala.espera": { "text": "Sala d’attesa", "from": "34c061e3" },
   "words.sala.segundoJugador": { "text": "Secondo giocatore", "from": "f6f5dd1d" },
   "words.sala.invitado": { "text": "Ospite", "from": "6c4b85ee" },
-  "words.sala.pideUnirse": { "text": "Chiedi all’altro giocatore di aprire questa pagina in Kunobi o dal link web, scegliere «Online» e premere «Unisciti alla partita».", "from": "b806b391" },
+  "words.sala.pideUnirse": { "text": "Chiedi all’altro giocatore di aprire questa pagina in Kunobi o dal link web, scegliere «Gioca con un amico» e premere «Unisciti alla partita».", "from": "2e8a6c8f" },
   "words.sala.enSala": { "text": "Sei nella sala d’attesa. Aspetta che chi ospita inizi la partita.", "from": "9a291528" },
   "words.sala.unirme": { "text": "Unisciti alla partita", "from": "8891cedf" },
   "words.sala.salir": { "text": "Esci dalla sala d’attesa", "from": "fcb8e1f4" },
