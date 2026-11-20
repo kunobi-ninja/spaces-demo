@@ -10,7 +10,9 @@
  * (front matter `lang`); its `translations` carry its title, description and
  * prompts per language, from the page's `locales/<lang>.json` (`meta.*`). Files
  * outside the demo's folder that its sources import (the shared `lib/i18n.ts`)
- * are included too.
+ * are published inside it (`trip/lib/i18n.ts`), with the imports pointing at
+ * them, so the folder alone is the whole demo: "Make this mine" copies only the
+ * folder into the person's space.
  * `home` is the root `index.mdx` with the files it imports. Every file is
  * written once to `<out>/objects/<sha256>`; `<out>/catalog.json` lists them.
  *
@@ -145,6 +147,48 @@ async function addImports(repo, contents) {
   }
 }
 
+/**
+ * Moves the files `contents` imports from outside the demo's folder `own` into it, at the same
+ * path under it (`lib/i18n.ts` → `trip/lib/i18n.ts`), and points the folder's imports at them.
+ * `imported` are the paths `addImports` added. Their imports among themselves keep working, as
+ * they all move by the same prefix.
+ */
+async function placeShared(repo, id, own, contents, imported) {
+  const moved = new Map([...imported].filter((path) => !path.startsWith(`${own}/`)).map((path) => [path, `${own}/${path}`]))
+  if (moved.size === 0) return
+  for (const [path, target] of moved) {
+    if (contents.has(target)) throw new Error(`${id}: ${target} would hide the shared ${path}; rename one of them`)
+    for (const [, specifier] of importingCode(path, contents.get(path).toString('utf8')).matchAll(RELATIVE_IMPORT)) {
+      const resolved = await resolveImport(repo, path, specifier.replace(/\?raw$/, ''))
+      if (resolved && !moved.has(resolved)) throw new Error(`${id}: the shared ${path} imports ${resolved}, which it cannot reach once inside the demo`)
+    }
+  }
+  for (const path of [...contents.keys()]) {
+    if (moved.has(path)) continue
+    const text = contents.get(path).toString('utf8')
+    let rewritten = text
+    for (const [, specifier] of importingCode(path, text).matchAll(RELATIVE_IMPORT)) {
+      const [bare, query = ''] = specifier.split(/(?=\?)/)
+      const resolved = await resolveImport(repo, path, bare)
+      if (!moved.has(resolved)) continue
+      const from = posixPath.dirname(path)
+      let next = posixPath.relative(from, posixPath.join(own, posixPath.normalize(posixPath.join(from, bare))))
+      if (!next.startsWith('.')) next = `./${next}`
+      for (const quote of ["'", '"']) {
+        rewritten = rewritten.replace(
+          new RegExp(`((?:from|import)\\s+)${quote}${specifier.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}${quote}`, 'g'),
+          `$1${quote}${next}${query}${quote}`
+        )
+      }
+    }
+    if (rewritten !== text) contents.set(path, Buffer.from(rewritten))
+  }
+  for (const [path, target] of moved) {
+    contents.set(target, contents.get(path))
+    contents.delete(path)
+  }
+}
+
 /** One `@fontsource/<family>/<weight>.css`, keeping its Latin face with the woff2 inlined. */
 async function fontCss(repo, specifier) {
   const [, family, file] = specifier.split('/')
@@ -229,7 +273,9 @@ async function buildDemo(repo, { id, entry, gallery }, objects) {
     }
   }
 
+  const own = new Set(contents.keys())
   await addImports(repo, contents)
+  await placeShared(repo, id, posix(relative(repo, folder)), contents, [...contents.keys()].filter((path) => !own.has(path)))
   await addFonts(repo, contents)
 
   const coverPath = `assets/covers/${id}.jpg`
