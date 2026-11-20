@@ -1,0 +1,191 @@
+---
+title: Juego de la Oca
+description: "El clásico tablero de 63 casillas para 2 a 4 jugadores: tirad el dado en un mismo dispositivo, contra la IA o cada uno desde el suyo."
+prompts:
+  - "Que la posada haga perder dos turnos en vez de uno, y cuéntalo en las reglas."
+  - "Cambia la ficha azul por una estrella verde."
+lang: es
+i18n:
+  data:
+    tablero: ['especiales[*].nombre', 'especiales[*].regla', 'especiales[*].cantinela']
+kunobi:
+  page-layout: full
+  rooms:
+    oca:
+      model: map
+      rules:
+        own: [players]
+        host: [match]
+---
+
+import '@fontsource/fraunces/700.css'
+import '@fontsource/fraunces/800.css'
+import '@fontsource/fraunces/800-italic.css'
+import '@fontsource/figtree/400.css'
+import '@fontsource/figtree/600.css'
+import '@fontsource/figtree/700.css'
+import * as React from 'react'
+import tablero from './data/tablero.json'
+import fichas from './data/fichas.json'
+import { Juego } from './src/Juego'
+import { useI18n } from '../lib/i18n'
+import translations from './locales/index'
+
+{/*
+  Las casillas especiales (qué hacen, sus nombres y la regla que muestra el panel) están en
+  data/tablero.json y las fichas de cada jugador en data/fichas.json. Las reglas del juego están en
+  src/reglas.mjs. Entre dispositivos se juega en la sala oca: el anfitrión escribe la partida
+  (match) y tira el dado por quien lo pide; cada jugador solo escribe su petición (players.<id>).
+  Abajo están las palabras de la página; sus traducciones, en locales/<lang>.json.
+*/}
+
+export const WORDS = {
+  title: 'Juego de la Oca',
+  subtitle: 'De la salida a la casilla 63',
+  boardLabel: 'Tablero del juego',
+  start: 'Salida',
+  square: 'Casilla {{n}}',
+  player: 'Jugador {{n}}',
+  ai: 'IA {{n}}',
+  you: '{{name}} (tú)',
+  gameLabel: 'Partida',
+  piecesLabel: 'Fichas',
+  turnOfPlayer: 'Turno del jugador {{n}}',
+  winsPlayer: 'Gana el jugador {{n}}',
+  turnOfName: 'Turno de {{name}}',
+  winsName: 'Gana {{name}}',
+  dieValue: 'Dado: {{n}}',
+  dieNone: 'Dado sin tirar',
+  roll: 'Tirar dado',
+  inWell: 'En el pozo',
+  waits: 'Espera {{n}}',
+  startGame: 'Empezar partida',
+  newGame: 'Nueva partida',
+  keepPlaying: 'Seguir jugando',
+  portada: {
+    kicker: 'El clásico de siempre',
+    titleA: 'Juego de la',
+    titleB: 'Oca',
+    hook: 'Tira el dado, salta de oca en oca y llega el primero a la casilla 63.',
+    play: 'Jugar',
+    friend: 'Jugar con un amigo',
+    how: '¿Cómo se juega?',
+  },
+  ajustes: {
+    title: '¿Quién juega?',
+    count: 'Número de jugadores',
+    person: 'Persona',
+    ai: 'IA',
+    go: 'Empezar',
+    back: 'Volver',
+  },
+  amigo: {
+    title: 'Jugar con amigos',
+    text: 'Para jugar con amigos, primero haz tuyo este juego: toca **✨ Hacerlo mío** arriba. En tu copia, toca **Compartir** e invítales.',
+    here: 'Jugar aquí',
+    close: 'Cerrar',
+  },
+  victoria: {
+    title: '¡Gana {{name}}!',
+    sub: 'Llegó justo a la casilla 63.',
+    again: 'Otra partida',
+    home: 'Volver al inicio',
+  },
+  hud: {
+    home: 'Volver al inicio',
+  },
+  rules: {
+    title: '¿Cómo se juega?',
+    steps: [
+      'Por turnos, cada jugador tira el dado y avanza su ficha por la espiral.',
+      'Gana quien llegue justo a la casilla 63. Si te pasas, retrocedes lo que sobre.',
+      'Algunas casillas te hacen saltar, esperar o volver atrás.',
+    ],
+    squares: 'Las casillas especiales',
+    outro: 'Un salto termina al llegar a su destino. Solo la casilla en la que cae la tirada activa un efecto.',
+  },
+  history: {
+    title: 'Historial de tiradas',
+    throws_one: '{{count}} tirada',
+    throws_other: '{{count}} tiradas',
+    empty: 'Aún no hay tiradas.',
+    order: 'De la tirada más reciente a la más antigua',
+    die: 'Dado',
+    startSquare: 'Salida (0)',
+    plain: 'Avance normal.',
+  },
+  local: {
+    paused: 'Partida en pausa.',
+    confirmEnd: '¿Terminar la partida actual?',
+    yesNew: 'Sí, nueva partida',
+    confirmHome: '¿Salir de la partida?',
+    yesHome: 'Sí, salir',
+    pause: 'Pausar',
+    resume: 'Reanudar',
+    step: 'Avanzar una tirada',
+  },
+  room: {
+    kicker: 'Entre dispositivos',
+    title: 'Sala compartida',
+    freeSeat: 'Sitio libre',
+    howToJoin: 'El propietario crea la sala. Los demás abren este espacio compartido en Kunobi, tocan Jugar con un amigo y se unen con su propia cuenta.',
+    inRoom: 'Jugadores en la sala · {{n}} de {{max}}',
+    enrolled: 'Jugadores inscritos',
+    host: 'Anfitrión',
+    create: 'Crear sala',
+    waitingOther: 'Esperando al menos a otro jugador.',
+    keepOpen: 'Mantén abierta esta sala mientras jugáis.',
+    join: 'Unirme a la partida',
+    leave: 'Salir de la sala',
+    full: 'Sala llena',
+    readerOnly: 'Tu acceso permite ver la partida. Pide al propietario permiso de participante para jugar.',
+    hostAway: 'El anfitrión tiene que volver a abrir la sala.',
+    spectator: 'Estás viendo la partida como espectador.',
+    waitingTurn: 'Esperando a que vuelva el jugador del turno.',
+    confirmEndAll: '¿Terminar la partida para todos?',
+    yesNewRoom: 'Sí, abrir otra sala',
+    onlyOwner: 'Solo el propietario puede crear la sala.',
+    saveFailed: 'Kunobi no pudo guardar la acción.',
+    resolveFailed: 'No se pudo resolver la tirada.',
+    errors: {
+      stale: 'La sala cambió. Vuelve a intentarlo.',
+      denied: 'Kunobi no permite esta acción. Para jugar, necesitas acceso como participante.',
+      unavailable: 'Se perdió la conexión con la sala. Inténtalo de nuevo al reconectar.',
+      revoked: 'El acceso a la sala se ha retirado.',
+      over_budget: 'Kunobi limitó la actividad de la sala. Espera un momento.',
+    },
+    status: {
+      opening: 'Conectando con la sala…',
+      paused: 'Conexión en pausa. La partida continuará cuando vuelva el dispositivo anfitrión.',
+      unsupported: 'Esta vista de Kunobi no admite salas entre dispositivos. Puedes jugar en este dispositivo.',
+      refused: 'Kunobi rechazó el acceso a la sala. Comprueba que el espacio tiene la edición en vivo activada y que puedes participar.',
+      revoked: 'El acceso a la sala se ha retirado.',
+      closed: 'La sala se ha cerrado. Vuelve al inicio y toca Jugar con un amigo para conectar de nuevo.',
+    },
+  },
+  turno: {
+    allAtStart: 'Todas las fichas están en la salida.',
+    rolled: '{{player}} sacó {{roll}} y llegó a la casilla {{square}}.',
+    bounced: '{{player}} sacó {{roll}} y rebotó hasta la casilla {{square}}.',
+    wins: '¡{{player}} gana!',
+    jump: '{{name}} → {{to}}.',
+    toStart: 'salida',
+    losesTurns_one: '{{name}} · Pierde {{count}} turno.',
+    losesTurns_other: '{{name}} · Pierde {{count}} turnos.',
+    wellRescue: '{{name}} · {{rescued}} sale y {{player}} se queda dentro.',
+    wellWait: '{{name}} · Se queda dentro hasta que otro jugador caiga en el pozo.',
+    rollAgain: 'Vuelve a tirar.',
+    losesThisTurn: '{{player}} pierde este turno.',
+    stillInWell: '{{player}} sigue en el pozo.',
+    goalRule: 'Meta.',
+    bounceRule: 'Rebote en la meta.',
+  },
+}
+
+export const Page = () => {
+  const t = useI18n(WORDS, translations)
+  const board = React.useMemo(() => t.data('tablero', tablero), [t])
+  return <Juego w={t.w} tablero={board} fichas={fichas.fichas} />
+}
+
+<Page />

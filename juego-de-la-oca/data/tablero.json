@@ -1,0 +1,83 @@
+{
+  "especiales": [
+    { "id": "salida", "tipo": "borde", "nombre": "Salida", "icono": "↗", "casillas": [0] },
+    {
+      "id": "oca",
+      "tipo": "oca",
+      "nombre": "Oca",
+      "icono": "🪿",
+      "casillas": [5, 9, 14, 18, 23, 27, 32, 36, 41, 45, 50, 54, 59],
+      "destino": "siguiente",
+      "otraVez": true,
+      "cantinela": "¡De oca a oca y tiro porque me toca!",
+      "regla": "Salta a la siguiente oca y vuelve a tirar. En la 59, vuelve a tirar desde allí."
+    },
+    {
+      "id": "puente",
+      "tipo": "salto",
+      "nombre": "Puente",
+      "icono": "🌉",
+      "casillas": [6],
+      "destino": [12],
+      "otraVez": true,
+      "cantinela": "¡De puente a puente y tiro porque me lleva la corriente!",
+      "regla": "De la 6 saltas a la 12 y vuelves a tirar. La 12 es una casilla normal."
+    },
+    {
+      "id": "posada",
+      "tipo": "castigo",
+      "nombre": "Posada",
+      "icono": "🏠",
+      "casillas": [19],
+      "pierde": 1,
+      "regla": "En la 19 pierdes un turno."
+    },
+    {
+      "id": "dados",
+      "tipo": "salto",
+      "nombre": "Dados",
+      "icono": "🎲",
+      "casillas": [26, 53],
+      "destino": [53, 26],
+      "otraVez": true,
+      "cantinela": "¡De dado a dado y tiro porque me ha tocado!",
+      "regla": "Salta entre la 26 y la 53 y vuelve a tirar."
+    },
+    {
+      "id": "pozo",
+      "tipo": "pozo",
+      "nombre": "Pozo",
+      "icono": "🪣",
+      "casillas": [31],
+      "regla": "En la 31 te quedas dentro hasta que otro jugador cae en el pozo. Entonces sales tú y se queda él."
+    },
+    {
+      "id": "laberinto",
+      "tipo": "castigo",
+      "nombre": "Laberinto",
+      "icono": "🌀",
+      "casillas": [42],
+      "destino": [30],
+      "regla": "De la 42 vuelves a la 30."
+    },
+    {
+      "id": "carcel",
+      "tipo": "castigo",
+      "nombre": "Cárcel",
+      "icono": "🔒",
+      "casillas": [52],
+      "pierde": 3,
+      "regla": "En la 52 pierdes tres turnos."
+    },
+    {
+      "id": "muerte",
+      "tipo": "castigo",
+      "nombre": "Muerte",
+      "icono": "☠",
+      "casillas": [58],
+      "destino": [0],
+      "regla": "De la 58 vuelves a la salida."
+    },
+    { "id": "meta", "tipo": "borde", "nombre": "Meta", "icono": "✦", "casillas": [63] }
+  ]
+}

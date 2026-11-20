@@ -1,0 +1,526 @@
+{
+  "nombre": "Español",
+  "letras": "ABCDEFGHIJKLMNOPQRSTUVXYZ",
+  "niveles": {
+    "facil": {
+      "nombre": "Fácil",
+      "preguntas": {
+        "A": [
+          {"tipo":"empieza","pista":"Insecto que fabrica miel y cera en su colmena","respuestas":"K1wsXnWQuJrH"},
+          {"tipo":"empieza","pista":"Capital de Grecia","respuestas":"K1wMSHWUuMu4OA=="},
+          {"tipo":"empieza","pista":"Río más caudaloso del mundo, que atraviesa Brasil","respuestas":"K1wMUXGAttb7FnXK"}
+        ],
+        "B": [
+          {"tipo":"empieza","pista":"Capital de Cataluña","respuestas":"K1wPXWKZvNT1Cza1ng=="},
+          {"tipo":"empieza","pista":"Vehículo de dos ruedas que se mueve con pedales","respuestas":"K1wvVXOTutT/ETa178K51r4LZWI="},
+          {"tipo":"empieza","pista":"Animal de orejas largas, pariente del caballo, muy usado para cargar","respuestas":"K1wvSWKItpq2RzX4sZKy3LJAGg=="}
+        ],
+        "C": [
+          {"tipo":"empieza","pista":"Capital de Venezuela","respuestas":"K1wOXWKbutnpRwo="},
+          {"tipo":"empieza","pista":"Reptil que cambia de color y mueve cada ojo por separado","respuestas":"K1wuXX2btd1Z1jm1ng=="},
+          {"tipo":"empieza","pista":"Órgano que bombea la sangre por el cuerpo","respuestas":"K1wuU2Kbo3spC3XK"}
+        ],
+        "D": [
+          {"tipo":"empieza","pista":"Reptil gigante que dominó la Tierra y se extinguió hace unos 66 millones de años","respuestas":"K1wpVX6VqtnvFz744b0="},
+          {"tipo":"empieza","pista":"Mamífero marino muy inteligente que vive en grupo y salta entre las olas","respuestas":"K1wpWXycGhX0Rwo="},
+          {"tipo":"empieza","pista":"Juego de mesa con 28 fichas rectangulares marcadas con puntos","respuestas":"K1wpU32Tt3spRwo="}
+        ],
+        "E": [
+          {"tipo":"empieza","pista":"Mamífero terrestre más grande, con trompa y colmillos de marfil","respuestas":"K1woUHWcuNbuAHXK"},
+          {"tipo":"empieza","pista":"País sudamericano cuya capital es Quito","respuestas":"K1wIX2WbvdfoRwo="},
+          {"tipo":"empieza","pista":"Punto cardinal por donde sale el sol","respuestas":"K1woT2Sf++U="}
+        ],
+        "F": [
+          {"tipo":"empieza","pista":"Ave rosada que suele descansar sobre una sola pata","respuestas":"K1wrUHGXvNb5CnXK"},
+          {"tipo":"empieza","pista":"Ciudad italiana, capital de la Toscana, cuna del Renacimiento","respuestas":"K1wLUH+IvNb5DDa1ng=="},
+          {"tipo":"empieza","pista":"Deporte de once jugadores por equipo que se juega con los pies y un balón","respuestas":"K1wr/6qOu9f2Rwo="}
+        ],
+        "G": [
+          {"tipo":"empieza","pista":"Felino doméstico que maúlla","respuestas":"K1wqXWSV++U="},
+          {"tipo":"empieza","pista":"País europeo cuya capital es Atenas","respuestas":"K1wKTnWZsNm4OA=="},
+          {"tipo":"empieza","pista":"Instrumento de seis cuerdas, muy presente en el flamenco","respuestas":"K1wqSXmOuMroBHXK"}
+        ],
+        "H": [
+          {"tipo":"empieza","pista":"Insecto pequeño que vive en colonias y carga mucho más que su peso","respuestas":"K1wlU2KXsN/7Rwo="},
+          {"tipo":"empieza","pista":"Agua en estado sólido","respuestas":"K1wlVXWWtprH"},
+          {"tipo":"empieza","pista":"Mamífero africano enorme que pasa el día en el agua; su nombre significa «caballo de río»","respuestas":"K1wlVWCVqXspETb6rMKG"}
+        ],
+        "I": [
+          {"tipo":"empieza","pista":"Porción de tierra rodeada de agua por todas partes","respuestas":"K1wkT3yb++U="},
+          {"tipo":"empieza","pista":"País europeo con forma de bota","respuestas":"K1wESHGWsNm4OA=="},
+          {"tipo":"empieza","pista":"Reptil verde americano, herbívoro, con una cresta en el lomo","respuestas":"K1wkW2Wbt9m4OA=="}
+        ],
+        "J": [
+          {"tipo":"empieza","pista":"Animal con el cuello más largo del mundo","respuestas":"K1wnVWKbv9m4OA=="},
+          {"tipo":"empieza","pista":"País asiático cuya capital es Tokio","respuestas":"K1wHXWA5ata4OA=="},
+          {"tipo":"empieza","pista":"Producto que hace espuma con el agua y sirve para lavarse las manos","respuestas":"K1wnXXI5ata4OA=="}
+        ],
+        "K": [
+          {"tipo":"empieza","pista":"Unidad de masa que equivale a mil gramos","respuestas":"K1wmVXyVvsr7CDi178Kw1rENZWI="},
+          {"tipo":"empieza","pista":"Arte marcial japonés de golpes con manos y pies","respuestas":"K1wm/7GIuMz/R3u1qIGp3qkHZWI="},
+          {"tipo":"empieza","pista":"Marsupial australiano que se alimenta de hojas de eucalipto","respuestas":"K1wmU3GWuJrH"}
+        ],
+        "L": [
+          {"tipo":"empieza","pista":"Satélite natural de la Tierra","respuestas":"K1whSX6b++U="},
+          {"tipo":"empieza","pista":"Gran felino de melena al que llaman «el rey de la selva»","respuestas":"K1whWdNJt5rH"},
+          {"tipo":"empieza","pista":"Capital de Portugal","respuestas":"K1wBVWOYttm4OA=="}
+        ],
+        "M": [
+          {"tipo":"empieza","pista":"Único mamífero capaz de volar","respuestas":"K1wgSWKZsHszCTbwrMKG"},
+          {"tipo":"empieza","pista":"Capital de España","respuestas":"K1wAXXSIsNy4OA=="},
+          {"tipo":"empieza","pista":"Planeta al que llaman «el planeta rojo»","respuestas":"K1wAXWKOvJrH"}
+        ],
+        "N": [
+          {"tipo":"empieza","pista":"Fruta cítrica cuyo nombre es también un color","respuestas":"K1wjXWKbt9L7Rwo="},
+          {"tipo":"empieza","pista":"Agua helada que cae del cielo en copos","respuestas":"K1wjVXWMvJrH"},
+          {"tipo":"empieza","pista":"Río más largo de África, que atraviesa Egipto","respuestas":"K1wDVXyV++U="}
+        ],
+        "O": [
+          {"tipo":"empieza","pista":"Mamífero grande y peludo que hiberna en invierno","respuestas":"K1wiT3/YhA=="},
+          {"tipo":"empieza","pista":"Gran masa de agua salada; el Pacífico es el mayor","respuestas":"K1wiX9NTuNb1Rwo="},
+          {"tipo":"empieza","pista":"Órgano de la vista","respuestas":"K1wiVn/YhA=="}
+        ],
+        "P": [
+          {"tipo":"empieza","pista":"Ave que no vuela, nada muy bien y vive en la Antártida","respuestas":"K1w9VX6dGgTzCzi1ng=="},
+          {"tipo":"empieza","pista":"Capital de Francia","respuestas":"K1wdXWI5dMu4OA=="},
+          {"tipo":"empieza","pista":"Instrumento musical de teclas blancas y negras","respuestas":"K1w9VXGUtprH"}
+        ],
+        "Q": [
+          {"tipo":"empieza","pista":"Alimento que se elabora cuajando la leche","respuestas":"K1w8SXWJtprH"},
+          {"tipo":"empieza","pista":"Capital de Ecuador","respuestas":"K1wcSXmOtprH"},
+          {"tipo":"empieza","pista":"Ave de plumas verdes brillantes, símbolo nacional de Guatemala","respuestas":"K1w8SXWOo9n2Rwo="}
+        ],
+        "R": [
+          {"tipo":"empieza","pista":"Capital de Italia","respuestas":"K1wfU32b++U="},
+          {"tipo":"empieza","pista":"Flor con espinas, símbolo del amor","respuestas":"K1w/U2Ob++U="},
+          {"tipo":"empieza","pista":"País más extenso del mundo","respuestas":"K1wfSWOTuJrH"}
+        ],
+        "S": [
+          {"tipo":"empieza","pista":"Estrella en el centro de nuestro sistema planetario","respuestas":"K1w+U3zYhA=="},
+          {"tipo":"empieza","pista":"Reptil alargado y sin patas","respuestas":"K1w+WWKKsN30ETK1ng=="},
+          {"tipo":"empieza","pista":"Día de la semana que va después del viernes","respuestas":"K1w+/7GYuNz1Rwo="}
+        ],
+        "T": [
+          {"tipo":"empieza","pista":"El felino más grande, de pelaje naranja con rayas negras","respuestas":"K1w5VXeIvJrH"},
+          {"tipo":"empieza","pista":"Reptil que lleva su casa a cuestas: un caparazón","respuestas":"K1w5U2KOrN/7Rwo="},
+          {"tipo":"empieza","pista":"Capital de Japón","respuestas":"K1wZU3uTtpq2RwP4qJm0nYA="}
+        ],
+        "U": [
+          {"tipo":"empieza","pista":"Fruta pequeña que crece en racimos y con la que se hace el vino","respuestas":"K1w4SnHYhA=="},
+          {"tipo":"empieza","pista":"Caballo mitológico con un cuerno en la frente","respuestas":"K1w4UnmZtsr0DDi1ng=="},
+          {"tipo":"empieza","pista":"País sudamericano cuya capital es Montevideo","respuestas":"K1wYTmWdrNnjRwo="}
+        ],
+        "V": [
+          {"tipo":"empieza","pista":"Montaña que puede expulsar lava","respuestas":"K1w7U3yZGhn0Rwo="},
+          {"tipo":"empieza","pista":"Hembra del toro, que da leche","respuestas":"K1w7XXOb++U="},
+          {"tipo":"empieza","pista":"Estación más calurosa del año","respuestas":"K1w7WWKbt9e4OA=="}
+        ],
+        "X": [
+          {"tipo":"empieza","pista":"Instrumento de percusión de láminas que se golpean con baquetas","respuestas":"K1w1VXw5at71Czi178Kj1rENIfy+l/j1"},
+          {"tipo":"contiene","pista":"Coche con conductor que se paga por trayecto","respuestas":"K1w5XWiT++U="},
+          {"tipo":"contiene","pista":"Gas del aire que necesitamos respirar para vivir","respuestas":"K1wiRNNXvt30CnXK"}
+        ],
+        "Y": [
+          {"tipo":"empieza","pista":"Alimento lácteo fermentado que se come con cuchara","respuestas":"K1w0U3ePq5q2Ry74pJWpy/8/"},
+          {"tipo":"empieza","pista":"Parte amarilla del huevo","respuestas":"K1w0WX2b++U="},
+          {"tipo":"empieza","pista":"Barco de recreo, a menudo de lujo","respuestas":"K1w0XWSf++U="}
+        ],
+        "Z": [
+          {"tipo":"empieza","pista":"Hortaliza naranja y alargada que comen los conejos","respuestas":"K1w3XX6bsdfoDDa1ng=="},
+          {"tipo":"empieza","pista":"Calzado que cubre el pie","respuestas":"K1w3XWCbrde4OA=="},
+          {"tipo":"empieza","pista":"Mamífero astuto de pelaje rojizo y cola larga y peluda","respuestas":"K1w3U2KItprH"}
+        ]
+      }
+    },
+    "medio": {
+      "nombre": "Medio",
+      "preguntas": {
+        "A": [
+          {"tipo":"empieza","pista":"Continente más grande del mundo","respuestas":"K1wMT3mb++U="},
+          {"tipo":"empieza","pista":"Ave rapaz de vista muy aguda que aparece en muchos escudos","respuestas":"K1yOnXePsNT7Rwo="},
+          {"tipo":"empieza","pista":"País más grande de Sudamérica después de Brasil","respuestas":"K1wMTneft8zzCza1ng=="}
+        ],
+        "B": [
+          {"tipo":"empieza","pista":"País europeo cuya capital es Bruselas","respuestas":"K1wP/7mWvtH5BHXK"},
+          {"tipo":"empieza","pista":"Mamífero marino, el animal más grande que ha existido","respuestas":"K1wvXXyWvNb7R3u1oYG307gMJh9sg6/EuTs="},
+          {"tipo":"empieza","pista":"Capital de Alemania","respuestas":"K1wPWWKWGhX0Rwo="}
+        ],
+        "C": [
+          {"tipo":"empieza","pista":"Capital de Egipto","respuestas":"K1wIUDC5uNHoCnW74aO61q8NZWI="},
+          {"tipo":"empieza","pista":"Cuerpo celeste helado con una larga cola brillante","respuestas":"K1wuU32frdm4OA=="},
+          {"tipo":"empieza","pista":"País asiático donde se construyó la Gran Muralla","respuestas":"K1wOVHmUuJrH"}
+        ],
+        "D": [
+          {"tipo":"empieza","pista":"Moneda de Estados Unidos","respuestas":"K1wp/6OWuMq4OA=="},
+          {"tipo":"empieza","pista":"Último mes del año","respuestas":"K1wpVXOTvNX4FzK1ng=="},
+          {"tipo":"empieza","pista":"País nórdico cuya capital es Copenhague","respuestas":"K1wJVX6btNnoBja1ng=="}
+        ],
+        "E": [
+          {"tipo":"empieza","pista":"Árbol de hoja perenne cuyo fruto es la bellota","respuestas":"K1woUnOTt9m4OA=="},
+          {"tipo":"empieza","pista":"Antiguo reino a orillas del Nilo que construyó las pirámides","respuestas":"K1wIW3mKrde4OA=="},
+          {"tipo":"empieza","pista":"Pequeño mamífero cubierto de púas","respuestas":"K1woTnmAtprH"}
+        ],
+        "F": [
+          {"tipo":"empieza","pista":"Fruta roja pequeña con las semillas por fuera","respuestas":"K1wrTnWJuJrH"},
+          {"tipo":"empieza","pista":"País nórdico cuya capital es Helsinki","respuestas":"K1wLVX6WuNb+DDa1ng=="},
+          {"tipo":"empieza","pista":"Torre junto al mar con una luz que guía a los barcos","respuestas":"K1wrXWKV++U="}
+        ],
+        "G": [
+          {"tipo":"empieza","pista":"Felino moteado, el animal terrestre más rápido","respuestas":"K1wqSXWKuMr+CnXK"},
+          {"tipo":"empieza","pista":"Gran masa de hielo que avanza lentamente desde las montañas","respuestas":"K1wqUHGZsNnoRwo="},
+          {"tipo":"empieza","pista":"País africano cuya capital es Acra","respuestas":"K1wKVHGUuJrH"}
+        ],
+        "H": [
+          {"tipo":"empieza","pista":"País europeo de molinos y tulipanes cuya capital es Ámsterdam","respuestas":"K1wFU3ybt9z7Rwo="},
+          {"tipo":"empieza","pista":"Herramienta de filo con mango, para cortar leña","respuestas":"K1wlXXOSuJrH"},
+          {"tipo":"empieza","pista":"Animal carroñero africano famoso por un sonido parecido a una risa","respuestas":"K1wlVXWUuJrH"}
+        ],
+        "I": [
+          {"tipo":"empieza","pista":"País asiático cuya capital es Nueva Delhi","respuestas":"K1wEUnSTuJrH"},
+          {"tipo":"empieza","pista":"Casa de bloques de hielo de los pueblos del Ártico","respuestas":"K1wkW3w5Y5rH"},
+          {"tipo":"empieza","pista":"Isla verde, país cuya capital es Dublín","respuestas":"K1wETnybt9z7Rwo="}
+        ],
+        "J": [
+          {"tipo":"empieza","pista":"Mes en el que empieza el verano en el hemisferio norte","respuestas":"K1wnSX6TtprH"},
+          {"tipo":"empieza","pista":"Felino americano de piel amarilla con manchas en forma de rosetas","respuestas":"K1wnXXePuMq4OA=="},
+          {"tipo":"empieza","pista":"Pierna de cerdo curada, muy típica de España","respuestas":"K1wnXX05ata4OA=="}
+        ],
+        "K": [
+          {"tipo":"empieza","pista":"Medida de longitud que equivale a mil metros","respuestas":"K1wmVXw5atX/ESX44b0="},
+          {"tipo":"empieza","pista":"Fruta de piel marrón y peluda con la pulpa verde","respuestas":"K1wmVWeT++U="},
+          {"tipo":"empieza","pista":"Traje tradicional japonés, largo y con mangas anchas","respuestas":"K1wmVX2Vt9e4OA=="}
+        ],
+        "L": [
+          {"tipo":"empieza","pista":"Mamífero salvaje que vive en manada y aúlla","respuestas":"K1whU3KV++U="},
+          {"tipo":"empieza","pista":"Capital del Reino Unido","respuestas":"K1wBU36eq93pRwo="},
+          {"tipo":"empieza","pista":"Fruto cítrico amarillo y muy ácido","respuestas":"K1whVX05ata4OA=="}
+        ],
+        "M": [
+          {"tipo":"empieza","pista":"Mar que separa Europa de África","respuestas":"K1wAWXSTrd3oF5Q2rYW0nYA="},
+          {"tipo":"empieza","pista":"País del norte de África cuya capital es Rabat","respuestas":"K1wAXWKIrN35CiS1ng=="},
+          {"tipo":"empieza","pista":"Insecto de alas de colores que antes fue oruga","respuestas":"K1wgXWKTqdfpBHXK"}
+        ],
+        "N": [
+          {"tipo":"empieza","pista":"País nórdico cuya capital es Oslo","respuestas":"K1wDU2KPvN/7Rwo="},
+          {"tipo":"empieza","pista":"Planeta más alejado del Sol","respuestas":"K1wDWWCOrNb1Rwo="},
+          {"tipo":"empieza","pista":"Mes número once del año","respuestas":"K1wjU2aTvNX4FzK1ng=="}
+        ],
+        "O": [
+          {"tipo":"empieza","pista":"Metal precioso de color amarillo","respuestas":"K1wiTn/YhA=="},
+          {"tipo":"empieza","pista":"Continente formado por Australia y muchas islas del Pacífico","respuestas":"K1wCX3Wbt3s3BHXK"},
+          {"tipo":"empieza","pista":"Cetáceo blanco y negro al que llaman «ballena asesina»","respuestas":"K1wiTnOb++U="}
+        ],
+        "P": [
+          {"tipo":"empieza","pista":"Animal marino de ocho brazos con ventosas","respuestas":"K1w9SXyKtprH"},
+          {"tipo":"empieza","pista":"País sudamericano cuya capital es Lima","respuestas":"K1wdWWI5Y5rH"},
+          {"tipo":"empieza","pista":"País europeo cuya capital es Varsovia","respuestas":"K1wdU3yVt9H7Rwo="}
+        ],
+        "Q": [
+          {"tipo":"empieza","pista":"Número que resulta de multiplicar cinco por tres","respuestas":"K1w8SXmUut24OA=="},
+          {"tipo":"empieza","pista":"Ciencia que estudia la composición de la materia y cómo se transforma","respuestas":"K1w8SdNXtNH5BHXK"},
+          {"tipo":"empieza","pista":"Caseta en la calle donde se venden periódicos y revistas","respuestas":"K1w8SXmVqtv1Rwo="}
+        ],
+        "R": [
+          {"tipo":"empieza","pista":"Animal africano con uno o dos cuernos sobre la nariz","respuestas":"K1w/VX6Vut3oCjnjpsKG"},
+          {"tipo":"empieza","pista":"Aparato que da la hora y se lleva en la muñeca","respuestas":"K1w/WXyVs5rH"},
+          {"tipo":"empieza","pista":"Pequeño roedor al que persiguen los gatos","respuestas":"K1w/XWQ5ata4OA=="}
+        ],
+        "S": [
+          {"tipo":"empieza","pista":"Planeta famoso por sus anillos","respuestas":"K1weXWSPq9b1Rwo="},
+          {"tipo":"empieza","pista":"País nórdico cuya capital es Estocolmo","respuestas":"K1weSXWZsNm4OA=="},
+          {"tipo":"empieza","pista":"Condimento blanco que se obtiene del agua del mar","respuestas":"K1w+XXzYhA=="}
+        ],
+        "T": [
+          {"tipo":"empieza","pista":"Fruto rojo que se usa en ensaladas y en el gazpacho","respuestas":"K1w5U32brd24OA=="},
+          {"tipo":"empieza","pista":"Ola gigante provocada por un terremoto bajo el mar","respuestas":"K1w5T2WUuNXzRwo="},
+          {"tipo":"empieza","pista":"Ave tropical americana de pico enorme y colorido","respuestas":"K1w5SXM5eNa4OA=="}
+        ],
+        "U": [
+          {"tipo":"empieza","pista":"Capa dura que protege la punta de los dedos","respuestas":"K1w4/6Gb++U="},
+          {"tipo":"empieza","pista":"Todo lo que existe: galaxias, estrellas, planetas…","respuestas":"K1w4UnmMvMrpCnXK"},
+          {"tipo":"empieza","pista":"País europeo cuya capital es Kiev","respuestas":"K1wYX2Kbt9H7Rwo="}
+        ],
+        "V": [
+          {"tipo":"empieza","pista":"Ciudad italiana famosa por sus canales y góndolas","respuestas":"K1wbWX6futH7Rwo="},
+          {"tipo":"empieza","pista":"Instrumento de cuerda que se toca con arco y se apoya en el hombro","respuestas":"K1w7VX+WGhX0Rwo="},
+          {"tipo":"empieza","pista":"País sudamericano cuya capital es Caracas","respuestas":"K1wbWX6fo83/CTa1ng=="}
+        ],
+        "X": [
+          {"tipo":"contiene","pista":"Prueba para comprobar lo que has aprendido","respuestas":"K1woRHGXvNa4OA=="},
+          {"tipo":"contiene","pista":"País de Norteamérica cuya capital tiene su mismo nombre","respuestas":"K1wA/7mCsNv1Rwo="},
+          {"tipo":"contiene","pista":"Deportista que pelea con guantes en un ring","respuestas":"K1wvU2ifuNz1F3XK"}
+        ],
+        "Y": [
+          {"tipo":"empieza","pista":"Hembra del caballo","respuestas":"K1w0WXePuJrH"},
+          {"tipo":"empieza","pista":"Disciplina india de posturas, respiración y meditación","respuestas":"K1w0U3eb++U="},
+          {"tipo":"empieza","pista":"Bloque de hierro sobre el que el herrero golpea el metal","respuestas":"K1w0SX6LrN24OA=="}
+        ],
+        "Z": [
+          {"tipo":"empieza","pista":"Bebida que se obtiene exprimiendo fruta","respuestas":"K1w3SX2V++U="},
+          {"tipo":"empieza","pista":"Ciudad española a orillas del Ebro, famosa por la Basílica del Pilar","respuestas":"K1wXXWKbvtfgBHXK"},
+          {"tipo":"empieza","pista":"Lugar donde se pueden ver animales salvajes de todo el mundo","respuestas":"K1w3U3/Y9ZrgCjj7AFO81r4NZWI="}
+        ]
+      }
+    },
+    "dificil": {
+      "nombre": "Difícil",
+      "preguntas": {
+        "A": [
+          {"tipo":"empieza","pista":"Metal más abundante en la corteza terrestre","respuestas":"K1wsUGWXsNbzCnXK"},
+          {"tipo":"empieza","pista":"Cordillera que recorre el oeste de Sudamérica, la más larga del mundo","respuestas":"K1wMUnSfqprH"},
+          {"tipo":"empieza","pista":"Filósofo griego, maestro de Alejandro Magno","respuestas":"K1wMTnmJrXspETL7ppP54g=="}
+        ],
+        "B": [
+          {"tipo":"empieza","pista":"Compositor alemán que se quedó sordo y compuso la Novena Sinfonía","respuestas":"K1wPWXWOsdfsADm1ng=="},
+          {"tipo":"empieza","pista":"Capital de Hungría, atravesada por el Danubio","respuestas":"K1wPSXSbqd3pEXXK"},
+          {"tipo":"empieza","pista":"Militar venezolano que lideró la independencia de varios países sudamericanos","respuestas":"K1wPU3w5dM77F3XK"}
+        ],
+        "C": [
+          {"tipo":"empieza","pista":"Navegante que llegó a América en 1492","respuestas":"K1wOU3w5ata4SXXUsYmoyx7RJV5h2ZnH96X5SiW/"},
+          {"tipo":"empieza","pista":"Autor de «Don Quijote de la Mancha»","respuestas":"K1wOWWKMuNbuACS1ng=="},
+          {"tipo":"empieza","pista":"Científica polaca, la primera persona que ganó dos premios Nobel","respuestas":"K1wOSWKTvJrH"}
+        ],
+        "D": [
+          {"tipo":"empieza","pista":"Pintor surrealista español de bigote famoso, autor de «La persistencia de la memoria»","respuestas":"K1wJXXw5dJrH"},
+          {"tipo":"empieza","pista":"Capital de Irlanda","respuestas":"K1wJSXKWGhX0Rwo="},
+          {"tipo":"empieza","pista":"Naturalista inglés que explicó la evolución por selección natural","respuestas":"K1wJXWKNsNa4OA=="}
+        ],
+        "E": [
+          {"tipo":"empieza","pista":"Científico alemán que formuló la teoría de la relatividad","respuestas":"K1wIVX6Jrd3zC3XK"},
+          {"tipo":"empieza","pista":"Capa de la atmósfera en la que se encuentra la capa de ozono","respuestas":"K1woT2SIuMz1FjHysYH54g=="},
+          {"tipo":"empieza","pista":"Matemático griego considerado el padre de la geometría","respuestas":"K1wISXOWsNz/FnXK"}
+        ],
+        "F": [
+          {"tipo":"empieza","pista":"Proceso con el que las plantas fabrican su alimento usando la luz del sol","respuestas":"K1wrU2SVqns3CyPysImonYA="},
+          {"tipo":"empieza","pista":"Elemento químico de símbolo P","respuestas":"K1wr/6OJv9foCnXK"},
+          {"tipo":"empieza","pista":"Pueblo navegante de la Antigüedad que inventó un alfabeto","respuestas":"K1wrWX6TutH1FnW74Ya+0bQBLlAvpA=="}
+        ],
+        "G": [
+          {"tipo":"empieza","pista":"Astrónomo italiano juzgado por la Inquisición por defender que la Tierra gira alrededor del Sol","respuestas":"K1wKXXyTtd31R3u1hIG31rEHKB9KmLbB9wMjBlo="},
+          {"tipo":"empieza","pista":"Pintor aragonés autor de «Los fusilamientos del 3 de mayo»","respuestas":"K1wKU2mb++U="},
+          {"tipo":"empieza","pista":"Líder pacifista de la independencia de la India","respuestas":"K1wKXX6esdG4OA=="}
+        ],
+        "H": [
+          {"tipo":"empieza","pista":"Elemento químico más ligero","respuestas":"K1wlVXSIGgv9ADn44b0="},
+          {"tipo":"empieza","pista":"Poeta griego al que se atribuyen la «Ilíada» y la «Odisea»","respuestas":"K1wFU32fq9e4OA=="},
+          {"tipo":"empieza","pista":"Proteína de la sangre que transporta el oxígeno","respuestas":"K1wlWX2VvtT1Bz75osKG"}
+        ],
+        "I": [
+          {"tipo":"empieza","pista":"Pueblo de los Andes que construyó un gran imperio con capital en Cuzco","respuestas":"K1wkUnOb+5S4DDn0opP54g=="},
+          {"tipo":"empieza","pista":"País asiático cuya capital es Teherán","respuestas":"K1wETtNbt5rH"},
+          {"tipo":"empieza","pista":"Personaje mitológico que se acercó demasiado al Sol con alas de cera","respuestas":"K1yOsXObq9e4OA=="}
+        ],
+        "J": [
+          {"tipo":"empieza","pista":"Planeta más grande del sistema solar","respuestas":"K1wH/6qKsMz/F3XK"},
+          {"tipo":"empieza","pista":"País de Oriente Próximo cuya capital es Amán","respuestas":"K1wHU2KeuNbzBHXK"},
+          {"tipo":"empieza","pista":"Heroína francesa quemada en la hoguera en 1431","respuestas":"K1wHSXGUuJj+AHfWsYO0nYA="}
+        ],
+        "K": [
+          {"tipo":"empieza","pista":"Escritor checo autor de «La metamorfosis»","respuestas":"K1wGXXaRuJrH"},
+          {"tipo":"empieza","pista":"Unidad de temperatura del Sistema Internacional","respuestas":"K1wmWXyMsNa4OA=="},
+          {"tipo":"empieza","pista":"Montaña más alta de África","respuestas":"K1wGVXyTtNn0DzblrMKG"}
+        ],
+        "L": [
+          {"tipo":"empieza","pista":"Poeta granadino autor de «Bodas de sangre»","respuestas":"K1wBU2KZuJrH"},
+          {"tipo":"empieza","pista":"Capital de Perú","respuestas":"K1wBVX2b++U="},
+          {"tipo":"empieza","pista":"Genio del Renacimiento que pintó «La Gioconda»","respuestas":"K1wBWX+UuMr+CnW74ay+0LMDNVti2b7JuzAjSmSL4u4="}
+        ],
+        "M": [
+          {"tipo":"empieza","pista":"Artista italiano que pintó el techo de la Capilla Sixtina","respuestas":"K1wAVXePvNS6ptb5pIW3nYA="},
+          {"tipo":"empieza","pista":"Planeta más cercano al Sol","respuestas":"K1wAWWKZrMrzCnXK"},
+          {"tipo":"empieza","pista":"Compositor austriaco autor de «La flauta mágica»","respuestas":"K1wAU2qbq8y4OA=="}
+        ],
+        "N": [
+          {"tipo":"empieza","pista":"Partícula sin carga eléctrica del núcleo del átomo","respuestas":"K1wjWWWOq3spC3XK"},
+          {"tipo":"empieza","pista":"Científico inglés que formuló la ley de la gravitación universal","respuestas":"K1wDWWeOtta4OA=="},
+          {"tipo":"empieza","pista":"Emperador francés derrotado en Waterloo","respuestas":"K1wDXWCVtd1Z1jm178KV3q0NK1rOSrSI2QkkRXeDssfkH/Q="}
+        ],
+        "O": [
+          {"tipo":"empieza","pista":"Gas que forma una capa protectora frente a los rayos ultravioleta","respuestas":"K1wiRn+UtprH"},
+          {"tipo":"empieza","pista":"Capital de Noruega","respuestas":"K1wCT3yV++U="},
+          {"tipo":"empieza","pista":"Roca volcánica negra y brillante, parecida al cristal","respuestas":"K1wiXmOTvdH7Cza1ng=="}
+        ],
+        "P": [
+          {"tipo":"empieza","pista":"Pintor malagueño autor del «Guernica»","respuestas":"K1wdVXObqsv1Rwo="},
+          {"tipo":"empieza","pista":"Filósofo griego, discípulo de Sócrates y maestro de Aristóteles","respuestas":"K1wdUHGOGgv0Rwo="},
+          {"tipo":"empieza","pista":"Matemático griego del famoso teorema de los triángulos rectángulos","respuestas":"K1wdVWQ5eN/1Fzbk4b0="}
+        ],
+        "Q": [
+          {"tipo":"empieza","pista":"Lengua de los incas que aún hablan millones de personas en los Andes","respuestas":"K1w8SXWZsc37Rwo="},
+          {"tipo":"empieza","pista":"Hidalgo manchego, protagonista de la novela más famosa de Cervantes","respuestas":"K1wcSXmQtsz/Rwo="},
+          {"tipo":"empieza","pista":"Dios «serpiente emplumada» de los pueblos de Mesoamérica","respuestas":"K1wcSXWOo9n2BpQkopS3nYA="}
+        ],
+        "R": [
+          {"tipo":"empieza","pista":"Capital de Marruecos","respuestas":"K1wfXXKbrZrH"},
+          {"tipo":"empieza","pista":"Pintor holandés autor de «La ronda de noche»","respuestas":"K1wfWX2Yq9n0ASO1ng=="},
+          {"tipo":"empieza","pista":"Según la leyenda, fundador de Roma junto a su hermano Remo","respuestas":"K1wf/6OXrNT1Rwo="}
+        ],
+        "S": [
+          {"tipo":"empieza","pista":"Desierto cálido más grande del mundo, en el norte de África","respuestas":"K1weXXibq9m4SXXEAEGz3q8DZWI="},
+          {"tipo":"empieza","pista":"Filósofo griego condenado a beber cicuta","respuestas":"K1we/6OZq9nuACS1ng=="},
+          {"tipo":"empieza","pista":"Dramaturgo inglés autor de «Hamlet»","respuestas":"K1weVHGRvMvqADblpsKG"}
+        ],
+        "T": [
+          {"tipo":"empieza","pista":"Capa de la atmósfera más cercana a la superficie terrestre","respuestas":"K1w5Tn+Ktsv8ACX24b0="},
+          {"tipo":"empieza","pista":"Transatlántico que se hundió en 1912 tras chocar con un iceberg","respuestas":"K1wZVWSbt9H5Rwo="},
+          {"tipo":"empieza","pista":"Faraón egipcio cuya tumba, casi intacta, se descubrió en 1922","respuestas":"K1wZSWSbt9P7CJQkrcKG"}
+        ],
+        "U": [
+          {"tipo":"empieza","pista":"Planeta del sistema solar que gira tumbado de lado","respuestas":"K1wYTnGUtprH"},
+          {"tipo":"empieza","pista":"Montes que separan Europa de Asia","respuestas":"K1wYTnGWvMu4OA=="},
+          {"tipo":"empieza","pista":"Héroe griego que tardó diez años en volver a Ítaca tras la guerra de Troya","respuestas":"K1wYUHmJvMu4OA=="}
+        ],
+        "V": [
+          {"tipo":"empieza","pista":"Planeta más caluroso del sistema solar","respuestas":"K1wbWX6PqprH"},
+          {"tipo":"empieza","pista":"Pintor sevillano autor de «Las Meninas»","respuestas":"K1wbWXw5eMLrEDLt4b0="},
+          {"tipo":"empieza","pista":"Estado más pequeño del mundo, dentro de Roma","respuestas":"K1wbXWSTutn0CnXK"}
+        ],
+        "X": [
+          {"tipo":"empieza","pista":"Gas noble de símbolo Xe","respuestas":"K1w1WX45ata4OA=="},
+          {"tipo":"contiene","pista":"Ciencia que clasifica y pone nombre a los seres vivos","respuestas":"K1w5XWiVt9f3pvr24b0="},
+          {"tipo":"contiene","pista":"Instrumento de viento de metal, muy usado en el jazz","respuestas":"K1w+XWiVv3spC3W74ZO6x7JAGg=="}
+        ],
+        "Y": [
+          {"tipo":"empieza","pista":"Península mexicana donde están las ruinas mayas de Chichén Itzá","respuestas":"K1wUSXObrXs7C3XK"},
+          {"tipo":"empieza","pista":"Elemento químico de símbolo I","respuestas":"K1w0U3SV++U="},
+          {"tipo":"empieza","pista":"Criatura legendaria de las nieves del Himalaya","respuestas":"K1w0WWST++U="}
+        ],
+        "Z": [
+          {"tipo":"empieza","pista":"Dios principal del Olimpo griego","respuestas":"K1wXWWWJ++U="},
+          {"tipo":"empieza","pista":"País africano cuya capital es Harare","respuestas":"K1wXVX2YuNrvAHW74bqy0r8DJUho24c="},
+          {"tipo":"empieza","pista":"Elemento químico de símbolo Zn","respuestas":"K1w3VX6Z++U="}
+        ]
+      }
+    },
+    "experto": {
+      "nombre": "Experto",
+      "preguntas": {
+        "A": [
+          {"tipo":"empieza","pista":"Capital de Etiopía","respuestas":"K1wMWNNXqpjbBzL1osL3nZwGI1Z+2ZvK/gQrBlo="},
+          {"tipo":"empieza","pista":"Gas noble de símbolo Ar","respuestas":"K1wsTnc5ata4OA=="},
+          {"tipo":"empieza","pista":"Palacio y fortaleza nazarí de Granada","respuestas":"K1wMUHibtNroBHXK"}
+        ],
+        "B": [
+          {"tipo":"empieza","pista":"Capital de Colombia","respuestas":"K1wPU3eVrXs7Rwo="},
+          {"tipo":"empieza","pista":"Pintor florentino de «El nacimiento de Venus»","respuestas":"K1wPU2SOsNv/CTv+4b0="},
+          {"tipo":"empieza","pista":"Ciudad de Mesopotamia famosa por sus jardines colgantes","respuestas":"K1wPXXKTtdf0DDa1ng=="}
+        ],
+        "C": [
+          {"tipo":"empieza","pista":"Capital de Australia","respuestas":"K1wOXX6YvMroBHXK"},
+          {"tipo":"empieza","pista":"Astrónomo polaco que situó el Sol en el centro del sistema planetario","respuestas":"K1wOU2A5cMr0DDT44b0="},
+          {"tipo":"empieza","pista":"Ciudad del norte de África, rival de Roma en las guerras púnicas","respuestas":"K1wOXWKOuN/1Rwo="}
+        ],
+        "D": [
+          {"tipo":"empieza","pista":"Poeta florentino autor de la «Divina comedia»","respuestas":"K1wJXX6OvJq2RxP2rZS+n5wOLlhlkL/a8kQX"},
+          {"tipo":"empieza","pista":"Río que atraviesa Viena, Budapest y Belgrado","respuestas":"K1wJXX6Pu9H1Rwo="},
+          {"tipo":"empieza","pista":"Poliedro regular de doce caras","respuestas":"K1wpU3Sfutn/ASX44b0="}
+        ],
+        "E": [
+          {"tipo":"empieza","pista":"Ciudad griega rival de Atenas, famosa por sus guerreros","respuestas":"K1wIT2Cbq8z7Rwo="},
+          {"tipo":"empieza","pista":"Montaña más alta del mundo","respuestas":"K1wISnWIvMvuRwo="},
+          {"tipo":"empieza","pista":"Enfermedad de los marineros causada por la falta de vitamina C","respuestas":"K1woT3OVq9rvETi1ng=="}
+        ],
+        "F": [
+          {"tipo":"empieza","pista":"Escala de temperatura que se usa en Estados Unidos","respuestas":"K1wLXXiIvNbyAD7j4b0="},
+          {"tipo":"empieza","pista":"Matemático italiano de la sucesión 1, 1, 2, 3, 5, 8…","respuestas":"K1wLVXKVt9n5Bj61ng=="},
+          {"tipo":"empieza","pista":"Médico austriaco, padre del psicoanálisis","respuestas":"K1wLTnWPvZrH"}
+        ],
+        "G": [
+          {"tipo":"empieza","pista":"Inventor alemán de la imprenta de tipos móviles","respuestas":"K1wKSWSft9r/FzC1ng=="},
+          {"tipo":"empieza","pista":"Arquitecto de la Sagrada Familia de Barcelona","respuestas":"K1wKXWWeGhW4OA=="},
+          {"tipo":"empieza","pista":"Fundador del Imperio mongol","respuestas":"K1wKWX6dsMu6Ljb54cz5+LgMIFZ+2ZHA+ghoeQ=="}
+        ],
+        "H": [
+          {"tipo":"empieza","pista":"Rey babilonio famoso por su código de leyes","respuestas":"K1wFXX2XrMr7Bz61ng=="},
+          {"tipo":"empieza","pista":"Gas noble de símbolo He, más ligero que el aire","respuestas":"K1wlWXyTtprH"},
+          {"tipo":"empieza","pista":"Médico griego cuyo juramento siguen haciendo los médicos","respuestas":"K1wFVWA5atvoBCPysMKG"}
+        ],
+        "I": [
+          {"tipo":"empieza","pista":"País insular cuya capital es Reikiavik","respuestas":"K1wET3ybt9zzBHXK"},
+          {"tipo":"empieza","pista":"Átomo de un mismo elemento con distinto número de neutrones","respuestas":"K1wkT9NJrdfqCnXK"},
+          {"tipo":"empieza","pista":"Poema épico griego sobre la guerra de Troya","respuestas":"K1wEUNNXuNz7Rwo="}
+        ],
+        "J": [
+          {"tipo":"empieza","pista":"Médico inglés que creó la primera vacuna, contra la viruela","respuestas":"K1wHWX6UvMq4OA=="},
+          {"tipo":"empieza","pista":"Periodo geológico de los grandes dinosaurios, entre el Triásico y el Cretácico","respuestas":"K1wHSWI5eMvzBji1ng=="},
+          {"tipo":"empieza","pista":"Capital de Sudán, donde se unen el Nilo Blanco y el Nilo Azul","respuestas":"K1wHXWKOrNW4OA=="}
+        ],
+        "K": [
+          {"tipo":"empieza","pista":"Astrónomo alemán que descubrió que las órbitas de los planetas son elipses","respuestas":"K1wGWWCWvMq4OA=="},
+          {"tipo":"empieza","pista":"Capital de Nepal","respuestas":"K1wGXWSXuNb+pu21ng=="},
+          {"tipo":"empieza","pista":"Filósofo alemán autor de «Crítica de la razón pura»","respuestas":"K1wGXX6O++U="}
+        ],
+        "L": [
+          {"tipo":"empieza","pista":"Químico francés considerado el padre de la química moderna","respuestas":"K1wBXWaVsMvzACW1ng=="},
+          {"tipo":"empieza","pista":"Batalla naval de 1571 en la que Cervantes perdió la movilidad de una mano","respuestas":"K1wBWWCbt8z1Rwo="},
+          {"tipo":"empieza","pista":"Monje alemán que inició la Reforma protestante","respuestas":"K1wBSWSfq9e4OA=="}
+        ],
+        "M": [
+          {"tipo":"empieza","pista":"Navegante portugués cuya expedición dio la primera vuelta al mundo","respuestas":"K1wAXXebtdT7CzLk4b0="},
+          {"tipo":"empieza","pista":"Monje que descubrió las leyes de la herencia cruzando guisantes","respuestas":"K1wAWX6evNS4OA=="},
+          {"tipo":"empieza","pista":"Orgánulo que produce la energía de la célula","respuestas":"K1wgVWSVutf0ASX+osKG"}
+        ],
+        "N": [
+          {"tipo":"empieza","pista":"Reina egipcia famosa por su busto de piedra pintada","respuestas":"K1wDWXafq8zzET61ng=="},
+          {"tipo":"empieza","pista":"Gas más abundante del aire","respuestas":"K1wjVWSIGgv9ADn44b0="},
+          {"tipo":"empieza","pista":"Inventor sueco de la dinamita que creó unos famosos premios","respuestas":"K1wDU3KftZrH"}
+        ],
+        "O": [
+          {"tipo":"empieza","pista":"Capital de Canadá","respuestas":"K1wCSGSbrtm4OA=="},
+          {"tipo":"empieza","pista":"Santuario griego donde se celebraban los primeros Juegos Olímpicos","respuestas":"K1wCUHmXqdH7Rwo="},
+          {"tipo":"empieza","pista":"Escritor británico autor de «1984» y «Rebelión en la granja»","respuestas":"K1wCTmeftdS4OA=="}
+        ],
+        "P": [
+          {"tipo":"empieza","pista":"Científico francés que creó la vacuna contra la rabia","respuestas":"K1wdXWOOvM3oRwo="},
+          {"tipo":"empieza","pista":"Gobernante de Atenas en su siglo de oro","respuestas":"K1wdWWKTutT/FnXK"},
+          {"tipo":"empieza","pista":"Ciudad excavada en la roca rosada, en Jordania","respuestas":"K1wdWWSIuJrH"}
+        ],
+        "Q": [
+          {"tipo":"empieza","pista":"Núcleo de galaxia lejano y extremadamente luminoso","respuestas":"K1w8SdNbqtnoR3u1spW6zLwQZWI="},
+          {"tipo":"empieza","pista":"Escritor del Siglo de Oro, gran rival de Góngora","respuestas":"K1wcSXWMvNz1Rwo="},
+          {"tipo":"empieza","pista":"Unidad que mide la pureza del oro","respuestas":"K1w8SXmWuMz/Rwo="}
+        ],
+        "R": [
+          {"tipo":"empieza","pista":"Líder jacobino de la época del Terror en la Revolución francesa","respuestas":"K1wfU3KfqsjzACXlpsKG"},
+          {"tipo":"empieza","pista":"Nombre de varios faraones; el segundo mandó construir Abu Simbel","respuestas":"K1wfXX2JGhHpRwo="},
+          {"tipo":"empieza","pista":"Capital de Letonia","respuestas":"K1wfVXeb++U="}
+        ],
+        "S": [
+          {"tipo":"empieza","pista":"Sultán que reconquistó Jerusalén en 1187","respuestas":"K1weXXybvdH0CnXK"},
+          {"tipo":"empieza","pista":"Dramaturgo griego autor de «Edipo rey»","respuestas":"K1we/6Octtv2ACS1ng=="},
+          {"tipo":"empieza","pista":"Punto de unión por el que se comunican dos neuronas","respuestas":"K1w+VX6bqcvzFnXK"}
+        ],
+        "T": [
+          {"tipo":"empieza","pista":"Inventor serbio-estadounidense, pionero de la corriente alterna","respuestas":"K1wZWWOWuJrH"},
+          {"tipo":"empieza","pista":"Capital de Georgia","respuestas":"K1wZVXaWsMu4SXXDoYm31q4LZWI="},
+          {"tipo":"empieza","pista":"Desfiladero donde 300 espartanos frenaron al ejército persa","respuestas":"K1wZWWKXGgvqDDv2sMKG"}
+        ],
+        "U": [
+          {"tipo":"empieza","pista":"Capital de Mongolia","respuestas":"K1wYUNNbt5jYBCP4scKG"},
+          {"tipo":"empieza","pista":"Elemento radiactivo de símbolo U, combustible de las centrales nucleares","respuestas":"K1w4TnGUsNe4OA=="},
+          {"tipo":"empieza","pista":"Escritor de la Generación del 98 autor de «Niebla»","respuestas":"K1wYUnGXrNb1Rwo="}
+        ],
+        "V": [
+          {"tipo":"empieza","pista":"Compositor veneciano de «Las cuatro estaciones»","respuestas":"K1wbVWabtdzzRwo="},
+          {"tipo":"empieza","pista":"Volcán que sepultó Pompeya en el año 79","respuestas":"K1wbWWOPu9H1Rwo="},
+          {"tipo":"empieza","pista":"Capital de Lituania","respuestas":"K1wbVXyUuJq2RwH+r46yyq5AGg=="}
+        ],
+        "X": [
+          {"tipo":"empieza","pista":"Tejido de las plantas que lleva el agua desde la raíz","respuestas":"K1w1VXyftNm4OA=="},
+          {"tipo":"contiene","pista":"Sistema de miles de millones de estrellas, como la Vía Láctea","respuestas":"K1wqXXybodH7Rwo="},
+          {"tipo":"contiene","pista":"Arte de disecar animales para conservarlos","respuestas":"K1w5XWiTvd3oCD724b0="}
+        ],
+        "Y": [
+          {"tipo":"empieza","pista":"Río más largo de Asia","respuestas":"K1wUXX6drctZzHW74bm60boWNFovpA=="},
+          {"tipo":"empieza","pista":"Nombre de pila de Gagarin, el primer ser humano en viajar al espacio","respuestas":"K1wUSWKT++U="},
+          {"tipo":"empieza","pista":"Capital de Camerún","respuestas":"K1wUXWWUvXszRwo="}
+        ],
+        "Z": [
+          {"tipo":"empieza","pista":"Profeta persa, fundador de una antigua religión","respuestas":"K1wXXWKbrc3pESX24cz55bIQKF5+jajHuTs="},
+          {"tipo":"empieza","pista":"Pintor extremeño del Siglo de Oro, famoso por sus monjes","respuestas":"K1wXSWKYuMpZxDm1ng=="},
+          {"tipo":"empieza","pista":"Templo escalonado de Mesopotamia","respuestas":"K1w3VXePq9nuRwo="}
+        ]
+      }
+    }
+  }
+}

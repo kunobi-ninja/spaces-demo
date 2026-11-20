@@ -37,6 +37,10 @@ import runbookCover from './assets/covers/runbook.jpg'
 import handoverCover from './assets/covers/on-call-handover.jpg'
 import jamCover from './assets/covers/music-jam.jpg'
 import flatCover from './assets/covers/flat-tour.jpg'
+import castillosCover from './assets/covers/castillos.jpg'
+import kunobitosCover from './assets/covers/kunobitos.jpg'
+import ocaCover from './assets/covers/juego-de-la-oca.jpg'
+import pasalacabraCover from './assets/covers/pasalacabra.jpg'
 
 {/* The words on this page, in English; their translations are in locales/<lang>.json. The page follows Kunobi's language and falls back to English. A tag not listed in `tags` shows as written in EXAMPLES. */}
 
@@ -53,11 +57,13 @@ export const WORDS = {
   tags: {
     '2 formats': '2 formats',
     '2 looks': '2 looks',
+    '28 levels': '28 levels',
     '3 formats': '3 formats',
     '3D': '3D',
     '3D scan': '3D scan',
     'Acks': 'Acks',
     'Board': 'Board',
+    'Board game': 'Board game',
     'Budget': 'Budget',
     'Calendar': 'Calendar',
     'Charts': 'Charts',
@@ -82,6 +88,7 @@ export const WORDS = {
     'Orbit': 'Orbit',
     'Pins': 'Pins',
     'Pipeline': 'Pipeline',
+    'Pixel art': 'Pixel art',
     'Postmortem': 'Postmortem',
     'RSVP': 'RSVP',
     'Read-only': 'Read-only',
@@ -100,7 +107,10 @@ export const WORDS = {
     'Timeline': 'Timeline',
     'Touch': 'Touch',
     'Two people': 'Two people',
+    'Two players': 'Two players',
+    'vs AI': 'vs AI',
     'Wiki': 'Wiki',
+    'Word game': 'Word game',
     'Zoom': 'Zoom',
   },
   items: {
@@ -129,6 +139,10 @@ export const WORDS = {
     'on-call-handover': ['On-call handover', 'The last 12 hours for the next person, who acks each open item.'],
     'music-jam': ['Music Jam', 'Each friend owns a track, and every screen plays the same groove.'],
     'flat-tour': ['Flat tour', 'Flatmates pin issues, questions and ideas on a 3D model of their flat.'],
+    'castillos': ['Castillos', 'Build a kingdom tile by tile, against the AI or with friends.'],
+    'kunobitos': ['Kunobitos', 'Little ninjas walk without looking. You decide how they reach the Dojo.'],
+    'juego-de-la-oca': ['Game of the Goose', 'The classic: roll the die, hop from goose to goose and reach square 63 first.'],
+    'pasalacabra': ['Pasalacabra', 'Two letter wheels, two clocks and a goat. Who knows more words?'],
   },
 }
 
@@ -160,6 +174,10 @@ export const EXAMPLES = [
   { id: 'scan-viewer', href: 'scan-viewer/', cover: splatCover, kind: 'study', size: 'half', tags: ['3D scan', 'Orbit', 'Zoom'] },
   { id: 'birthday-film', href: 'birthday-film.mdx/', cover: birthdayCover, kind: 'film', size: 'half', tags: ['Music', '3 formats'] },
   { id: 'cat-chase', href: 'cat-chase/', cover: catCover, kind: 'play', size: 'half', tags: ['3D', 'Multiplayer', 'Sound'] },
+  { id: 'castillos', href: 'castillos/', cover: castillosCover, kind: 'play', size: 'half', tags: ['Board game', 'vs AI', 'Multiplayer'] },
+  { id: 'kunobitos', href: 'kunobitos/', cover: kunobitosCover, kind: 'play', size: 'half', tags: ['Pixel art', '28 levels', 'Sound'] },
+  { id: 'juego-de-la-oca', href: 'juego-de-la-oca/', cover: ocaCover, kind: 'play', size: 'half', tags: ['3D', 'vs AI', 'Multiplayer'] },
+  { id: 'pasalacabra', href: 'pasalacabra/', cover: pasalacabraCover, kind: 'play', size: 'half', tags: ['Word game', 'Two players', 'Multiplayer'] },
   { id: 'spectral-core', href: 'spectral-core.mdx/', cover: glassCover, kind: 'study', size: 'base', status: 'preview', needs: 'experiment', tags: ['GLSL', '3 formats'] },
   { id: 'paper-explainer', href: 'paper-explainer.mdx/', cover: paperCover, kind: 'study', size: 'base', status: 'preview', needs: 'experiment', tags: ['Motion', '3 formats'] },
 ]

@@ -197,7 +197,8 @@ async function fontCss(repo, specifier) {
     throw new Error(`${specifier} is not installed: add @fontsource/${family} to package.json`)
   })
   const weight = file.replace(/\.css$/, '')
-  const marker = `/* ${family}-latin-${weight}-normal */`
+  // Fontsource names its faces `<family>-latin-500-normal` and, for `500-italic.css`, `<family>-latin-500-italic`.
+  const marker = weight.endsWith('-italic') ? `/* ${family}-latin-${weight} */` : `/* ${family}-latin-${weight}-normal */`
   const start = css.indexOf(marker)
   if (start < 0) throw new Error(`${specifier} has no Latin face`)
   const block = css.slice(start + marker.length, css.indexOf('}', start) + 1)

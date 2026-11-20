@@ -1,0 +1,14 @@
+{
+  "estandartesPorJugador": 7,
+  "castilloCerrado": {
+    "loseta": 2,
+    "escudo": 2
+  },
+  "castilloAbierto": {
+    "loseta": 1,
+    "escudo": 1
+  },
+  "camino": 1,
+  "ermitaCerrada": 9,
+  "campoPorCastilloCerrado": 3
+}
