@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import { centroCasilla, pintarMadera, pintarTablero, TAMANO_CASILLA, type Celda } from './arte'
-import { rollDie } from './dado.mjs'
+import { rollDie } from './dado.js'
 
 /*
  * El tablero en 3D: una mesa de madera bajo una luz cálida, el tablero pintado, las fichas
