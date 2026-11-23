@@ -1,0 +1,546 @@
+{
+  "nombre": "English",
+  "letras": "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+  "niveles": {
+    "facil": {
+      "nombre": "Easy",
+      "preguntas": {
+        "A": [
+          {"tipo":"empieza","pista":"Red or green fruit that, according to the saying, keeps the doctor away.","respuestas":"K1wsTGCWvJrH"},
+          {"tipo":"empieza","pista":"Small insect that lives in colonies and can carry many times its own weight.","respuestas":"K1wsUmTYhA=="},
+          {"tipo":"empieza","pista":"Country that is also a continent, home to Sydney and Melbourne.","respuestas":"K1wMSWOOq9n2DDa1ng=="}
+        ],
+        "B": [
+          {"tipo":"empieza","pista":"Long yellow fruit with a curved shape that you peel with your hands.","respuestas":"K1wvXX6bt9m4OA=="},
+          {"tipo":"empieza","pista":"Striped insect that makes honey.","respuestas":"K1wvWXXY9Zr4EDr1r4W52rhAGg=="},
+          {"tipo":"empieza","pista":"Vehicle with two wheels that moves when you push the pedals.","respuestas":"K1wvVXODutT/R3u1oYmw2v8/"}
+        ],
+        "C": [
+          {"tipo":"empieza","pista":"Pet that purrs and says “meow”.","respuestas":"K1wuXWTYhA=="},
+          {"tipo":"empieza","pista":"Sweet treat made from cocoa, often sold in bars.","respuestas":"K1wuVH+ZttT7ETK1ng=="},
+          {"tipo":"empieza","pista":"White or grey mass floating in the sky that can bring rain.","respuestas":"K1wuUH+PvZrH"}
+        ],
+        "D": [
+          {"tipo":"empieza","pista":"Pet that barks and wags its tail.","respuestas":"K1wpU3fYhA=="},
+          {"tipo":"empieza","pista":"Clever sea mammal famous for jumping out of the water.","respuestas":"K1wpU3yKsdH0Rwo="},
+          {"tipo":"empieza","pista":"Small cube with one to six dots on its faces, used in board games.","respuestas":"K1wpVXOf+5S4AT7y4b0="}
+        ],
+        "E": [
+          {"tipo":"empieza","pista":"Largest land animal, with a trunk and tusks.","respuestas":"K1woUHWKsdn0EXXK"},
+          {"tipo":"empieza","pista":"Oval thing laid by a hen, often eaten for breakfast.","respuestas":"K1woW3fYhA=="},
+          {"tipo":"empieza","pista":"The planet we live on.","respuestas":"K1wIXWKOsZrH"}
+        ],
+        "F": [
+          {"tipo":"empieza","pista":"Animal that lives in water and breathes through gills.","respuestas":"K1wrVWOS++U="},
+          {"tipo":"empieza","pista":"Hot, bright flames that appear when something burns.","respuestas":"K1wrVWKf++U="},
+          {"tipo":"empieza","pista":"Eating tool with prongs, used to pick up food.","respuestas":"K1wrU2KR++U="}
+        ],
+        "G": [
+          {"tipo":"empieza","pista":"Animal with horns and a beard: the star of this game.","respuestas":"K1wqU3GO++U="},
+          {"tipo":"empieza","pista":"Small round fruit that grows in bunches and is used to make wine.","respuestas":"K1wqTnGKvJq2RzDlopC+zP8/"},
+          {"tipo":"empieza","pista":"Green plant that covers lawns and football pitches.","respuestas":"K1wqTnGJqprH"}
+        ],
+        "H": [
+          {"tipo":"empieza","pista":"Building where a family lives.","respuestas":"K1wlU2WJvJq2Rz/4roX54g=="},
+          {"tipo":"empieza","pista":"Part of the body at the end of your arm, used to wave and to write.","respuestas":"K1wlXX6e++U="},
+          {"tipo":"empieza","pista":"Organ that pumps blood; its shape is a symbol of love.","respuestas":"K1wlWXGIrZrH"}
+        ],
+        "I": [
+          {"tipo":"empieza","pista":"Frozen water, often put in cubes in drinks.","respuestas":"K1wkX3XYhA=="},
+          {"tipo":"empieza","pista":"Piece of land surrounded by water on all sides.","respuestas":"K1wkT3ybt9y4OA=="},
+          {"tipo":"empieza","pista":"Country shaped like a boot, with Rome as its capital.","respuestas":"K1wESHGWoJrH"}
+        ],
+        "J": [
+          {"tipo":"empieza","pista":"Sweet spread made from fruit and sugar, put on toast.","respuestas":"K1wnXX3Y9ZrwADv7usKG"},
+          {"tipo":"empieza","pista":"Short coat worn over your other clothes.","respuestas":"K1wnXXORvMy4OA=="},
+          {"tipo":"empieza","pista":"Puzzle made of many pieces that fit together to make a picture.","respuestas":"K1wnVXeJuM+4SXX9qoeo3qpCN0p3g7bNuTs="}
+        ],
+        "K": [
+          {"tipo":"empieza","pista":"Tool with a sharp blade for cutting food.","respuestas":"K1wmUnmcvJrH"},
+          {"tipo":"empieza","pista":"Toy that flies in the wind at the end of a long string.","respuestas":"K1wmVWSf++U="},
+          {"tipo":"empieza","pista":"Australian animal that hops and carries its baby in a pouch.","respuestas":"K1wmXX6duMr1CnXK"}
+        ],
+        "L": [
+          {"tipo":"empieza","pista":"Yellow citrus fruit with a sour taste.","respuestas":"K1whWX2Vt5rH"},
+          {"tipo":"empieza","pista":"Big cat with a mane, known as the king of the jungle.","respuestas":"K1whVX+U++U="},
+          {"tipo":"empieza","pista":"Flat green part of a plant that often turns brown and falls in autumn.","respuestas":"K1whWXGc++U="}
+        ],
+        "M": [
+          {"tipo":"empieza","pista":"It shines in the night sky and goes round our planet once a month.","respuestas":"K1wgU3+U++U="},
+          {"tipo":"empieza","pista":"White drink that comes from cows.","respuestas":"K1wgVXyR++U="},
+          {"tipo":"empieza","pista":"Small rodent with a long tail that cats like to chase.","respuestas":"K1wgU2WJvJrH"}
+        ],
+        "N": [
+          {"tipo":"empieza","pista":"Part of the face you smell with.","respuestas":"K1wjU2Of++U="},
+          {"tipo":"empieza","pista":"The dark part of each day, when most people sleep.","respuestas":"K1wjVXeSrZq2Rzn+pIivy7QPIh0h27TB/A4+CXOLrdajYA=="},
+          {"tipo":"empieza","pista":"Home built by a bird from twigs, where it lays its eggs.","respuestas":"K1wjWWOO++U="}
+        ],
+        "O": [
+          {"tipo":"empieza","pista":"Round citrus fruit whose name is also a colour.","respuestas":"K1wiTnGUvt24OA=="},
+          {"tipo":"empieza","pista":"Huge body of salt water, such as the Atlantic or the Pacific.","respuestas":"K1wiX3Wbt5rH"},
+          {"tipo":"empieza","pista":"Bird that hunts at night and hoots.","respuestas":"K1wiS3zYhA=="}
+        ],
+        "P": [
+          {"tipo":"empieza","pista":"Italian dish: a round, flat base baked with tomato and cheese on top.","respuestas":"K1w9VWqAuJrH"},
+          {"tipo":"empieza","pista":"Black-and-white bird that cannot fly and lives in Antarctica.","respuestas":"K1w9WX6drNH0Rwo="},
+          {"tipo":"empieza","pista":"Writing tool with graphite inside that you sharpen.","respuestas":"K1w9WX6ZsNS4OA=="}
+        ],
+        "Q": [
+          {"tipo":"empieza","pista":"Woman who rules a country, or the wife of a king.","respuestas":"K1w8SXWft5rH"},
+          {"tipo":"empieza","pista":"Warm bed cover made of padded layers stitched together.","respuestas":"K1w8SXmWrZrH"},
+          {"tipo":"empieza","pista":"Game or test with short questions, often played just for fun.","respuestas":"K1w8SXmA++U="}
+        ],
+        "R": [
+          {"tipo":"empieza","pista":"Arc of colours that can appear in the sky when the sun shines after a shower.","respuestas":"K1w/XXmUu9ftRwo="},
+          {"tipo":"empieza","pista":"Flower with thorns on its stem, often red, given on Valentine’s Day.","respuestas":"K1w/U2Of++U="},
+          {"tipo":"empieza","pista":"Long-eared animal that hops and loves carrots.","respuestas":"K1w/XXKYsMy4OA=="}
+        ],
+        "S": [
+          {"tipo":"empieza","pista":"The star that gives us light and heat during the day.","respuestas":"K1w+SX7YhA=="},
+          {"tipo":"empieza","pista":"Cold white flakes that fall from the sky in very cold weather.","respuestas":"K1w+Un+N++U="},
+          {"tipo":"empieza","pista":"Long reptile with no legs that slithers and may hiss.","respuestas":"K1w+UnGRvJrH"}
+        ],
+        "T": [
+          {"tipo":"empieza","pista":"Red fruit used to make ketchup.","respuestas":"K1w5U32brde4OA=="},
+          {"tipo":"empieza","pista":"Tall plant with a trunk, branches and leaves.","respuestas":"K1w5TnWf++U="},
+          {"tipo":"empieza","pista":"Vehicle that runs on rails and pulls carriages.","respuestas":"K1w5TnGTt5rH"}
+        ],
+        "U": [
+          {"tipo":"empieza","pista":"You open it over your head to stay dry when it rains.","respuestas":"K1w4UXKIvNT2BHXK"},
+          {"tipo":"empieza","pista":"Magical horse with a single horn on its forehead.","respuestas":"K1w4UnmZtsr0Rwo="},
+          {"tipo":"empieza","pista":"Country made up of England, Scotland, Wales and Northern Ireland.","respuestas":"K1wYUnmOvNy6Lj75pIS00v9OZWpG24c="}
+        ],
+        "V": [
+          {"tipo":"empieza","pista":"String instrument held under the chin and played with a bow.","respuestas":"K1w7VX+WsNa4OA=="},
+          {"tipo":"empieza","pista":"Mountain that can erupt and throw out lava.","respuestas":"K1w7U3yZuNb1Rwo="},
+          {"tipo":"empieza","pista":"Plant eaten as food, such as a carrot, a pea or a cabbage.","respuestas":"K1w7WXefrdn4CTK178Kt2roHM15vlb/buUpoUmKF4p+jS8wpUnzS9uw="}
+        ],
+        "W": [
+          {"tipo":"empieza","pista":"Season after autumn, the coldest of the year.","respuestas":"K1w6VX6OvMq4OA=="},
+          {"tipo":"empieza","pista":"Clear liquid that we drink and that falls as rain.","respuestas":"K1w6XWSfq5rH"},
+          {"tipo":"empieza","pista":"Wild animal like a big dog that howls and lives in packs.","respuestas":"K1w6U3yc++U="}
+        ],
+        "X": [
+          {"tipo":"contiene","pista":"Wild animal with reddish fur and a bushy tail, known for being sly.","respuestas":"K1wrU2jYhA=="},
+          {"tipo":"contiene","pista":"Cardboard container used to pack or post things.","respuestas":"K1wvU2jYhA=="},
+          {"tipo":"contiene","pista":"The number that comes after five.","respuestas":"K1w+VWjYhA=="}
+        ],
+        "Y": [
+          {"tipo":"empieza","pista":"Colour of bananas and lemons.","respuestas":"K1w0WXyWts+4OA=="},
+          {"tipo":"empieza","pista":"Creamy food made from milk with bacteria, often eaten with fruit.","respuestas":"K1w0U3eSrMruR3u1uo+8yq8WZRMvgLXP8wk/VnPAnQ=="},
+          {"tipo":"empieza","pista":"Toy on a string that goes up and down when you move your hand.","respuestas":"K1w0Uz2Dtpq2Ry74uo/54g=="}
+        ],
+        "Z": [
+          {"tipo":"empieza","pista":"African animal like a horse, with black and white stripes.","respuestas":"K1w3WXKIuJrH"},
+          {"tipo":"empieza","pista":"The number that comes before one.","respuestas":"K1w3WWKV++U="},
+          {"tipo":"empieza","pista":"Place where wild animals are kept for people to visit.","respuestas":"K1w3U3/YhA=="}
+        ]
+      }
+    },
+    "medio": {
+      "nombre": "Medium",
+      "preguntas": {
+        "A": [
+          {"tipo":"empieza","pista":"Person trained to travel into space in a rocket.","respuestas":"K1wsT2SIttb7ECO1ng=="},
+          {"tipo":"empieza","pista":"Heavy metal object dropped from a ship to keep it from drifting.","respuestas":"K1wsUnOStsq4OA=="},
+          {"tipo":"empieza","pista":"Huge South American river that flows through the world’s largest rainforest.","respuestas":"K1wMUXGAtta4SXXWroGh0LNCFVZ7nKiKxg=="}
+        ],
+        "B": [
+          {"tipo":"empieza","pista":"Insect with colourful wings that starts life as a caterpillar.","respuestas":"K1wvSWSOvMr8CS61ng=="},
+          {"tipo":"empieza","pista":"Largest country in South America, where Rio de Janeiro holds a famous carnival.","respuestas":"K1wPTnGAsNS4OA=="},
+          {"tipo":"empieza","pista":"Structure built so that people or cars can cross over a river or road.","respuestas":"K1wvTnmevt24OA=="}
+        ],
+        "C": [
+          {"tipo":"empieza","pista":"Desert animal with one or two humps on its back.","respuestas":"K1wuXX2ftZrH"},
+          {"tipo":"empieza","pista":"Long orange vegetable that rabbits are said to love.","respuestas":"K1wuXWKItsy4OA=="},
+          {"tipo":"empieza","pista":"Large stone building with towers and walls where kings and knights once lived.","respuestas":"K1wuXWOOtd24OA=="}
+        ],
+        "D": [
+          {"tipo":"empieza","pista":"Very dry place where it hardly ever rains, often covered in sand.","respuestas":"K1wpWWOfq8y4OA=="},
+          {"tipo":"empieza","pista":"Hardest natural stone, a sparkling gem often set in rings.","respuestas":"K1wpVXGXttb+Rwo="},
+          {"tipo":"empieza","pista":"Person you visit when you feel ill.","respuestas":"K1wpU3OOtsq4OA=="}
+        ],
+        "E": [
+          {"tipo":"empieza","pista":"Large bird of prey with sharp eyesight, a symbol of the United States.","respuestas":"K1woXXeWvJrH"},
+          {"tipo":"empieza","pista":"Paper cover you put a letter in before posting it.","respuestas":"K1woUmaftdfqAHXK"},
+          {"tipo":"empieza","pista":"African country of the pyramids of Giza and the river Nile.","respuestas":"K1wIW2mKrZrH"}
+        ],
+        "F": [
+          {"tipo":"empieza","pista":"Light, soft thing that covers a bird’s body.","respuestas":"K1wrWXGOsd3oRwo="},
+          {"tipo":"empieza","pista":"Pink wading bird that often stands on one leg.","respuestas":"K1wrUHGXsNb9CnXK"},
+          {"tipo":"empieza","pista":"European country whose capital has the Eiffel Tower.","respuestas":"K1wLTnGUut24OA=="}
+        ],
+        "G": [
+          {"tipo":"empieza","pista":"Tallest animal in the world, with a very long neck.","respuestas":"K1wqVWKbv97/Rwo="},
+          {"tipo":"empieza","pista":"Musical instrument with six strings, played by strumming.","respuestas":"K1wqSXmOuMq4OA=="},
+          {"tipo":"empieza","pista":"Piece of clothing that keeps your hand warm, with a place for each finger.","respuestas":"K1wqUH+MvJq2RzD7rJa+zP8/"}
+        ],
+        "H": [
+          {"tipo":"empieza","pista":"Small animal covered in spines that rolls into a ball when scared.","respuestas":"K1wlWXSdvND1AnXK"},
+          {"tipo":"empieza","pista":"Aircraft with spinning blades on top that can hover in the air.","respuestas":"K1wlWXyTutfqETLl4b0="},
+          {"tipo":"empieza","pista":"Sweet, sticky golden food made by bees.","respuestas":"K1wlU36foJrH"}
+        ],
+        "I": [
+          {"tipo":"empieza","pista":"Dome-shaped house built from blocks of snow.","respuestas":"K1wkW3yVtprH"},
+          {"tipo":"empieza","pista":"Small creature with six legs, such as a beetle or a fly.","respuestas":"K1wkUmOfusy4OA=="},
+          {"tipo":"empieza","pista":"Asian country of the Taj Mahal, with more than a billion people.","respuestas":"K1wEUnSTuJrH"}
+        ],
+        "J": [
+          {"tipo":"empieza","pista":"Island country in Asia whose capital is Tokyo.","respuestas":"K1wHXWCbt5rH"},
+          {"tipo":"empieza","pista":"See-through sea creature with stinging tentacles.","respuestas":"K1wnWXyWoN7zFj+1ng=="},
+          {"tipo":"empieza","pista":"Thick tropical forest full of trees, vines and wild animals.","respuestas":"K1wnSX6dtd24OA=="}
+        ],
+        "K": [
+          {"tipo":"empieza","pista":"Kitchen appliance used to boil water for tea.","respuestas":"K1wmWWSOtd24OA=="},
+          {"tipo":"empieza","pista":"Australian animal that sleeps most of the day and eats eucalyptus leaves.","respuestas":"K1wmU3GWuJrH"},
+          {"tipo":"empieza","pista":"Set of keys you type on to write on a computer.","respuestas":"K1wmWWmYttnoAXXK"}
+        ],
+        "L": [
+          {"tipo":"empieza","pista":"Tall tower by the sea with a bright light that warns ships.","respuestas":"K1whVXeSrdD1ECTy4b0="},
+          {"tipo":"empieza","pista":"Place where you can borrow books.","respuestas":"K1whVXKIuMrjRwo="},
+          {"tipo":"empieza","pista":"Set of steps you lean against a wall to climb up.","respuestas":"K1whXXSevMq4OA=="}
+        ],
+        "M": [
+          {"tipo":"empieza","pista":"Glass that shows your reflection.","respuestas":"K1wgVWKItsq4OA=="},
+          {"tipo":"empieza","pista":"Fungus with a cap and a stem that grows in damp woods.","respuestas":"K1wgSWOSq9f1CHXK"},
+          {"tipo":"empieza","pista":"Country south of the United States, famous for tacos and mariachi music.","respuestas":"K1wAWWiTute4OA=="}
+        ],
+        "N": [
+          {"tipo":"empieza","pista":"Thin, sharp tool with a hole for thread, used for sewing.","respuestas":"K1wjWXWetd24OA=="},
+          {"tipo":"empieza","pista":"Scandinavian country of fjords, with Oslo as its capital.","respuestas":"K1wDU2KNuMG4OA=="},
+          {"tipo":"empieza","pista":"Printed pages of the day’s news, sold every morning.","respuestas":"K1wjWWeJqdnqACW1ng=="}
+        ],
+        "O": [
+          {"tipo":"empieza","pista":"Sea animal with eight arms covered in suckers.","respuestas":"K1wiX2SVqc3pRwo="},
+          {"tipo":"empieza","pista":"Vegetable with layers that can make you cry when you cut it.","respuestas":"K1wiUnmVt5rH"},
+          {"tipo":"empieza","pista":"Gas in the air that we need to breathe.","respuestas":"K1wiRGmdvNa4OA=="}
+        ],
+        "P": [
+          {"tipo":"empieza","pista":"Huge stone monument with a square base and triangular sides, built in ancient Egypt.","respuestas":"K1w9RWKbtNH+Rwo="},
+          {"tipo":"empieza","pista":"Musical instrument with black and white keys.","respuestas":"K1w9VXGUtprH"},
+          {"tipo":"empieza","pista":"Colourful tropical bird that can copy human words.","respuestas":"K1w9XWKItsy4OA=="}
+        ],
+        "Q": [
+          {"tipo":"empieza","pista":"Line of people waiting their turn.","respuestas":"K1w8SXWPvJrH"},
+          {"tipo":"empieza","pista":"One of four equal parts of something; fifteen minutes is one of an hour.","respuestas":"K1w8SXGIrd3oRwo="},
+          {"tipo":"empieza","pista":"Sound a duck makes.","respuestas":"K1w8SXGZsprH"}
+        ],
+        "R": [
+          {"tipo":"empieza","pista":"Vehicle that blasts off into space.","respuestas":"K1w/U3ORvMy4OA=="},
+          {"tipo":"empieza","pista":"Large stream of fresh water that flows into the sea.","respuestas":"K1w/VWafq5rH"},
+          {"tipo":"empieza","pista":"Machine that can do jobs on its own, sometimes built to look like a person.","respuestas":"K1w/U3KVrZrH"}
+        ],
+        "S": [
+          {"tipo":"empieza","pista":"Creature with eight legs that spins a web.","respuestas":"K1w+THmevMq4OA=="},
+          {"tipo":"empieza","pista":"European country of flamenco and paella, with Madrid as its capital.","respuestas":"K1weTHGTt5rH"},
+          {"tipo":"empieza","pista":"All the bones of the body together.","respuestas":"K1w+V3WWvMz1C3XK"}
+        ],
+        "T": [
+          {"tipo":"empieza","pista":"Big wild cat with orange fur and black stripes.","respuestas":"K1w5VXefq5rH"},
+          {"tipo":"empieza","pista":"Tube with lenses used to look at the stars.","respuestas":"K1w5WXyfqtv1FTK1ng=="},
+          {"tipo":"empieza","pista":"Slow land reptile that carries a heavy shell.","respuestas":"K1w5U2KOttHpAHXK"}
+        ],
+        "U": [
+          {"tipo":"empieza","pista":"Special set of clothes worn by everyone in a school, team or job.","respuestas":"K1w4Unmctsr3Rwo="},
+          {"tipo":"empieza","pista":"Everything that exists: all of space, the stars and the galaxies.","respuestas":"K1w4UnmMvMrpAHXK"},
+          {"tipo":"empieza","pista":"Small four-stringed guitar from Hawaii.","respuestas":"K1w4V2WWvNT/Rwo="}
+        ],
+        "V": [
+          {"tipo":"empieza","pista":"Creature of legend that sleeps in a coffin and drinks blood.","respuestas":"K1w7XX2KsMr/Rwo="},
+          {"tipo":"empieza","pista":"Container you put flowers in.","respuestas":"K1w7XWOf++U="},
+          {"tipo":"empieza","pista":"Italian city built on canals, where people travel by gondola.","respuestas":"K1wbWX6Tut24OA=="}
+        ],
+        "W": [
+          {"tipo":"empieza","pista":"Largest animal in the sea, which breathes through a blowhole.","respuestas":"K1w6VHGWvJrH"},
+          {"tipo":"empieza","pista":"Round part that turns so that a car or a cart can roll.","respuestas":"K1w6VHWftZrH"},
+          {"tipo":"empieza","pista":"Big green fruit, red and juicy inside, with black seeds.","respuestas":"K1w6XWSfq9X/CTj54b0="}
+        ],
+        "X": [
+          {"tipo":"contiene","pista":"Car with a driver that you pay to take you somewhere.","respuestas":"K1w5XWiT++U="},
+          {"tipo":"contiene","pista":"Tool with a heavy blade used to chop wood.","respuestas":"K1wsRHXY9Zr7HXXK"},
+          {"tipo":"contiene","pista":"Soft substance that candles are made of.","respuestas":"K1w6XWjYhA=="}
+        ],
+        "Y": [
+          {"tipo":"empieza","pista":"Expensive sailing or motor boat used for pleasure.","respuestas":"K1w0XXOSrZrH"},
+          {"tipo":"empieza","pista":"Shaggy, long-haired ox of the Himalayas.","respuestas":"K1w0XXvYhA=="},
+          {"tipo":"empieza","pista":"What you do with your mouth wide open when you are tired.","respuestas":"K1w0XWeU++U="}
+        ],
+        "Z": [
+          {"tipo":"empieza","pista":"Fastener with two rows of teeth that you pull up and down on a jacket.","respuestas":"K1w3VWDY9ZrgDCfnppL54g=="},
+          {"tipo":"empieza","pista":"Line that goes sharply left and right, like a lightning bolt.","respuestas":"K1w3VXeAuN+4SXXtqof2xbwFZWI="},
+          {"tipo":"empieza","pista":"King of the Greek gods, who threw thunderbolts from Mount Olympus.","respuestas":"K1wXWWWJ++U="}
+        ]
+      }
+    },
+    "dificil": {
+      "nombre": "Hard",
+      "preguntas": {
+        "A": [
+          {"tipo":"empieza","pista":"Mass of snow that suddenly slides down a mountainside.","respuestas":"K1wsSnGWuNb5DTK1ng=="},
+          {"tipo":"empieza","pista":"Group of many islands scattered across a stretch of sea.","respuestas":"K1wsTnOSsMj/CTbwrMKG"},
+          {"tipo":"empieza","pista":"Greek capital crowned by the Acropolis and the Parthenon.","respuestas":"K1wMSHift8u4OA=="}
+        ],
+        "B": [
+          {"tipo":"empieza","pista":"Curved throwing stick from Australia that can come back to you.","respuestas":"K1wvU3+XvMr7CzC1ng=="},
+          {"tipo":"empieza","pista":"German composer who kept writing music after going deaf; his Ninth Symphony ends with the “Ode to Joy”.","respuestas":"K1wPWXWOsdfsADm1ng=="},
+          {"tipo":"empieza","pista":"Instrument that measures air pressure to help forecast the weather.","respuestas":"K1wvXWKVtN3uACW1ng=="}
+        ],
+        "C": [
+          {"tipo":"empieza","pista":"Lizard that can change colour and move its eyes separately.","respuestas":"K1wuVHGXvNT/Cjm1ng=="},
+          {"tipo":"empieza","pista":"Group of stars that forms a pattern in the sky, like Orion or the Great Bear.","respuestas":"K1wuU36Jrd32CTbjqo+1nYA="},
+          {"tipo":"empieza","pista":"Capital of Australia, chosen as a compromise between Sydney and Melbourne.","respuestas":"K1wOXX6YvMroBHXK"}
+        ],
+        "D": [
+          {"tipo":"empieza","pista":"European river that flows through Vienna, Budapest and Belgrade into the Black Sea.","respuestas":"K1wJXX6Pu924OA=="},
+          {"tipo":"empieza","pista":"System of government in which the people choose their leaders by voting; the word comes from Greek.","respuestas":"K1wpWX2Vusr7Bi61ng=="},
+          {"tipo":"empieza","pista":"English naturalist who sailed on HMS Beagle and wrote “On the Origin of Species”.","respuestas":"K1wJXWKNsNa4OA=="}
+        ],
+        "E": [
+          {"tipo":"empieza","pista":"When the Moon passes in front of the Sun and hides it.","respuestas":"K1woX3yTqcv/Rwo="},
+          {"tipo":"empieza","pista":"Imaginary line around the middle of the Earth, halfway between the poles.","respuestas":"K1woTWWbrdfoRwo="},
+          {"tipo":"empieza","pista":"Highest mountain in the world, on the border of Nepal and China.","respuestas":"K1wISnWIvMvuRwo="}
+        ],
+        "F": [
+          {"tipo":"empieza","pista":"Remains of an ancient plant or animal preserved in rock.","respuestas":"K1wrU2OJsNS4OA=="},
+          {"tipo":"empieza","pista":"Nordic country of a thousand lakes, with Helsinki as its capital.","respuestas":"K1wLVX6WuNb+Rwo="},
+          {"tipo":"empieza","pista":"Long, narrow sea inlet between steep cliffs, typical of the Norwegian coast.","respuestas":"K1wrVn+IvZq2RzH+rJK/nYA="}
+        ],
+        "G": [
+          {"tipo":"empieza","pista":"Slow-moving river of ice that carves valleys.","respuestas":"K1wqUHGZsN3oRwo="},
+          {"tipo":"empieza","pista":"Italian astronomer who discovered four large moons of the biggest planet with his telescope.","respuestas":"K1wKXXyTtd31R3u1hIG31rEHKB9KmLbB9wMjBlo="},
+          {"tipo":"empieza","pista":"Force that makes things fall to the ground, described by Isaac Newton.","respuestas":"K1wqTnGMsMzjRwo="}
+        ],
+        "H": [
+          {"tipo":"empieza","pista":"Huge tropical storm with very strong winds that forms over the Atlantic.","respuestas":"K1wlSWKIsNv7CzK1ng=="},
+          {"tipo":"empieza","pista":"Picture writing of the ancient Egyptians.","respuestas":"K1wlVXWItt/2HCf/sML3nbULIk1inrbR6w4jR3TA7JHpVMw8WnLbrcHtVRo="},
+          {"tipo":"empieza","pista":"Danish prince in a Shakespeare tragedy who wonders whether to be or not to be.","respuestas":"K1wFXX2WvMy4OA=="}
+        ],
+        "I": [
+          {"tipo":"empieza","pista":"Huge floating mass of frozen fresh water; one sank the Titanic in 1912.","respuestas":"K1wkX3WYvMr9Rwo="},
+          {"tipo":"empieza","pista":"Turkish city on two continents, formerly called Constantinople.","respuestas":"K1wET2Sbt9rvCXXK"},
+          {"tipo":"empieza","pista":"Nordic island country of volcanoes, geysers and glaciers.","respuestas":"K1wEX3WWuNb+Rwo="}
+        ],
+        "J": [
+          {"tipo":"empieza","pista":"Largest planet in the Solar System, with a Great Red Spot.","respuestas":"K1wHSWCTrd3oRwo="},
+          {"tipo":"empieza","pista":"Spotted big cat of the Americas, the largest in that part of the world.","respuestas":"K1wnXXePuMq4OA=="},
+          {"tipo":"empieza","pista":"Japanese martial art whose name means “the gentle way”, Olympic since 1964.","respuestas":"K1wnSXSV++U="}
+        ],
+        "K": [
+          {"tipo":"empieza","pista":"Narrow boat moved with a double-bladed paddle, first used by Arctic peoples.","respuestas":"K1wmXWmbsprH"},
+          {"tipo":"empieza","pista":"Fortress in the heart of Moscow, seat of the Russian government.","respuestas":"K1wGTnWXtdH0Rwo="},
+          {"tipo":"empieza","pista":"East African country famous for safaris and its long-distance runners.","respuestas":"K1wGWX6DuJrH"}
+        ],
+        "L": [
+          {"tipo":"empieza","pista":"Renaissance genius who painted the Mona Lisa and The Last Supper.","respuestas":"K1wBWX+UuMr+CnW74ay+0LMDNVti2b7JuzAjSmSL4u4="},
+          {"tipo":"empieza","pista":"Molten rock that flows out of a volcano.","respuestas":"K1whXWab++U="},
+          {"tipo":"empieza","pista":"Hilly Atlantic capital famous for its yellow trams and fado music.","respuestas":"K1wBVWOYtta4OA=="}
+        ],
+        "M": [
+          {"tipo":"empieza","pista":"Red planet, fourth from the Sun.","respuestas":"K1wAXWKJ++U="},
+          {"tipo":"empieza","pista":"Running race of about 42 kilometres, named after a Greek battle.","respuestas":"K1wgXWKbrdD1C3XK"},
+          {"tipo":"empieza","pista":"Austrian child prodigy who composed “The Magic Flute”.","respuestas":"K1wAU2qbq8y4OA=="}
+        ],
+        "N": [
+          {"tipo":"empieza","pista":"Very long African river that flows north into the Mediterranean.","respuestas":"K1wDVXyf++U="},
+          {"tipo":"empieza","pista":"Blue planet, the farthest from the Sun in our Solar System.","respuestas":"K1wDWWCOrNb/Rwo="},
+          {"tipo":"empieza","pista":"Swedish inventor of dynamite who left his fortune to fund famous prizes.","respuestas":"K1wDU3KftZrH"}
+        ],
+        "O": [
+          {"tipo":"empieza","pista":"International sports event held every four years, revived in modern form in 1896.","respuestas":"K1wCUGmXqdH5FnW74a+3xrASLlwtvrvF/hVoeQ=="},
+          {"tipo":"empieza","pista":"Large group of musicians playing together, led by a conductor.","respuestas":"K1wiTnOSvMvuFza1ng=="},
+          {"tipo":"empieza","pista":"Norwegian capital where the Peace Prize is awarded every December.","respuestas":"K1wCT3yV++U="}
+        ],
+        "P": [
+          {"tipo":"empieza","pista":"Spanish painter, a founder of Cubism, who painted “Guernica”.","respuestas":"K1wdVXObqsv1Rwo="},
+          {"tipo":"empieza","pista":"Country on the western edge of the Iberian Peninsula, famous for port wine.","respuestas":"K1wdU2KOrN/7CXXK"},
+          {"tipo":"empieza","pista":"Australian mammal with a duck-like bill that lays eggs.","respuestas":"K1w9UHGOoMjvFnXK"}
+        ],
+        "Q": [
+          {"tipo":"empieza","pista":"French-speaking province of Canada, whose largest city is Montreal.","respuestas":"K1wcSdNTu935Rwo="},
+          {"tipo":"empieza","pista":"Period of isolation to stop a disease from spreading.","respuestas":"K1w8SXGIuNbuDDny4b0="},
+          {"tipo":"empieza","pista":"Pen made from a bird’s feather, dipped in ink.","respuestas":"K1w8SXmWtZrH"}
+        ],
+        "R": [
+          {"tipo":"empieza","pista":"Period of rebirth in European art and learning that began in Italy in the 14th century.","respuestas":"K1wfWX6bsMvpBDn0psKG"},
+          {"tipo":"empieza","pista":"Heavy grey animal of Africa and Asia with one or two horns on its nose.","respuestas":"K1w/VHmUttv/Fzjk4cz5zbULKVAvpA=="},
+          {"tipo":"empieza","pista":"Largest country in the world by area, crossing eleven time zones.","respuestas":"K1wfSWOJsNm4OA=="}
+        ],
+        "S": [
+          {"tipo":"empieza","pista":"Planet famous for its bright rings.","respuestas":"K1weXWSPq9a4OA=="},
+          {"tipo":"empieza","pista":"English playwright of “Romeo and Juliet” and “Macbeth”.","respuestas":"K1weVHGRvMvqADblpsKG"},
+          {"tipo":"empieza","pista":"Ship that can travel underwater.","respuestas":"K1w+SXKXuMrzCzK1ng=="}
+        ],
+        "T": [
+          {"tipo":"empieza","pista":"Instrument for measuring temperature.","respuestas":"K1w5VHWItNf3ACPyscKG"},
+          {"tipo":"empieza","pista":"British liner said to be unsinkable that went down on its first voyage in 1912.","respuestas":"K1wZVWSbt9H5Rwo="},
+          {"tipo":"empieza","pista":"Japanese capital, one of the most populous cities on Earth.","respuestas":"K1wZU3uDtprH"}
+        ],
+        "U": [
+          {"tipo":"empieza","pista":"South American country that hosted and won the first football World Cup, in 1930.","respuestas":"K1wYTmWdrNnjRwo="},
+          {"tipo":"empieza","pista":"Ice giant planet that spins on its side, seventh from the Sun.","respuestas":"K1wYTnGUrMu4OA=="},
+          {"tipo":"empieza","pista":"Imaginary perfect society, named after a book by Thomas More.","respuestas":"K1w4SH+KsNm4OA=="}
+        ],
+        "V": [
+          {"tipo":"empieza","pista":"Hottest planet in the Solar System, second from the Sun.","respuestas":"K1wbWX6PqprH"},
+          {"tipo":"empieza","pista":"Medicine that trains the body to fight a disease before you catch it.","respuestas":"K1w7XXOZsNb/Rwo="},
+          {"tipo":"empieza","pista":"Smallest country in the world, home of the Pope, inside Rome.","respuestas":"K1wbXWSTutn0R3u1lYGv1r4DKR9OkK7RuTs="}
+        ],
+        "W": [
+          {"tipo":"empieza","pista":"Arctic sea mammal with long tusks and whiskers.","respuestas":"K1w6XXyIrMu4OA=="},
+          {"tipo":"empieza","pista":"First president of the United States; the capital city bears his name.","respuestas":"K1waXWOSsNb9ETj54b0="},
+          {"tipo":"empieza","pista":"Capital of New Zealand, on the southern tip of the North Island.","respuestas":"K1waWXyWsNb9ETj54b0="}
+        ],
+        "X": [
+          {"tipo":"contiene","pista":"Single-reed instrument made of brass, invented by Adolphe Sax and common in jazz.","respuestas":"K1w+XWiVqdD1CzK1ng=="},
+          {"tipo":"contiene","pista":"Mythical bird that is reborn from its own ashes.","respuestas":"K1w9VH+ft9HiRwo="},
+          {"tipo":"contiene","pista":"Second-largest US state, known as the Lone Star State, with Austin as its capital.","respuestas":"K1wZWWibqprH"}
+        ],
+        "Y": [
+          {"tipo":"empieza","pista":"Ape-like creature said to roam the Himalayas, also called the Abominable Snowman.","respuestas":"K1w0WWST++U="},
+          {"tipo":"empieza","pista":"Longest river in Asia, dammed by the Three Gorges Dam.","respuestas":"K1wUXX6drcL/R3u1moG12KkRIh1Q"},
+          {"tipo":"empieza","pista":"Tiny fungus that makes bread rise.","respuestas":"K1w0WXGJrZrH"}
+        ],
+        "Z": [
+          {"tipo":"empieza","pista":"Circle of twelve star signs, from Aries to Pisces.","respuestas":"K1w3U3STuNu4OA=="},
+          {"tipo":"empieza","pista":"African country once called Rhodesia, with Harare as its capital.","respuestas":"K1wXVX2YuNrtAHXK"},
+          {"tipo":"empieza","pista":"Giant rigid airship named after a German count.","respuestas":"K1w3WWCKvNTzC3XK"}
+        ]
+      }
+    },
+    "experto": {
+      "nombre": "Expert",
+      "preguntas": {
+        "A": [
+          {"tipo":"empieza","pista":"Greek philosopher, pupil of Plato and tutor of a young Macedonian conqueror.","respuestas":"K1wMTnmJrdfuCTK1ng=="},
+          {"tipo":"empieza","pista":"Coldest and windiest continent, where the lowest natural temperature on Earth was recorded.","respuestas":"K1wMUmSbq9vuDDT24b0="},
+          {"tipo":"empieza","pista":"Greek mathematician of Syracuse said to have shouted “Eureka!” in his bath.","respuestas":"K1wMTnOSsNX/ATLk4b0="}
+        ],
+        "B": [
+          {"tipo":"empieza","pista":"Ancient Greek city on the Bosporus, later renamed Constantinople.","respuestas":"K1wPRWqbt8zzEDq1ng=="},
+          {"tipo":"empieza","pista":"German Baroque composer of the Brandenburg Concertos and the Goldberg Variations.","respuestas":"K1wPXXOS++U="},
+          {"tipo":"empieza","pista":"Japanese art of growing miniature trees in pots.","respuestas":"K1wvU36JuNG4OA=="}
+        ],
+        "C": [
+          {"tipo":"empieza","pista":"Last active ruler of Ptolemaic Egypt, allied with Julius Caesar and Mark Antony.","respuestas":"K1wOUHWVqdnuFza1ng=="},
+          {"tipo":"empieza","pista":"Spanish author of the adventures of a knight from La Mancha and his squire Sancho Panza.","respuestas":"K1wOWWKMuNbuACS1ng=="},
+          {"tipo":"empieza","pista":"Chemical element with atomic number 6, found in diamonds and graphite.","respuestas":"K1wuXWKYtta4OA=="}
+        ],
+        "D": [
+          {"tipo":"empieza","pista":"Flightless bird of Mauritius, extinct by the late 17th century.","respuestas":"K1wpU3SV++U="},
+          {"tipo":"empieza","pista":"Florentine poet who journeys through Hell, Purgatory and Paradise in “The Divine Comedy”.","respuestas":"K1wJXX6OvJq2RxP2rZS+n5wOLlhlkL/a8kQX"},
+          {"tipo":"empieza","pista":"Athletics contest of ten events held over two days.","respuestas":"K1wpWXObrdD2Cjm1ng=="}
+        ],
+        "E": [
+          {"tipo":"empieza","pista":"Physicist of the theory of relativity and the equation E = mc².","respuestas":"K1wIVX6Jrd3zC3XK"},
+          {"tipo":"empieza","pista":"Greek mathematician of Alexandria whose “Elements” was the standard geometry book for two thousand years.","respuestas":"K1wISXOWsNy4OA=="},
+          {"tipo":"empieza","pista":"Scottish capital, whose castle stands on an extinct volcano.","respuestas":"K1wIWHmUu83oAj+1ng=="}
+        ],
+        "F": [
+          {"tipo":"empieza","pista":"Italian mathematician whose sequence begins 0, 1, 1, 2, 3, 5, 8, 13.","respuestas":"K1wLVXKVt9n5Bj61ng=="},
+          {"tipo":"empieza","pista":"Novel by Mary Shelley, published in 1818, about a scientist who builds a living creature.","respuestas":"K1wLTnGUst30FiPyqo754g=="},
+          {"tipo":"empieza","pista":"Pacific island nation of more than 300 islands, with Suva as its capital.","respuestas":"K1wLVXqT++U="}
+        ],
+        "G": [
+          {"tipo":"empieza","pista":"German goldsmith who introduced printing with movable metal type in Europe around 1450.","respuestas":"K1wKSWSft9r/FzC1ng=="},
+          {"tipo":"empieza","pista":"Catalan architect of the Sagrada Família in Barcelona.","respuestas":"K1wKXWWeGhW4OA=="},
+          {"tipo":"empieza","pista":"Sacred river of India that flows past Varanasi.","respuestas":"K1wKXX6dvMu4OA=="}
+        ],
+        "H": [
+          {"tipo":"empieza","pista":"Greek physician known as the father of medicine, who gave his name to a doctors’ oath.","respuestas":"K1wFVWCKttvoBCPysMKG"},
+          {"tipo":"empieza","pista":"Light gas that makes balloons float and voices squeaky; atomic number 2.","respuestas":"K1wlWXyTrNW4OA=="},
+          {"tipo":"empieza","pista":"Cuban capital, famous for its old American cars and its seafront Malecón.","respuestas":"K1wFXWabt9m4OA=="}
+        ],
+        "I": [
+          {"tipo":"empieza","pista":"In Greek myth, the son of Daedalus who flew too close to the Sun on wings of wax.","respuestas":"K1wEX3GIrMu4OA=="},
+          {"tipo":"empieza","pista":"Andean civilisation that built Machu Picchu.","respuestas":"K1wEUnObqpq2Rx75oIH5k/8rKVxs2Z/F6w84QSW/"},
+          {"tipo":"empieza","pista":"Greek island kingdom to which Odysseus spent ten years trying to return.","respuestas":"K1wESHibutm4OA=="}
+        ],
+        "J": [
+          {"tipo":"empieza","pista":"French peasant girl who led an army during the Hundred Years’ War and was burned at the stake in 1431.","respuestas":"K1wHU3GU+df8RRbloML3nZcHJlFjnPrMeebTZXWB4u4="},
+          {"tipo":"empieza","pista":"Capital of Indonesia, on the island of Java.","respuestas":"K1wHXXubq8z7Rwo="},
+          {"tipo":"empieza","pista":"Geological period between the Triassic and the Cretaceous, when dinosaurs ruled the Earth.","respuestas":"K1wHSWKbqsvzBnXK"}
+        ],
+        "K": [
+          {"tipo":"empieza","pista":"Prague-born writer of “The Metamorphosis”, in which a man wakes up as a giant insect.","respuestas":"K1wGXXaRuJrH"},
+          {"tipo":"empieza","pista":"Highest mountain in Africa, a dormant volcano in Tanzania.","respuestas":"K1wGVXyTtNn0DzblrMKG"},
+          {"tipo":"empieza","pista":"Imperial capital of Japan for over a thousand years, which gave its name to a 1997 climate agreement.","respuestas":"K1wGRX+OtprH"}
+        ],
+        "L": [
+          {"tipo":"empieza","pista":"US president who gave the Gettysburg Address and was assassinated in 1865.","respuestas":"K1wBVX6ZttT0Rwo="},
+          {"tipo":"empieza","pista":"Distance north or south of the equator, measured in degrees.","respuestas":"K1whXWSTrc3+AHXK"},
+          {"tipo":"empieza","pista":"Paris museum, once a royal palace, where the Mona Lisa hangs behind glass.","respuestas":"K1wBU2WMq924OA=="}
+        ],
+        "M": [
+          {"tipo":"empieza","pista":"South African leader who spent 27 years in prison and became president in 1994.","respuestas":"K1wAXX6evNT7Rwo="},
+          {"tipo":"empieza","pista":"Portuguese navigator who led the first expedition to sail round the world, though he died on the way.","respuestas":"K1wAXXeftdT7C3XK"},
+          {"tipo":"empieza","pista":"Renaissance artist who sculpted David and painted the ceiling of the Sistine Chapel.","respuestas":"K1wAVXOSvNT7CzDyr4/54g=="}
+        ],
+        "N": [
+          {"tipo":"empieza","pista":"French emperor crowned in 1804, later exiled to Elba and then to Saint Helena.","respuestas":"K1wDXWCVtXszCjm178KV3q0NK1pil/rq9AgrVGaQtNajYA=="},
+          {"tipo":"empieza","pista":"Capital of Kenya, with a national park on the edge of the city.","respuestas":"K1wDXXmIttrzRwo="},
+          {"tipo":"empieza","pista":"Gas that makes up about 78 per cent of the air.","respuestas":"K1wjVWSItt//C3XK"}
+        ],
+        "O": [
+          {"tipo":"empieza","pista":"Homer’s epic poem about a hero’s long voyage home after the Trojan War.","respuestas":"K1wCWGmJqt3jRwo="},
+          {"tipo":"empieza","pista":"Capital of Canada, on a river of the same name.","respuestas":"K1wCSGSbrtm4OA=="},
+          {"tipo":"empieza","pista":"Black volcanic glass once used to make blades and arrowheads.","respuestas":"K1wiXmOTvdH7C3XK"}
+        ],
+        "P": [
+          {"tipo":"empieza","pista":"Greek thinker whose theorem relates the three sides of a right-angled triangle.","respuestas":"K1wdRWSSuN/1Fzbk4b0="},
+          {"tipo":"empieza","pista":"Roman city near Naples buried in ash by a volcano in AD 79.","respuestas":"K1wdU32KvNHzRwo="},
+          {"tipo":"empieza","pista":"Ninth planet until 2006, when it was reclassified as a dwarf planet.","respuestas":"K1wdUGWOtprH"}
+        ],
+        "Q": [
+          {"tipo":"empieza","pista":"Extremely bright, distant object powered by a supermassive black hole.","respuestas":"K1w8SXGJuMq4OA=="},
+          {"tipo":"empieza","pista":"Gulf country on a peninsula that hosted the 2022 football World Cup.","respuestas":"K1wcXWSbq5rH"},
+          {"tipo":"empieza","pista":"Seed from the Andes, eaten like a grain, that the Incas called the mother of all grains.","respuestas":"K1w8SXmUttm4OA=="}
+        ],
+        "R": [
+          {"tipo":"empieza","pista":"Dutch Golden Age painter of “The Night Watch”.","respuestas":"K1wfWX2Yq9n0ASO1ng=="},
+          {"tipo":"empieza","pista":"Capital of Iceland, the northernmost capital of a sovereign state.","respuestas":"K1wfWWmRs9nspvr84b0="},
+          {"tipo":"empieza","pista":"Inscribed slab found in Egypt in 1799 that helped scholars decipher hieroglyphs.","respuestas":"K1wfU2Ofrcz7RQTjrI6+nfFAFVB+nK7c+kQX"}
+        ],
+        "S": [
+          {"tipo":"empieza","pista":"Athenian philosopher sentenced to death by drinking hemlock.","respuestas":"K1weU3OIuMz/FnXK"},
+          {"tipo":"empieza","pista":"Prehistoric ring of standing stones on Salisbury Plain, in England.","respuestas":"K1weSH+UvND/CzDy4b0="},
+          {"tipo":"empieza","pista":"Largest hot desert in the world, covering much of North Africa.","respuestas":"K1weXXibq9m4OA=="}
+        ],
+        "T": [
+          {"tipo":"empieza","pista":"Russian composer of “Swan Lake” and “The Nutcracker”.","respuestas":"K1wZX3ibsNP1EyT8usKG"},
+          {"tipo":"empieza","pista":"Boy pharaoh whose almost untouched tomb was found by Howard Carter in 1922.","respuestas":"K1wZSWSbt9PyBDrircL3nYkXM15jkrLJ9gMkBlo="},
+          {"tipo":"empieza","pista":"Cold, treeless plain of the Arctic with permanently frozen subsoil.","respuestas":"K1w5SX6eq9m4OA=="}
+        ],
+        "U": [
+          {"tipo":"empieza","pista":"Giant red sandstone rock in the heart of Australia, sacred to the Anangu people.","respuestas":"K1wYUGWIrJrH"},
+          {"tipo":"empieza","pista":"Invisible light just beyond violet in the spectrum, which causes sunburn.","respuestas":"K1w4UGSIuM7zCjvyt8KG"},
+          {"tipo":"empieza","pista":"Capital of Mongolia, the coldest national capital in the world.","respuestas":"K1wYUHGbt9r7BCP2scL3nYgOJlEtu7vc9BRoeQ=="}
+        ],
+        "V": [
+          {"tipo":"empieza","pista":"Venetian Baroque composer of “The Four Seasons”.","respuestas":"K1wbVWabtdzzRwo="},
+          {"tipo":"empieza","pista":"Volcano on the Bay of Naples, the only active one on mainland Europe.","respuestas":"K1wbWWOPr9HvFnXK"},
+          {"tipo":"empieza","pista":"Palace of Louis XIV near Paris, whose Hall of Mirrors saw a peace treaty signed in 1919.","respuestas":"K1wbWWKJuNH2CTLk4b0="}
+        ],
+        "W": [
+          {"tipo":"empieza","pista":"Belgian battle site where a French emperor was finally defeated in 1815.","respuestas":"K1waXWSfq9T1CnXK"},
+          {"tipo":"empieza","pista":"American brothers who made the first powered aeroplane flight in 1903.","respuestas":"K1waTnmdscy4SXXAsYm816lCJU1ijbLN6RVoeQ=="},
+          {"tipo":"empieza","pista":"Polish capital, rebuilt almost from scratch after the Second World War.","respuestas":"K1waXWKJuM+4OA=="}
+        ],
+        "X": [
+          {"tipo":"contiene","pista":"Macedonian king who conquered the Persian Empire and founded a famous city in Egypt named after himself.","respuestas":"K1wMUHWCuNb+ACW178Ka07gaJlFpnKiI7w4vBECQpdL1H/Q="},
+          {"tipo":"contiene","pista":"German thinker who wrote “Das Kapital” and co-wrote “The Communist Manifesto”.","respuestas":"K1wAXWKC+5S4Ljblr8CW3q8aZWI="},
+          {"tipo":"contiene","pista":"Shape with six sides, like each cell of a honeycomb.","respuestas":"K1wlWWibvtf0Rwo="}
+        ],
+        "Y": [
+          {"tipo":"empieza","pista":"World’s first national park, created in 1872, home of the geyser Old Faithful.","respuestas":"K1wUWXyWts/pETj5psKG"},
+          {"tipo":"empieza","pista":"Irish poet who won the Nobel Prize in Literature in 1923.","respuestas":"K1wUWXGOqprH"},
+          {"tipo":"empieza","pista":"Mexican peninsula of the Maya city Chichén Itzá, near the crater of the asteroid that ended the dinosaurs.","respuestas":"K1wUSXObrXs7C3XK"}
+        ],
+        "Z": [
+          {"tipo":"empieza","pista":"Spice island off Tanzania where Freddie Mercury was born.","respuestas":"K1wXXX6AsNr7F3XK"},
+          {"tipo":"empieza","pista":"Metal used to coat iron so that it does not rust; symbol Zn.","respuestas":"K1w3VX6Z++U="},
+          {"tipo":"empieza","pista":"French novelist who published the open letter “J’accuse…!” in 1898.","respuestas":"K1wXU3yb++U="}
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,281 @@
+---
+title: Castillos
+description: "Un juego de colocar losetas para 2 a 4 jugadores: construid juntos un reino con río, castillos, caminos y ermitas, en un dispositivo, contra la IA o en línea."
+prompts:
+  - "Añade una loseta nueva: un castillo con dos puertas y un camino que lo cruza, dos copias en el mazo."
+  - "Que las ermitas cerradas den 12 puntos y que cada jugador tenga 5 estandartes en vez de 7."
+lang: es
+i18n:
+  data:
+    losetas: ['tipos[*].nombre']
+    jugadores: ['colores[*].nombre']
+  docs: [reglas.md]
+kunobi:
+  page-layout: full
+  webEdits: write
+  rooms:
+    castillos-mesa2:
+      model: map
+      rules:
+        turns: { seats: 2, moves: [jugada] }
+        own: [jugador]
+        host: [mesa]
+    castillos-mesa3:
+      model: map
+      rules:
+        turns: { seats: 3, moves: [jugada] }
+        own: [jugador]
+        host: [mesa]
+    castillos-mesa4:
+      model: map
+      rules:
+        turns: { seats: 4, moves: [jugada] }
+        own: [jugador]
+        host: [mesa]
+---
+
+import * as React from 'react'
+import '@fontsource/fraunces/600.css'
+import '@fontsource/fraunces/800.css'
+import '@fontsource/fraunces/900.css'
+import '@fontsource/fraunces/500-italic.css'
+import '@fontsource/figtree/400.css'
+import '@fontsource/figtree/600.css'
+import '@fontsource/figtree/700.css'
+import losetas from './data/losetas.json'
+import jugadores from './data/jugadores.json'
+import { Castillos } from './src/Castillos'
+import { useI18n } from '../lib/i18n'
+import translations from './locales/index'
+
+{/*
+  Las losetas (lados, campos y cuántas hay de cada una) están en data/losetas.json, los puntos y
+  los estandartes por jugador en data/puntos.json y los colores de los jugadores en
+  data/jugadores.json. Las reglas completas están en reglas.md. Se juega en este dispositivo
+  (pasándolo de mano en mano o contra la IA) o en línea, en las salas castillos-mesa2, -mesa3 y
+  -mesa4: cada participante escribe solo su nombre y color (jugador), el anfitrión empieza la
+  partida (mesa) y solo el asiento al que le toca envía su jugada. Estas son las palabras de la
+  página; sus traducciones están en locales/<lang>.json.
+*/}
+
+export const WORDS = {
+  y: 'y',
+  portada: {
+    titulo: 'Castillos',
+    cinta: 'De 2 a 4 jugadores',
+    lema: 'Levanta un reino loseta a loseta.',
+    jugar: 'Jugar',
+    amigo: 'Jugar con un amigo',
+    como: '¿Cómo se juega?',
+  },
+  amigo: {
+    titulo: 'Jugad juntos',
+    texto: 'Para jugar con amigos, primero haz tuyo este juego: toca **✨ Hacerlo mío** arriba. En tu copia, toca **Compartir** e invítales.',
+    jugarAqui: 'Jugar aquí',
+    cerrar: 'Cerrar',
+  },
+  zonas: { castillo: 'Castillos', camino: 'Caminos', ermita: 'Ermitas', campo: 'Campos' },
+  zona: { castillo: 'Castillo', camino: 'Camino', ermita: 'Ermita', campo: 'Campo' },
+  estandarteEn: {
+    castillo: 'caballero en el castillo',
+    camino: 'viajero en el camino',
+    ermita: 'ermitaño en la ermita',
+    campo: 'labriego en el campo',
+  },
+  sitio: {
+    castillo: 'Caballero (castillo)',
+    camino: 'Viajero (camino)',
+    ermita: 'Ermitaño (ermita)',
+    campo: 'Labriego (campo)',
+  },
+  letra: { castillo: 'C', camino: 'V', ermita: 'E', campo: 'L' },
+  anotacion: {
+    cerrar: '{{quien}}: +{{puntos}} por cerrar {{que}}',
+    final: '{{quien}}: +{{puntos}} por {{que}} (final)',
+    castillo_one: 'el castillo de {{count}} loseta',
+    castillo_other: 'el castillo de {{count}} losetas',
+    camino_one: 'el camino de {{count}} loseta',
+    camino_other: 'el camino de {{count}} losetas',
+    conEscudos_one: '{{que}} y {{count}} escudo',
+    conEscudos_other: '{{que}} y {{count}} escudos',
+    ermita: 'la ermita',
+    campo_one: 'el campo con {{count}} castillo cerrado',
+    campo_other: 'el campo con {{count}} castillos cerrados',
+  },
+  inicio: {
+    titulo: 'Nueva partida',
+    guardada_one: 'Hay una partida a medias: {{nombres}}, con {{count}} loseta puesta.',
+    guardada_other: 'Hay una partida a medias: {{nombres}}, con {{count}} losetas puestas.',
+    continuar: 'Continuar',
+    descartar: 'Descartarla',
+    explicacion: 'Empieza el primero de la lista. Toca «Persona» o «IA» para elegir quién juega cada color; entre varias personas, os vais pasando el dispositivo.',
+    numeroJugadores: 'Número de jugadores',
+    cuantos: '{{n}} jugadores',
+    nombreJugador: 'Nombre del jugador {{n}}',
+    jugadorN: 'Jugador {{n}}',
+    quien: 'Jugador {{n}}: {{quien}}',
+    quienIa: 'IA',
+    quienPersona: 'persona',
+    cambiarQuien: 'Cambiar entre persona e IA',
+    ia: 'IA',
+    persona: 'Persona',
+    colorJugador: 'Color del jugador {{n}}',
+    colorOcupado: '{{color}} (lo cambia con quien lo tiene)',
+    empezar: 'Empezar',
+    sustituye: 'Empezar una nueva sustituye a la partida a medias.',
+  },
+  historial: {
+    titulo: 'Historial',
+    aria: 'Jugadas, de la última a la primera',
+    decidiendo: 'decidiendo…',
+    sinEstandarte: 'sin estandarte',
+    verUltimas: 'Ver solo las últimas',
+    verTodo_one: 'Ver el historial completo ({{count}} jugada)',
+    verTodo_other: 'Ver el historial completo ({{count}} jugadas)',
+  },
+  final: {
+    titulo: 'Fin de la partida',
+    gana: 'Gana {{nombres}} con {{puntos}} puntos.',
+    empate: 'Empate entre {{nombres}} con {{puntos}} puntos.',
+    reino: '{{n}} losetas en el reino.',
+    reinoApartadas_one: '{{n}} losetas en el reino y {{count}} apartada porque no cabía.',
+    reinoApartadas_other: '{{n}} losetas en el reino y {{count}} apartadas porque no cabían.',
+    revancha: 'Revancha',
+    nueva: 'Nueva partida',
+    jugador: 'Jugador',
+    total: 'Total',
+    puesto: '{{n}}.º',
+    masAlFinal: '{{durante}} + {{final}} al final',
+    alFinal: 'al final',
+    puntosFinal: 'Puntos del final',
+    ninguno: 'Al final no se sumó ningún punto.',
+    camposSinPuntos_one: 'Y {{count}} campo con labriegos que no tocaba ningún castillo cerrado (0 puntos).',
+    camposSinPuntos_other: 'Y {{count}} campos con labriegos que no tocaban ningún castillo cerrado (0 puntos).',
+  },
+  ayuda: {
+    titulo: 'Cómo se juega',
+    cerrar: 'Cerrar',
+    colocaT: 'Coloca una loseta',
+    coloca: 'Junto al reino, con los bordes a juego: muralla con muralla, camino con camino. Puedes girarla.',
+    plantaT: 'Planta un estandarte',
+    planta: 'Si quieres, en el castillo, el camino, la ermita o el campo de esa loseta, si nadie lo ha ocupado. Tienes {{n}}.',
+    cierraT: 'Cierra y puntúa',
+    cierra: 'Castillo cerrado: {{loseta}} por loseta y {{escudo}} por escudo. Camino: {{camino}} por loseta. Ermita rodeada: {{ermita}}. Puntúa quien tenga más estandartes en ella.',
+    finalT: 'Al acabar el mazo',
+    final: 'Lo que sigue abierto suma menos, y cada campo da {{campo}} por castillo cerrado que toque. Gana quien tenga más puntos.',
+    controles: 'Arrastra para mover el tablero y pellizca o usa la rueda para ampliar. `R` gira, `Intro` confirma, `P` pausa.',
+    completas: 'Reglas completas',
+  },
+  turno: {
+    pausada: 'Partida en pausa',
+    leToca: 'Le toca a {{nombre}}. El tablero está oculto hasta reanudar.',
+    reanudar: 'Reanudar',
+    volverInicio: 'Volver al inicio',
+    guardadaAlVolver: 'Al volver al inicio la partida queda guardada y se puede continuar.',
+    enPausa: 'En pausa',
+    turnoDe: 'Turno de {{nombre}}',
+    ayuda: 'Ayuda',
+    ponerSonido: 'Poner el sonido',
+    quitarSonido: 'Quitar el sonido',
+    sinSonido: 'Sin sonido',
+    conSonido: 'Con sonido',
+    pausa: 'Pausa',
+    ajustes: 'Nueva partida y ajustes',
+    pensando: 'Pensando dónde ponerla…',
+    decidiendo: 'Decidiendo el estandarte…',
+    mirando: 'Estás mirando la partida.',
+    esperando: 'Esperando a {{nombre}}…',
+    girarIzquierda: 'Girar a la izquierda',
+    girarDerecha: 'Girar a la derecha',
+    colocar: 'Colocar',
+    tocaOtraVez: 'Toca otra vez la loseta para probar otro giro, o pulsa Colocar.',
+    tocaHueco: 'Toca un hueco verde del tablero. Los huecos con borde claro valen girándola.',
+    tocaCirculo: 'Toca un círculo para poner un estandarte: C castillo, V camino, E ermita, L labriego en el campo.',
+    sinEstandartes: 'No te quedan estandartes.',
+    sinSitio: 'En esta loseta no queda ningún sitio libre.',
+    deshacer: 'Deshacer',
+    sinEstandarte: 'Sin estandarte',
+    enviando: 'Enviando la jugada…',
+    quedan_one: 'Queda {{count}} loseta.',
+    quedan_other: 'Quedan {{count}} losetas.',
+    quedanRio_one: 'Queda {{count}} loseta ({{rio}} de río).',
+    quedanRio_other: 'Quedan {{count}} losetas ({{rio}} de río).',
+    apartadas: 'Apartadas: {{n}}.',
+    noVale: 'Esa jugada no vale.',
+    salaNoAcepto: 'La sala no aceptó la jugada: {{motivo}}',
+    marcador: 'Marcador',
+    enMano: 'Estandartes en la mano',
+  },
+  tablero: {
+    cabeAsi: 'Cabe así',
+    cabeGirandola: 'Cabe girándola',
+    ampliar: 'Ampliar',
+    reducir: 'Reducir',
+    centrar: 'Centrar',
+    verTodo: 'Ver todo el reino',
+  },
+  linea: {
+    eligeMesa: 'Elige mesa',
+    eligeMesaAyuda: 'Elegid todos la misma mesa y ocupad un asiento cada uno. El anfitrión empieza la partida desde Kunobi y los invitados pueden jugar desde el enlace web.',
+    titulo: 'Jugar en línea',
+    jugadores: 'jugadores',
+    recargar: 'El anfitrión mantiene abierta la mesa en Kunobi. Si recargas el enlace web, vuelve a elegir la misma mesa en el mismo navegador para recuperar tu asiento mientras la sala siga abierta.',
+    retomarAnfitrion: 'Si la sala se vacía, el anfitrión puede retomar la partida guardada en su dispositivo.',
+    barra: 'En línea · mesa de {{n}}',
+    tuAsiento: 'tu asiento: {{n}}',
+    estasMirando: 'estás mirando',
+    anfitrionDesconectado: 'el anfitrión no está conectado',
+    espectador: 'acceso de espectador',
+    salir: 'Salir de la mesa',
+    abriendo: 'Abriendo la mesa…',
+    noDisponible: 'La mesa no está disponible aquí',
+    estadoSala: 'Estado de la sala:',
+    compruebaWeb: 'Comprueba que el anfitrión tiene abierta esta mesa en Kunobi y que estás usando el enlace de la partida en línea.',
+    compruebaKunobi: 'Abre la página en un Space con edición en vivo. El anfitrión debe tener Kunobi abierto.',
+    reintentar: 'Reintentar',
+    jugadaMala: 'La jugada {{n}} no vale.',
+    tu: 'Tú',
+    tuMinuscula: 'tú',
+    tuNombre: 'Tu nombre',
+    tuColor: 'Tu color',
+    cambiar: 'Cambiar',
+    guardar: 'Guardar',
+    mismoColor: 'Si dos elegís el mismo color, el segundo asiento toma otro libre.',
+    asientos: 'Asientos',
+    libre: 'libre',
+    sentarme: 'Sentarme aquí',
+    liberar: 'Liberar',
+    soloAnfitrion: 'Solo el anfitrión puede liberar asientos',
+    asientosAyuda: 'El asiento 1 empieza. Solo el anfitrión puede liberar un asiento (por ejemplo, el de alguien que se fue).',
+    empezar: 'Empezar',
+    faltan_one: 'Falta {{count}} asiento por ocupar.',
+    faltan_other: 'Faltan {{count}} asientos por ocupar.',
+    empezarPartida: 'Empezar la partida',
+    retomar_one: 'Retomar la partida guardada ({{count}} jugada)',
+    retomar_other: 'Retomar la partida guardada ({{count}} jugadas)',
+    esperandoAnfitrion: 'Esperando a que el anfitrión empiece la partida.',
+    enLaSala: 'En la sala: {{lista}}.',
+    otraPersona: 'otra persona',
+    mirando: 'mirando',
+    operaciones: {
+      empezar: 'Empezar',
+      turno: 'Fijar el turno',
+      jugada: 'Jugada',
+      nombre: 'Guardar tu nombre',
+      sentarte: 'Sentarte',
+      liberar: 'Liberar el asiento',
+    },
+  },
+}
+
+export const Pagina = () => {
+  const t = useI18n(WORDS, translations)
+  const nombresLosetas = React.useMemo(
+    () => Object.fromEntries(t.data('losetas', losetas).tipos.map((tipo) => [tipo.id, tipo.nombre])),
+    [t],
+  )
+  const paleta = React.useMemo(() => t.data('jugadores', jugadores).colores, [t])
+  return <Castillos w={t.w} nombresLosetas={nombresLosetas} paleta={paleta} />
+}
+
+<Pagina />

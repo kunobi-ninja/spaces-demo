@@ -1,0 +1,831 @@
+{
+  "grupos": [
+    {
+      "id": "brotes",
+      "nombre": "Brotes",
+      "texto": "Una habilidad cada vez."
+    },
+    {
+      "id": "raices",
+      "nombre": "Raíces",
+      "texto": "Habilidades nuevas y la primera combinación."
+    },
+    {
+      "id": "cumbres",
+      "nombre": "Cumbres",
+      "texto": "Varias habilidades en el mismo nivel."
+    },
+    {
+      "id": "bambu",
+      "nombre": "Bambú",
+      "texto": "Salto y Gancho entre las cañas.",
+      "escenario": "bambu",
+      "aviso": "Los pinchos pierden a quien los pisa. El bambú solo lo abre el Túnel."
+    },
+    {
+      "id": "tejados",
+      "nombre": "Tejados",
+      "texto": "Sigilo y Humo en la aldea de noche.",
+      "escenario": "tejados",
+      "aviso": "La linterna vigía devuelve al Nido a quien ve sin Sigilo. Las tejas no se suben andando y el papel cae entero al primer golpe."
+    },
+    {
+      "id": "montana",
+      "nombre": "Montaña",
+      "texto": "Cometa y Kunai en la cumbre nevada.",
+      "escenario": "montana",
+      "aviso": "El viento lleva a quien vuela con la Cometa; la cascada tira abajo a quien vuela o trepa. La nieve se cava deprisa; el hielo no se cava y resbala."
+    },
+    {
+      "id": "maestro",
+      "nombre": "Maestro",
+      "texto": "Las pruebas del maestro: todo junto.",
+      "escenario": "maestro",
+      "aviso": "Mientras alguien pisa una placa, su puerta está abierta."
+    }
+  ],
+  "niveles": [
+    {
+      "id": "hacia-abajo",
+      "grupo": "brotes",
+      "nombre": "Hacia abajo",
+      "pista": "El Dojo está debajo del suelo. Dale Pozo a un kunobito y los demás bajarán por el agujero.",
+      "ancho": 60,
+      "alto": 30,
+      "nido": [10, 2],
+      "dojo": [48, 24],
+      "piezas": [
+        ["#", 1, 12, 58, 15],
+        ["#", 0, 25, 59, 29]
+      ],
+      "total": 10,
+      "minimo": 8,
+      "intervalo": 50,
+      "tiempo": 180,
+      "habilidades": {
+        "pozo": 2
+      }
+    },
+    {
+      "id": "el-muro",
+      "grupo": "brotes",
+      "nombre": "El muro",
+      "pista": "Un muro de tierra corta el camino. Túnel cava en horizontal, aunque lo des un poco antes de llegar.",
+      "ancho": 70,
+      "alto": 30,
+      "nido": [8, 6],
+      "dojo": [60, 19],
+      "piezas": [
+        ["#", 0, 20, 69, 29],
+        ["#", 34, 6, 37, 19]
+      ],
+      "total": 10,
+      "minimo": 9,
+      "intervalo": 50,
+      "tiempo": 180,
+      "habilidades": {
+        "tunel": 2
+      }
+    },
+    {
+      "id": "la-charca",
+      "grupo": "brotes",
+      "nombre": "La charca",
+      "pista": "Quien cae al agua se pierde. Peldaño tiende un puente: dalo justo antes de la orilla.",
+      "ancho": 70,
+      "alto": 30,
+      "nido": [8, 6],
+      "dojo": [60, 19],
+      "piezas": [
+        ["#", 0, 20, 69, 29],
+        ["~", 32, 20, 34, 22]
+      ],
+      "total": 10,
+      "minimo": 9,
+      "intervalo": 60,
+      "tiempo": 180,
+      "habilidades": {
+        "peldano": 3,
+        "planton": 1
+      }
+    },
+    {
+      "id": "alto",
+      "grupo": "brotes",
+      "nombre": "¡Alto!",
+      "pista": "Salen hacia el precipicio y el Dojo está detrás. Un Plantón les hace dar la vuelta.",
+      "ancho": 70,
+      "alto": 30,
+      "nido": [30, 6],
+      "dojo": [6, 19],
+      "piezas": [
+        ["#", 0, 20, 50, 29],
+        [".", 51, 0, 68, 29]
+      ],
+      "total": 10,
+      "minimo": 8,
+      "intervalo": 45,
+      "tiempo": 150,
+      "habilidades": {
+        "planton": 2
+      }
+    },
+    {
+      "id": "paracaidas",
+      "grupo": "raices",
+      "nombre": "Paracaídas",
+      "pista": "La caída es demasiado alta. Con la Hoja cada kunobito baja planeando; dásela antes del borde.",
+      "ancho": 70,
+      "alto": 40,
+      "nido": [6, 0],
+      "dojo": [55, 33],
+      "piezas": [
+        ["#", 1, 10, 30, 13],
+        ["#", 0, 34, 69, 39]
+      ],
+      "total": 8,
+      "minimo": 7,
+      "intervalo": 60,
+      "tiempo": 180,
+      "habilidades": {
+        "hoja": 9
+      }
+    },
+    {
+      "id": "escalada",
+      "grupo": "raices",
+      "nombre": "Escalada",
+      "pista": "El cristal no se cava ni se rompe. Con Trepa, suben por la pared y bajan por el otro lado.",
+      "ancho": 70,
+      "alto": 30,
+      "nido": [8, 6],
+      "dojo": [60, 19],
+      "piezas": [
+        ["#", 0, 20, 69, 29],
+        ["=", 30, 8, 31, 19]
+      ],
+      "total": 10,
+      "minimo": 8,
+      "intervalo": 45,
+      "tiempo": 180,
+      "habilidades": {
+        "trepa": 10
+      }
+    },
+    {
+      "id": "bajo-la-roca",
+      "grupo": "raices",
+      "nombre": "Bajo la roca",
+      "pista": "El cristal tapa el paso a la altura de los pies. Pico cava en diagonal y pasa por debajo; empieza lejos de la pared.",
+      "ancho": 80,
+      "alto": 36,
+      "nido": [8, 4],
+      "dojo": [70, 33],
+      "piezas": [
+        ["#", 1, 16, 42, 29],
+        ["=", 41, 4, 42, 23],
+        ["#", 0, 34, 79, 35]
+      ],
+      "total": 10,
+      "minimo": 8,
+      "intervalo": 55,
+      "tiempo": 210,
+      "habilidades": {
+        "pico": 2,
+        "tunel": 1
+      }
+    },
+    {
+      "id": "abre-paso",
+      "grupo": "raices",
+      "nombre": "Abre paso",
+      "pista": "Sin Túnel: un Plantón pegado al muro y, a ese mismo kunobito, una Chispa. Su estallido abre el camino.",
+      "ancho": 70,
+      "alto": 30,
+      "nido": [8, 6],
+      "dojo": [60, 19],
+      "piezas": [
+        ["#", 0, 20, 69, 29],
+        ["#", 35, 8, 35, 19]
+      ],
+      "total": 10,
+      "minimo": 8,
+      "intervalo": 50,
+      "tiempo": 180,
+      "habilidades": {
+        "planton": 1,
+        "chispa": 1
+      }
+    },
+    {
+      "id": "doble-escalon",
+      "grupo": "cumbres",
+      "nombre": "Doble escalón",
+      "pista": "El Dojo está arriba, a 24 píxeles. Un Peldaño sube 12: cuando acabe, dale otro al mismo kunobito.",
+      "ancho": 70,
+      "alto": 34,
+      "nido": [8, 10],
+      "dojo": [60, 17],
+      "piezas": [
+        ["#", 0, 24, 69, 33],
+        ["#", 40, 18, 68, 33]
+      ],
+      "total": 10,
+      "minimo": 8,
+      "intervalo": 60,
+      "tiempo": 210,
+      "habilidades": {
+        "peldano": 4,
+        "planton": 1
+      }
+    },
+    {
+      "id": "bajo-el-cristal",
+      "grupo": "cumbres",
+      "nombre": "Bajo el cristal",
+      "pista": "Arriba, una pared de cristal. Abajo, un muro de tierra. Hay que bajar y luego atravesar.",
+      "ancho": 70,
+      "alto": 30,
+      "nido": [8, 2],
+      "dojo": [62, 25],
+      "piezas": [
+        ["#", 1, 14, 40, 17],
+        ["=", 41, 2, 42, 17],
+        ["#", 0, 26, 69, 29],
+        ["#", 50, 12, 53, 25]
+      ],
+      "total": 12,
+      "minimo": 10,
+      "intervalo": 50,
+      "tiempo": 240,
+      "habilidades": {
+        "pozo": 2,
+        "tunel": 2
+      }
+    },
+    {
+      "id": "puente-y-bajada",
+      "grupo": "cumbres",
+      "nombre": "Puente y bajada",
+      "pista": "Primero, un puente sobre el agua. Luego el suelo se acaba en un precipicio: Pico baja poco a poco y sin peligro.",
+      "ancho": 70,
+      "alto": 32,
+      "nido": [6, 0],
+      "dojo": [62, 27],
+      "piezas": [
+        ["#", 1, 12, 28, 15],
+        ["~", 29, 12, 31, 14],
+        ["#", 29, 15, 31, 15],
+        ["#", 32, 12, 55, 15],
+        ["#", 0, 28, 69, 31]
+      ],
+      "total": 12,
+      "minimo": 10,
+      "intervalo": 60,
+      "tiempo": 240,
+      "habilidades": {
+        "peldano": 2,
+        "pico": 2,
+        "hoja": 2,
+        "planton": 1
+      }
+    },
+    {
+      "id": "el-largo-camino",
+      "grupo": "cumbres",
+      "nombre": "El largo camino",
+      "pista": "Un muro, una charca, una meseta y un escalón de cristal. Pon los peldaños justo antes de lo que hay que salvar.",
+      "ancho": 120,
+      "alto": 40,
+      "nido": [8, 8],
+      "dojo": [106, 31],
+      "piezas": [
+        ["#", 44, 20, 80, 24],
+        ["#", 1, 20, 40, 31],
+        ["#", 41, 24, 43, 31],
+        ["~", 41, 21, 43, 23],
+        ["=", 81, 6, 82, 24],
+        ["#", 28, 6, 32, 19],
+        ["=", 92, 30, 94, 31],
+        ["#", 0, 32, 119, 39]
+      ],
+      "total": 20,
+      "minimo": 14,
+      "intervalo": 60,
+      "tiempo": 300,
+      "habilidades": {
+        "trepa": 2,
+        "hoja": 2,
+        "planton": 2,
+        "chispa": 2,
+        "peldano": 4,
+        "tunel": 2,
+        "pico": 2,
+        "pozo": 2
+      }
+    },
+    {
+      "id": "pinchos",
+      "grupo": "bambu",
+      "nombre": "Pinchos",
+      "pista": "Las estacas de bambú pierden a quien las pisa. Salto las cruza: dalo un poco antes de llegar.",
+      "ancho": 60,
+      "alto": 24,
+      "nido": [6, 8],
+      "dojo": [52, 19],
+      "piezas": [
+        ["#", 0, 20, 59, 23],
+        ["^", 24, 20, 27, 20]
+      ],
+      "total": 10,
+      "minimo": 8,
+      "intervalo": 50,
+      "tiempo": 200,
+      "habilidades": {
+        "salto": 10
+      }
+    },
+    {
+      "id": "la-cana-alta",
+      "grupo": "bambu",
+      "nombre": "La caña alta",
+      "pista": "El Dojo está arriba, sobre las cañas. Gancho lanza la cuerda a un saliente delante y arriba, y sube colgado.",
+      "ancho": 60,
+      "alto": 24,
+      "nido": [6, 8],
+      "dojo": [50, 11],
+      "piezas": [
+        ["#", 0, 20, 59, 23],
+        ["b", 33, 12, 34, 19],
+        ["#", 35, 12, 58, 19]
+      ],
+      "total": 8,
+      "minimo": 7,
+      "intervalo": 50,
+      "tiempo": 200,
+      "habilidades": {
+        "gancho": 8
+      }
+    },
+    {
+      "id": "pasarela-rota",
+      "grupo": "bambu",
+      "nombre": "Pasarela rota",
+      "pista": "Primero los pinchos y luego la repisa: Salto y Gancho, uno detrás del otro.",
+      "ancho": 60,
+      "alto": 24,
+      "nido": [6, 8],
+      "dojo": [52, 12],
+      "piezas": [
+        ["#", 0, 20, 59, 23],
+        ["^", 18, 20, 21, 20],
+        ["#", 36, 13, 58, 19]
+      ],
+      "total": 8,
+      "minimo": 6,
+      "intervalo": 60,
+      "tiempo": 220,
+      "habilidades": {
+        "salto": 8,
+        "gancho": 8
+      }
+    },
+    {
+      "id": "el-bosque-cerrado",
+      "grupo": "bambu",
+      "nombre": "El bosque cerrado",
+      "pista": "Solo el Túnel abre el bambú. Después, pinchos y un escalón alto: Salto para cada uno y un Peldaño para todos.",
+      "ancho": 64,
+      "alto": 24,
+      "nido": [5, 8],
+      "dojo": [56, 17],
+      "piezas": [
+        ["#", 0, 20, 63, 23],
+        ["b", 16, 9, 17, 19],
+        ["^", 26, 20, 28, 20],
+        ["#", 38, 18, 62, 19]
+      ],
+      "total": 10,
+      "minimo": 8,
+      "intervalo": 60,
+      "tiempo": 260,
+      "habilidades": {
+        "tunel": 1,
+        "salto": 10,
+        "peldano": 1,
+        "pico": 1
+      }
+    },
+    {
+      "id": "la-linterna",
+      "grupo": "tejados",
+      "nombre": "La linterna",
+      "pista": "No hay Sigilo para todos. Pero tampoco ve al que va pegado detrás de uno con Sigilo: acelera la salida (+) y dáselo a uno de cada dos.",
+      "ancho": 60,
+      "alto": 24,
+      "nido": [5, 8],
+      "dojo": [54, 19],
+      "piezas": [
+        ["t", 0, 20, 59, 23]
+      ],
+      "objetos": [
+        {
+          "tipo": "linterna",
+          "x": 120,
+          "y": 12,
+          "barrido": 0.5
+        }
+      ],
+      "total": 8,
+      "minimo": 6,
+      "intervalo": 40,
+      "tiempo": 240,
+      "habilidades": {
+        "sigilo": 4
+      }
+    },
+    {
+      "id": "puerta-de-cristal",
+      "grupo": "tejados",
+      "nombre": "Puerta de cristal",
+      "pista": "El cristal no se cava, pero Humo lo atraviesa si es fino. El papel, en cambio, cae entero al primer golpe.",
+      "ancho": 60,
+      "alto": 24,
+      "nido": [5, 8],
+      "dojo": [54, 19],
+      "piezas": [
+        ["t", 0, 20, 59, 23],
+        ["=", 28, 6, 28, 19],
+        ["p", 42, 6, 43, 19]
+      ],
+      "total": 8,
+      "minimo": 6,
+      "intervalo": 60,
+      "tiempo": 240,
+      "habilidades": {
+        "humo": 8,
+        "tunel": 1
+      }
+    },
+    {
+      "id": "muro-de-papel",
+      "grupo": "tejados",
+      "nombre": "Muro de papel",
+      "pista": "Tras el papel vigila una linterna, y al final hay un tejado que no se sube andando. Túnel, Sigilo por parejas y un Salto para subir.",
+      "ancho": 60,
+      "alto": 24,
+      "nido": [5, 8],
+      "dojo": [54, 18],
+      "piezas": [
+        ["t", 0, 20, 59, 23],
+        ["p", 20, 6, 22, 19],
+        ["t", 46, 19, 58, 19]
+      ],
+      "objetos": [
+        {
+          "tipo": "linterna",
+          "x": 136,
+          "y": 14,
+          "barrido": 0.45
+        }
+      ],
+      "total": 8,
+      "minimo": 6,
+      "intervalo": 40,
+      "tiempo": 260,
+      "habilidades": {
+        "tunel": 1,
+        "sigilo": 4,
+        "salto": 8
+      }
+    },
+    {
+      "id": "ronda-de-noche",
+      "grupo": "tejados",
+      "nombre": "Ronda de noche",
+      "pista": "Dos linternas seguidas y, al final, un muro de cristal. Sigilo por parejas aguanta las dos si lo das pronto.",
+      "ancho": 64,
+      "alto": 24,
+      "nido": [4, 8],
+      "dojo": [60, 19],
+      "piezas": [
+        ["t", 0, 20, 63, 23],
+        ["=", 54, 6, 54, 19]
+      ],
+      "objetos": [
+        {
+          "tipo": "linterna",
+          "x": 92,
+          "y": 12,
+          "barrido": 0.35
+        },
+        {
+          "tipo": "linterna",
+          "x": 160,
+          "y": 12,
+          "barrido": 0.35
+        }
+      ],
+      "total": 10,
+      "minimo": 7,
+      "intervalo": 40,
+      "tiempo": 280,
+      "habilidades": {
+        "sigilo": 5,
+        "humo": 10
+      }
+    },
+    {
+      "id": "el-barranco",
+      "grupo": "montana",
+      "nombre": "El barranco",
+      "pista": "El viento sopla sobre el barranco. Con la Cometa, quien salta al vacío vuela hasta el otro lado.",
+      "ancho": 60,
+      "alto": 26,
+      "nido": [5, 5],
+      "dojo": [54, 13],
+      "piezas": [
+        ["#", 0, 12, 15, 25],
+        ["s", 0, 11, 15, 11],
+        ["~", 16, 24, 41, 25],
+        ["#", 42, 15, 59, 25],
+        ["s", 42, 14, 59, 14]
+      ],
+      "objetos": [
+        {
+          "tipo": "viento",
+          "x": 64,
+          "y": 0,
+          "w": 104,
+          "h": 56,
+          "dir": 1
+        }
+      ],
+      "total": 8,
+      "minimo": 7,
+      "intervalo": 60,
+      "tiempo": 220,
+      "habilidades": {
+        "cometa": 8
+      }
+    },
+    {
+      "id": "pared-helada",
+      "grupo": "montana",
+      "nombre": "Pared helada",
+      "pista": "El hielo no se cava ni se trepa fácil. Un solo Kunai deja una escala para todos.",
+      "ancho": 60,
+      "alto": 24,
+      "nido": [5, 8],
+      "dojo": [52, 12],
+      "piezas": [
+        ["h", 0, 20, 59, 23],
+        ["h", 44, 13, 58, 19]
+      ],
+      "total": 10,
+      "minimo": 9,
+      "intervalo": 50,
+      "tiempo": 220,
+      "habilidades": {
+        "kunai": 1,
+        "planton": 1
+      }
+    },
+    {
+      "id": "la-cascada",
+      "grupo": "montana",
+      "nombre": "La cascada",
+      "pista": "La cascada tira abajo a quien vuela: la Cometa no sirve. Por debajo, la nieve se cava deprisa.",
+      "ancho": 60,
+      "alto": 24,
+      "nido": [5, 4],
+      "dojo": [52, 14],
+      "piezas": [
+        ["s", 0, 10, 59, 23],
+        [".", 24, 10, 29, 14],
+        [".", 44, 10, 58, 14]
+      ],
+      "objetos": [
+        {
+          "tipo": "viento",
+          "x": 96,
+          "y": 0,
+          "w": 24,
+          "h": 40,
+          "dir": 1
+        },
+        {
+          "tipo": "cascada",
+          "x": 100,
+          "y": 0,
+          "w": 12,
+          "h": 60
+        }
+      ],
+      "total": 10,
+      "minimo": 8,
+      "intervalo": 50,
+      "tiempo": 240,
+      "habilidades": {
+        "tunel": 1,
+        "cometa": 2
+      }
+    },
+    {
+      "id": "la-cumbre",
+      "grupo": "montana",
+      "nombre": "La cumbre",
+      "pista": "Una caída alta, un barranco con viento y una pared de hielo. Hoja para bajar, Cometa para cruzar y Kunai para subir.",
+      "ancho": 70,
+      "alto": 30,
+      "nido": [5, 3],
+      "dojo": [64, 18],
+      "piezas": [
+        ["#", 0, 9, 14, 29],
+        ["s", 0, 8, 14, 8],
+        ["#", 15, 25, 30, 29],
+        ["s", 15, 24, 30, 24],
+        ["~", 31, 28, 44, 29],
+        ["#", 45, 27, 57, 29],
+        ["s", 45, 26, 57, 26],
+        ["h", 58, 19, 68, 29]
+      ],
+      "objetos": [
+        {
+          "tipo": "viento",
+          "x": 124,
+          "y": 40,
+          "w": 60,
+          "h": 60,
+          "dir": 1
+        }
+      ],
+      "total": 8,
+      "minimo": 6,
+      "intervalo": 70,
+      "tiempo": 300,
+      "habilidades": {
+        "hoja": 8,
+        "cometa": 8,
+        "kunai": 1
+      }
+    },
+    {
+      "id": "la-placa",
+      "grupo": "maestro",
+      "nombre": "La placa",
+      "pista": "Mientras alguien pisa la placa del foso, la puerta está abierta. Que caiga uno y los demás salten; después, un puente. Al final, el botón Terminar lo acaba.",
+      "ancho": 64,
+      "alto": 24,
+      "nido": [5, 8],
+      "dojo": [56, 19],
+      "piezas": [
+        ["#", 0, 20, 63, 23],
+        [".", 12, 20, 14, 21],
+        ["p", 30, 0, 30, 13],
+        [".", 40, 20, 44, 20],
+        ["~", 40, 21, 44, 23]
+      ],
+      "objetos": [
+        {
+          "tipo": "placa",
+          "x": 48,
+          "y": 87,
+          "w": 12,
+          "puerta": "p"
+        },
+        {
+          "tipo": "puerta",
+          "id": "p",
+          "x": 120,
+          "y": 56,
+          "w": 4,
+          "h": 24
+        }
+      ],
+      "total": 8,
+      "minimo": 6,
+      "intervalo": 60,
+      "tiempo": 260,
+      "habilidades": {
+        "salto": 8,
+        "peldano": 2
+      }
+    },
+    {
+      "id": "prueba-del-humo",
+      "grupo": "maestro",
+      "nombre": "Prueba del humo",
+      "pista": "Una linterna, un muro de cristal y una repisa: Sigilo por parejas, Humo y Gancho.",
+      "ancho": 70,
+      "alto": 26,
+      "nido": [5, 10],
+      "dojo": [62, 14],
+      "piezas": [
+        ["#", 0, 22, 69, 25],
+        ["=", 34, 8, 34, 21],
+        ["#", 50, 15, 68, 21]
+      ],
+      "objetos": [
+        {
+          "tipo": "linterna",
+          "x": 90,
+          "y": 14,
+          "barrido": 0.4
+        }
+      ],
+      "total": 8,
+      "minimo": 6,
+      "intervalo": 40,
+      "tiempo": 280,
+      "habilidades": {
+        "sigilo": 4,
+        "humo": 8,
+        "gancho": 8
+      }
+    },
+    {
+      "id": "prueba-del-viento",
+      "grupo": "maestro",
+      "nombre": "Prueba del viento",
+      "pista": "Pinchos en la meseta, un barranco con viento y una pared de hielo: Salto, Cometa y Kunai.",
+      "ancho": 70,
+      "alto": 28,
+      "nido": [2, 6],
+      "dojo": [64, 8],
+      "piezas": [
+        ["#", 0, 12, 16, 27],
+        ["^", 6, 12, 8, 12],
+        ["~", 17, 26, 46, 27],
+        ["#", 47, 16, 58, 27],
+        ["h", 59, 9, 68, 27]
+      ],
+      "objetos": [
+        {
+          "tipo": "viento",
+          "x": 68,
+          "y": 0,
+          "w": 120,
+          "h": 60,
+          "dir": 1
+        }
+      ],
+      "total": 8,
+      "minimo": 6,
+      "intervalo": 70,
+      "tiempo": 280,
+      "habilidades": {
+        "salto": 8,
+        "cometa": 8,
+        "kunai": 1
+      }
+    },
+    {
+      "id": "el-camino-del-ninja",
+      "grupo": "maestro",
+      "nombre": "El camino del ninja",
+      "pista": "Todo lo aprendido: papel, pinchos, la linterna, el cristal, el viento y el hielo. Forma parejas pronto.",
+      "ancho": 120,
+      "alto": 32,
+      "nido": [4, 10],
+      "dojo": [112, 17],
+      "piezas": [
+        ["#", 0, 22, 59, 31],
+        ["p", 14, 10, 15, 21],
+        ["^", 24, 22, 26, 22],
+        ["=", 50, 10, 50, 21],
+        ["~", 60, 30, 84, 31],
+        ["#", 85, 25, 104, 31],
+        ["h", 105, 18, 118, 31]
+      ],
+      "objetos": [
+        {
+          "tipo": "linterna",
+          "x": 150,
+          "y": 20,
+          "barrido": 0.35
+        },
+        {
+          "tipo": "viento",
+          "x": 240,
+          "y": 40,
+          "w": 100,
+          "h": 52,
+          "dir": 1
+        }
+      ],
+      "total": 12,
+      "minimo": 9,
+      "intervalo": 40,
+      "tiempo": 360,
+      "habilidades": {
+        "tunel": 1,
+        "salto": 12,
+        "sigilo": 6,
+        "humo": 12,
+        "cometa": 12,
+        "kunai": 1
+      }
+    }
+  ]
+}

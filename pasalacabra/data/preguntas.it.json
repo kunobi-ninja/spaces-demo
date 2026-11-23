@@ -1,0 +1,446 @@
+{
+  "nombre": "Italiano",
+  "letras": "ABCDEFGHILMNOPQRSTUVZ",
+  "niveles": {
+    "facil": {
+      "nombre": "Facile",
+      "preguntas": {
+        "A": [
+          {"tipo":"empieza","pista":"Insetto che produce il miele.","respuestas":"K1wsTHXYhA=="},
+          {"tipo":"empieza","pista":"Liquido che esce dal rubinetto e che beviamo per dissetarci.","respuestas":"K1wsX2GPuJrH"},
+          {"tipo":"empieza","pista":"Arco di colori che può apparire in cielo quando il sole illumina le gocce di pioggia.","respuestas":"K1wsTnOVu9n2ADn44b0="}
+        ],
+        "B": [
+          {"tipo":"empieza","pista":"Frutto giallo dalla forma allungata e curva, che si sbuccia con le mani.","respuestas":"K1wvXX6bt9m4OA=="},
+          {"tipo":"empieza","pista":"Mezzo a due ruote che si muove spingendo sui pedali.","respuestas":"K1wvVXOTutT/ESP24cz53bQBLh1Q"},
+          {"tipo":"empieza","pista":"Strumento con un ago magnetico che indica il nord.","respuestas":"K1wvSWOJttT7Rwo="}
+        ],
+        "C": [
+          {"tipo":"empieza","pista":"Bevanda scura preparata con chicchi tostati, servita in tazzina quando è espresso.","respuestas":"K1wuXXacGhC4OA=="},
+          {"tipo":"empieza","pista":"Animale domestico che abbaia.","respuestas":"K1wuXX6f++U="},
+          {"tipo":"empieza","pista":"Strumento musicale a sei corde che si può suonare con il plettro.","respuestas":"K1wuVHmOuMroBHXK"}
+        ],
+        "D": [
+          {"tipo":"empieza","pista":"Mammifero marino dal muso allungato, noto per i salti fuori dall’acqua.","respuestas":"K1wpWXycsNb1Rwo="},
+          {"tipo":"empieza","pista":"Piccolo cubo da gioco, di solito con un numero da uno a sei su ogni faccia.","respuestas":"K1wpXXSV++U="},
+          {"tipo":"empieza","pista":"Giorno della settimana che viene subito dopo il sabato.","respuestas":"K1wpU32ft9H5BHXK"}
+        ],
+        "E": [
+          {"tipo":"empieza","pista":"Grande mammifero terrestre con proboscide e zanne.","respuestas":"K1woUHWcuNbuAHXK"},
+          {"tipo":"empieza","pista":"Stagione tra la primavera e l’autunno.","respuestas":"K1woT2Sbrd24OA=="},
+          {"tipo":"empieza","pista":"Vulcano attivo della Sicilia, vicino a Catania.","respuestas":"K1wISH6b++U="}
+        ],
+        "F": [
+          {"tipo":"empieza","pista":"Insetto che da bruco si trasforma e vola con due paia di ali spesso colorate.","respuestas":"K1wrXWKcuNT2BHXK"},
+          {"tipo":"empieza","pista":"Posata con più rebbi usata per portare il cibo alla bocca.","respuestas":"K1wrU2KZsd3uETa1ng=="},
+          {"tipo":"empieza","pista":"Città toscana che ospita la Galleria degli Uffizi e il Ponte Vecchio.","respuestas":"K1wLVWKft8L/Rwo="}
+        ],
+        "G": [
+          {"tipo":"empieza","pista":"Animale domestico che miagola e fa le fusa.","respuestas":"K1wqXWSOtprH"},
+          {"tipo":"empieza","pista":"Dolce freddo che si serve in palline, nel cono o nella coppetta.","respuestas":"K1wqWXybrde4OA=="},
+          {"tipo":"empieza","pista":"Forma solida dell’acqua, spesso messa a cubetti nelle bevande.","respuestas":"K1wqVHmbutvzCnXK"}
+        ],
+        "H": [
+          {"tipo":"contiene","pista":"Parte dura che ricopre la punta delle dita.","respuestas":"K1w4UneSsNm4OA=="},
+          {"tipo":"contiene","pista":"Posata concava usata per mangiare la minestra.","respuestas":"K1wuSXOZsdH7DDi1ng=="},
+          {"tipo":"contiene","pista":"Strumento con lenti e montatura che si porta sul naso per vedere meglio.","respuestas":"K1wiX3OSsNn2DHXK"}
+        ],
+        "I": [
+          {"tipo":"empieza","pista":"Traccia che un dito lascia su una superficie, usata per identificare una persona.","respuestas":"K1wkUWCIttbuBHfzqoeyy7wOIh1Q"},
+          {"tipo":"empieza","pista":"Macchia di terra circondata dall’acqua su tutti i lati.","respuestas":"K1wkT3+WuJrH"},
+          {"tipo":"empieza","pista":"Stagione tra l’autunno e la primavera.","respuestas":"K1wkUmafq9b1Rwo="}
+        ],
+        "L": [
+          {"tipo":"empieza","pista":"Satellite naturale della Terra.","respuestas":"K1wBSX6b++U="},
+          {"tipo":"empieza","pista":"Agrume giallo, dal succo aspro, di cui si grattugia la scorza per aromatizzare i dolci.","respuestas":"K1whVX2Vt924OA=="},
+          {"tipo":"empieza","pista":"Mammifero dalla folta criniera, chiamato anche re della savana.","respuestas":"K1whWX+UvJrH"}
+        ],
+        "M": [
+          {"tipo":"empieza","pista":"Frutto rosso, giallo o verde che, secondo la leggenda, cadde vicino a Newton.","respuestas":"K1wgWXyb++U="},
+          {"tipo":"empieza","pista":"Strumento di legno con una mina di grafite, usato per disegnare e scrivere.","respuestas":"K1wgXWSTrdm4OA=="},
+          {"tipo":"empieza","pista":"Città lombarda in cui si trovano il Teatro alla Scala e la Madonnina del Duomo.","respuestas":"K1wAVXybt9e4OA=="}
+        ],
+        "N": [
+          {"tipo":"empieza","pista":"Precipitazione che cade in fiocchi bianchi quando fa freddo.","respuestas":"K1wjWWaf++U="},
+          {"tipo":"empieza","pista":"Parte del viso che serve a sentire gli odori.","respuestas":"K1wjXWOV++U="},
+          {"tipo":"empieza","pista":"Città ai piedi del Vesuvio famosa per la pizza margherita.","respuestas":"K1wDXWCVtdG4OA=="}
+        ],
+        "O": [
+          {"tipo":"empieza","pista":"Accessorio da polso che indica l’ora.","respuestas":"K1wiTn+Wtt/zCnXK"},
+          {"tipo":"empieza","pista":"Metallo prezioso di colore giallo, usato per gioielli e medaglie del primo posto.","respuestas":"K1wiTn/YhA=="},
+          {"tipo":"empieza","pista":"Mollusco marino dal guscio irregolare che si mangia anche crudo con succo di limone. Alcune specie producono perle.","respuestas":"K1wiT2SIsNv7Rwo="}
+        ],
+        "P": [
+          {"tipo":"empieza","pista":"Piatto rotondo di pasta lievitata cotto al forno, spesso condito con pomodoro e mozzarella.","respuestas":"K1w9VWqAuJrH"},
+          {"tipo":"empieza","pista":"Struttura che permette di attraversare un fiume senza entrare in acqua.","respuestas":"K1w9U36OvJrH"},
+          {"tipo":"empieza","pista":"Strumento musicale a tasti bianchi e neri, con corde percosse da martelletti.","respuestas":"K1w9VXGUtt71FyPy4b0="}
+        ],
+        "Q": [
+          {"tipo":"empieza","pista":"Insieme di fogli rilegati, spesso a righe o a quadretti, su cui si scrivono gli appunti.","respuestas":"K1w8SXGevMr0CnXK"},
+          {"tipo":"empieza","pista":"Figura geometrica con quattro lati uguali e quattro angoli retti.","respuestas":"K1w8SXGeq9nuCnXK"},
+          {"tipo":"contiene","pista":"Pesce marino predatore con più file di denti e una pinna dorsale spesso triangolare.","respuestas":"K1w+TWWbtde4OA=="}
+        ],
+        "R": [
+          {"tipo":"empieza","pista":"Capitale d’Italia, in cui si trova il Colosseo.","respuestas":"K1wfU32b++U="},
+          {"tipo":"empieza","pista":"Anfibio senza coda da adulto, che salta e gracida negli stagni.","respuestas":"K1w/XX6b++U="},
+          {"tipo":"empieza","pista":"Cereale in chicchi usato per preparare la paella e gli arancini.","respuestas":"K1w/VWOV++U="}
+        ],
+        "S": [
+          {"tipo":"empieza","pista":"Stella che illumina e riscalda la Terra.","respuestas":"K1weU3yf++U="},
+          {"tipo":"empieza","pista":"Oggetto con una superficie riflettente in cui possiamo vedere il nostro viso.","respuestas":"K1w+THWZutDzCnXK"},
+          {"tipo":"empieza","pista":"Regione insulare italiana con capoluogo Cagliari.","respuestas":"K1weXWKevN/0BHXK"}
+        ],
+        "T": [
+          {"tipo":"empieza","pista":"Mezzo di trasporto composto da vagoni che viaggiano sui binari.","respuestas":"K1w5TnWUtprH"},
+          {"tipo":"empieza","pista":"Dolce al cucchiaio con savoiardi, caffè, mascarpone e cacao.","respuestas":"K1w5VWKbtNHppu61ng=="},
+          {"tipo":"empieza","pista":"Rettile con un guscio rigido che protegge il corpo.","respuestas":"K1w5XWKOuMrvAja178Kv2q4WMlhqkLTNuTs="}
+        ],
+        "U": [
+          {"tipo":"empieza","pista":"Frutto che cresce in grappoli e da cui si ricava il vino.","respuestas":"K1w4SnHYhA=="},
+          {"tipo":"empieza","pista":"Quello di gallina ha guscio, albume e tuorlo.","respuestas":"K1w4U2aV++U="},
+          {"tipo":"empieza","pista":"Il numero che viene subito dopo il dieci.","respuestas":"K1w4UnSTutG4OA=="}
+        ],
+        "V": [
+          {"tipo":"empieza","pista":"Città lagunare italiana celebre per le gondole e Piazza San Marco.","respuestas":"K1wbWX6fo9H7Rwo="},
+          {"tipo":"empieza","pista":"Mammifero selvatico dal muso appuntito e dalla coda folta, famoso nelle fiabe per la sua astuzia.","respuestas":"K1w7U3yKvJrH"},
+          {"tipo":"empieza","pista":"Materiale trasparente con cui si fanno molte bottiglie e bicchieri, ottenuto fondendo sabbia ricca di silice.","respuestas":"K1w7WWSItprH"}
+        ],
+        "Z": [
+          {"tipo":"empieza","pista":"Animale africano simile a un cavallo, con strisce bianche e nere.","respuestas":"K1w3WXKIuJrH"},
+          {"tipo":"empieza","pista":"Ortaggio che può avere la buccia arancione e che si intaglia per Halloween.","respuestas":"K1w3SXOZuJrH"},
+          {"tipo":"empieza","pista":"Borsa con due spallacci che si porta sulla schiena.","respuestas":"K1w3XXmUtprH"}
+        ]
+      }
+    },
+    "medio": {
+      "nombre": "Medio",
+      "preguntas": {
+        "A": [
+          {"tipo":"empieza","pista":"Opera che convoglia l’acqua dalla sorgente ai luoghi in cui viene utilizzata.","respuestas":"K1wsX2GPvNz1ESP44b0="},
+          {"tipo":"empieza","pista":"Crostaceo marino con lunghe antenne e carapace spinoso. A differenza dell’astice, è privo di grandi chele anteriori.","respuestas":"K1wsTnGdtsvuBHXK"},
+          {"tipo":"empieza","pista":"Fenomeno luminoso che colora il cielo notturno alle alte latitudini dell’emisfero nord.","respuestas":"K1wsSWKVq9m6BzjlpoG32v8/"}
+        ],
+        "B": [
+          {"tipo":"empieza","pista":"Strumento che misura la pressione atmosferica.","respuestas":"K1wvXWKVtN3uFzi1ng=="},
+          {"tipo":"empieza","pista":"Erba aromatica dalle foglie verdi che dà al pesto genovese il suo profumo caratteristico.","respuestas":"K1wvXWOTtdH5CnXK"},
+          {"tipo":"empieza","pista":"Capoluogo dell’Emilia-Romagna, famoso per i portici e le torri degli Asinelli e della Garisenda.","respuestas":"K1wPU3yVvtb7Rwo="}
+        ],
+        "C": [
+          {"tipo":"empieza","pista":"Strumento in cui la sabbia cade da un’ampolla all’altra per misurare il tempo.","respuestas":"K1wuUHWJqtH+Fza1ng=="},
+          {"tipo":"empieza","pista":"Marsupiale australiano che avanza a grandi salti e porta i piccoli in una tasca ventrale.","respuestas":"K1wuXX6drMr1Rwo="},
+          {"tipo":"empieza","pista":"Gruppo apparente di stelle a cui si associa una figura, come nel caso di Orione.","respuestas":"K1wuU2OOvNT2BC3+rI6+nYA="}
+        ],
+        "D": [
+          {"tipo":"empieza","pista":"Camelide con una sola gobba, usato come animale da trasporto nelle regioni desertiche.","respuestas":"K1wpTn+XvNz7Fz744b0="},
+          {"tipo":"empieza","pista":"Segmento che unisce due vertici non consecutivi di un poligono.","respuestas":"K1wpVXGdttb7CTK1ng=="},
+          {"tipo":"empieza","pista":"Poeta fiorentino che nella Divina Commedia racconta il suo viaggio attraverso Inferno, Purgatorio e Paradiso.","respuestas":"K1wJXX6OvJjbCT7wq4m+zbRAax1JmLTc/kQX"}
+        ],
+        "E": [
+          {"tipo":"empieza","pista":"Fenomeno in cui un astro scompare in tutto o in parte alla vista, come accade al Sole quando la Luna gli passa davanti.","respuestas":"K1woX3yTqsvzR3u1poO31q4RIh1Q"},
+          {"tipo":"empieza","pista":"Circonferenza immaginaria a latitudine zero che divide la Terra in due emisferi.","respuestas":"K1woTWWbrdfoAHXK"},
+          {"tipo":"empieza","pista":"Raccolta di piante essiccate e classificate, spesso fissate su fogli con un’etichetta.","respuestas":"K1woTnKbq9H1Rwo="}
+        ],
+        "F": [
+          {"tipo":"empieza","pista":"Uccello dalle zampe lunghe e dal piumaggio spesso rosa, che cerca cibo nelle acque poco profonde.","respuestas":"K1wrWX6TutfuETLlrMKG"},
+          {"tipo":"empieza","pista":"Resto o impronta di un organismo del passato geologico, conservato per esempio nella roccia.","respuestas":"K1wrU2OJsNT/Rwo="},
+          {"tipo":"empieza","pista":"Struttura da cui sgorga acqua, spesso al centro di una piazza come quella di Trevi.","respuestas":"K1wrU36OuNb7Rwo="}
+        ],
+        "G": [
+          {"tipo":"empieza","pista":"Giocattolo fissato su un bastoncino, con pale colorate che girano quando soffia il vento.","respuestas":"K1wqVWKbt9z1CTa1ng=="},
+          {"tipo":"empieza","pista":"Pianta alta dal grande capolino giallo, coltivata anche per ricavare olio dai suoi semi.","respuestas":"K1wqVWKbqtf2AHXK"},
+          {"tipo":"empieza","pista":"Apparecchio a manovella che riproduce dischi grazie a una puntina e spesso amplifica il suono con una tromba.","respuestas":"K1wqTnGXtNf8Cjn44b0="}
+        ],
+        "H": [
+          {"tipo":"contiene","pista":"Pianta ornamentale con fiori spesso vistosi. Alla sua famiglia appartiene anche la vaniglia.","respuestas":"K1wiTnOSsNz/BHXK"},
+          {"tipo":"contiene","pista":"Liquido colorato contenuto nella cartuccia di una penna stilografica.","respuestas":"K1wkUnOSsNfpESX44b0="},
+          {"tipo":"contiene","pista":"Legume che matura sottoterra e si mangia spesso tostato e salato.","respuestas":"K1wsTnGZsdH+AHW74YGp3r4KLltk24c="}
+        ],
+        "I": [
+          {"tipo":"empieza","pista":"Rifugio a cupola che si costruisce sovrapponendo blocchi di neve compatta.","respuestas":"K1wkW3yVtpq2Rz7wryNinYA="},
+          {"tipo":"empieza","pista":"Indagine giornalistica approfondita, condotta raccogliendo testimonianze e documenti.","respuestas":"K1wkUnOSsN3pETa1ng=="},
+          {"tipo":"empieza","pista":"Poema epico attribuito a Omero che racconta l’ira di Achille durante la guerra di Troia.","respuestas":"K1wEUHmbvd24OA=="}
+        ],
+        "L": [
+          {"tipo":"empieza","pista":"Lampada portatile che protegge la fiamma dal vento con pareti trasparenti.","respuestas":"K1whXX6OvMr0BHXK"},
+          {"tipo":"empieza","pista":"Felino selvatico con coda corta e ciuffi di pelo sulla punta delle orecchie.","respuestas":"K1whVX6ZvJrH"},
+          {"tipo":"empieza","pista":"Pianta dalla cui radice si ricava un estratto scuro usato in caramelle dal sapore caratteristico.","respuestas":"K1whVWGPsMrzHz724b0="}
+        ],
+        "M": [
+          {"tipo":"empieza","pista":"Opera figurativa ottenuta accostando tessere di pietra, vetro o altri materiali colorati.","respuestas":"K1wgU2ObsNv1Rwo="},
+          {"tipo":"empieza","pista":"Orologio solare che indica l’ora grazie all’ombra proiettata su una superficie graduata.","respuestas":"K1wgWWKTvdH7Cza1ng=="},
+          {"tipo":"empieza","pista":"Fantoccio mosso dall’alto con fili, tipico di un certo tipo di teatro.","respuestas":"K1wgXWKTttb/ESP24b0="}
+        ],
+        "N": [
+          {"tipo":"empieza","pista":"Liquido zuccherino dei fiori che attira gli impollinatori ed è usato dalle api per produrre il miele.","respuestas":"K1wjWWSOuMr/Rwo="},
+          {"tipo":"empieza","pista":"Pianta acquatica con foglie galleggianti e fiori che Claude Monet dipinse nel suo giardino.","respuestas":"K1wjVX6cvNm4OA=="},
+          {"tipo":"empieza","pista":"Sentimento di rimpianto o desiderio per un luogo lontano o per un periodo passato.","respuestas":"K1wjU2OOuNT9DDa1ng=="}
+        ],
+        "O": [
+          {"tipo":"empieza","pista":"Arte giapponese che crea figure piegando la carta.","respuestas":"K1wiTnmduNXzRwo="},
+          {"tipo":"empieza","pista":"Poligono con otto lati, come la forma del segnale di stop.","respuestas":"K1wiSGSbvtf0CnXK"},
+          {"tipo":"empieza","pista":"Strumento a fiato dell’orchestra, con corpo di legno e ancia doppia, che di solito dà il la agli altri strumenti.","respuestas":"K1wiXn+f++U="}
+        ],
+        "P": [
+          {"tipo":"empieza","pista":"Uccello marino dell’emisfero sud, incapace di volare ma abile nel nuoto.","respuestas":"K1w9VX6drNH0CnXK"},
+          {"tipo":"empieza","pista":"Frutto dal sapore piccante che dà carattere agli spaghetti aglio e olio.","respuestas":"K1w9WWCfq9f0Bj75rMKG"},
+          {"tipo":"empieza","pista":"Dispositivo che si apre in aria per rallentare la caduta di una persona o di un carico.","respuestas":"K1w9XWKbutn+ECPy4b0="}
+        ],
+        "Q": [
+          {"tipo":"empieza","pista":"Albero che produce ghiande.","respuestas":"K1w8SXWIutH7Rwo="},
+          {"tipo":"empieza","pista":"Foglia di trifoglio con quattro foglioline, ritenuta un portafortuna.","respuestas":"K1w8SXGeq9H8CjD7qo/54g=="},
+          {"tipo":"empieza","pista":"Numero di giocatori per squadra nel rugby a XV.","respuestas":"K1w8SXmUvdH5DHXK"}
+        ],
+        "R": [
+          {"tipo":"empieza","pista":"Pittore rinascimentale che affrescò La scuola di Atene nelle Stanze Vaticane.","respuestas":"K1wfXXacuN32CTi178KJ3rsEJlphlbWIyAckXm6N4u4="},
+          {"tipo":"empieza","pista":"Trama di fili di seta che certi aracnidi tessono per catturare le prede.","respuestas":"K1w/XXeUuMz/CTa1ng=="},
+          {"tipo":"empieza","pista":"Goccioline che si formano di notte sull’erba quando il vapore acqueo condensa.","respuestas":"K1w/SXeTuNz7Rwo="}
+        ],
+        "S": [
+          {"tipo":"empieza","pista":"Corpo naturale o artificiale che orbita attorno a un pianeta.","respuestas":"K1w+XWSftdTzETK1ng=="},
+          {"tipo":"empieza","pista":"Regione italiana in cui si trovano la Valle dei Templi e la città di Siracusa.","respuestas":"K1weVXOTtdH7Rwo="},
+          {"tipo":"empieza","pista":"Piccolo roditore arboricolo dalla coda folta, noto per fare scorta di noci e ghiande.","respuestas":"K1w+X3+TuMzuCjv44b0="}
+        ],
+        "T": [
+          {"tipo":"empieza","pista":"Strumento usato per misurare la temperatura.","respuestas":"K1w5WWKXttX/ESX44b0="},
+          {"tipo":"empieza","pista":"Fiore a coppa che nasce da un bulbo, associato ai campi fioriti dei Paesi Bassi.","respuestas":"K1w5SXyTqdn0CnXK"},
+          {"tipo":"empieza","pista":"Strumento a percussione formato da un cerchio con sonagli metallici, comune nella pizzica.","respuestas":"K1w5XX2YrMr/CTv44b0="}
+        ],
+        "U": [
+          {"tipo":"empieza","pista":"Piccolo uccello canoro famoso per il suo canto melodioso, che si può udire anche di notte.","respuestas":"K1w4T3mdt9f2CnXK"},
+          {"tipo":"empieza","pista":"Creatura fantastica simile a un cavallo, con un solo corno sulla fronte.","respuestas":"K1w4UnmZtsr0CnXK"},
+          {"tipo":"empieza","pista":"Eroe greco che impiegò dieci anni per tornare a Itaca dopo la caduta di Troia.","respuestas":"K1wYUHmJqt24OA=="}
+        ],
+        "V": [
+          {"tipo":"empieza","pista":"Strumento ad arco a quattro corde, il più piccolo della famiglia a cui appartiene la viola.","respuestas":"K1w7VX+WsNb1Rwo="},
+          {"tipo":"empieza","pista":"Città veneta dell’Arena romana, in cui Shakespeare ambientò Romeo e Giulietta.","respuestas":"K1wbWWKVt9m4OA=="},
+          {"tipo":"empieza","pista":"Massa di neve che si stacca dal pendio e precipita a valle.","respuestas":"K1w7XXybt9/7Rwo="}
+        ],
+        "Z": [
+          {"tipo":"empieza","pista":"Spezia ottenuta dagli stimmi essiccati di un fiore viola, usata nel risotto alla milanese.","respuestas":"K1w3XXacvMr7Czi1ng=="},
+          {"tipo":"empieza","pista":"Insetto a due ali che ronza e la cui femmina in molte specie punge per nutrirsi di sangue.","respuestas":"K1w3XX6AuMr7Rwo="},
+          {"tipo":"empieza","pista":"Semplice imbarcazione piatta, spesso fatta di tronchi legati tra loro.","respuestas":"K1w3XWSOvMr7Rwo="}
+        ]
+      }
+    },
+    "dificil": {
+      "nombre": "Difficile",
+      "preguntas": {
+        "A": [
+          {"tipo":"empieza","pista":"Edificio romano con gradinate disposte attorno a un’arena, come quello di Verona.","respuestas":"K1wsUnaTrd37ESX44b0="},
+          {"tipo":"empieza","pista":"Punto dell’orbita in cui un corpo che gira attorno alla Terra raggiunge la massima distanza da essa.","respuestas":"K1wsTH+dvNe4OA=="},
+          {"tipo":"contiene","pista":"Poeta di corte che scrisse l’Orlando furioso.","respuestas":"K1wMTnmVqsz1R3u1j5W/0KsLJFAtuKjB9BU+SyW/"}
+        ],
+        "B": [
+          {"tipo":"empieza","pista":"Edificio o ambiente annesso a una chiesa destinato alla celebrazione del primo sacramento cristiano.","respuestas":"K1wvXWSOsMvuACX44b0="},
+          {"tipo":"empieza","pista":"Roccia ricca di composti dell’alluminio e principale materia prima per estrarlo.","respuestas":"K1wvXWWCsMz/Rwo="},
+          {"tipo":"contiene","pista":"Autore toscano del Decameron.","respuestas":"K1wPU3OZuNv5DDi178Kc1rIUJlFjkPrq9AUpRWSBqdyjYA=="}
+        ],
+        "C": [
+          {"tipo":"empieza","pista":"Insieme di fenomeni causati dalla dissoluzione di rocce solubili, con formazione di grotte e doline.","respuestas":"K1wuXWKJsMv3CnXK"},
+          {"tipo":"empieza","pista":"Erba della famiglia del prezzemolo. I suoi frutti essiccati e le foglie fresche si usano come aromi.","respuestas":"K1wuU2KTuNb+Cjv44b0="},
+          {"tipo":"empieza","pista":"Strumento a tastiera di epoca barocca in cui ogni tasto aziona un plettro che pizzica la corda.","respuestas":"K1wuWX2YuNT1R3u1oIy6ybQBIlJvmLbHuTs="}
+        ],
+        "D": [
+          {"tipo":"empieza","pista":"Unione di due elementi vocalici pronunciati in una sola sillaba, come in «piede».","respuestas":"K1wpVWSOttb9CnXK"},
+          {"tipo":"empieza","pista":"Metodo che permette di datare il legno confrontando la successione degli anelli di crescita.","respuestas":"K1wpWX6eq9f5Fzj5rIy02LQDZWI="},
+          {"tipo":"empieza","pista":"Poliedro a dodici facce. Nella sua forma regolare, ciascuna faccia è un pentagono.","respuestas":"K1wpU3Sfutn/ASX44b0="}
+        ],
+        "E": [
+          {"tipo":"empieza","pista":"Curva piana per cui la somma delle distanze da due punti fissi, detti fuochi, è costante.","respuestas":"K1woUHyTqsv/Rwo="},
+          {"tipo":"empieza","pista":"Iscrizione incisa su pietra, metallo o altro materiale durevole, spesso commemorativa.","respuestas":"K1woTHmdq9n8AHXK"},
+          {"tipo":"empieza","pista":"Verso della tradizione italiana con l’ultimo accento ritmico principale sulla decima sillaba.","respuestas":"K1woUnSfutnpDDv7ooK0nYA="}
+        ],
+        "F": [
+          {"tipo":"empieza","pista":"Frattura della crosta terrestre lungo la quale due blocchi di roccia si sono spostati l’uno rispetto all’altro.","respuestas":"K1wrXXeWsNm4OA=="},
+          {"tipo":"empieza","pista":"Disegno visibile in controluce nella carta, usato anche come elemento di sicurezza nelle banconote.","respuestas":"K1wrVXyTvsr7Cza1ng=="},
+          {"tipo":"empieza","pista":"Strumento grave a fiato con ancia doppia e lungo tubo di legno ripiegato su sé stesso.","respuestas":"K1wrXXeVrcz1Rwo="}
+        ],
+        "G": [
+          {"tipo":"empieza","pista":"Concentrazione del glucosio nel sangue.","respuestas":"K1wqUHmZvNXzBHXK"},
+          {"tipo":"empieza","pista":"Sorgente termale che emette a intervalli getti di acqua calda e vapore.","respuestas":"K1wqWXmJvMq4SXXwppmo2q9AGg=="},
+          {"tipo":"empieza","pista":"Pittore toscano che affrescò la Cappella degli Scrovegni a Padova.","respuestas":"K1wKVX+Orde4SXXQqo+vy7JCI1Ytu7XG/wkkQSW/"}
+        ],
+        "H": [
+          {"tipo":"empieza","pista":"Istituto di origine inglese che permette a una persona detenuta di far verificare la legittimità della detenzione davanti a un giudice.","respuestas":"K1wlXXKfuMu6Bjjls5WonYA="},
+          {"tipo":"contiene","pista":"Struttura longitudinale alla base dello scafo, paragonata alla spina dorsale di una nave.","respuestas":"K1wuVHmdtdH7Rwo="},
+          {"tipo":"contiene","pista":"Cortile di un monastero, di solito circondato da un portico e riservato alla vita della comunità.","respuestas":"K1wuVHmVqszoCnXK"}
+        ],
+        "I": [
+          {"tipo":"empieza","pista":"Striscia di terra che unisce due aree emerse maggiori e separa due specchi d’acqua.","respuestas":"K1wkT2SXtprH"},
+          {"tipo":"empieza","pista":"Libro stampato con caratteri mobili nel Quattrocento, fino all’anno 1500 incluso.","respuestas":"K1wkUnOPt9n4Cjv44b0="},
+          {"tipo":"empieza","pista":"Linea di una carta meteorologica che unisce punti con la stessa pressione atmosferica.","respuestas":"K1wkT3+YuMr7Rwo="}
+        ],
+        "L": [
+          {"tipo":"empieza","pista":"In astronomia, bordo apparente del disco di un astro come il Sole o la Luna.","respuestas":"K1whWX2YtprH"},
+          {"tipo":"empieza","pista":"Involucro rigido formato dalla crosta terrestre e dalla parte superiore del mantello.","respuestas":"K1whVWSVqt7/Fza1ng=="},
+          {"tipo":"empieza","pista":"Blocco di metallo ottenuto colando il materiale fuso in uno stampo, spesso a forma di tronco di piramide.","respuestas":"K1whVX6dtszuCnXK"}
+        ],
+        "M": [
+          {"tipo":"empieza","pista":"Nelle arti visive, tono intermedio fra le zone di luce e quelle di ombra.","respuestas":"K1wgWWqAuMzzCyP24cz50rgYPV4tjbPG7wdoeQ=="},
+          {"tipo":"empieza","pista":"Trasformazione che porta, per esempio, un girino allo stadio di rana adulta.","respuestas":"K1wgWWSbtNfoAzjkqsKG"},
+          {"tipo":"contiene","pista":"Quale pittore rinascimentale affrescò la Camera degli Sposi nel Palazzo Ducale di Mantova?","respuestas":"K1wAXX6OvN/0BHW74aG1268HJh9AmLTc/gEkRSW/"}
+        ],
+        "N": [
+          {"tipo":"empieza","pista":"Disciplina che studia monete e medaglie, anche per ricostruire la storia economica.","respuestas":"K1wjSX2TqtX7ET70osKG"},
+          {"tipo":"empieza","pista":"Periodo della preistoria in cui molte comunità adottarono agricoltura e allevamento e produssero utensili di pietra levigata.","respuestas":"K1wjWX+WsMzzBji1ng=="},
+          {"tipo":"empieza","pista":"Punto della sfera celeste opposto allo zenit e situato idealmente sotto i piedi dell’osservatore.","respuestas":"K1wjXXSTq5rH"}
+        ],
+        "O": [
+          {"tipo":"empieza","pista":"Insieme dei processi geologici che portano alla formazione di una catena montuosa.","respuestas":"K1wiTn+dvNb/Fj61ng=="},
+          {"tipo":"empieza","pista":"Parola o espressione che imita un suono, come «tic tac».","respuestas":"K1wiUn+XuMz1FTL24b0="},
+          {"tipo":"empieza","pista":"Pigmento naturale terroso, spesso giallo o rossastro per la presenza di composti del ferro.","respuestas":"K1wiX2Kb++U="}
+        ],
+        "P": [
+          {"tipo":"empieza","pista":"Punto dell’orbita in cui un pianeta si trova alla minima distanza dal Sole.","respuestas":"K1w9WWKTvNTzCnXK"},
+          {"tipo":"empieza","pista":"Manoscritto, spesso su pergamena, di cui è stato cancellato il testo originario per poter scrivere di nuovo sullo stesso supporto.","respuestas":"K1w9XXyTt8v/FiP44b0="},
+          {"tipo":"contiene","pista":"Poeta del Canzoniere, la cui figura femminile centrale è Laura.","respuestas":"K1wdWWSIuMr5BHW74aap3rMBIkxulvr4/hI4RXWBoZHc"}
+        ],
+        "Q": [
+          {"tipo":"empieza","pista":"Minerale composto da biossido di silicio. La sua varietà viola è l’ametista.","respuestas":"K1w8SXGIo9e4OA=="},
+          {"tipo":"empieza","pista":"Numero minimo di presenti o votanti richiesto perché una deliberazione o una consultazione sia valida.","respuestas":"K1w8SX+IrNW4OA=="},
+          {"tipo":"empieza","pista":"Nucleo galattico attivo estremamente luminoso, alimentato da materia in caduta verso un buco nero supermassiccio.","respuestas":"K1w8SXGJuMq4OA=="}
+        ],
+        "R": [
+          {"tipo":"empieza","pista":"In cartografia, rete di meridiani e paralleli che permette di individuare una posizione.","respuestas":"K1w/WWSTutf2CnW74ZK+y7QBKFNi2b3N9AE4RWGLo9yjYA=="},
+          {"tipo":"empieza","pista":"In tecnologia dei materiali, proprietà misurata con la prova Charpy, che valuta l’energia assorbita da un provino durante la rottura per urto.","respuestas":"K1w/WWOTtdH/Cy324b0="},
+          {"tipo":"empieza","pista":"Enigma in cui immagini, lettere e segni vanno combinati per ricavare una frase.","respuestas":"K1w/WXKPqprH"}
+        ],
+        "S": [
+          {"tipo":"empieza","pista":"Strumento nautico a specchi usato per misurare l’altezza di un astro sull’orizzonte.","respuestas":"K1w+WWOOuNbuAHXK"},
+          {"tipo":"empieza","pista":"Figura retorica basata su un rapporto di quantità o inclusione, come quando si usa «vele» per indicare navi intere.","respuestas":"K1w+VX6fvdz1Bj/y4b0="},
+          {"tipo":"empieza","pista":"Passaggio diretto dallo stato solido a quello aeriforme.","respuestas":"K1w+SXKWsNX7Hz74rYX54g=="}
+        ],
+        "T": [
+          {"tipo":"empieza","pista":"Parte orizzontale di un ordine classico, composta da architrave, fregio e cornice.","respuestas":"K1w5TnGYvNngDDj5psKG"},
+          {"tipo":"empieza","pista":"Strato più basso dell’atmosfera, in cui avviene la maggior parte dei fenomeni meteorologici.","respuestas":"K1w5Tn+Ktsv8ACX24b0="},
+          {"tipo":"empieza","pista":"Opera pittorica o scultorea articolata in tre pannelli.","respuestas":"K1w5TnmOrdH5CnXK"}
+        ],
+        "U": [
+          {"tipo":"empieza","pista":"Proprietà di chi può essere presente in più luoghi nello stesso momento.","respuestas":"K1w4XnmLrNHupve1ng=="},
+          {"tipo":"empieza","pista":"Disciplina che studia e pianifica lo sviluppo degli insediamenti e l’organizzazione della città.","respuestas":"K1w4TnKbt9HpET70osKG"},
+          {"tipo":"empieza","pista":"Uccello con piumaggio color cannella, ali a strisce bianche e nere e una cresta che può aprire a ventaglio.","respuestas":"K1w4TGWKuJrH"}
+        ],
+        "V": [
+          {"tipo":"empieza","pista":"Grandezza fisica che descrive la rotazione locale di un fluido.","respuestas":"K1w7U2KOsNvzEZQ34b0="},
+          {"tipo":"empieza","pista":"Formato di pasta lunga e sottile il cui nome ricorda quello di un piccolo animale strisciante.","respuestas":"K1w7WWKXsNv/CTv44cz5ybgQKlZunLbE8kQX"},
+          {"tipo":"empieza","pista":"Ornamento a spirale caratteristico del capitello ionico.","respuestas":"K1w7U3yPrdm4OA=="}
+        ],
+        "Z": [
+          {"tipo":"empieza","pista":"Punto della sfera celeste direttamente sopra la testa dell’osservatore.","respuestas":"K1w3WX6TrZrH"},
+          {"tipo":"empieza","pista":"Titolo comunemente dato alla raccolta di pensieri e appunti che Giacomo Leopardi tenne dal 1817.","respuestas":"K1w3VXKbtdz1CzK178Kh1r8DK1til7+I/w9qVGKMs9rkT8BsaA=="},
+          {"tipo":"empieza","pista":"Minerale microporoso con una struttura a canali, utile per lo scambio ionico e come setaccio molecolare.","respuestas":"K1w3WX+WsMz/R3u1uYW007QWLh1Q"}
+        ]
+      }
+    },
+    "experto": {
+      "nombre": "Esperto",
+      "preguntas": {
+        "A": [
+          {"tipo":"empieza","pista":"Costruzione in cui l’elemento iniziale resta senza un legame sintattico regolare con il resto della frase, come in «Io, queste cose non mi interessano».","respuestas":"K1wsUnGZttTvETi1ng=="},
+          {"tipo":"empieza","pista":"Antiparticella del protone, della stessa massa ma di carica elettrica opposta.","respuestas":"K1wsUmSTqcr1ETj5psKG"},
+          {"tipo":"empieza","pista":"Condizione in cui l’apporto di ossigeno a un tessuto è assente.","respuestas":"K1wsUn+JqtH7Rwo="}
+        ],
+        "B": [
+          {"tipo":"empieza","pista":"Punto d’incontro delle mediane di un triangolo.","respuestas":"K1wvXWKTut30ESX44b0="},
+          {"tipo":"empieza","pista":"Si dice di un sistema di scrittura in cui le righe si leggono alternativamente da destra a sinistra e da sinistra a destra.","respuestas":"K1wvU2WJrcr1AzLzqoO0nfFAJUp+jajH/QMuTWSN4u4="},
+          {"tipo":"empieza","pista":"Argilla ricca di smectiti, usata anche per chiarificare il vino e nei fanghi di perforazione.","respuestas":"K1wvWX6OttbzETK1ng=="}
+        ],
+        "C": [
+          {"tipo":"empieza","pista":"Rinvio linguistico a un elemento che verrà espresso più avanti nel discorso.","respuestas":"K1wuXWSbv9foBHXK"},
+          {"tipo":"empieza","pista":"Solfuro di rame e ferro, di colore giallo ottone, importante minerale per l’estrazione del rame.","respuestas":"K1wuXXyZtsjzFz7jpsKG"},
+          {"tipo":"empieza","pista":"Statua femminile usata come sostegno architettonico, come quelle dell’Eretteo.","respuestas":"K1wuXWKTuMzzATK1ng=="}
+        ],
+        "D": [
+          {"tipo":"empieza","pista":"Prospettiva che studia una lingua attraverso i suoi cambiamenti nel corso del tempo.","respuestas":"K1wpVXGZq9f0DDa1ng=="},
+          {"tipo":"empieza","pista":"Proprietà per cui un materiale assorbe diversamente la luce secondo la polarizzazione, mostrando due colori in condizioni diverse.","respuestas":"K1wpVXOIttHpCDi1ng=="},
+          {"tipo":"empieza","pista":"Titolo del trattato latino in cui Dante discute le varietà del volgare e la ricerca di una lingua letteraria illustre.","respuestas":"K1wJWTCMrNT9BCX+44W30KwXIlF5kLuKxg=="}
+        ],
+        "E": [
+          {"tipo":"empieza","pista":"Descrizione letteraria di un’opera figurativa, come quella dello scudo di Achille nell’Iliade.","respuestas":"K1woX3aIuMvzR3u1pour168DNFZ+2/aK/g0sVmaRqZHc"},
+          {"tipo":"empieza","pista":"Nel sistema tolemaico, cerchio lungo cui si muove un pianeta mentre il centro del cerchio percorre il deferente.","respuestas":"K1woTHmZsNv2CnXK"},
+          {"tipo":"empieza","pista":"Si dice di una miscela che, a una data pressione, solidifica a una temperatura inferiore a quella di tutte le altre composizioni dello stesso sistema.","respuestas":"K1woSWSfrczzBji1ng=="}
+        ],
+        "F": [
+          {"tipo":"empieza","pista":"Aggettivo che qualifica la falda sotterranea più superficiale, il cui limite superiore è una superficie libera.","respuestas":"K1wrTnWbrdH5CnW74Yap2rwWLlxs24c="},
+          {"tipo":"empieza","pista":"Unità minima distintiva del sistema sonoro di una lingua, come /p/ e /b/ in «palla» e «balla».","respuestas":"K1wrU36ftNm4OA=="},
+          {"tipo":"empieza","pista":"Piccolo frammento, per esempio di tessuto biologico prelevato durante una biopsia.","respuestas":"K1wrTmWJrc32CnXK"}
+        ],
+        "G": [
+          {"tipo":"empieza","pista":"Groviglio di capillari del nefrone in cui inizia la filtrazione del sangue.","respuestas":"K1wqUH+XvMrvCTi178K807IPIk14lbWI6QMkRWuH4u4="},
+          {"tipo":"empieza","pista":"Disciplina che misura la forma e le dimensioni della Terra e il suo campo di gravità.","respuestas":"K1wqWX+evMvzBHXK"},
+          {"tipo":"empieza","pista":"Annotazione che spiega una parola o un passo difficile di un testo, spesso scritta a margine o tra le righe.","respuestas":"K1wqUH+Jqtm4OA=="}
+        ],
+        "H": [
+          {"tipo":"contiene","pista":"Astronomo il cui cognome designa la legge che lega la velocità di recessione delle galassie alla loro distanza.","respuestas":"K1wFSXKYtd24SXXSp5ey0f0qMl1vlb+Kxg=="},
+          {"tipo":"contiene","pista":"Tungstato di calcio che costituisce un importante minerale da cui si ricava il tungsteno.","respuestas":"K1w+X3ifvNTzETK1ng=="},
+          {"tipo":"contiene","pista":"Nome, di origine ebraica, della vocale centrale media rappresentata dal simbolo fonetico ə.","respuestas":"K1w+X3iNuJrH"}
+        ],
+        "I": [
+          {"tipo":"empieza","pista":"Equilibrio gravitazionale per cui blocchi litosferici di densità e spessore diversi si compensano in profondità.","respuestas":"K1wkT3+JrdnpDDa1ng=="},
+          {"tipo":"empieza","pista":"Figura retorica che attribuisce grammaticalmente a una parola un aggettivo che, per senso, spetterebbe a un’altra.","respuestas":"K1wkTHGWtdn9AHXK"},
+          {"tipo":"empieza","pista":"Disciplina che studia le tracce lasciate dagli organismi, come piste, tane e impronte fossili.","respuestas":"K1wkX36Vtdf9DDa1ng=="}
+        ],
+        "L": [
+          {"tipo":"empieza","pista":"Intrusione magmatica a base circa piana che solleva a cupola gli strati di roccia sovrastanti.","respuestas":"K1whXXOZttTzETK1ng=="},
+          {"tipo":"empieza","pista":"Minerale della famiglia dei feldspatoidi, ricco di potassio e tipico di alcune lave italiane.","respuestas":"K1whWWWZsMz/Rwo="},
+          {"tipo":"contiene","pista":"Matematico italiano che sviluppò con Gregorio Ricci-Curbastro il calcolo differenziale assoluto, poi usato nella relatività generale.","respuestas":"K1wBWWaT9PvzEz7josL3nYkXK1Nklvrk/hAjCUSLttr1XItiF1nSotilNC5Se5WxntM="}
+        ],
+        "M": [
+          {"tipo":"empieza","pista":"Ramo dell’entomologia che studia le formiche.","respuestas":"K1wgVWKXvNv1CTjwqoH54g=="},
+          {"tipo":"empieza","pista":"Figura retorica che sostituisce un termine con un altro legato da contiguità, come in «leggere Manzoni» per le sue opere.","respuestas":"K1wgWWSVt9H3DDa1ng=="},
+          {"tipo":"empieza","pista":"Confine atmosferico tra mesosfera e termosfera, vicino al minimo di temperatura dell’alta atmosfera.","respuestas":"K1wgWWOVqdnvFja1ng=="}
+        ],
+        "N": [
+          {"tipo":"empieza","pista":"Strumento che stima la torbidità misurando la luce diffusa dalle particelle in sospensione.","respuestas":"K1wjWXaftdf3ACPlrMKG"},
+          {"tipo":"empieza","pista":"Porzione della corteccia cerebrale dei mammiferi caratterizzata tipicamente da sei strati.","respuestas":"K1wjWX+ZtsruADT0qoH5k/8MIlBulqjc/h5oeQ=="},
+          {"tipo":"contiene","pista":"Scrittore francese che pubblicò il racconto Sylvie e la raccolta poetica Les Chimères.","respuestas":"K1wDWWKMuNS4SXXQAEmp3q8GZ1to2ZTN6RArSCW/"}
+        ],
+        "O": [
+          {"tipo":"empieza","pista":"Vetro vulcanico naturale, in genere scuro, formato dal rapido raffreddamento di un magma.","respuestas":"K1wiT2OTvdH7Cza1ng=="},
+          {"tipo":"empieza","pista":"Punto d’intersezione delle tre altezze di un triangolo.","respuestas":"K1wiTmSVut30ESX44b0="},
+          {"tipo":"empieza","pista":"Procedura ateniese con cui i cittadini votavano su frammenti di ceramica per allontanare una persona dalla città per dieci anni.","respuestas":"K1wiT2SIuNvzFjr44b0="}
+        ],
+        "P": [
+          {"tipo":"empieza","pista":"Disciplina che ricostruisce le antiche variazioni del campo magnetico terrestre analizzando le rocce.","respuestas":"K1w9XXyfttX7Ajnyt4mo0rJAGg=="},
+          {"tipo":"empieza","pista":"Organizzazione del periodo tramite coordinazione o giustapposizione delle proposizioni.","respuestas":"K1w9XWKbrdnpFj61ng=="},
+          {"tipo":"empieza","pista":"Dispositivo idrogeologico che misura il carico idraulico attraverso il livello raggiunto dall’acqua in un tubo verticale.","respuestas":"K1w9VXWAttX/ESX44b0="}
+        ],
+        "Q": [
+          {"tipo":"empieza","pista":"Verso della metrica italiana con l’ultimo accento ritmico principale sulla quarta sillaba.","respuestas":"K1w8SXmUuMrzCnXK"},
+          {"tipo":"empieza","pista":"Disposizione di cinque punti, quattro ai vertici di un quadrato e uno al centro, come sulla faccia di un dado.","respuestas":"K1w8SXmUutf0BjK178KqyrQMJEpjmr+Kxg=="},
+          {"tipo":"empieza","pista":"Numero ipercomplesso della forma a + bi + cj + dk, introdotto da William Rowan Hamilton.","respuestas":"K1w8SXGOvMr0DDj5psKG"}
+        ],
+        "R": [
+          {"tipo":"empieza","pista":"Filamento di ancoraggio delle briofite e di altri organismi privi di vere radici.","respuestas":"K1w/VWqVsNz/R3u1sYmh0LQGLh1Q"},
+          {"tipo":"empieza","pista":"Disciplina che studia come i materiali si deformano e fluiscono quando sono sottoposti a forze.","respuestas":"K1w/WX+Wtt/zBHXK"},
+          {"tipo":"empieza","pista":"Fenomeno fonetico per cui una consonante evolve in r, come accadde spesso alla s intervocalica in latino.","respuestas":"K1w/U2SbutHpCDi1ng=="}
+        ],
+        "S": [
+          {"tipo":"empieza","pista":"Disciplina ausiliaria della storia che studia i sigilli.","respuestas":"K1w+WmKbvtHpET70osL3na4LIFZhlbXP6QcsTWbAnQ=="},
+          {"tipo":"empieza","pista":"Figura retorica che accosta sensazioni di sfere sensoriali diverse, come in «una voce vellutata».","respuestas":"K1w+VX6fqsz/Fj724b0="},
+          {"tipo":"empieza","pista":"Tendenza di una roccia metamorfica a separarsi secondo piani definiti dall’orientazione dei minerali.","respuestas":"K1w+X3mJrdfpDCNUY8KG"}
+        ],
+        "T": [
+          {"tipo":"empieza","pista":"Strumento che, nella versione usata in agronomia, misura la tensione con cui l’acqua è trattenuta nel terreno.","respuestas":"K1w5WX6JsNf3ACPlrMKG"},
+          {"tipo":"empieza","pista":"Figura che separa le parti di una parola inserendovi un altro elemento, oppure le divide tra due versi.","respuestas":"K1w5UXWJsJrH"},
+          {"tipo":"empieza","pista":"Storico ateniese autore della narrazione classica della guerra del Peloponneso.","respuestas":"K1wZSXOTvdH+AHXK"}
+        ],
+        "U": [
+          {"tipo":"empieza","pista":"In filosofia del linguaggio, si dice di un termine applicato a più cose sempre nello stesso senso.","respuestas":"K1w4UnmMttv1Rwo="},
+          {"tipo":"empieza","pista":"Narrazione che immagina un corso alternativo della storia a partire da un evento del passato che si svolge diversamente.","respuestas":"K1w4X2KVt9H7Rwo="},
+          {"tipo":"empieza","pista":"Apparecchio ad altissima velocità di rotazione che separa, per sedimentazione, componenti come macromolecole e particelle subcellulari.","respuestas":"K1w4UGSIuNv/CyPlqoau2LxAGg=="}
+        ],
+        "V": [
+          {"tipo":"empieza","pista":"Compartimento cellulare delimitato da membrana, spesso molto grande nelle cellule vegetali mature.","respuestas":"K1w7XXOPttT1R3u1tYG4yrIOKB9unLTc6QcmQSW/"},
+          {"tipo":"empieza","pista":"Induzione della capacità di fiorire in alcune piante mediante un periodo di esposizione al freddo.","respuestas":"K1w7WWKUuNTzHy32uYm00bhAGg=="},
+          {"tipo":"empieza","pista":"Insieme di foglie o altri organi vegetali disposti intorno all’asse alla stessa altezza.","respuestas":"K1w7WWKOsNvzCTv44b0="}
+        ],
+        "Z": [
+          {"tipo":"empieza","pista":"Figura retorica in cui un unico verbo regge due termini, pur adattandosi propriamente soltanto a uno.","respuestas":"K1w3WWWdtNm4OA=="},
+          {"tipo":"empieza","pista":"Spora mobile dotata di uno o più flagelli, prodotta per esempio da alcune alghe.","respuestas":"K1w3U3+JqdfoBHXK"},
+          {"tipo":"empieza","pista":"Edificio templare mesopotamico a terrazze sovrapposte.","respuestas":"K1w3VXedrMr7EXW74Zqy2LoXNV552bfN6Ak6S3ODrdriXItiF2/epcDwBSZQMM3yxucGJ1trih9dyQ=="}
+        ]
+      }
+    }
+  }
+}

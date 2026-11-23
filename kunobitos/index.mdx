@@ -1,0 +1,170 @@
+---
+title: Kunobitos
+description: "Un juego de puzles: una fila de kunobitos sale del Nido y anda sin pensar; dales habilidades para llevarlos al Dojo en 28 niveles, con las estrellas y las cintas guardadas en este dispositivo."
+prompts:
+  - "Añade un nivel 29 al grupo Maestro: un muro de cristal y una charca, con 2 Peldaños y 3 Humos."
+  - "En el nivel «La charca», da 5 Peldaños en vez de 3 y pide que lleguen 10 kunobitos de 10."
+lang: es
+i18n:
+  data:
+    niveles: ['grupos[*].nombre', 'grupos[*].texto', 'grupos[*].aviso', 'niveles[*].nombre', 'niveles[*].pista']
+kunobi:
+  page-layout: full
+---
+
+import '@fontsource/press-start-2p/400.css'
+import '@fontsource/fredoka/400.css'
+import '@fontsource/fredoka/500.css'
+import '@fontsource/fredoka/600.css'
+import * as React from 'react'
+import datos from './data/niveles.json'
+import { Juego } from './src/Juego'
+import { useI18n } from '../lib/i18n'
+import translations from './locales/index'
+
+{/*
+  Los niveles y sus grupos están en data/niveles.json (cómo se dibuja un nivel: src/niveles.ts).
+  El progreso se guarda solo en este dispositivo. Estas son las palabras de la página y del juego;
+  en `controles`, `objetivo` y otras, **texto** sale en negrita. La página es solo el juego: empieza en
+  la pantalla de título, que juega sola un nivel de cada escenario (src/demo.ts).
+*/}
+
+export const WORDS = {
+  cerrar: 'Cerrar',
+  titulo: {
+    gancho: 'Pequeños ninjas que andan sin mirar. Tú decides cómo llegan al Dojo.',
+    jugar: 'Jugar',
+    nivelN: 'Nivel {{n}} · {{nombre}}',
+    todos: 'Elige un nivel',
+    turnos: 'Por turnos',
+    turnosSub: 'Dos jugadores, un nivel',
+    niveles: 'Niveles',
+    verNiveles: 'Niveles: {{n}} de {{total}} estrellas',
+    comoSeJuega: '¿Cómo se juega?',
+    cintas: '{{n}} de 5 cintas',
+    escena: '{{grupo}} · {{nivel}}',
+  },
+  ayuda: {
+    titulo: 'Cómo se juega',
+    paso1: 'Los kunobitos salen del Nido y andan solos, sin mirar.',
+    paso2: 'Elige una habilidad y toca a un kunobito para dársela.',
+    paso3: 'Lleva al Dojo a los que pide el nivel antes de que acabe el tiempo.',
+    una: 'Llegan los que pide el nivel',
+    dos: 'Se pierden dos como mucho',
+    tres: 'Llegan todos',
+    controles: '**Controles:** arrastra para mover la vista; rueda, pellizco o + y − para acercarla. Teclas: **1–8** habilidad, **P** pausa, **F** ×2, **+** y **−** ritmo de salida, **M** sonido.',
+    entendido: '¡Entendido!',
+  },
+  mapa: {
+    titulo: 'Niveles',
+    inicio: 'Inicio',
+    teToca: '¡Te toca!',
+  },
+  turnos: {
+    titulo: 'Por turnos',
+    explica: 'Jugáis el mismo nivel en este dispositivo, uno detrás de otro. Gana quien lleve más kunobitos al Dojo.',
+    jugador1: 'Jugador 1',
+    jugador2: 'Jugador 2',
+    primero: 'Primero juega',
+    despues: 'Después juega',
+    nivel: 'Nivel',
+    anterior: 'Nivel anterior',
+    posterior: 'Nivel siguiente',
+    empezar: 'Empezar',
+    turnoDe: 'Turno de {{nombre}}',
+    ahoraJuega: 'Ahora juega {{nombre}} →',
+    verQuien: '¿Quién ha ganado? →',
+    gana: '¡Gana {{nombre}}!',
+    empate: '¡Empate!',
+    enElDojo_one: 'llegó al Dojo',
+    enElDojo_other: 'llegaron al Dojo',
+    revancha: 'Revancha',
+    otroNivel: 'Siguiente nivel',
+    inicio: 'Volver al inicio',
+  },
+  estrellas_one: '{{count}} estrella',
+  estrellas_other: '{{count}} estrellas',
+  seguro: '¿Seguro? Toca otra vez',
+  lista: {
+    estrellas: 'Estrellas: **{{n}}** de {{total}}',
+    cerrado: 'Cerrado',
+    pie: 'Cada nivel se abre al superar el anterior. El progreso se guarda en este dispositivo.',
+    borrar: 'Borrar progreso',
+  },
+  cintas: { dorada: 'dorada', verde: 'verde', morada: 'morada', blanca: 'blanca', negra: 'negra' },
+  cinta: {
+    nombre: 'Cinta {{nombre}}',
+    ganada: 'Cinta {{nombre}} ✓',
+    ganadaTitulo: 'Cinta {{nombre}}: ganada',
+    alSuperar: 'Al superar el grupo: cinta {{nombre}}',
+  },
+  habilidades: {
+    trepa: { nombre: 'Trepa', queHace: 'Sube por las paredes. Se suma a lo que haga; se puede dar en el aire.' },
+    hoja: { nombre: 'Hoja', queHace: 'Planea y llega bien desde cualquier altura. Se puede dar en el aire.' },
+    planton: { nombre: 'Plantón', queHace: 'Se queda quieto con los brazos abiertos: los demás rebotan contra él.' },
+    chispa: { nombre: 'Chispa', queHace: 'Cuenta 5 segundos y estalla: abre un hueco en la tierra (no en el cristal). Él se pierde.' },
+    peldano: { nombre: 'Peldaño', queHace: 'Pone 12 tablas en diagonal hacia arriba. Dalo justo antes de lo que hay que salvar.' },
+    tunel: { nombre: 'Túnel', queHace: 'Cava en horizontal hasta salir de la tierra. Si lo das un poco antes, se acerca.' },
+    pico: { nombre: 'Pico', queHace: 'Cava en diagonal hacia abajo: una rampa por la que se baja sin peligro.' },
+    pozo: { nombre: 'Pozo', queHace: 'Cava hacia abajo hasta atravesar el suelo.' },
+    gancho: { nombre: 'Gancho', queHace: 'Lanza la cuerda a un saliente delante y arriba, sube colgado y pasa por encima. Si no hay dónde engancharse, no se gasta.' },
+    salto: { nombre: 'Salto', queHace: 'Salta en arco por encima de pinchos, charcas cortas y huecos, y cae de pie.' },
+    humo: { nombre: 'Humo', queHace: 'Desaparece en una nube y sale al otro lado de un muro fino, también de cristal. Dalo cerca del muro.' },
+    kunai: { nombre: 'Kunai', queHace: 'Clava cuatro kunai en la pared de delante: él y los que lleguen después suben por ellos.' },
+    sigilo: { nombre: 'Sigilo', queHace: 'Unos 10 segundos agachado: las linternas vigía no lo ven, ni al que va pegado detrás.' },
+    cometa: { nombre: 'Cometa', queHace: 'Con viento vuela en horizontal; sin viento planea. Dala antes del borde o en el aire.' },
+  },
+  partida: {
+    ayuda: 'Ayuda',
+    ayudaTecla: 'Ayuda (?)',
+    comoSeJuega: 'Cómo se juega',
+    objetivoGeneral: 'Los kunobitos salen del Nido y andan solos. Elige una habilidad abajo y toca a un kunobito para dársela. Lleva al Dojo al menos los que pide el nivel antes de que se acabe el tiempo.',
+    controles: '**Controles:** toca un kunobito para darle la habilidad · arrastra para mover la vista · rueda, pellizco o + / − para el zoom · minimapa para saltar. **Teclas:** 1–{{n}} habilidad, P pausa, F ×2, + / − ritmo, M sonido, ? ayuda.',
+    peligros: 'Caer desde muy alto aturde, y el agua o salir del mapa los pierde. El cristal no se cava ni se rompe.',
+    estrellasRegla: '**Estrellas:** ★ si llegan al Dojo los que pide el nivel, ★★ si se pierden dos como mucho y ★★★ si llegan todos.',
+    entendido: 'Entendido',
+    niveles: '← Niveles',
+    salir: '← Salir',
+    nivelN: 'Nivel {{n}}',
+    fuera: 'Fuera **{{n}}/{{total}}**',
+    enCasa: 'En casa **{{n}}** de {{minimo}}',
+    perdidos: 'Perdidos **{{n}}**',
+    lienzo: 'Nivel: toca un kunobito para darle la habilidad elegida',
+    activarSonido: 'Activar sonido',
+    silenciar: 'Silenciar',
+    sonidoTecla: 'Sonido (M)',
+    acercar: 'Acercar',
+    alejar: 'Alejar',
+    objetivo: 'Lleva al Dojo al menos **{{minimo}}** de **{{total}}** kunobitos en **{{tiempo}}**.',
+    mejor: 'Tu mejor resultado:',
+    aJugar: '¡A jugar!',
+    superado: '¡Nivel superado!',
+    fallado: 'No ha podido ser',
+    llegaron: 'Llegaron al Dojo **{{n}}** de {{total}} (hacían falta {{minimo}}).',
+    otraVez: 'Jugar otra vez',
+    reintentar: 'Reintentar',
+    siguiente: 'Siguiente nivel →',
+    habilidades: 'Habilidades',
+    tecla: '{{nombre}} (tecla {{n}})',
+    ritmo: 'Ritmo de salida',
+    masDespacio: 'Más despacio',
+    masDeprisa: 'Más deprisa',
+    saleUno: 'Sale uno cada **{{s}} s**',
+    seguir: '▶ Jugar',
+    pausa: '⏸ Pausa',
+    fuegos: 'Terminar',
+    reiniciar: '↺ Reiniciar',
+    minimapa: 'Minimapa: toca para mover la vista',
+    noQuedan: 'No quedan: {{nombre}}',
+    ahoraNo: 'Ahora no',
+    visto: '¡Visto!',
+  },
+}
+
+export const Pagina = () => {
+  const t = useI18n(WORDS, translations)
+  const niveles = React.useMemo(() => t.data('niveles', datos), [t])
+  return <Juego datos={niveles} w={t.w} locale={t.locale} />
+}
+
+<Pagina />
