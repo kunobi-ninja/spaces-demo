@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { rollDie } from './dado.mjs'
+import { rollDie } from './dado.js'
 import { Panel, ThrowHistory, TurnPanel, Victoria, useOca, type Game } from './Panel'
 
 /*

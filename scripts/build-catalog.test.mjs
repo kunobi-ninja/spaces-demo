@@ -132,6 +132,16 @@ test('rejects a demo over 10 MB', async () => {
   })
 })
 
+test('rejects a module the gallery would not load as code', async () => {
+  await withGallery(['esm'], async (copy) => {
+    await mkdir(join(copy, 'esm'))
+    await writeFile(join(copy, 'esm', 'index.mdx'), "---\ntitle: Esm\ndescription: Uses .mjs\nprompts: [Hi]\n---\n\nimport { x } from './rules.mjs'\n\n{x}\n")
+    await writeFile(join(copy, 'esm', 'rules.mjs'), 'export const x = 1\n')
+    await cp(join(copy, 'assets/covers/trip.jpg'), join(copy, 'assets/covers/esm.jpg'))
+    await assert.rejects(buildCatalog({ repo: copy, out: join(copy, 'out'), release: 'x' }), /esm: esm\/rules\.mjs is not loaded as code/)
+  })
+})
+
 test('rejects an id that is not a page', async () => {
   await withGallery(['pitch-deck'], async (copy) => {
     await assert.rejects(buildCatalog({ repo: copy, out: join(copy, 'out'), release: 'x' }), /pitch-deck: not a page/)

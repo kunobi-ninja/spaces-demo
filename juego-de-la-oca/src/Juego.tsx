@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { crearReglas } from './reglas.mjs'
+import { crearReglas } from './reglas.js'
 import { espiral } from './espiral'
 import { EscenaOca, type ReglasEscena } from './escena'
 import { ESTILOS } from './estilos'

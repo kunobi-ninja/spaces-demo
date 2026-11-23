@@ -279,6 +279,11 @@ async function buildDemo(repo, { id, entry, gallery }, objects) {
   await placeShared(repo, id, posix(relative(repo, folder)), contents, [...contents.keys()].filter((path) => !own.has(path)))
   await addFonts(repo, contents)
 
+  // Released Kunobi gallery builds read only .ts/.tsx/.js/.jsx as code: a module with another
+  // extension arrives as a plain file and its exports are undefined when the demo starts.
+  const module = [...contents.keys()].find((path) => /\.(mjs|cjs|mts|cts)$/.test(path))
+  if (module) throw new Error(`${id}: ${module} is not loaded as code in the gallery; name it .js or .ts`)
+
   const coverPath = `assets/covers/${id}.jpg`
   const cover = await readFile(join(repo, coverPath)).catch(() => {
     throw new Error(`${id}: no cover at ${coverPath}`)

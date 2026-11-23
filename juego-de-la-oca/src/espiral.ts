@@ -1,4 +1,4 @@
-import { META } from './reglas.mjs'
+import { META } from './reglas.js'
 import type { Celda } from './arte'
 
 /** Las casillas 0…63 en una espiral de 8 × 8 que entra hacia el centro, con una flecha en cada giro. */

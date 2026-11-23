@@ -1,6 +1,6 @@
 import * as React from 'react'
 import * as kunobi from 'kunobi'
-import { rollDie } from './dado.mjs'
+import { rollDie } from './dado.js'
 import { Panel, Token, TurnPanel, Victoria, useOca, type Game } from './Panel'
 
 /*
