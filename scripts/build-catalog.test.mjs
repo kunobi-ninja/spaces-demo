@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
+import { readFileSync } from 'node:fs'
 import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join, resolve } from 'node:path'
@@ -30,7 +31,7 @@ test('catalog lists the gallery picks first, then every other page in the index 
       ...GALLERY,
       'home-hunt', 'team', 'expenses', 'meals', 'flat-tour', 'monthly-report', 'hiring', 'content-calendar',
       'projects', 'cluster-dashboard', 'runbook', 'incident', 'blast-radius', 'on-call-handover', 'quiz-night',
-      'music-jam', 'scan-viewer',
+      'music-jam', 'scan-viewer', 'castillos', 'kunobitos', 'juego-de-la-oca', 'pasalacabra',
     ]
   )
   for (const d of catalog.demos) assert.equal(d.gallery, GALLERY.includes(d.id), d.id)
@@ -86,6 +87,8 @@ test('fontsource imports are resolved to a Latin css with the font inlined', asy
     ['trip', '@fontsource/figtree/400.css', 'Figtree'],
     ['week-quest', '@fontsource/press-start-2p/400.css', 'Press Start 2P'],
     ['dino-snack', '@fontsource/fredoka/700.css', 'Fredoka'],
+    // An italic weight: Fontsource names its face `fraunces-latin-500-italic`, not `…-normal`.
+    ['castillos', '@fontsource/fraunces/500-italic.css', 'Fraunces'],
   ]) {
     const font = demo(id).files.find((f) => f.path === specifier)
     assert.ok(font, `${id}: ${specifier} missing`)
@@ -129,6 +132,16 @@ test('rejects a demo over 10 MB', async () => {
   })
 })
 
+test('rejects a module the gallery would not load as code', async () => {
+  await withGallery(['esm'], async (copy) => {
+    await mkdir(join(copy, 'esm'))
+    await writeFile(join(copy, 'esm', 'index.mdx'), "---\ntitle: Esm\ndescription: Uses .mjs\nprompts: [Hi]\ncategory: play\n---\n\nimport { x } from './rules.mjs'\n\n{x}\n")
+    await writeFile(join(copy, 'esm', 'rules.mjs'), 'export const x = 1\n')
+    await cp(join(copy, 'assets/covers/trip.jpg'), join(copy, 'assets/covers/esm.jpg'))
+    await assert.rejects(buildCatalog({ repo: copy, out: join(copy, 'out'), release: 'x' }), /esm: esm\/rules\.mjs is not loaded as code/)
+  })
+})
+
 test('rejects an id that is not a page', async () => {
   await withGallery(['pitch-deck'], async (copy) => {
     await assert.rejects(buildCatalog({ repo: copy, out: join(copy, 'out'), release: 'x' }), /pitch-deck: not a page/)
@@ -144,14 +157,39 @@ test('translations come from the locale files, prompts only where the page has t
   assert.match(demo('trip').translations.es.description, /Lisboa/)
   assert.equal(demo('hiring').translations.es.title, 'Contratación en Linden & Co')
   assert.ok(!('prompts' in demo('hiring').translations.es))
-  // English pages carry no lang.
-  for (const d of catalog.demos) assert.ok(!('lang' in d), d.id)
+  // English pages carry no lang; the pages written in Spanish say so.
+  const spanish = ['castillos', 'kunobitos', 'juego-de-la-oca', 'pasalacabra']
+  for (const d of catalog.demos) assert.equal(d.lang, spanish.includes(d.id) ? 'es' : undefined, d.id)
 })
 
-test('the shared i18n helper ships with every page that imports it', () => {
-  assert.ok(paths('trip').includes('lib/i18n.ts'))
+const published = (id, path) => readFileSync(join(out, 'objects', demo(id).files.find((f) => f.path === path).sha256), 'utf8')
+
+test('the shared i18n helper ships inside every demo that imports it, which imports it from there', () => {
+  assert.ok(paths('trip').includes('trip/lib/i18n.ts'))
   assert.ok(paths('trip').includes('trip/locales/es.json'))
+  assert.match(published('trip', 'trip/index.mdx'), /from '\.\/lib\/i18n'/)
+  assert.equal(published('trip', 'trip/lib/i18n.ts'), readFileSync(join(repo, 'lib/i18n.ts'), 'utf8'))
+  // A page deeper in the folder reaches the same copy.
+  assert.match(published('team', 'team/wiki/index.mdx'), /from '\.\.\/lib\/i18n'/)
+  // The home page is the repository root: it keeps the original where it is.
   assert.ok(catalog.home.files.some((f) => f.path === 'lib/i18n.ts'))
+})
+
+test('every demo is its folder alone, as "Make this mine" copies only the folder', () => {
+  for (const d of catalog.demos) {
+    const folder = d.entry.slice(0, d.entry.lastIndexOf('/') + 1)
+    for (const f of d.files) {
+      assert.ok(f.path.startsWith(folder) || f.path.startsWith('.kunobi/') || f.path.startsWith('@fontsource/'), `${d.id}: ${f.path}`)
+    }
+  }
+})
+
+test('rejects a shared file that a demo file of the same path would hide', async () => {
+  await withGallery(['trip'], async (copy) => {
+    await mkdir(join(copy, 'trip', 'lib'))
+    await writeFile(join(copy, 'trip', 'lib', 'i18n.ts'), 'export {}\n')
+    await assert.rejects(buildCatalog({ repo: copy, out: join(copy, 'out'), release: 'x' }), /trip: trip\/lib\/i18n\.ts would hide the shared lib\/i18n\.ts/)
+  })
 })
 
 async function withPage(frontMatter, locales, run) {
@@ -234,6 +272,9 @@ test('only demos made for several people at once carry players', () => {
     'flat-tour': { min: 2 },
     'quiz-night': { min: 2 },
     'music-jam': { min: 2 },
+    castillos: { min: 2, max: 4 },
+    'juego-de-la-oca': { min: 2, max: 4 },
+    pasalacabra: { min: 2, max: 2 },
   })
 })
 

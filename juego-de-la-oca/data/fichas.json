@@ -1,0 +1,8 @@
+{
+  "fichas": [
+    { "id": "roja", "simbolo": "●", "color": "#d4452b", "tinta": "#fff" },
+    { "id": "azul", "simbolo": "◆", "color": "#1f6fb2", "tinta": "#fff" },
+    { "id": "morada", "simbolo": "▲", "color": "#7b3fc4", "tinta": "#fff" },
+    { "id": "amarilla", "simbolo": "■", "color": "#e0a100", "tinta": "#3a2600" }
+  ]
+}

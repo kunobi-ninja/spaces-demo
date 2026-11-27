@@ -1,0 +1,10 @@
+{
+  "colores": [
+    { "nombre": "Rojo", "color": "#c8413b" },
+    { "nombre": "Azul", "color": "#3563b8" },
+    { "nombre": "Amarillo", "color": "#e0b532" },
+    { "nombre": "Morado", "color": "#7d4aa8" },
+    { "nombre": "Negro", "color": "#2f2f33" },
+    { "nombre": "Rosa", "color": "#d9569a" }
+  ]
+}

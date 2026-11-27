@@ -1,0 +1,139 @@
+---
+title: Pasalacabra
+description: "Un juego de palabras para dos: cada uno tiene una rueda de letras y un reloj que solo corre en su turno."
+prompts:
+  - "Añade dos pistas nuevas para la letra Z del nivel Fácil, con sus respuestas cifradas como las demás."
+  - "Que los tiempos por jugador sean de 1, 2 y 4 minutos, y que la cuenta atrás suene en los últimos 5 segundos."
+category: play
+players: { min: 2, max: 2 }
+lang: es
+kunobi:
+  page-layout: full
+  webEdits: write
+  rooms:
+    pasalacabra:
+      model: map
+      rules:
+        host: [mesa]
+        own: [listo, jugada]
+---
+
+import '@fontsource/fredoka/500.css'
+import '@fontsource/fredoka/600.css'
+import '@fontsource/fredoka/700.css'
+import '@fontsource/figtree/400.css'
+import '@fontsource/figtree/600.css'
+import { Jugar } from './src/Jugar'
+import { edicionPara } from './src/ediciones'
+import { useI18n } from '../lib/i18n'
+import translations from './locales/index'
+
+{/*
+  Las preguntas están en data/preguntas.<idioma>.json (español, inglés e italiano): cada nivel, sus
+  letras y, en cada letra, sus pistas con las respuestas cifradas (src/cifrado.ts) para no destripar
+  el juego. Cada idioma tiene su propio banco: no son traducciones unos de otros. La partida empieza
+  con el banco del idioma de quien lee (español si no hay), y en los ajustes se puede elegir otro.
+  La portada es una partida de muestra que se juega sola (src/Titulo.tsx), con las mismas reglas y preguntas.
+  La partida en línea va en la sala pasalacabra: solo el anfitrión escribe la mesa, y cada jugador
+  solo su «listo» y su jugada. Abajo están las palabras de la página, en español; sus traducciones
+  están en locales/<idioma>.json.
+*/}
+
+export const WORDS = {
+  titulo: 'Pasalacabra',
+  gancho: 'Dos ruedas de letras, dos relojes y una cabra. ¿Quién sabe más palabras?',
+  jugar: 'Jugar',
+  jugarAmigo: 'Jugar con un amigo',
+  comoSeJuega: '¿Cómo se juega?',
+  entendido: '¡Entendido!',
+  amigoTitulo: 'Para jugar con amigos',
+  amigoTexto: 'Primero haz tuyo este juego: toca **✨ Hacerlo mío** arriba. En tu copia, toca **Compartir** e invítales.',
+  jugarAqui: 'Jugar aquí',
+  cerrar: 'Cerrar',
+  volver: 'Volver',
+  ajustesTitulo: 'Antes de empezar',
+  reglas: [
+    'Cada letra trae una pista. La respuesta empieza con esa letra o la lleva dentro.',
+    '¿Aciertas? Sigues tú con la siguiente.',
+    '¿Fallas? Le toca al otro. Tu reloj se para y empieza el suyo.',
+    '¿Ni idea? Di «¡Pasa la cabra!» o pulsa Esc. Esa letra vuelve en la siguiente vuelta.',
+    'Gana quien más acierte. Si empatan, quien menos falle y, si no, quien tenga más tiempo.',
+  ],
+  tituloEnLinea: 'Pasalacabra en línea',
+  contra: 'vs',
+  jugador: 'Jugador',
+  tiempo: 'Tiempo por jugador',
+  preguntas: 'Preguntas',
+  idiomaPreguntas: 'Idioma de las preguntas',
+  empezar: 'Empezar',
+  introTecla: 'Intro',
+  atajoResponder: 'responde',
+  atajoPasar: 'pasa la cabra',
+  sonido: '🔊 Sonido',
+  silencio: '🔇 Sin sonido',
+  cancelarTitulo: '¿Cancelar la partida?',
+  cancelarAviso: 'Se perderá lo jugado y volveréis a la pantalla de inicio.',
+  cancelarSi: 'Sí, cancelar',
+  no: 'No',
+  pausaTitulo: 'Partida en pausa',
+  pausaAviso: 'Los relojes están parados. Le toca a {{nombre}} al seguir.',
+  seguir: 'Seguir',
+  cancelarPartida: 'Cancelar partida',
+  turno: 'Turno de',
+  nivel: 'Nivel',
+  pausa: 'Pausa',
+  cancelar: 'Cancelar',
+  empieza: 'Empieza con',
+  contiene: 'Lleva la',
+  respuesta: 'Tu respuesta',
+  responder: 'Responder',
+  pasa: '¡Pasa la cabra!',
+  espera: 'La pregunta solo se muestra a quien tiene el turno.',
+  avisoEmpieza: 'Empieza {{nombre}}. ¡Suerte!',
+  avisoAcierto: '¡Bien! La {{letra}} es correcta.',
+  avisoFallo: 'Fallo en la {{letra}}: era «{{correcta}}».',
+  avisoSigue: 'Sigue {{nombre}}.',
+  avisoTiempo: 'Se acabó el tiempo de {{nombre}}.',
+  avisoRueda: '¡{{nombre}} ha completado su rueda!',
+  empate: '¡Empate!',
+  gana: '¡Gana {{nombre}}!',
+  motivos: {
+    aciertos: 'por tener más aciertos',
+    fallos: 'con los mismos aciertos, por tener menos fallos',
+    tiempo: 'con los mismos aciertos y fallos, por tener más tiempo de sobra',
+    empate: 'mismos aciertos, fallos y tiempo',
+  },
+  revancha: 'Revancha',
+  cambiar: 'Cambiar jugadores',
+  repaso: 'Respuestas de',
+  rueda: 'Rueda de {{nombre}}: {{bien}} aciertos, {{mal}} fallos, quedan {{tiempo}}',
+  sala: {
+    abriendo: 'Abriendo la sala…',
+    anfitrionDesconectado: 'El dispositivo anfitrión está desconectado. Esperando a que vuelva…',
+    noDisponible: 'La sala en línea no está disponible. El anfitrión debe abrir esta página en Kunobi con la edición en vivo activada.',
+    abrirEnKunobi: 'El anfitrión debe tener esta misma página abierta en Kunobi.',
+    reintentar: 'Reintentar conexión',
+    espectador: 'Estás viendo la partida.',
+    juegasComo: 'Juegas como {{nombre}}.',
+    esperandoVuelta: 'Esperando a que vuelva el otro jugador.',
+    espera: 'Sala de espera',
+    segundoJugador: 'Segundo jugador',
+    invitado: 'Invitado',
+    pideUnirse: 'Pide al otro jugador que abra esta página en Kunobi o desde el enlace web, elija «Jugar con un amigo» y pulse «Unirme a la partida».',
+    enSala: 'Estás en la sala. Esperando a que el anfitrión empiece.',
+    unirme: 'Unirme a la partida',
+    salir: 'Salir de la sala de espera',
+    soloEspectador: 'Tienes acceso de espectador. Para jugar necesitas acceso de jugador en este espacio.',
+    errorCambio: 'La sala cambió. Revisa el turno y vuelve a intentarlo.',
+    errorActualizar: 'No se pudo actualizar la sala. {{motivo}}',
+    vuelveAIntentarlo: 'Vuelve a intentarlo.',
+    errorConexion: 'Se perdió la conexión al enviar el cambio. Comprueba el estado antes de intentarlo de nuevo.',
+  },
+}
+
+export const Pagina = () => {
+  const t = useI18n(WORDS, translations)
+  return <Jugar w={t.w} idioma={edicionPara(t.lang).idioma} />
+}
+
+<Pagina />
