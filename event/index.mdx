@@ -21,13 +21,11 @@ import '@fontsource/parkinsans/800.css'
 import '@fontsource/figtree/400.css'
 import '@fontsource/figtree/600.css'
 import event from './data/event.json'
-import guests from './data/guests.json'
-import guestsStart from './data/guests.start.json'
 import { EventPlan } from './src/EventPlan'
 import { useI18n } from '../lib/i18n'
 import translations from './locales/index'
 
-{/* The page's words. Replies, party sizes, diets and tables live in the event-guests LiveStore (readable copy: data/guests.json); the tables, evening and budget live in data/event.json. Their translations, and those of the starting guests (data/guests.start.json, by id), are in locales/<lang>.json; a guest still as they started shows translated. */}
+{/* The page's words. Replies, party sizes, diets and tables live in the event-guests LiveStore (starting from data/guests.start.json; readable copy: data/guests.json); the tables, evening and budget live in data/event.json. Their translations, and those of the starting guests (data/guests.start.json, by id), are in locales/<lang>.json; a guest still as they started shows translated. */}
 
 export const WORDS = {
   daysToGo: 'days to go', coming: 'coming', seatsLeft: 'seats left',
@@ -35,7 +33,7 @@ export const WORDS = {
   seating: 'Seating plan', seatingLine: 'Click anyone to see their details. Their household lights up with them.',
   seatingLineHost: 'Click anyone to change their reply, party or table.',
   moveHint: 'Click a table to seat {{name}} there.', seatHere: 'Seat {{name}} here',
-  saving: 'Saving…', refused: 'Not saved. Try again.',
+  saving: 'Saving…', refused: 'Not saved. Try again.', loading: 'Loading…', unavailable: "This can't be opened right now.",
   answer: 'Reply', party: 'People', noSeat: 'No seat', dietHint: 'e.g. Vegan, Nut allergy', withMore: '+{{count}} with them', fromLink: 'Replied from a link',
   yourReply: 'Your reply', yourName: 'Your name', nameFirst: 'Add your name, then pick a reply.',
   colourBy: 'Colour by', side: 'Side', diet: 'Diet', none: 'No needs',
@@ -62,9 +60,9 @@ export const WORDS = {
 
 export const Party = () => {
   const t = useI18n(WORDS, translations)
-  const localize = React.useCallback((live) => t.data('guests', live, guestsStart), [t])
+  const localize = React.useCallback((live) => t.data('guests', live), [t])
   const plan = React.useMemo(() => t.data('event', event), [t])
-  return <EventPlan event={plan} start={guests} localize={localize} locale={t.tag} w={t.w} />
+  return <EventPlan event={plan} localize={localize} locale={t.tag} w={t.w} />
 }
 
 <Party />

@@ -164,19 +164,22 @@ function seatPositions(table: Table, count: number) {
 
 /* ---------- the page ---------- */
 
-export function EventPlan({ event, start, localize, locale, w }: { event: EventData; start: EventGuestsStore; localize: (data: EventGuestsStore) => EventGuestsStore; locale: string; w: any }) {
+const EMPTY: EventGuestsStore = { guests: {} }
+
+export function EventPlan({ event, localize, locale, w }: { event: EventData; localize: (data: EventGuestsStore) => EventGuestsStore; locale: string; w: any }) {
   const [selected, setSelected] = React.useState<string | null>(null)
   const [hovered, setHovered] = React.useState<string | null>(null)
   const [active, setActive] = React.useState<string | null>(null)
   const [colourBy, setColourBy] = React.useState<'side' | 'diet'>('side')
   const [refused, setRefused] = React.useState(false)
 
-  // The store when it is open; otherwise its readable copy, shown without controls.
+  // The store when it is open (or paused, read-only); until it opens, no guests and a note saying why.
   const live = useStore(STORE) as EventGuestsStore | undefined
   const status = (useStoreStatus(STORE) ?? {}) as Status
   const open = status.status === 'open' && !!live?.guests
   const paused = status.status === 'paused' && !!live?.guests
-  const raw = open || paused ? (live as EventGuestsStore) : start
+  const raw = open || paused ? (live as EventGuestsStore) : EMPTY
+  const pending = open || paused ? null : status.status === 'refused' || status.status === 'closed' ? w.unavailable : w.loading
   // Starting guests in the reader's language; display only, edits go to the store as typed.
   const rows = React.useMemo(() => localize(raw).guests, [raw, localize])
   const actor = open ? status.actor : undefined
@@ -314,6 +317,7 @@ export function EventPlan({ event, start, localize, locale, w }: { event: EventD
               <p>{moving ? w.moveHint({ name: moving.name.split(' ')[0] }) : host ? w.seatingLineHost : w.seatingLine}</p>
             </div>
             <div className="ev-head-right">
+              {pending && <span className="ev-saving">{pending}</span>}
               {saving && <span className="ev-saving">{w.saving}</span>}
               {refused && !saving && <span className="ev-saving err">{w.refused}</span>}
               <div className="ev-toggle" role="group" aria-label={w.colourBy}>
@@ -495,7 +499,7 @@ export function EventPlan({ event, start, localize, locale, w }: { event: EventD
                       {w.attention}
                       {conflicts.length > 0 && <em>{conflicts.length}</em>}
                     </h3>
-                    {conflicts.length === 0 && <p className="ev-muted">{w.allGood}</p>}
+                    {conflicts.length === 0 && <p className="ev-muted">{pending ?? w.allGood}</p>}
                     <ul className="ev-conflicts">
                       {conflicts.map((c) => (
                         <li key={c.key}>
@@ -525,7 +529,7 @@ export function EventPlan({ event, start, localize, locale, w }: { event: EventD
         </section>
 
         <section className="ev-grid2">
-          <Replies guests={guests} w={w} host={host} onAnswer={(id, rsvp) => update(id, { rsvp })} onPick={select} />
+          <Replies guests={guests} w={w} host={host} pending={pending} onAnswer={(id, rsvp) => update(id, { rsvp })} onPick={select} />
           <Caterer guests={yes} w={w} />
         </section>
 
@@ -727,7 +731,7 @@ function MyReply({ row, onSend, w }: { row?: Row; onSend: (patch: Partial<Row>) 
   )
 }
 
-function Replies({ guests, w, host, onAnswer, onPick }: { guests: Guest[]; w: any; host: boolean; onAnswer: (id: string, r: Rsvp) => void; onPick: (id: string) => void }) {
+function Replies({ guests, w, host, pending, onAnswer, onPick }: { guests: Guest[]; w: any; host: boolean; pending: string | null; onAnswer: (id: string, r: Rsvp) => void; onPick: (id: string) => void }) {
   const order = ['yes', 'maybe', 'no', 'none'] as const
   const colors = { yes: C.tide, maybe: C.sun, no: 'hsl(var(--muted-foreground))', none: 'hsl(var(--border))' }
   const count = (k: string) => people(guests.filter((g) => g.rsvp === k))
@@ -756,7 +760,7 @@ function Replies({ guests, w, host, onAnswer, onPick }: { guests: Guest[]; w: an
       </div>
       <h3 className="ev-sub">{w.waiting}</h3>
       {waiting.length === 0 ? (
-        <p className="ev-muted">{w.waitingNone}</p>
+        <p className="ev-muted">{pending ?? w.waitingNone}</p>
       ) : (
         <ul className={`ev-list${host ? ' host' : ''}`}>
           {waiting.map((g) => (

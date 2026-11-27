@@ -15,6 +15,8 @@
   "words.boardHintEdit": { "text": "Clique em um candidato para avançá-lo.", "from": "400ae3e0" },
   "words.decline": { "text": "Recusar", "from": "cf19fd47" },
   "words.saving": { "text": "Salvando…", "from": "53ca6040" },
+  "words.loading": { "text": "Carregando…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "Não é possível abrir agora.", "from": "d6285d4d" },
   "words.quickFor": { "text": "Veredito rápido de {{name}}", "from": "1b6c02c1" },
   "words.quickTitle": { "text": "Veredito rápido, avaliação a seguir", "from": "e064b308" },
   "words.stage.applied": { "text": "Inscritos", "from": "704298a5" },

@@ -82,6 +82,8 @@ export const BlastRadius = ({ w, locale, localize }: { w: any; locale: string; l
   const status = useStoreStatus(STORE) as any
   const canEdit = status?.status === 'open' && !!status?.canEdit
   const saving = status?.status === 'open' && status?.saved === false
+  // While the store has nothing to show: opening, or it cannot open here.
+  const pending = stored !== undefined ? null : status?.status === 'refused' || status?.status === 'closed' ? w.unavailable : status?.status === 'open' || status?.status === 'paused' || status?.status === 'revoked' ? null : w.loading
 
   const all = React.useMemo(() => Object.keys(index.objects).filter((id) => (TARGET_KINDS as readonly string[]).includes(parseId(id).kind)), [index])
   const counts = React.useMemo(() => {
@@ -162,14 +164,14 @@ export const BlastRadius = ({ w, locale, localize }: { w: any; locale: string; l
           </ul>
         </aside>
 
-        <Detail key={selected} id={selected} index={index} w={w} locale={locale} review={review} canEdit={canEdit} saving={saving} />
+        <Detail key={selected} id={selected} index={index} w={w} locale={locale} review={review} canEdit={canEdit} saving={saving} pending={pending} />
       </div>
       </div>
     </div>
   )
 }
 
-function Detail({ id, index, w, locale, review, canEdit, saving }: { id: string; index: Index; w: any; locale: string; review: any; canEdit: boolean; saving: boolean }) {
+function Detail({ id, index, w, locale, review, canEdit, saving, pending }: { id: string; index: Index; w: any; locale: string; review: any; canEdit: boolean; saving: boolean; pending: string | null }) {
   const p = parseId(id)
   const o = index.objects[id] || {}
   const refs = React.useMemo(() => referrersOf(index, id), [index, id])
@@ -222,8 +224,8 @@ function Detail({ id, index, w, locale, review, canEdit, saving }: { id: string;
           ) : <p className="br-muted">{o.missing ? w.notFound : w.noRefs}</p>}
         </div>
         <div className="br-stack">
-          <Checklist id={id} items={items} w={w} review={review} canEdit={canEdit} saving={saving} />
-          <Notes id={id} w={w} review={review} canEdit={canEdit} saving={saving} locale={locale} />
+          <Checklist id={id} items={items} w={w} review={review} canEdit={canEdit} saving={saving} pending={pending} />
+          <Notes id={id} w={w} review={review} canEdit={canEdit} saving={saving} pending={pending} locale={locale} />
         </div>
       </div>
 
@@ -517,7 +519,7 @@ function checklist(p: any, o: any, refs: Referrer[], s: ReturnType<typeof summar
   return items
 }
 
-function Checklist({ id, items, w, review, canEdit, saving }: { id: string; items: Item[]; w: any; review: any; canEdit: boolean; saving: boolean }) {
+function Checklist({ id, items, w, review, canEdit, saving, pending }: { id: string; items: Item[]; w: any; review: any; canEdit: boolean; saving: boolean; pending: string | null }) {
   const [problem, setProblem] = React.useState<string | null>(null)
   const checks = (review?.checks ?? {}) as Record<string, any>
   const done = items.filter((it) => checks[rowKey(id, it.id)]?.state === 'done').length
@@ -533,7 +535,7 @@ function Checklist({ id, items, w, review, canEdit, saving }: { id: string; item
     <div className="br-card">
       <div className="br-card-head">
         <h3>{w.check}</h3>
-        <span className="br-muted">{canEdit ? (saving ? <span className="br-saving">{w.saving} · </span> : '') : `${w.readOnly} · `}{w.progress({ done, total: items.length })}</span>
+        <span className="br-muted">{canEdit ? (saving ? <span className="br-saving">{w.saving} · </span> : '') : `${pending ?? w.readOnly} · `}{w.progress({ done, total: items.length })}</span>
       </div>
       {problem ? <p className="br-problem" role="alert">{w.notSaved({ reason: problem })}</p> : null}
       <ol className="br-check">
@@ -567,7 +569,7 @@ const ItemText = ({ it }: { it: Item }) => (
   </span>
 )
 
-function Notes({ id, w, review, canEdit, saving, locale }: { id: string; w: any; review: any; canEdit: boolean; saving: boolean; locale: string }) {
+function Notes({ id, w, review, canEdit, saving, pending, locale }: { id: string; w: any; review: any; canEdit: boolean; saving: boolean; pending: string | null; locale: string }) {
   const [text, setText] = React.useState('')
   const [problem, setProblem] = React.useState<string | null>(null)
   const notes = ((review?.notes ?? []) as any[]).filter((n) => n?.object === id).slice().reverse()
@@ -599,7 +601,7 @@ function Notes({ id, w, review, canEdit, saving, locale }: { id: string; w: any;
             </li>
           ))}
         </ul>
-      ) : <p className="br-muted small">{w.noNotes}</p>}
+      ) : <p className="br-muted small">{pending ?? w.noNotes}</p>}
     </div>
   )
 }

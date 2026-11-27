@@ -11,6 +11,8 @@
   "words.weekNote": { "text": "Vence nos próximos 7 dias ou está esperando alguém", "from": "0c843a1c" },
   "words.doing": { "text": "Em andamento", "from": "1752b74c" },
   "words.nothing": { "text": "Nada vence esta semana.", "from": "99c2589e" },
+  "words.loading": { "text": "Carregando…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "Não é possível abrir agora.", "from": "d6285d4d" },
   "words.waiting": { "text": "Esperando", "from": "64b1aceb" },
   "words.due": { "text": "Prazo", "from": "02e6f7c8" },
   "words.projects": { "text": "Projetos", "from": "87d96b8b" },

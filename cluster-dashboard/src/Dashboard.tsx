@@ -62,7 +62,7 @@ const short = (k: string) => SHORT[k] ?? k
 
 // ---------- page ----------
 
-export function Dashboard({ snap, savedAcks, w }: { snap: Snapshot; savedAcks: ClusterDashboardAcksStore; w: Words }) {
+export function Dashboard({ snap, w }: { snap: Snapshot; w: Words }) {
   const { data, live, allow } = useCluster(snap)
   const now = live ? Date.now() : Date.parse(snap.takenAt)
   const { issues } = React.useMemo(() => derive(data as any, now), [data, now])
@@ -70,7 +70,9 @@ export function Dashboard({ snap, savedAcks, w }: { snap: Snapshot; savedAcks: C
   const status = useStoreStatus(STORE) as any
   const stored = useStore(STORE) as ClusterDashboardAcksStore | undefined
   const open = status?.status === 'open'
-  const acks = (open ? stored?.acks : savedAcks.acks) ?? {}
+  // The shared "known" marks; none until the store opens (paused or withdrawn, the last ones).
+  const acks = stored?.acks ?? {}
+  const pending = stored ? null : status?.status === 'refused' || status?.status === 'closed' ? w.unavailable : w.loading
   const canEdit = open && Boolean(status?.canEdit)
 
   const [sel, setSel] = React.useState<string | null>(null)
@@ -200,6 +202,7 @@ export function Dashboard({ snap, savedAcks, w }: { snap: Snapshot; savedAcks: C
                 </details>
               )}
               {open && status?.saved === false && <p className="saving">{w.saving}</p>}
+              {pending && <p className="saving">{pending}</p>}
             </>
           )}
         </aside>

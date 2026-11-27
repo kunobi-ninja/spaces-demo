@@ -17,6 +17,8 @@
   "words.markBooked": { "text": "Marcar como reservado", "from": "434120b1" },
   "words.unbook": { "text": "Não reservado", "from": "f7a77270" },
   "words.saving": { "text": "Salvando…", "from": "53ca6040" },
+  "words.loading": { "text": "Carregando…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "Não é possível abrir agora.", "from": "d6285d4d" },
   "words.addedBy": { "text": "Adicionado por", "from": "5138475a" },
   "words.close": { "text": "Fechar", "from": "771bd904" },
   "words.free": { "text": "Grátis", "from": "01e78184" },

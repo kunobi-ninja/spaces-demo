@@ -18,5 +18,7 @@
   "words.mark": { "text": "알고 있음으로 표시", "from": "2bcfdfa5" },
   "words.unmark": { "text": "모름", "from": "0c770638" },
   "words.known": { "text": "알고 있음", "from": "5235ede1" },
-  "words.saving": { "text": "저장 중…", "from": "53ca6040" }
+  "words.saving": { "text": "저장 중…", "from": "53ca6040" },
+  "words.loading": { "text": "불러오는 중…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "지금은 열 수 없습니다.", "from": "d6285d4d" }
 }

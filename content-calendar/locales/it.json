@@ -20,6 +20,8 @@
   "words.change": { "text": "Questa pagina mostra data/posts.json. Chiedi alla tua IA:", "from": "e7ac089c" },
   "words.changeEdit": { "text": "Apri un post per spostarlo a un altro giorno o cambiarne lo stato, oppure chiedi alla tua IA:", "from": "5475e99f" },
   "words.saving": { "text": "Salvataggio…", "from": "53ca6040" },
+  "words.loading": { "text": "Caricamento…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "Non si può aprire adesso.", "from": "d6285d4d" },
   "words.prompts": { "text": ["“Sposta P14 a sabato e segnalo come in revisione.”", "“Pianifica tre post Instagram per le confezioni regalo nell'ultima settimana.”"], "from": "9fe91876" },
   "words.status.idea": { "text": "Idea", "from": "92fb43c5" },
   "words.status.drafting": { "text": "In stesura", "from": "4e531add" },

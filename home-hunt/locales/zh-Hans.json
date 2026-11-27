@@ -32,6 +32,8 @@
   "words.takeOf": { "text": "{{name}} 的看法", "from": "b07d199f" },
   "words.notePh": { "text": "{{name}} 的备注", "from": "f0d1fab1" },
   "words.saving": { "text": "正在保存…", "from": "53ca6040" },
+  "words.loading": { "text": "加载中…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "现在无法打开。", "from": "d6285d4d" },
   "words.how": { "text": ["房源来自", "，我们各自的需求来自", "修改这些文件，或者问问你的 AI：", "我们的看法保存在", "打开一套房子，写下你的看法。"], "from": "f482a677" },
   "words.prompts": { "text": ["添加 14 Ashley Down Road, Horfield：£1,350，3 间卧室，花园工具棚，骑车 13 分钟，到 M32 6 分钟", "Alex 很喜欢 18 Elgin Park：地下室放得下他的工作台", "Maya 说 Cotham 那套公寓太小，放不下她的画架：以这个理由排除它"], "from": "73c0099b" },
   "words.say.both": { "text": "两人都合适。美中不足：{{lacks}}。", "from": "e909feac" },

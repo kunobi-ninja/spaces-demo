@@ -26,6 +26,8 @@
   "words.justNow": { "text": "gerade eben", "from": "89f0ab9a" },
   "words.refused": { "text": "Nicht gespeichert. Versuch es nochmal.", "from": "438959f4" },
   "words.saving": { "text": "Speichern…", "from": "53ca6040" },
+  "words.loading": { "text": "Wird geladen…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "Lässt sich gerade nicht öffnen.", "from": "d6285d4d" },
   "words.someone": { "text": "Jemand", "from": "1d0d684a" },
   "words.storeSource": { "text": "Kopf des Vorfalls", "from": "cfd1d806" },
   "words.statusChanged": { "text": "Status auf {{status}} gesetzt.", "from": "e3b5bd57" },

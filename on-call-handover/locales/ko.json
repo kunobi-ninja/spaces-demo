@@ -44,6 +44,8 @@
   "words.ago.h": { "text": "{{count}}시간", "from": "c52adce8" },
   "words.itemsTitle": { "text": "열린 항목", "from": "063f2027" },
   "words.saving": { "text": "저장 중…", "from": "53ca6040" },
+  "words.loading": { "text": "불러오는 중…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "지금은 열 수 없습니다.", "from": "d6285d4d" },
   "words.progressLabel": { "text": "{{count}}/{{total}} 확인함", "from": "320d4b6a" },
   "words.all": { "text": "전체", "from": "9a9877c8" },
   "words.status.open": { "text": "열림", "from": "780d8a56" },

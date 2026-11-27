@@ -22,15 +22,14 @@ import '@fontsource/parkinsans/800.css'
 import '@fontsource/figtree/400.css'
 import '@fontsource/figtree/600.css'
 import quiz from './data/quiz.json'
-import saved from './data/scores.json'
 import { QuizNight } from './src/QuizNight'
 import { useI18n } from '../lib/i18n'
 import translations from './locales/index'
 
 {/*
   The questions and teams are in data/quiz.json; their translations, and those of the words below,
-  are in locales/<lang>.json. The scores live in the quiz-night-scores store;
-  data/scores.json is its readable copy, shown when the store cannot open. The round itself runs in
+  are in locales/<lang>.json. The scores live in the quiz-night-scores store, which starts from
+  data/scores.start.json; data/scores.json is its readable copy. The round itself runs in
   the quiz-night-round room: only the host moves it on (stage), each player picks their own team,
   and each answer is set once. These are only the page's own words.
 */}
@@ -85,8 +84,8 @@ export const WORDS = {
   saving: 'Saving…',
   scoresTitle: 'Scores are saved.',
   scoresBody: 'Every point counts on the all-nights table, so it is still there next Friday.',
-  savedTitle: 'Last saved scores.',
-  savedBody: 'Open this page in Kunobi to play and keep score.',
+  loading: 'Loading…',
+  unavailable: "This can't be opened right now.",
   shareTitle: 'Play from your phone.',
   shareBody: 'Share a link to this page. Each player picks a team and answers on their own screen.',
   changeTitle: 'Make it yours.',
@@ -98,7 +97,7 @@ export const WORDS = {
 
 export const Page = () => {
   const t = useI18n(WORDS, translations)
-  return <QuizNight quiz={t.data('quiz', quiz)} saved={saved} words={t.w} />
+  return <QuizNight quiz={t.data('quiz', quiz)} words={t.w} />
 }
 
 <Page />

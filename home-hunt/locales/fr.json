@@ -32,6 +32,8 @@
   "words.takeOf": { "text": "L'avis de {{name}}", "from": "b07d199f" },
   "words.notePh": { "text": "La note de {{name}}", "from": "f0d1fab1" },
   "words.saving": { "text": "Enregistrement…", "from": "53ca6040" },
+  "words.loading": { "text": "Chargement…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "Impossible de l’ouvrir pour le moment.", "from": "d6285d4d" },
   "words.how": { "text": ["Les logements viennent de", "et ce dont chacun de nous a besoin vient de", "Modifie les fichiers, ou demande à ton IA :", "Nos avis sont enregistrés dans", "Ouvre un logement pour donner le tien."], "from": "f482a677" },
   "words.prompts": { "text": ["Ajoute 14 Ashley Down Road, Horfield : 1 350 £, 3 chambres, abri de jardin, 13 min à vélo, 6 min de la M32", "Alex aime bien 18 Elgin Park : la cave peut accueillir son établi", "Maya trouve l'appart de Cotham trop petit pour ses chevalets : écarte-le avec cette raison"], "from": "73c0099b" },
   "words.say.both": { "text": "Convient aux deux. Le hic : {{lacks}}.", "from": "e909feac" },

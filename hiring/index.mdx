@@ -24,12 +24,11 @@ import '@fontsource/parkinsans/800.css'
 import '@fontsource/figtree/400.css'
 import '@fontsource/figtree/600.css'
 import data from './data/hiring.json'
-import pipeline from './data/pipeline.json'
 import { Hiring } from './src/Hiring'
 import { useI18n } from '../lib/i18n'
 import translations from './locales/index'
 
-{/* The page's words. Roles, candidates and scorecards live in data/hiring.json; each candidate's stage and quick verdicts live in the hiring-pipeline store, saved to data/pipeline.json. Their translations (the fields listed under i18n in the front matter) and the words' are in locales/<lang>.json. */}
+{/* The page's words. Roles, candidates and scorecards live in data/hiring.json; each candidate's stage and quick verdicts live in the hiring-pipeline store (starting from data/pipeline.start.json, with a readable copy in data/pipeline.json). Their translations (the fields listed under i18n in the front matter) and the words' are in locales/<lang>.json. */}
 
 export const WORDS = {
   hiring: 'Hiring',
@@ -39,7 +38,7 @@ export const WORDS = {
   role: 'Role', allRoles: 'Both roles',
   boardHint: 'Click a candidate with scorecards to compare them above.',
   boardHintEdit: 'Click a candidate to move them on.',
-  decline: 'Decline', saving: 'Saving…',
+  decline: 'Decline', saving: 'Saving…', loading: 'Loading…', unavailable: "This can't be opened right now.",
   quickFor: "{{name}}'s quick verdict", quickTitle: 'Quick verdict, scorecard to follow',
   stage: { applied: 'Applied', screen: 'Screen', interview: 'Interview', offer: 'Offer', hired: 'Hired', declined: 'Closed' },
   today: 'today', daysIn: '{{count}}d in stage',
@@ -70,7 +69,7 @@ export const WORDS = {
 export const HiringPage = () => {
   const t = useI18n(WORDS, translations)
   const localized = React.useMemo(() => t.data('hiring', data), [t])
-  return <Hiring data={localized} pipeline={pipeline} w={{ ...t.w, locale: t.tag }} />
+  return <Hiring data={localized} w={{ ...t.w, locale: t.tag }} />
 }
 
 <HiringPage />

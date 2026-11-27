@@ -11,6 +11,8 @@
   "words.weekNote": { "text": "7일 안에 마감이거나 누군가를 기다리는 일", "from": "0c843a1c" },
   "words.doing": { "text": "진행 중", "from": "1752b74c" },
   "words.nothing": { "text": "이번 주 마감인 일이 없어요.", "from": "99c2589e" },
+  "words.loading": { "text": "불러오는 중…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "지금은 열 수 없습니다.", "from": "d6285d4d" },
   "words.waiting": { "text": "대기 중", "from": "64b1aceb" },
   "words.due": { "text": "마감", "from": "02e6f7c8" },
   "words.projects": { "text": "프로젝트", "from": "87d96b8b" },

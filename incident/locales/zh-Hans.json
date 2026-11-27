@@ -26,6 +26,8 @@
   "words.justNow": { "text": "刚刚", "from": "89f0ab9a" },
   "words.refused": { "text": "没有保存。请重试。", "from": "438959f4" },
   "words.saving": { "text": "正在保存…", "from": "53ca6040" },
+  "words.loading": { "text": "加载中…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "现在无法打开。", "from": "d6285d4d" },
   "words.someone": { "text": "某人", "from": "1d0d684a" },
   "words.storeSource": { "text": "事故概要", "from": "cfd1d806" },
   "words.statusChanged": { "text": "状态已设为{{status}}。", "from": "e3b5bd57" },

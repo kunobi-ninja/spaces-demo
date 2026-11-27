@@ -59,8 +59,9 @@ export const toPosts = (data: ContentCalendarPostsStore | undefined): Post[] =>
     link: p.link ?? '',
   }))
 
-export function ContentCalendar({ posts: saved, localize, settings, words, locale, initial }: {
-  posts: ContentCalendarPostsStore
+const EMPTY: ContentCalendarPostsStore = { posts: {} }
+
+export function ContentCalendar({ localize, settings, words, locale, initial }: {
   /** The posts with their starting text in the reader's language (display only). */
   localize: (data: ContentCalendarPostsStore) => ContentCalendarPostsStore
   settings: Settings
@@ -71,10 +72,11 @@ export function ContentCalendar({ posts: saved, localize, settings, words, local
 }) {
   const stored = useStore(STORE) as ContentCalendarPostsStore | undefined
   const store = useStoreStatus(STORE)
-  // Without the store (other builds, previews), show the last saved copy, read-only.
   const live = (store?.status === 'open' || store?.status === 'paused') && stored !== undefined
   const canEdit = live && store?.status === 'open' && Boolean(store?.canEdit)
-  const posts = React.useMemo(() => toPosts(localize(live ? stored : saved)), [live, stored, saved, localize])
+  // Until the store opens there are no posts yet: say so instead of "nothing planned".
+  const waiting = live ? null : store?.status === 'refused' || store?.status === 'closed' ? words.unavailable : words.loading
+  const posts = React.useMemo(() => toPosts(localize(live ? stored : EMPTY)), [live, stored, localize])
   const change = (id: string, values: Partial<Pick<Post, 'date' | 'status'>>) =>
     edit(STORE, (d: ContentCalendarPostsStore) => {
       Object.assign(d.posts[id], values)
@@ -224,7 +226,7 @@ export function ContentCalendar({ posts: saved, localize, settings, words, local
           </div>
           <div className="cc-picked">
             <div className="cc-picked-title">{fmt({ weekday: 'long', day: 'numeric', month: 'long' }, day(picked))}</div>
-            {pickedPosts.length === 0 ? <div className="cc-empty">{words.nothing}</div> : pickedPosts.map((p) => (
+            {pickedPosts.length === 0 ? <div className="cc-empty">{waiting ?? words.nothing}</div> : pickedPosts.map((p) => (
               <button key={p.id} className="cc-row" onClick={() => setOpen(p)}>
                 <span className="cc-tag" style={{ background: channel[p.channel]?.color }}>{channel[p.channel]?.label}</span>
                 <span className="cc-row-title">{p.title}</span>
@@ -260,7 +262,7 @@ export function ContentCalendar({ posts: saved, localize, settings, words, local
               </div>
             )
           })}
-          {weeks.size === 0 && <div className="cc-empty">{words.nothing}</div>}
+          {weeks.size === 0 && <div className="cc-empty">{waiting ?? words.nothing}</div>}
         </section>
       )}
 

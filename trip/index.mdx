@@ -17,13 +17,11 @@ import '@fontsource/parkinsans/600.css'
 import '@fontsource/parkinsans/800.css'
 import '@fontsource/figtree/400.css'
 import '@fontsource/figtree/600.css'
-import places from './data/places.json'
-import placesStart from './data/places.start.json'
 import { TripPlanner } from './src/trip'
 import { useI18n } from '../lib/i18n'
 import translations from './locales/index'
 
-{/* The places live in the trip-places store; data/places.json is its saved copy. The trip's frame and the page's words are below; their translations, and those of the starting places (data/places.start.json, by id), are in locales/<lang>.json. A place still as it started shows translated. */}
+{/* The places live in the trip-places store, started from data/places.start.json; data/places.json is its saved copy. The trip's frame and the page's words are below; their translations, and those of the starting places (by id), are in locales/<lang>.json. A place still as it started shows translated. */}
 
 export const TRIP = {
   friends: [
@@ -38,7 +36,7 @@ export const WORDS = {
   days: ['Fri 13', 'Sat 14', 'Sun 15'],
   all: 'All days', map: 'Map of the trip',
   places: 'places', each: 'each', toBook: 'to book', pp: 'each',
-  booked: 'Booked', notBooked: 'Not booked yet', markBooked: 'Mark booked', unbook: 'Not booked', saving: 'Saving…', addedBy: 'Added by', close: 'Close', free: 'Free',
+  booked: 'Booked', notBooked: 'Not booked yet', markBooked: 'Mark booked', unbook: 'Not booked', saving: 'Saving…', loading: 'Loading…', unavailable: "This can't be opened right now.", addedBy: 'Added by', close: 'Close', free: 'Free',
   stillToBook: 'Still to book', allBooked: 'Everything is booked.', budget: 'Budget per person',
   kinds: { stay: 'Stay', food: 'Food', see: 'See', coffee: 'Coffee', viewpoint: 'Viewpoint' },
   how: ['The plan is saved in', 'Tap a place to mark it booked, or ask your AI:', 'Ask your AI:'],
@@ -49,8 +47,8 @@ export const Lisbon = () => {
   const t = useI18n(WORDS, translations)
   const w = t.w
   const trip = { ...TRIP, city: w.city, days: w.days.map((label, i) => ({ day: i + 1, label })) }
-  const localize = React.useCallback((live) => t.data('places', live, placesStart), [t])
-  return <TripPlanner start={places} localize={localize} trip={trip} words={w} />
+  const localize = React.useCallback((live) => t.data('places', live), [t])
+  return <TripPlanner localize={localize} trip={trip} words={w} />
 }
 
 <Lisbon />

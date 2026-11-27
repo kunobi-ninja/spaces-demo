@@ -44,6 +44,8 @@
   "words.ago.h": { "text": "{{count}} Std.", "from": "c52adce8" },
   "words.itemsTitle": { "text": "Offene Punkte", "from": "063f2027" },
   "words.saving": { "text": "Speichern…", "from": "53ca6040" },
+  "words.loading": { "text": "Wird geladen…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "Lässt sich gerade nicht öffnen.", "from": "d6285d4d" },
   "words.progressLabel": { "text": "{{count}}/{{total}} bestätigt", "from": "320d4b6a" },
   "words.all": { "text": "Alle", "from": "9a9877c8" },
   "words.status.open": { "text": "Offen", "from": "780d8a56" },

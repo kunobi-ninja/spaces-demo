@@ -16,16 +16,14 @@ import '@fontsource/parkinsans/800.css'
 import '@fontsource/figtree/400.css'
 import '@fontsource/figtree/600.css'
 import data from './data/recipes.json'
-import startWeek from './data/week.json'
-import startShopping from './data/shopping.json'
 import { MealPlan } from './src/MealPlan'
 import { keepKeys } from './src/plan'
 import { useI18n } from '../lib/i18n'
 import translations from './locales/index'
 
 {/* The page's own words. The week and the shopping list live in the meals-week and meals-shopping stores
-    (readable copies: this-week.json, shopping-list.json); data/week.json and data/shopping.json are their
-    starting data, shown where the stores are not available. Recipes live in data/recipes.json. Translations of the words,
+    (readable copies: this-week.json, shopping-list.json), which start from data/week.json and data/shopping.json.
+    Recipes live in data/recipes.json. Translations of the words,
     the recipes and the starting extras (by id) are in locales/<lang>.json; an extra still as it started shows translated,
     and the list keeps the recipes' own ingredient names as its ids. */}
 
@@ -36,9 +34,8 @@ export const WORDS = {
   list: 'Shopping list', things: 'things to buy', only: 'Only what this needs:', all: 'Whole week',
   byAisle: 'By aisle', byRecipe: 'By recipe', basket: 'in the basket', people: 'people',
   swap: 'Swap dinner', nothing: 'Nothing planned', extras: 'Extras', added: 'extra', Other: 'Other',
-  addPh: 'Add to the list…', aisle: 'Aisle', add: 'Add', remove: 'Remove', clear: 'Clear ticked', saving: 'Saving…',
+  addPh: 'Add to the list…', aisle: 'Aisle', add: 'Add', remove: 'Remove', clear: 'Clear ticked', saving: 'Saving…', loading: 'Loading…', unavailable: "This can't be opened right now.",
   howTitle: 'Make it yours.', howBody: 'The week and the list are saved for the whole house. Change them here, or ask your AI:',
-  howRead: 'This copy is read-only. Open it in Kunobi, or ask your AI:',
   prompt1: 'Put lentil soup on Thursday',
   prompt2: 'Add oat milk to the list',
   prompt3: 'Add my aunt’s paella and plan it for Saturday, 6 people',
@@ -51,8 +48,8 @@ export const Meals = () => {
   const t = useI18n(WORDS, translations)
   // Translated recipes keep the list ids of the recipes as written, so ticks hold in every language.
   const recipes = React.useMemo(() => keepKeys(t.data('recipes', data).recipes, data.recipes), [t])
-  const localize = React.useCallback((live) => t.data('shopping', live, startShopping), [t])
-  return <MealPlan startWeek={startWeek} startShopping={startShopping} localizeShopping={localize} recipes={recipes} aisles={data.aisles} words={t.w} />
+  const localize = React.useCallback((live) => t.data('shopping', live), [t])
+  return <MealPlan localizeShopping={localize} recipes={recipes} aisles={data.aisles} words={t.w} />
 }
 
 <Meals />

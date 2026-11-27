@@ -26,6 +26,8 @@
   "words.justNow": { "text": "proprio ora", "from": "89f0ab9a" },
   "words.refused": { "text": "Non salvato. Riprova.", "from": "438959f4" },
   "words.saving": { "text": "Salvataggio…", "from": "53ca6040" },
+  "words.loading": { "text": "Caricamento…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "Non si può aprire adesso.", "from": "d6285d4d" },
   "words.someone": { "text": "Qualcuno", "from": "1d0d684a" },
   "words.storeSource": { "text": "Intestazione dell'incidente", "from": "cfd1d806" },
   "words.statusChanged": { "text": "Stato impostato su {{status}}.", "from": "e3b5bd57" },

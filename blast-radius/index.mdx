@@ -14,12 +14,11 @@ import '@fontsource/parkinsans/600.css'
 import '@fontsource/parkinsans/800.css'
 import '@fontsource/figtree/400.css'
 import '@fontsource/figtree/600.css'
-import reviewStart from './data/review.start.json'
 import { BlastRadius } from './src/BlastRadius'
 import { useI18n } from '../lib/i18n'
 import translations from './locales/index'
 
-{/* The page's words. Their translations, and those of the starting notes (data/review.start.json, by id), are in locales/<lang>.json; a note still as it started shows translated. Cluster data: data/cluster.json, or live after Allow in your own Space. Checks and notes: blast-radius-review store (readable copy: data/review.json). */}
+{/* The page's words. Their translations, and those of the starting notes (by id), are in locales/<lang>.json; a note still as it started shows translated. Cluster data: data/cluster.json, or live after Allow in your own Space. Checks and notes: blast-radius-review store (readable copy: data/review.json). */}
 
 export const list = (xs, and) => xs.length <= 3 ? xs.join(', ') : `${xs.slice(0, 3).join(', ')} ${and({ count: xs.length - 3 })}`
 
@@ -84,6 +83,8 @@ export const WORDS = {
   progress: '{{done}}/{{total}}',
   readOnly: 'read-only',
   saving: 'Saving…',
+  loading: 'Loading…',
+  unavailable: "This can't be opened right now.",
   notSaved: 'Not saved: {{reason}}',
   reviewed: 'Has checks or notes',
   c: {
@@ -120,7 +121,7 @@ export const WORDS = {
 export const Page = () => {
   const t = useI18n(WORDS, translations)
   const w = React.useMemo(() => ({ ...t.w, list: (xs) => list(xs, t.w.and) }), [t])
-  const localize = React.useCallback((live) => t.data('review', live, reviewStart), [t])
+  const localize = React.useCallback((live) => t.data('review', live), [t])
   return <BlastRadius w={w} locale={t.tag} localize={localize} />
 }
 

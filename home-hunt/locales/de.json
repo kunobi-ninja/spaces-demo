@@ -32,6 +32,8 @@
   "words.takeOf": { "text": "Meinung von {{name}}", "from": "b07d199f" },
   "words.notePh": { "text": "Notiz von {{name}}", "from": "f0d1fab1" },
   "words.saving": { "text": "Speichern…", "from": "53ca6040" },
+  "words.loading": { "text": "Wird geladen…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "Lässt sich gerade nicht öffnen.", "from": "d6285d4d" },
   "words.how": { "text": ["Die Häuser kommen aus", "und was jeder von uns braucht, aus", "Bearbeite die Dateien oder frag deine KI:", "Unsere Meinungen sind gespeichert in", "Öffne ein Haus, um deine abzugeben."], "from": "f482a677" },
   "words.prompts": { "text": ["Füg 14 Ashley Down Road, Horfield hinzu: £1,350, 3 Schlafzimmer, Gartenschuppen, 13 Min. mit dem Rad, 6 Min. zur M32", "Alex mag 18 Elgin Park: Seine Werkbank passt in den Keller", "Maya sagt, die Wohnung in Cotham ist zu klein für ihre Staffeleien: Lehn sie mit diesem Grund ab"], "from": "73c0099b" },
   "words.say.both": { "text": "Passt für beide. Der Haken: {{lacks}}.", "from": "e909feac" },

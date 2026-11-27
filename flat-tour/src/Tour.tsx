@@ -38,13 +38,16 @@ function KindIcon({ kind, resolved }: { kind: Kind; resolved?: boolean }) {
 type Draft = { x: number; y: number; z: number; room: string }
 type Api = { flyTo(x: number, y: number, z: number): void; overview(): void }
 
-export function Tour({ flat, start, localize, words: w }: { flat: Flat; start: FlatTourPinsStore; localize: (data: FlatTourPinsStore) => FlatTourPinsStore; words: any }) {
+const EMPTY: FlatTourPinsStore = { pins: {} }
+
+export function Tour({ flat, localize, words: w }: { flat: Flat; localize: (data: FlatTourPinsStore) => FlatTourPinsStore; words: any }) {
   const live = useStore(STORE) as FlatTourPinsStore | undefined
   const status = useStoreStatus(STORE)
-  // Without the store (other builds, previews), show the starting pins, read-only.
   const open = (status?.status === 'open' || status?.status === 'paused') && live !== undefined
   const canEdit = open && status?.status === 'open' && Boolean(status?.canEdit)
-  const pins = React.useMemo(() => localize((open ? live : start) as FlatTourPinsStore)?.pins ?? {}, [open, live, start, localize])
+  // Until the store opens there are no pins yet: say so instead of "no pins".
+  const waiting = open ? null : status?.status === 'refused' || status?.status === 'closed' ? w.unavailable : w.loading
+  const pins = React.useMemo(() => localize((open ? live : EMPTY) as FlatTourPinsStore)?.pins ?? {}, [open, live, localize])
 
   const [selected, setSelected] = React.useState<string | null>(null)
   const [draft, setDraft] = React.useState<Draft | null>(null)
@@ -579,13 +582,13 @@ export function Tour({ flat, start, localize, words: w }: { flat: Flat; start: F
             {card}
           </div>
             {problem && <div className="ft-problem">{problem}</div>}
-            <div className="ft-foot">{w.model} <code>flat-tour/data/flat.json</code>.{open ? '' : ` ${w.readOnly}`}</div>
+            <div className="ft-foot">{w.model} <code>flat-tour/data/flat.json</code>.</div>
           </div>
 
           <aside className="ft-side">
             <div className="ft-side-in">
               <div className="ft-side-head">
-                <h2>{w.pins} {open && !status?.saved && <span className="ft-saving">{w.saving}</span>}</h2>
+                <h2>{w.pins} {open && !status?.saved && <span className="ft-saving">{w.saving}</span>}{waiting && <span className="ft-saving">{waiting}</span>}</h2>
                 <div className="ft-filters">
                   {filters.map((f) => (
                     <button key={f} className={`ft-f${filter === f ? ' on' : ''}`} aria-pressed={filter === f} onClick={() => setFilter(f)}>
@@ -596,7 +599,7 @@ export function Tour({ flat, start, localize, words: w }: { flat: Flat; start: F
                 </div>
               </div>
               <div className="ft-list">
-                {shown.length === 0 && <div className="ft-empty">{w.empty}</div>}
+                {shown.length === 0 && <div className="ft-empty">{waiting ?? w.empty}</div>}
                 {shown.map((p) => (
                   <button key={p.id} className={`ft-item${selected === p.id ? ' on' : ''}${p.resolved === 'yes' ? ' done' : ''}`} onClick={() => choose(p.id)}>
                     <span className="ft-dot" style={{ background: p.resolved === 'yes' ? '#8a97a6' : KIND_COLOR[p.kind as Kind] }}>

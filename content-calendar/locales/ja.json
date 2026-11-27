@@ -20,6 +20,8 @@
   "words.change": { "text": "このページは data/posts.json を表示しています。AI にこう頼んでみてください：", "from": "e7ac089c" },
   "words.changeEdit": { "text": "投稿を開くと別の日に移したりステータスを変えたりできます。AI に頼むこともできます：", "from": "5475e99f" },
   "words.saving": { "text": "保存中…", "from": "53ca6040" },
+  "words.loading": { "text": "読み込み中…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "今は開けません。", "from": "d6285d4d" },
   "words.prompts": { "text": ["「P14 を土曜日に移して、レビュー中にして。」", "「最後の週にギフトボックスの Instagram 投稿を3つ計画して。」"], "from": "9fe91876" },
   "words.status.idea": { "text": "アイデア", "from": "92fb43c5" },
   "words.status.drafting": { "text": "下書き中", "from": "4e531add" },

@@ -20,7 +20,7 @@ Thanks for making something for Kunobi spaces. Every demo here is a page people 
    The prompts are what people copy into their AI to make the demo theirs, so make them concrete.
    Write the page in the language you know best: everything (front matter, words, data) in that one language. If it is not English, say which with `lang: es` (any language tag). Translations come later, from `locales/` (see [Languages](#languages)).
 3. **Data in files**: put what the page shows in `data/*.json`, so people and their AI can change it without touching code.
-4. **If the page saves something** (replies, scores, a board), define a LiveStore in `.kunobi/stores/<name>/store.json`, with its starting data in a `*.start.json` file beside the data, and name it in the front matter (`kunobi.stores`). The existing demos show the pattern.
+4. **If the page saves something** (replies, scores, a board), define a LiveStore in `.kunobi/stores/<name>/store.json`, with its starting data in a `*.start.json` file beside the data, and name it in the front matter (`kunobi.stores`). The page reads it with `useStore` and never imports the store's readable copy or its starting data: Kunobi refuses to open a page that does. The existing demos show the pattern.
 5. **A cover** at `assets/covers/<folder>.jpg`, 16:9, under 200 KB.
 6. **Add it to the gallery** in the root `index.mdx` (`EXAMPLES`), with its title and description in its `WORDS.items` (and any new tag in `WORDS.tags`).
 
@@ -62,11 +62,11 @@ export const WORDS = { title: 'Lisbon weekend', places_one: '{{count}} place', p
 
 export const Trip = () => {
   const t = useI18n(WORDS, translations)
-  // t.w.title, t.w.places({ count: 3 }), t.data('places', live, start), t.doc('menu.md', menu), t.lang, t.locale (for number and date formats)
+  // t.w.title, t.w.places({ count: 3 }), t.data('places', live), t.doc('menu.md', menu), t.lang, t.locale (for number and date formats)
 }
 ```
 
-`t.data(name, value, start)` shows a store's data with its translated fields, but only while a field still equals its starting value: what people changed shows as saved. It is for display only; never write it back to the store. Outside React (a timeline's constants), use `i18n(WORDS, translations)`.
+`t.data(name, value)` shows data with its translated fields, each only while it still holds the text its translation was made from (the entry's `from`): what people changed in a store shows as saved. It is for display only; never write it back to the store. Outside React (a timeline's constants), use `i18n(WORDS, translations)`.
 
 ### The locale files
 

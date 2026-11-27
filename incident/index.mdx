@@ -16,12 +16,11 @@ import '@fontsource/parkinsans/800.css'
 import '@fontsource/figtree/400.css'
 import '@fontsource/figtree/600.css'
 import snapshot from './data/cluster.json'
-import start from './data/timeline.start.json'
 import { Incident } from './src/Incident'
 import { useI18n } from '../lib/i18n'
 import translations from './locales/index'
 
-{/* The page's words. Their translations, and those of the starting header, timeline and follow-ups (data/timeline.start.json, by id), are in locales/<lang>.json; text still as it started shows translated. The header, timeline and follow-ups live in the incident-timeline LiveStore (readable copy: data/timeline.json). Cluster facts come live from the cluster selected in your Kunobi tab, or from the sample in data/cluster.json, whose `scope` names the app, namespaces and release the incident is about. */}
+{/* The page's words. Their translations, and those of the starting header, timeline and follow-ups (by id), are in locales/<lang>.json; text still as it started shows translated. The header, timeline and follow-ups live in the incident-timeline LiveStore (readable copy: data/timeline.json). Cluster facts come live from the cluster selected in your Kunobi tab, or from the sample in data/cluster.json, whose `scope` names the app, namespaces and release the incident is about. */}
 
 export const span = (ms) => {
   const m = Math.max(0, Math.floor(ms / 60000))
@@ -42,7 +41,7 @@ export const WORDS = {
   status: { investigating: 'Investigating', mitigated: 'Mitigated', resolved: 'Resolved' },
   durationDays: '{{count}} days', durationHours: '{{hours}} h {{minutes}} min', durationMinutes: '{{count}} min',
   agoDays: '{{count}} d ago', agoHours: '{{count}} h ago', agoMinutes: '{{count}} min ago', justNow: 'just now',
-  refused: 'Not saved. Try again.', saving: 'Saving…', someone: 'Someone', storeSource: 'Incident header',
+  refused: 'Not saved. Try again.', saving: 'Saving…', loading: 'Loading…', unavailable: "This can't be opened right now.", someone: 'Someone', storeSource: 'Incident header',
   statusChanged: 'Status set to {{status}}.',
 
   plainTitle: 'In plain words',
@@ -129,8 +128,8 @@ export const Page = () => {
   const t = useI18n(WORDS, translations)
   const w = React.useMemo(() => ({ ...t.w, ...sentences(t.w), locale: t.lang === 'en' ? 'en-GB' : t.tag }), [t])
   const sample = React.useMemo(() => t.data('cluster', snapshot), [t])
-  const localize = React.useCallback((live) => t.data('timeline', live, start), [t])
-  return <Incident snapshot={sample} start={start} localize={localize} w={w} />
+  const localize = React.useCallback((live) => t.data('timeline', live), [t])
+  return <Incident snapshot={sample} localize={localize} w={w} />
 }
 
 <Page />

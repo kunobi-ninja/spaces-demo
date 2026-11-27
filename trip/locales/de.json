@@ -17,6 +17,8 @@
   "words.markBooked": { "text": "Als gebucht markieren", "from": "434120b1" },
   "words.unbook": { "text": "Nicht gebucht", "from": "f7a77270" },
   "words.saving": { "text": "Speichern…", "from": "53ca6040" },
+  "words.loading": { "text": "Wird geladen…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "Lässt sich gerade nicht öffnen.", "from": "d6285d4d" },
   "words.addedBy": { "text": "Hinzugefügt von", "from": "5138475a" },
   "words.close": { "text": "Schließen", "from": "771bd904" },
   "words.free": { "text": "Gratis", "from": "01e78184" },

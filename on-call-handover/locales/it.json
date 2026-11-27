@@ -44,6 +44,8 @@
   "words.ago.h": { "text": "{{count}} h", "from": "c52adce8" },
   "words.itemsTitle": { "text": "Punti aperti", "from": "063f2027" },
   "words.saving": { "text": "Salvataggio…", "from": "53ca6040" },
+  "words.loading": { "text": "Caricamento…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "Non si può aprire adesso.", "from": "d6285d4d" },
   "words.progressLabel": { "text": "{{count}}/{{total}} confermati", "from": "320d4b6a" },
   "words.all": { "text": "Tutti", "from": "9a9877c8" },
   "words.status.open": { "text": "Aperti", "from": "780d8a56" },

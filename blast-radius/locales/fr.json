@@ -96,6 +96,8 @@
   "words.progress": { "text": "{{done}}/{{total}}", "from": "05d5ee64" },
   "words.readOnly": { "text": "lecture seule", "from": "f3233551" },
   "words.saving": { "text": "Enregistrement…", "from": "53ca6040" },
+  "words.loading": { "text": "Chargement…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "Impossible de l’ouvrir pour le moment.", "from": "d6285d4d" },
   "words.notSaved": { "text": "Non enregistré : {{reason}}", "from": "c2dd8897" },
   "words.reviewed": { "text": "A des vérifications ou des notes", "from": "67fdd990" },
   "words.c.missing": { "text": "Manquant : crée-le ou retire {{count}} réf.", "from": "2a90d563" },

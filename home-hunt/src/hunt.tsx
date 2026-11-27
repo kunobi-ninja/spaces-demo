@@ -175,15 +175,18 @@ function Meter({ p, f, w }: { p: Person; f: Fit; w: any }) {
   )
 }
 
-export function HomeHunt({ homes, setup, takes: start, localize, words: w }: { homes: Home[]; setup: Setup; takes: HomeHuntTakesStore; localize: (data: HomeHuntTakesStore) => HomeHuntTakesStore; words: any }) {
+const EMPTY: HomeHuntTakesStore = { takes: {} }
+
+export function HomeHunt({ homes, setup, localize, words: w }: { homes: Home[]; setup: Setup; localize: (data: HomeHuntTakesStore) => HomeHuntTakesStore; words: any }) {
   const people = setup.people
   const live = useStore(STORE) as HomeHuntTakesStore | undefined
   const status = useStoreStatus(STORE)
-  // Without the store (other builds, previews), show the last saved takes, read-only.
   const open = (status?.status === 'open' || status?.status === 'paused') && live !== undefined
   const canEdit = open && status?.status === 'open' && Boolean(status?.canEdit)
+  // Until the store opens there are no takes yet: say so where the takes show.
+  const waiting = open ? null : status?.status === 'refused' || status?.status === 'closed' ? w.unavailable : w.loading
   // Starting notes in the reader's language; display only, edits go to the store as typed.
-  const takes = React.useMemo(() => localize((open ? live : start) as HomeHuntTakesStore)?.takes ?? {}, [open, live, start, localize])
+  const takes = React.useMemo(() => localize((open ? live : EMPTY) as HomeHuntTakesStore)?.takes ?? {}, [open, live, localize])
   const takeOf = (home: string, person: string) => takes[`${home}-${person}`]
   const setTake = (home: string, person: string, change: Partial<Take>) =>
     edit(STORE, (d: HomeHuntTakesStore) => {
@@ -447,6 +450,7 @@ export function HomeHunt({ homes, setup, takes: start, localize, words: w }: { h
                     </div>
                   </div>
                   {open && !status?.saved && <span className="saving">{w.saving}</span>}
+                  {waiting && <span className="saving">{waiting}</span>}
                   <button className="close" onClick={() => setSelected(null)} aria-label={w.close}>×</button>
                 </div>
                 <div className="c-cols">
@@ -591,7 +595,7 @@ export function HomeHunt({ homes, setup, takes: start, localize, words: w }: { h
 
         <div className="how">
           {w.how[0]} <code>home-hunt/data/homes.json</code> {w.how[1]} <code>home-hunt/data/people.json</code>. {w.how[3]}{' '}
-          <code>home-hunt/data/takes.json</code>.{canEdit ? ` ${w.how[4]}` : ''} {w.how[2]}
+          <code>home-hunt/data/takes.json</code>.{canEdit ? ` ${w.how[4]}` : waiting ? ` ${waiting}` : ''} {w.how[2]}
           {w.prompts.map((p: string) => <q key={p}>“{p}”</q>)}
         </div>
       </div>

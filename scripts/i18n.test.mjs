@@ -17,7 +17,7 @@ register(
     }`
   )}`
 )
-const { i18n, localeChain } = await import(resolve(import.meta.dirname, '../lib/i18n.ts'))
+const { i18n, localeChain, hash: pageHash } = await import(resolve(import.meta.dirname, '../lib/i18n.ts'))
 
 const entry = (text, source = text) => ({ text, from: hash(source) })
 
@@ -224,8 +224,8 @@ const TRANSLATIONS = {
       'words.places_one': entry('{{count}} lugar'),
       'words.places_other': entry('{{count}} lugares'),
       'words.days': entry(['Vie', 'Sáb']),
-      'data.places.places.P1.note': entry('Comer primero'),
-      'data.plan.days[fri].title': entry('Viernes'),
+      'data.places.places.P1.note': entry('Comer primero', 'Lunch first'),
+      'data.plan.days[fri].title': entry('Viernes', 'Friday'),
       'doc.notes.md': entry('# Notas'),
     },
     'es-AR': { 'words.title': entry('Finde largo') },
@@ -269,16 +269,19 @@ test('words with placeholders and plurals become functions in the reader languag
   assert.deepEqual(i18n(WORDS, TRANSLATIONS, 'es').meta('prompts', ['Add']), ['Add'])
 })
 
-test('data shows translated while it still equals its start, and is never changed in place', () => {
+test('the page hashes a text as the scripts do', () => {
+  for (const text of ['', 'Lunch first', 'Café ☕ 東京', ['Vie', 'Sáb'], 'x'.repeat(200)]) assert.equal(pageHash(text), hash(text))
+})
+
+test('data shows translated while it still holds the text it was translated from, and is never changed in place', () => {
   const t = i18n(WORDS, TRANSLATIONS, 'es')
-  const start = { places: { P1: { note: 'Lunch first' }, P2: { note: 'x' } } }
   const live = { places: { P1: { note: 'Lunch first' }, P2: { note: 'x' }, P3: { note: 'New' } } }
-  const shown = t.data('places', live, start)
+  const shown = t.data('places', live)
   assert.equal(shown.places.P1.note, 'Comer primero')
   assert.equal(shown.places.P3, live.places.P3)
   assert.equal(live.places.P1.note, 'Lunch first')
   const edited = { places: { P1: { note: 'Dinner instead' } } }
-  assert.equal(t.data('places', edited, start).places.P1.note, 'Dinner instead')
+  assert.equal(t.data('places', edited).places.P1.note, 'Dinner instead')
 
   const plan = { days: [{ id: 'sat', title: 'Saturday' }, { id: 'fri', title: 'Friday' }] }
   assert.deepEqual(t.data('plan', plan).days.map((d) => d.title), ['Saturday', 'Viernes'])

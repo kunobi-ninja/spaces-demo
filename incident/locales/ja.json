@@ -26,6 +26,8 @@
   "words.justNow": { "text": "たった今", "from": "89f0ab9a" },
   "words.refused": { "text": "保存されませんでした。もう一度お試しください。", "from": "438959f4" },
   "words.saving": { "text": "保存中…", "from": "53ca6040" },
+  "words.loading": { "text": "読み込み中…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "今は開けません。", "from": "d6285d4d" },
   "words.someone": { "text": "だれか", "from": "1d0d684a" },
   "words.storeSource": { "text": "インシデントの概要", "from": "cfd1d806" },
   "words.statusChanged": { "text": "ステータスを {{status}} にしました。", "from": "e3b5bd57" },

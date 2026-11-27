@@ -26,6 +26,11 @@ const SHOP = 'meals-shopping'
 
 /** A store is open when Kunobi says so; elsewhere (previews, builds without live editing) it is refused. */
 const isOpen = (s: { status?: string }) => s.status === 'open'
+/** Why a store shows no data yet: still opening, or it cannot open here. */
+const pending = (s: { status?: string }, w: Words) => (s.status === 'refused' || s.status === 'closed' ? w.unavailable : w.loading)
+/** The stores' shapes with nothing in them, until they open. */
+const EMPTY_WEEK: WeekData = { nights: {} }
+const EMPTY_SHOPPING: ShoppingData = { ticks: {}, extras: [] }
 
 interface Item { key: string; name: string; qty: string; aisle: string; days: string[]; got: boolean; extra?: string }
 
@@ -140,8 +145,8 @@ function Tick({ on }: { on: boolean }) {
   )
 }
 
-export function MealPlan({ startWeek, startShopping, localizeShopping, recipes, aisles: recipeAisles, words: w }: { startWeek: WeekData; startShopping: ShoppingData; localizeShopping: (data: ShoppingData) => ShoppingData; recipes: Recipe[]; aisles: string[]; words: Words }) {
-  // The stores when Kunobi has them; the starting data where it does not (previews, builds without live editing).
+export function MealPlan({ localizeShopping, recipes, aisles: recipeAisles, words: w }: { localizeShopping: (data: ShoppingData) => ShoppingData; recipes: Recipe[]; aisles: string[]; words: Words }) {
+  // The stores' data; empty until they open (paused or withdrawn, their last data).
   const weekStore = useStore(WEEK) as WeekData | undefined
   const shopStore = useStore(SHOP) as ShoppingData | undefined
   const weekStatus = useStoreStatus(WEEK) ?? {}
@@ -153,11 +158,11 @@ export function MealPlan({ startWeek, startShopping, localizeShopping, recipes, 
   const savingWeek = weekOpen && weekStatus.saved === false
   const savingShop = shopOpen && shopStatus.saved === false
 
-  const slots = React.useMemo(() => nights(weekStore ?? startWeek, recipes), [weekStore, startWeek, recipes])
+  const slots = React.useMemo(() => nights(weekStore ?? EMPTY_WEEK, recipes), [weekStore, recipes])
   const week = slots.filter((n): n is Night => n.recipe !== null)
   const list = React.useMemo(() => shopping(week), [slots])
   // Starting extras in the reader's language; display only, edits go to the store as typed.
-  const shop = React.useMemo(() => localizeShopping(shopStore ?? startShopping), [shopStore, startShopping, localizeShopping])
+  const shop = React.useMemo(() => localizeShopping(shopStore ?? EMPTY_SHOPPING), [shopStore, localizeShopping])
   const ticks = shop.ticks ?? {}
   const extras = shop.extras ?? []
   const aisles = [...recipeAisles, 'Other']
@@ -341,6 +346,7 @@ export function MealPlan({ startWeek, startShopping, localizeShopping, recipes, 
           <span className="fact"><Clock />{hours(minutes)} {w.cooking}</span>
           {perCook && <span className="fact">{w.cooks}: {perCook}</span>}
           {savingWeek && <span className="fact saving" role="status">{w.saving}</span>}
+          {!weekStore && <span className="fact saving" role="status">{pending(weekStatus, w)}</span>}
         </div>
       </header>
 
@@ -390,7 +396,7 @@ export function MealPlan({ startWeek, startShopping, localizeShopping, recipes, 
       <div className="progress">
         <span>{done} / {shown.length} {w.basket}</span>
         <span className="bar"><span style={{ width: `${shown.length ? (done / shown.length) * 100 : 0}%` }} /></span>
-        {savingShop ? <span className="saving" role="status">{w.saving}</span> : canShop && done > 0 && !day && <button className="clear" onClick={clearTicked}>{w.clear}</button>}
+        {!shopStore ? <span className="saving" role="status">{pending(shopStatus, w)}</span> : savingShop ? <span className="saving" role="status">{w.saving}</span> : canShop && done > 0 && !day && <button className="clear" onClick={clearTicked}>{w.clear}</button>}
       </div>
       {canShop && !day && (
         <form className="add" onSubmit={add}>
@@ -427,7 +433,7 @@ export function MealPlan({ startWeek, startShopping, localizeShopping, recipes, 
       </div>
 
       <div className="how">
-        <div><b>{w.howTitle}</b> {canWeek || canShop ? w.howBody : w.howRead} <code>meals-week</code> · <code>meals-shopping</code> · <code>data/recipes.json</code></div>
+        <div><b>{w.howTitle}</b> {w.howBody} <code>meals-week</code> · <code>meals-shopping</code> · <code>data/recipes.json</code></div>
         <div className="prompts">
           <span>“{w.prompt1}”</span>
           <span>“{w.prompt2}”</span>

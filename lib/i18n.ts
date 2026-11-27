@@ -9,7 +9,7 @@
  *   const t = useI18n(WORDS, translations)
  *   t.w.title                      // 'Fin de semana en Lisboa'
  *   t.w.places({ count: 3 })       // '3 lugares'
- *   t.data('places', live, start)  // the store's rows, a field translated while it still equals its start
+ *   t.data('places', live)         // the store's rows, a field translated while it still holds the text it was translated from
  *
  * The language is `document.documentElement.lang` (Kunobi sets it to the app's language), else
  * `navigator.language`, else the page's own. Each text falls back from the exact tag to its base
@@ -135,7 +135,46 @@ function setPath(value: unknown, segments: Segment[], next: unknown): unknown {
   return { ...(value as Record<string, unknown>), [head.key]: setPath((value as Record<string, unknown>)[head.key], rest, next) }
 }
 
-const same = (a: unknown, b: unknown) => a === b || JSON.stringify(a) === JSON.stringify(b)
+/**
+ * The 8-hex-digit hash a translation records of the source text it came from: the first 8 hex digits
+ * of the SHA-1 of the text's JSON, as `scripts/i18n.mjs` writes it. Synchronous, so pages can compare
+ * a live value with it while rendering.
+ */
+export function hash(text: unknown): string {
+  const bytes = new TextEncoder().encode(JSON.stringify(text))
+  const words = new Uint32Array((((bytes.length + 8) >> 6) + 1) * 16)
+  bytes.forEach((byte, i) => (words[i >> 2] |= byte << (24 - (i % 4) * 8)))
+  words[bytes.length >> 2] |= 0x80 << (24 - (bytes.length % 4) * 8)
+  words[words.length - 1] = bytes.length * 8
+  words[words.length - 2] = Math.floor((bytes.length * 8) / 2 ** 32)
+  let [a, b, c, d, e] = [0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476, 0xc3d2e1f0]
+  const rotl = (x: number, n: number) => (x << n) | (x >>> (32 - n))
+  const w = new Uint32Array(80)
+  for (let block = 0; block < words.length; block += 16) {
+    for (let i = 0; i < 80; i++) w[i] = i < 16 ? words[block + i] : rotl(w[i - 3] ^ w[i - 8] ^ w[i - 14] ^ w[i - 16], 1)
+    let [h0, h1, h2, h3, h4] = [a, b, c, d, e]
+    for (let i = 0; i < 80; i++) {
+      const [f, k] = i < 20 ? [(h1 & h2) | (~h1 & h3), 0x5a827999] : i < 40 ? [h1 ^ h2 ^ h3, 0x6ed9eba1] : i < 60 ? [(h1 & h2) | (h1 & h3) | (h2 & h3), 0x8f1bbcdc] : [h1 ^ h2 ^ h3, 0xca62c1d6]
+      const next = (rotl(h0, 5) + f + h4 + k + w[i]) | 0
+      ;[h4, h3, h2, h1, h0] = [h3, h2, rotl(h1, 30), h0, next]
+    }
+    ;[a, b, c, d, e] = [(a + h0) | 0, (b + h1) | 0, (c + h2) | 0, (d + h3) | 0, (e + h4) | 0]
+  }
+  return [a, b].map((n) => (n >>> 0).toString(16).padStart(8, '0')).join('').slice(0, 8)
+}
+
+/** `hash`, remembered: a page hashes the same texts on every render. */
+const hashes = new Map<string, string>()
+function hashOf(text: unknown): string {
+  const key = JSON.stringify(text)
+  let found = hashes.get(key)
+  if (found === undefined) {
+    found = hash(text)
+    if (hashes.size > 5000) hashes.clear()
+    hashes.set(key, found)
+  }
+  return found
+}
 
 export interface I18n<W> {
   /** The language the page shows: the first locale used, or the page's own. */
@@ -149,12 +188,12 @@ export interface I18n<W> {
   /** A front matter field (`title`, `description`, `prompts`) in the reader's language, or `fallback`. */
   meta<T extends string | string[]>(field: 'title' | 'description' | 'prompts', fallback: T): T
   /**
-   * The data `name` (the file `data/<name>.json`, or the store started from `data/<name>.start.json`)
-   * with its translated fields. Pass a store's `start` too: a field shows translated only while it
-   * still equals its starting value, so what people changed shows as saved. Display only: never
-   * write the result back.
+   * The data `name` (the file `data/<name>.json`, or a store's data, started from
+   * `data/<name>.start.json`) with its translated fields. A field shows translated only while it
+   * still holds the text its translation was made from (the entry's `from` hash), so what people
+   * changed in a store shows as saved. Display only: never write the result back.
    */
-  data<T>(name: string, value: T, start?: unknown): T
+  data<T>(name: string, value: T): T
   /** A text file (`doc.<path>`, relative to the page) in the reader's language, or `source`. */
   doc(path: string, source: string): string
 }
@@ -212,7 +251,7 @@ export function i18n<W extends Record<string, unknown>>(words: W, translations: 
     locale: base(tag) === base(lang) ? tag : lang,
     w: translateWords(words, 'words.') as W & Record<string, any>,
     meta: (field, fallback) => (lookup(`meta.${field}`) ?? fallback) as typeof fallback,
-    data: (name, value, start = value) => {
+    data: (name, value) => {
       const prefix = `data.${name}`
       const keys = new Set<string>()
       for (const locale of chain) for (const key of Object.keys(translations.locales[locale])) {
@@ -222,8 +261,11 @@ export function i18n<W extends Record<string, unknown>>(words: W, translations: 
       for (const key of keys) {
         const path = parsePath(key.slice(prefix.length))
         const current = getPath(value, path)
-        if (current === undefined || !same(current, getPath(start, path))) continue
-        out = setPath(out, path, lookup(key))
+        if (current === undefined) continue
+        // The first locale whose translation was made from the text the field holds now.
+        const from = hashOf(current)
+        const entry = chain.map((lang) => translations.locales[lang][key]).find((found) => found && typeof found === 'object' && found.from === from)
+        if (entry) out = setPath(out, path, entry.text)
       }
       return out as typeof value
     },

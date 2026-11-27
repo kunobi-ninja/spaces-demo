@@ -26,6 +26,8 @@
   "words.justNow": { "text": "방금", "from": "89f0ab9a" },
   "words.refused": { "text": "저장되지 않았어요. 다시 해 보세요.", "from": "438959f4" },
   "words.saving": { "text": "저장 중…", "from": "53ca6040" },
+  "words.loading": { "text": "불러오는 중…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "지금은 열 수 없습니다.", "from": "d6285d4d" },
   "words.someone": { "text": "누군가", "from": "1d0d684a" },
   "words.storeSource": { "text": "장애 헤더", "from": "cfd1d806" },
   "words.statusChanged": { "text": "상태를 {{status}}(으)로 바꿨어요.", "from": "e3b5bd57" },

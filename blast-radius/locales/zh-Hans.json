@@ -96,6 +96,8 @@
   "words.progress": { "text": "{{done}}/{{total}}", "from": "05d5ee64" },
   "words.readOnly": { "text": "只读", "from": "f3233551" },
   "words.saving": { "text": "正在保存…", "from": "53ca6040" },
+  "words.loading": { "text": "加载中…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "现在无法打开。", "from": "d6285d4d" },
   "words.notSaved": { "text": "未保存：{{reason}}", "from": "c2dd8897" },
   "words.reviewed": { "text": "有检查项或备注", "from": "67fdd990" },
   "words.c.missing": { "text": "缺失：创建它，或移除 {{count}} 处引用", "from": "2a90d563" },

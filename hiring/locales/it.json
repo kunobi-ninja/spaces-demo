@@ -15,6 +15,8 @@
   "words.boardHintEdit": { "text": "Clicca un candidato per farlo avanzare.", "from": "400ae3e0" },
   "words.decline": { "text": "Scarta", "from": "cf19fd47" },
   "words.saving": { "text": "Salvataggio…", "from": "53ca6040" },
+  "words.loading": { "text": "Caricamento…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "Non si può aprire adesso.", "from": "d6285d4d" },
   "words.quickFor": { "text": "Giudizio rapido di {{name}}", "from": "1b6c02c1" },
   "words.quickTitle": { "text": "Giudizio rapido, la scheda arriverà", "from": "e064b308" },
   "words.stage.applied": { "text": "Candidati", "from": "704298a5" },

@@ -96,6 +96,8 @@
   "words.progress": { "text": "{{done}}/{{total}}", "from": "05d5ee64" },
   "words.readOnly": { "text": "solo lectura", "from": "f3233551" },
   "words.saving": { "text": "Guardando…", "from": "53ca6040" },
+  "words.loading": { "text": "Cargando…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "No se puede abrir ahora.", "from": "d6285d4d" },
   "words.notSaved": { "text": "No guardado: {{reason}}", "from": "c2dd8897" },
   "words.reviewed": { "text": "Tiene checks o notas", "from": "67fdd990" },
   "words.c.missing": { "text": "No existe: créalo o quita {{count}} refs", "from": "2a90d563" },

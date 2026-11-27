@@ -44,6 +44,8 @@
   "words.ago.h": { "text": "{{count}} 小时", "from": "c52adce8" },
   "words.itemsTitle": { "text": "待办事项", "from": "063f2027" },
   "words.saving": { "text": "正在保存…", "from": "53ca6040" },
+  "words.loading": { "text": "加载中…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "现在无法打开。", "from": "d6285d4d" },
   "words.progressLabel": { "text": "已确认 {{count}}/{{total}}", "from": "320d4b6a" },
   "words.all": { "text": "全部", "from": "9a9877c8" },
   "words.status.open": { "text": "待处理", "from": "780d8a56" },

@@ -26,6 +26,8 @@
   "words.justNow": { "text": "à l'instant", "from": "89f0ab9a" },
   "words.refused": { "text": "Non enregistré. Réessaie.", "from": "438959f4" },
   "words.saving": { "text": "Enregistrement…", "from": "53ca6040" },
+  "words.loading": { "text": "Chargement…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "Impossible de l’ouvrir pour le moment.", "from": "d6285d4d" },
   "words.someone": { "text": "Quelqu'un", "from": "1d0d684a" },
   "words.storeSource": { "text": "En-tête de l'incident", "from": "cfd1d806" },
   "words.statusChanged": { "text": "Statut passé à {{status}}.", "from": "e3b5bd57" },

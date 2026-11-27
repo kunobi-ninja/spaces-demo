@@ -18,5 +18,7 @@
   "words.mark": { "text": "Marquer comme connu", "from": "2bcfdfa5" },
   "words.unmark": { "text": "Pas connu", "from": "0c770638" },
   "words.known": { "text": "Connu", "from": "5235ede1" },
-  "words.saving": { "text": "Enregistrement…", "from": "53ca6040" }
+  "words.saving": { "text": "Enregistrement…", "from": "53ca6040" },
+  "words.loading": { "text": "Chargement…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "Impossible de l’ouvrir pour le moment.", "from": "d6285d4d" }
 }

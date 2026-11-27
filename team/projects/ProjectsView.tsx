@@ -7,8 +7,8 @@ import type { TeamTasksStore } from '../types/team-tasks.store'
  * one ordered list, where a task's `status` picks its column and its place in the
  * list picks its place in that column. Moving a card sets its status and moves it
  * in the list, so two people moving cards at once both keep their moves.
- * Kunobi keeps a readable copy in `data/tasks.json`; the page shows that copy,
- * read-only, wherever the store cannot open (a web link, a preview).
+ * Kunobi keeps a readable copy in `data/tasks.json`. Until the store opens the
+ * board shows no tasks, and says it is loading.
  * Seeded task text shows in the reader's language (`localize`, from the page);
  * project, status and priority values stay as stored and show through `team.labels`.
  */
@@ -414,8 +414,9 @@ function useSend(setProblem: (reason: string | null) => void) {
   }, [setProblem])
 }
 
-export function Projects({ seed, localize, team, w, locale }: {
-  seed: { tasks: Record<string, unknown>[] }
+const EMPTY: { tasks: Record<string, unknown>[] } = { tasks: [] }
+
+export function Projects({ localize, team, w, locale }: {
   /** The tasks with their starting text in the reader's language (display only). */
   localize: (data: { tasks: Record<string, unknown>[] }) => { tasks: Record<string, unknown>[] }
   team: Team
@@ -426,7 +427,10 @@ export function Projects({ seed, localize, team, w, locale }: {
   const status = useStoreStatus(STORE)
   const data = useStore(STORE) as TeamTasksStore | undefined
   const open = Boolean(status?.status === 'open' && data?.tasks)
-  const source = open ? (data as unknown as { tasks: Record<string, unknown>[] }) : seed
+  // Paused or withdrawn, the store keeps its last data, read-only.
+  const kept = Boolean((status?.status === 'paused' || status?.status === 'revoked') && data?.tasks)
+  const source = open || kept ? (data as unknown as { tasks: Record<string, unknown>[] }) : EMPTY
+  const pending = open || kept ? null : status?.status === 'refused' || status?.status === 'closed' ? w.unavailable : w.loading
   const all = React.useMemo(() => localize(source).tasks.map(toTask), [source, localize])
   const [problem, setProblem] = React.useState<string | null>(null)
   const send = useSend(setProblem)
@@ -503,6 +507,7 @@ export function Projects({ seed, localize, team, w, locale }: {
           {people.length || projects.length ? <button className="pj-clear" onClick={() => { setPeople([]); setProjects([]) }}>{w.clear}</button> : null}
         </div>
         {act && status && !status.saved ? <span className="pj-saving" role="status">{w.saving}</span> : null}
+        {pending ? <span className="pj-saving" role="status">{pending}</span> : null}
         {problem ? <span className="pj-problem" role="alert">{w.notSaved}: {problem}</span> : null}
       </div>
 

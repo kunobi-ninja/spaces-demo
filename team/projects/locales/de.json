@@ -30,6 +30,8 @@
   "words.cancel": { "text": "Abbrechen", "from": "ef133eb7" },
   "words.saving": { "text": "Speichern…", "from": "53ca6040" },
   "words.notSaved": { "text": "Nicht gespeichert", "from": "56f0acb2" },
+  "words.loading": { "text": "Wird geladen…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "Lässt sich gerade nicht öffnen.", "from": "d6285d4d" },
   "words.keys": { "text": "Pfeiltasten verschieben sie: links und rechts zwischen Spalten, hoch und runter innerhalb einer Spalte.", "from": "e45dbc7f" },
   "words.hint": { "text": "Zieh eine Karte, um sie zu verschieben, oder nutz ‹ › auf der Karte. Bei einer ausgewählten Karte gehen auch die Pfeiltasten.", "from": "bc2ddb63" },
   "words.howTitle": { "text": "So änderst du das", "from": "37c68600" },

@@ -11,6 +11,8 @@
   "words.weekNote": { "text": "In scadenza nei prossimi 7 giorni, o in attesa di qualcuno", "from": "0c843a1c" },
   "words.doing": { "text": "In corso", "from": "1752b74c" },
   "words.nothing": { "text": "Niente in scadenza questa settimana.", "from": "99c2589e" },
+  "words.loading": { "text": "Caricamento…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "Non si può aprire adesso.", "from": "d6285d4d" },
   "words.waiting": { "text": "In attesa", "from": "64b1aceb" },
   "words.due": { "text": "Scadenza", "from": "02e6f7c8" },
   "words.projects": { "text": "Progetti", "from": "87d96b8b" },

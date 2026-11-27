@@ -11,6 +11,8 @@
   "words.weekNote": { "text": "未来 7 天内到期，或在等别人", "from": "0c843a1c" },
   "words.doing": { "text": "进行中", "from": "1752b74c" },
   "words.nothing": { "text": "本周没有到期的事。", "from": "99c2589e" },
+  "words.loading": { "text": "加载中…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "现在无法打开。", "from": "d6285d4d" },
   "words.waiting": { "text": "等待中", "from": "64b1aceb" },
   "words.due": { "text": "截止", "from": "02e6f7c8" },
   "words.projects": { "text": "项目", "from": "87d96b8b" },

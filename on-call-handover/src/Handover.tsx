@@ -23,17 +23,20 @@ const C = { midnight: '#06213f', deep: '#0b2d52', sun: '#f3aa08', ocean: '#5bcbf
 const SEV: Record<Severity, string> = { high: C.coral, medium: C.sun, low: C.ocean }
 const STATUS: Status[] = ['open', 'acked', 'done']
 const HOUR = 3_600_000
+/** The store's shape with nothing in it, shown until the store opens. */
+const EMPTY: Store = { handedAt: '', handedBy: '', items: {}, takenAt: '', takenBy: '' }
 const KIND: Record<string, string> = { HelmRelease: 'HR', Kustomization: 'KS', StatefulSet: 'STS', HelmRepository: 'Repo' }
 
-export function Handover({ snap, text, start, localize, w }: { snap: Snapshot; text: HandoverText; start: Store; localize: (data: Store) => Store; w: any }) {
+export function Handover({ snap, text, localize, w }: { snap: Snapshot; text: HandoverText; localize: (data: Store) => Store; w: any }) {
   const cluster = useCluster(snap)
   const stored = useStore(STORE) as Store | undefined
   const st = useStoreStatus(STORE) as { status?: string; canEdit?: boolean; saved?: boolean } | undefined
-  // Without the store (web links, renders, other builds) the page shows the saved items, read-only.
   const open = (st?.status === 'open' || st?.status === 'paused') && stored !== undefined
   const canEdit = open && st?.status === 'open' && Boolean(st?.canEdit)
   // Seeded items show in the reader's language until someone changes them; display only.
-  const data = React.useMemo(() => localize((open ? stored : start) ?? start), [open, stored, start, localize])
+  const data = React.useMemo(() => localize(open && stored ? stored : EMPTY), [open, stored, localize])
+  // While the store has nothing to show: opening, or it cannot open here.
+  const pending = open ? null : st?.status === 'refused' || st?.status === 'closed' ? w.unavailable : w.loading
   const items: Item[] = Object.entries(data.items ?? {})
     .map(([id, v]) => ({ ...v, id }))
     .sort((a, b) => (a.order ?? 99) - (b.order ?? 99))
@@ -139,7 +142,7 @@ export function Handover({ snap, text, start, localize, w }: { snap: Snapshot; t
           <section className="oc-panel oc-itemsp" aria-labelledby="oc-items-h">
             <div className="oc-sechead">
               <h2 id="oc-items-h">{w.itemsTitle} <span className="oc-count">{counts.open}</span></h2>
-              <span className="oc-sub" aria-live="polite">{open && st?.saved === false ? w.saving : w.progressLabel({ count: counts.acked + counts.done, total: items.length })}</span>
+              <span className="oc-sub" aria-live="polite">{pending ?? (open && st?.saved === false ? w.saving : w.progressLabel({ count: counts.acked + counts.done, total: items.length }))}</span>
             </div>
             <div className="oc-itemsbar">
               <div className="oc-tabs" role="tablist">
@@ -158,7 +161,7 @@ export function Handover({ snap, text, start, localize, w }: { snap: Snapshot; t
                 <ItemCard key={i.id} item={i} rota={text.rota} canEdit={canEdit} w={w} since={since} fmtWhen={fmtWhen}
                   onStatus={(s) => setStatus(i, s)} onOwner={(o) => setOwner(i, o)} onComment={(c) => setComment(i, c)} />
               ))}
-              {shown.length === 0 ? <li className="oc-empty">{w.noItems}</li> : null}
+              {shown.length === 0 ? <li className="oc-empty">{pending ?? w.noItems}</li> : null}
             </ol>
           </section>
 

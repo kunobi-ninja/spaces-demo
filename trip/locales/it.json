@@ -17,6 +17,8 @@
   "words.markBooked": { "text": "Segna come prenotato", "from": "434120b1" },
   "words.unbook": { "text": "Non prenotato", "from": "f7a77270" },
   "words.saving": { "text": "Salvataggio…", "from": "53ca6040" },
+  "words.loading": { "text": "Caricamento…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "Non si può aprire adesso.", "from": "d6285d4d" },
   "words.addedBy": { "text": "Aggiunta da", "from": "5138475a" },
   "words.close": { "text": "Chiudi", "from": "771bd904" },
   "words.free": { "text": "Gratis", "from": "01e78184" },

@@ -15,6 +15,8 @@
   "words.boardHintEdit": { "text": "지원자를 클릭해 다음 단계로 옮기세요.", "from": "400ae3e0" },
   "words.decline": { "text": "불합격", "from": "cf19fd47" },
   "words.saving": { "text": "저장 중…", "from": "53ca6040" },
+  "words.loading": { "text": "불러오는 중…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "지금은 열 수 없습니다.", "from": "d6285d4d" },
   "words.quickFor": { "text": "{{name}}의 빠른 판단", "from": "1b6c02c1" },
   "words.quickTitle": { "text": "빠른 판단, 평가표는 나중에", "from": "e064b308" },
   "words.stage.applied": { "text": "지원", "from": "704298a5" },

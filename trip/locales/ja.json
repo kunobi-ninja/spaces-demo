@@ -17,6 +17,8 @@
   "words.markBooked": { "text": "予約済みにする", "from": "434120b1" },
   "words.unbook": { "text": "未予約に戻す", "from": "f7a77270" },
   "words.saving": { "text": "保存中…", "from": "53ca6040" },
+  "words.loading": { "text": "読み込み中…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "今は開けません。", "from": "d6285d4d" },
   "words.addedBy": { "text": "追加した人", "from": "5138475a" },
   "words.close": { "text": "閉じる", "from": "771bd904" },
   "words.free": { "text": "無料", "from": "01e78184" },

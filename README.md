@@ -46,7 +46,7 @@ These read the cluster you have selected in Kunobi. They need Kunobi with Ninja 
 
 What a page saves lives in a LiveStore, defined in `.kunobi/stores/<name>/store.json`. A new copy of the space starts each store from its starting data: the `*.start.json` file beside it, or `data/week.json` and `data/shopping.json` for meals. Kunobi keeps a readable JSON copy of each store next to the example, so you and your AI can still read it as a file. Ask your AI to change a store's data and it edits the store, not the copy.
 
-LiveStores need a Kunobi build with live editing, and live editing turned on for the space. Elsewhere the pages show their starting data and cannot be changed. The people, numbers and places are made up. The Kubernetes samples come from a real cluster, with its names changed.
+Every place that shows these pages opens their stores; a preview starts them from their starting data and keeps changes only while it is open. The people, numbers and places are made up. The Kubernetes samples come from a real cluster, with its names changed.
 
 ## Languages
 

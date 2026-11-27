@@ -14,6 +14,8 @@
   "words.seatHere": { "text": "Fai sedere {{name}} qui", "from": "4e660373" },
   "words.saving": { "text": "Salvataggio…", "from": "53ca6040" },
   "words.refused": { "text": "Non salvato. Riprova.", "from": "438959f4" },
+  "words.loading": { "text": "Caricamento…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "Non si può aprire adesso.", "from": "d6285d4d" },
   "words.answer": { "text": "Risposta", "from": "e2e1ac81" },
   "words.party": { "text": "Persone", "from": "fcb6df42" },
   "words.noSeat": { "text": "Nessun posto", "from": "b54f1163" },

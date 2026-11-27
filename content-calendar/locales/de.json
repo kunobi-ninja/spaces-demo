@@ -20,6 +20,8 @@
   "words.change": { "text": "Diese Seite zeigt data/posts.json. Frag deine KI:", "from": "e7ac089c" },
   "words.changeEdit": { "text": "Öffne einen Post, um ihn auf einen anderen Tag zu verschieben oder seinen Status zu ändern, oder frag deine KI:", "from": "5475e99f" },
   "words.saving": { "text": "Speichern…", "from": "53ca6040" },
+  "words.loading": { "text": "Wird geladen…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "Lässt sich gerade nicht öffnen.", "from": "d6285d4d" },
   "words.prompts": { "text": ["„Verschieb P14 auf Samstag und markier ihn als in Prüfung.“", "„Plan drei Instagram-Posts für die Geschenkboxen in der letzten Woche.“"], "from": "9fe91876" },
   "words.status.idea": { "text": "Idee", "from": "92fb43c5" },
   "words.status.drafting": { "text": "Im Entwurf", "from": "4e531add" },

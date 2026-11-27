@@ -20,14 +20,12 @@ import '@fontsource/parkinsans/600.css'
 import '@fontsource/parkinsans/800.css'
 import '@fontsource/figtree/400.css'
 import '@fontsource/figtree/600.css'
-import saved from './data/expenses.json'
-import seedStart from './data/expenses.start.json'
 import group from './data/group.json'
 import { buildLedger, formatSplit, parseSplit } from './src/ledger'
 import { useI18n } from '../lib/i18n'
 import translations from './locales/index'
 
-{/* The page's words. Expenses and payments live in the expenses-ledger store; data/expenses.json is its readable copy. The group (title, people, categories) is data/group.json. Translations of the words, the group's title and the starting expenses (data/expenses.start.json, by id) are in locales/<lang>.json: an expense still as it started shows translated, and categories stay as stored and show through WORDS cats. */}
+{/* The page's words. Expenses and payments live in the expenses-ledger store, which starts from data/expenses.start.json; data/expenses.json is its readable copy. The group (title, people, categories) is data/group.json. Translations of the words, the group's title and the starting expenses (data/expenses.start.json, by id) are in locales/<lang>.json: an expense still as it started shows translated, and categories stay as stored and show through WORDS cats. */}
 
 export const STORE = 'expenses-ledger'
 
@@ -51,7 +49,7 @@ export const WORDS = {
   cats: { Rent: 'Rent', Bills: 'Bills', Groceries: 'Groceries', Household: 'Household', Takeaway: 'Takeaway' },
   whatHint: 'Groceries', save: 'Save', cancel: 'Cancel', edit: 'Edit', del: 'Delete', sure: 'Delete it?', keep: 'Keep',
   incomplete: 'Add what it was for, an amount and at least one person.',
-  notSaved: 'Not saved', saving: 'Saving…', readOnly: 'Saved copy · read only',
+  notSaved: 'Not saved', saving: 'Saving…', loading: 'Loading…', unavailable: "This can't be opened right now.",
   change: 'How to change this',
   changeLine: 'Expenses and payments are kept in the expenses-ledger store; data/expenses.json is a readable copy. Use the form, or ask your AI:',
   prompts: ['“Add 18.50 for groceries paid by Amara, split between everyone.”', '“Diego was out for curry night: take him out of that split.”', '“Mei paid Amara back 150 today.”'],
@@ -273,7 +271,7 @@ export const ByDay = ({ ledger, span, w, f }) => {
   )
 }
 
-export const List = ({ ledger, rows: stored, w, f, canEdit, onSave, onDelete }) => {
+export const List = ({ ledger, rows: stored, pending, w, f, canEdit, onSave, onDelete }) => {
   const [who, setWho] = React.useState(null)
   const [cat, setCat] = React.useState(null)
   const [editing, setEditing] = React.useState(null)
@@ -303,7 +301,7 @@ export const List = ({ ledger, rows: stored, w, f, canEdit, onSave, onDelete }) 
           </button>
         ))}
       </div>
-      {rows.length === 0 && <div className="empty">{w.none}</div>}
+      {rows.length === 0 && <div className="empty">{pending ?? w.none}</div>}
       <div className="days">
       {Object.entries(byDay).map(([iso, items]) => (
         <div className="day" key={iso}>
@@ -369,13 +367,14 @@ export const Expenses = () => {
   const f = React.useMemo(() => formatters(t.tag), [t.tag])
   const live = useStore(STORE)
   const status = useStoreStatus(STORE)
-  // Without the store (other builds, previews), show the last saved copy, read-only.
+  // Until the store opens, no expenses and a note saying why.
   const open = Boolean(status?.status === 'open' && live)
   const canEdit = open && Boolean(status?.canEdit)
   const saving = open && status?.saved === false
-  const data = open ? live : saved
+  const pending = open ? null : status?.status === 'refused' || status?.status === 'closed' ? w.unavailable : w.loading
+  const data = open ? live : undefined
   // Starting expenses in the reader's language; display only. The edit form starts from the stored row.
-  const ledger = React.useMemo(() => buildLedger(t.data('expenses', data, seedStart), group), [data, t])
+  const ledger = React.useMemo(() => buildLedger(data && t.data('expenses', data), group), [data, t])
   const last = ledger.expenses.reduce((m, e) => (e.date > m ? e.date : m), group.to)
   const span = { from: group.from, to: last }
   const [adding, setAdding] = React.useState(false)
@@ -565,7 +564,7 @@ export const Expenses = () => {
           <div className="kinds">
             <div className="kind"><i />{w.kind}</div>
             {saving && <div className="kind saving" role="status"><i />{w.saving}</div>}
-            {!open && <div className="kind">{w.readOnly}</div>}
+            {pending && <div className="kind" role="status">{pending}</div>}
           </div>
           <h1>{t.data('group', group).title}</h1>
           <div className="top-meta">{f.range(span.from, span.to)}</div>
@@ -590,7 +589,7 @@ export const Expenses = () => {
         <ByCategory ledger={ledger} w={w} f={f} />
         <ByDay ledger={ledger} span={span} w={w} f={f} />
       </div>
-      <List ledger={ledger} rows={data?.expenses} w={w} f={f} canEdit={canEdit} onSave={saveExpense} onDelete={deleteExpense} />
+      <List ledger={ledger} rows={data?.expenses} pending={pending} w={w} f={f} canEdit={canEdit} onSave={saveExpense} onDelete={deleteExpense} />
 
       {ledger.errors.length > 0 && (
         <div className="problems"><b>{w.problems}</b><ul>{ledger.errors.map((e) => <li key={e}>{e}</li>)}</ul></div>

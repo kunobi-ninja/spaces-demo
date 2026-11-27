@@ -30,6 +30,8 @@
   "words.cancel": { "text": "Annulla", "from": "ef133eb7" },
   "words.saving": { "text": "Salvataggio…", "from": "53ca6040" },
   "words.notSaved": { "text": "Non salvato", "from": "56f0acb2" },
+  "words.loading": { "text": "Caricamento…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "Non si può aprire adesso.", "from": "d6285d4d" },
   "words.keys": { "text": "Le frecce la spostano: sinistra e destra tra le colonne, su e giù dentro una colonna.", "from": "e45dbc7f" },
   "words.hint": { "text": "Trascina una scheda per spostarla, o usa ‹ › sulla scheda. Su una scheda selezionata funzionano anche le frecce.", "from": "bc2ddb63" },
   "words.howTitle": { "text": "Come modificarlo", "from": "37c68600" },

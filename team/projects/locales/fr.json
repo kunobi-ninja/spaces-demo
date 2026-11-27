@@ -30,6 +30,8 @@
   "words.cancel": { "text": "Annuler", "from": "ef133eb7" },
   "words.saving": { "text": "Enregistrement…", "from": "53ca6040" },
   "words.notSaved": { "text": "Non enregistré", "from": "56f0acb2" },
+  "words.loading": { "text": "Chargement…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "Impossible de l’ouvrir pour le moment.", "from": "d6285d4d" },
   "words.keys": { "text": "Les flèches la déplacent : gauche et droite entre les colonnes, haut et bas dans une colonne.", "from": "e45dbc7f" },
   "words.hint": { "text": "Glisse une carte pour la déplacer, ou utilise ‹ › sur la carte. Sur une carte sélectionnée, les flèches la déplacent aussi.", "from": "bc2ddb63" },
   "words.howTitle": { "text": "Comment modifier ceci", "from": "37c68600" },
