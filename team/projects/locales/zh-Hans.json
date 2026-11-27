@@ -30,6 +30,8 @@
   "words.cancel": { "text": "取消", "from": "ef133eb7" },
   "words.saving": { "text": "正在保存…", "from": "53ca6040" },
   "words.notSaved": { "text": "没有保存", "from": "56f0acb2" },
+  "words.loading": { "text": "加载中…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "现在无法打开。", "from": "d6285d4d" },
   "words.keys": { "text": "用方向键移动：左右在列之间移动，上下在同一列内移动。", "from": "e45dbc7f" },
   "words.hint": { "text": "拖动卡片来移动，或使用卡片上的 ‹ ›。选中卡片后，也可以用方向键移动。", "from": "bc2ddb63" },
   "words.howTitle": { "text": "如何修改", "from": "37c68600" },

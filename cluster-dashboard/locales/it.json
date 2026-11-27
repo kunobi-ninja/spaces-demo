@@ -18,5 +18,7 @@
   "words.mark": { "text": "Segna come noto", "from": "2bcfdfa5" },
   "words.unmark": { "text": "Non noto", "from": "0c770638" },
   "words.known": { "text": "Noto", "from": "5235ede1" },
-  "words.saving": { "text": "Salvataggio…", "from": "53ca6040" }
+  "words.saving": { "text": "Salvataggio…", "from": "53ca6040" },
+  "words.loading": { "text": "Caricamento…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "Non si può aprire adesso.", "from": "d6285d4d" }
 }

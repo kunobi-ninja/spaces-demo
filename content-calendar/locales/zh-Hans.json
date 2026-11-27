@@ -20,6 +20,8 @@
   "words.change": { "text": "这个页面显示的是 data/posts.json。问问你的 AI：", "from": "e7ac089c" },
   "words.changeEdit": { "text": "打开一条帖子，可以把它挪到别的日子或修改状态，也可以问问你的 AI：", "from": "5475e99f" },
   "words.saving": { "text": "正在保存…", "from": "53ca6040" },
+  "words.loading": { "text": "加载中…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "现在无法打开。", "from": "d6285d4d" },
   "words.prompts": { "text": ["“把 P14 挪到周六，并标记为审核中。”", "“为最后一周的礼盒规划三条 Instagram 帖子。”"], "from": "9fe91876" },
   "words.status.idea": { "text": "点子", "from": "92fb43c5" },
   "words.status.drafting": { "text": "撰写中", "from": "4e531add" },

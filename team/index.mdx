@@ -21,14 +21,12 @@ import '@fontsource/parkinsans/800.css'
 import '@fontsource/figtree/400.css'
 import '@fontsource/figtree/600.css'
 import TEAM_SOURCE from './data/team.json'
-import SEED from './data/tasks.json'
-import SEED_START from './data/tasks.start.json'
 import DECISIONS from './wiki/decisions.md?raw'
 import { useI18n } from '../lib/i18n'
 import translations from './locales/index'
 import wikiTranslations from './wiki/locales/index'
 
-{/* The page's words, with `labels` naming the projects as stored. The team's own content lives in the team-tasks store (readable copy: data/tasks.json), data/team.json and wiki/. Translations of the words, the team and the starting tasks (data/tasks.start.json, by id) are in locales/<lang>.json; a task still as it started shows translated. The decisions come from wiki/decisions.md, translated in wiki/locales/<lang>.json. */}
+{/* The page's words, with `labels` naming the projects as stored. The team's own content lives in the team-tasks store, data/team.json and wiki/. Translations of the words, the team and the starting tasks (by id) are in locales/<lang>.json; a task that still reads as it started shows translated. The decisions come from wiki/decisions.md, translated in wiki/locales/<lang>.json. */}
 
 export const WORDS = {
   eyebrow: 'Team space',
@@ -40,6 +38,8 @@ export const WORDS = {
   weekNote: 'Due in the next 7 days, or waiting on someone',
   doing: 'In progress',
   nothing: 'Nothing due this week.',
+  loading: 'Loading…',
+  unavailable: "This can't be opened right now.",
   waiting: 'Waiting',
   due: 'Due',
   projects: 'Projects',
@@ -70,6 +70,8 @@ export const parseDecisions = (md) =>
       return { date, decision, who, why, task }
     })
 
+export const EMPTY = { tasks: [] }
+
 export const DAY = 86400000
 export const toDate = (iso) => new Date(`${iso}T12:00:00`)
 
@@ -94,11 +96,13 @@ export const TeamHome = () => {
   const w = t.w
   const TEAM = React.useMemo(() => t.data('team', TEAM_SOURCE), [t])
   const say = (value) => w.labels[value] ?? value
-  // The shared board's tasks; where the store cannot open, the readable copy Kunobi keeps of it.
+  // The shared board's tasks, from the team-tasks store; none until it opens.
   const live = useStore('team-tasks')
-  const shared = useStoreStatus('team-tasks')?.status === 'open'
-  const board = shared && live?.tasks ? live : SEED
-  const tasks = React.useMemo(() => t.data('tasks', board, SEED_START).tasks.map((t) => Object.fromEntries(Object.entries(t).map(([k, v]) => [k, v ?? '']))), [t, board])
+  const status = useStoreStatus('team-tasks')?.status
+  const shared = (status === 'open' || status === 'paused' || status === 'revoked') && Boolean(live?.tasks)
+  const board = shared ? live : EMPTY
+  const pending = shared ? null : status === 'refused' || status === 'closed' ? w.unavailable : w.loading
+  const tasks = React.useMemo(() => t.data('tasks', board).tasks.map((t) => Object.fromEntries(Object.entries(t).map(([k, v]) => [k, v ?? '']))), [t, board])
   const decisions = React.useMemo(() => parseDecisions(wiki.doc('decisions.md', DECISIONS)).slice(0, 3), [wiki])
   const people = Object.fromEntries(TEAM.people.map((p) => [p.id, p]))
   const projectColor = Object.fromEntries(TEAM.projects.map((p) => [p.id, p.color]))
@@ -260,7 +264,7 @@ export const TeamHome = () => {
           <section className="panel">
             <h2>{w.week} <small>{fmtShort.format(today)} – {fmtShort.format(new Date(today.getTime() + 7 * DAY))}</small></h2>
             <p className="note">{w.weekNote}</p>
-            {soon.length ? soon.map((t) => <TaskRow t={t} key={t.id} />) : <div className="empty">{w.nothing}</div>}
+            {soon.length ? soon.map((t) => <TaskRow t={t} key={t.id} />) : <div className="empty">{pending ?? w.nothing}</div>}
             {doing.length ? <div className="sub">{w.doing}</div> : null}
             {doing.map((t) => <TaskRow t={t} key={t.id} />)}
           </section>

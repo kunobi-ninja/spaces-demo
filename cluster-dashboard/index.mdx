@@ -10,7 +10,6 @@ import '@fontsource/parkinsans/800.css'
 import '@fontsource/figtree/400.css'
 import '@fontsource/figtree/600.css'
 import snap from './data/cluster.json'
-import savedAcks from './data/acks.json'
 import { Dashboard } from './src/Dashboard'
 import { useI18n } from '../lib/i18n'
 import translations from './locales/index'
@@ -23,11 +22,12 @@ export const WORDS = {
   broken: 'broken', toCheck: 'to check', allGood: 'All healthy', podsOk: 'pods healthy',
   map: 'Pods by namespace', problems: 'Problems', all: 'All', none: 'Nothing here.',
   back: 'Back', mark: 'Mark as known', unmark: 'Not known', known: 'Known', saving: 'Saving…',
+  loading: 'Loading…', unavailable: "This can't be opened right now.",
 }
 
 export const Page = () => {
   const { w } = useI18n(WORDS, translations)
-  return <Dashboard snap={snap} savedAcks={savedAcks} w={w} />
+  return <Dashboard snap={snap} w={w} />
 }
 
 <Page />

@@ -30,6 +30,8 @@
   "words.cancel": { "text": "취소", "from": "ef133eb7" },
   "words.saving": { "text": "저장 중…", "from": "53ca6040" },
   "words.notSaved": { "text": "저장 안 됨", "from": "56f0acb2" },
+  "words.loading": { "text": "불러오는 중…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "지금은 열 수 없습니다.", "from": "d6285d4d" },
   "words.keys": { "text": "화살표 키로 옮겨요: 왼쪽·오른쪽은 칸 사이로, 위·아래는 같은 칸 안에서.", "from": "e45dbc7f" },
   "words.hint": { "text": "카드를 끌어서 옮기거나 카드의 ‹ ›를 쓰세요. 카드를 선택하면 화살표 키로도 옮길 수 있어요.", "from": "bc2ddb63" },
   "words.howTitle": { "text": "바꾸는 방법", "from": "37c68600" },

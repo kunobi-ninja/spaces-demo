@@ -32,6 +32,8 @@
   "words.takeOf": { "text": "{{name}}의 생각", "from": "b07d199f" },
   "words.notePh": { "text": "{{name}}의 메모", "from": "f0d1fab1" },
   "words.saving": { "text": "저장 중…", "from": "53ca6040" },
+  "words.loading": { "text": "불러오는 중…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "지금은 열 수 없습니다.", "from": "d6285d4d" },
   "words.how": { "text": ["집 목록은 여기서 가져와요:", "각자 필요한 건 여기서:", "파일을 고치거나 AI에게 물어보세요:", "우리 생각은 여기 저장돼요:", "집을 열어 내 생각을 남겨 보세요."], "from": "f482a677" },
   "words.prompts": { "text": ["14 Ashley Down Road, Horfield 추가해 줘: £1,350, 침실 3개, 정원 창고, 자전거로 13분, M32까지 6분", "Alex는 18 Elgin Park가 마음에 들어: 지하실에 작업대가 들어가", "Maya가 Cotham 플랫은 이젤을 놓기엔 너무 좁대: 그 이유로 제외해 줘"], "from": "73c0099b" },
   "words.say.both": { "text": "둘 다 만족해요. 아쉬운 점: {{lacks}}.", "from": "e909feac" },

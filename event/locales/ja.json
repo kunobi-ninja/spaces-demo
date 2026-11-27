@@ -14,6 +14,8 @@
   "words.seatHere": { "text": "{{name}} をここに座らせる", "from": "4e660373" },
   "words.saving": { "text": "保存中…", "from": "53ca6040" },
   "words.refused": { "text": "保存されませんでした。もう一度お試しください。", "from": "438959f4" },
+  "words.loading": { "text": "読み込み中…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "今は開けません。", "from": "d6285d4d" },
   "words.answer": { "text": "返事", "from": "e2e1ac81" },
   "words.party": { "text": "人数", "from": "fcb6df42" },
   "words.noSeat": { "text": "席なし", "from": "b54f1163" },

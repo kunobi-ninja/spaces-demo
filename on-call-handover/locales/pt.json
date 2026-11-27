@@ -44,6 +44,8 @@
   "words.ago.h": { "text": "{{count}} h", "from": "c52adce8" },
   "words.itemsTitle": { "text": "Pendências", "from": "063f2027" },
   "words.saving": { "text": "Salvando…", "from": "53ca6040" },
+  "words.loading": { "text": "Carregando…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "Não é possível abrir agora.", "from": "d6285d4d" },
   "words.progressLabel": { "text": "{{count}}/{{total}} confirmadas", "from": "320d4b6a" },
   "words.all": { "text": "Todas", "from": "9a9877c8" },
   "words.status.open": { "text": "Aberta", "from": "780d8a56" },

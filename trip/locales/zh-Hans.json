@@ -17,6 +17,8 @@
   "words.markBooked": { "text": "标记为已预订", "from": "434120b1" },
   "words.unbook": { "text": "取消预订标记", "from": "f7a77270" },
   "words.saving": { "text": "正在保存…", "from": "53ca6040" },
+  "words.loading": { "text": "加载中…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "现在无法打开。", "from": "d6285d4d" },
   "words.addedBy": { "text": "添加者", "from": "5138475a" },
   "words.close": { "text": "关闭", "from": "771bd904" },
   "words.free": { "text": "免费", "from": "01e78184" },

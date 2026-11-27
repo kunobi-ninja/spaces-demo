@@ -68,7 +68,7 @@ function Command({ cmd, w }: { cmd: string; w: any }) {
   )
 }
 
-export function Runbook({ snapshot, saved, localize, w }: { snapshot: Cluster; saved: RunbookRunsStore; localize: (data: RunbookRunsStore) => RunbookRunsStore; w: any }) {
+export function Runbook({ snapshot, localize, w }: { snapshot: Cluster; localize: (data: RunbookRunsStore) => RunbookRunsStore; w: any }) {
   const src = useCluster(snapshot)
   const cluster = src.cluster
   const stored = useStore(STORE) as RunbookRunsStore | undefined
@@ -76,7 +76,9 @@ export function Runbook({ snapshot, saved, localize, w }: { snapshot: Cluster; s
   const open = (status?.status === 'open' || status?.status === 'paused') && stored !== undefined
   const canEdit = open && status?.status === 'open' && Boolean(status?.canEdit)
   // Seeded runs show in the reader's language until someone changes them; display only.
-  const log: RunbookRunsStore = React.useMemo(() => localize((open ? stored : saved) ?? { runs: {}, checks: {} }), [open, stored, saved, localize])
+  const log: RunbookRunsStore = React.useMemo(() => localize(open && stored ? stored : { runs: {}, checks: {} }), [open, stored, localize])
+  // While the store has nothing to show: opening, or it cannot open here.
+  const pending = open ? null : status?.status === 'refused' || status?.status === 'closed' ? w.unavailable : w.loading
 
   const stuck = cluster.helmreleases.filter((h) => h.ready?.s !== 'True')
   const [pick, setPick] = React.useState<string | null>(null)
@@ -277,7 +279,7 @@ export function Runbook({ snapshot, saved, localize, w }: { snapshot: Cluster; s
             <section className="rb-box rb-log">
               <div className="rb-row">
                 <h2>{w.lastRuns}</h2>
-                <span className="rb-muted">{open ? (status?.saved ? w.shared : w.saving) : w.readOnly}</span>
+                <span className="rb-muted">{open ? (status?.saved ? w.shared : w.saving) : pending}</span>
               </div>
               {canEdit && hr ? (
                 <div className="rb-record">
@@ -287,7 +289,7 @@ export function Runbook({ snapshot, saved, localize, w }: { snapshot: Cluster; s
                   {answer ? <span className="rb-muted rb-answer" role="status">{answer}</span> : null}
                 </div>
               ) : null}
-              {runs.length === 0 ? <p className="rb-muted">{w.noRuns}</p> : null}
+              {runs.length === 0 ? <p className="rb-muted">{pending ?? w.noRuns}</p> : null}
               <ul className="rb-runs">
                 {runs.slice(0, 10).map((r) => {
                   const tally = (x: Result) => r.checks.filter((c) => c.result === x).length

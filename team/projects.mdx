@@ -15,14 +15,12 @@ import '@fontsource/parkinsans/600.css'
 import '@fontsource/parkinsans/800.css'
 import '@fontsource/figtree/400.css'
 import '@fontsource/figtree/600.css'
-import tasks from './data/tasks.json'
-import tasksStart from './data/tasks.start.json'
 import team from './data/team.json'
 import { Projects } from './projects/ProjectsView'
 import { useI18n } from '../lib/i18n'
 import translations from './projects/locales/index'
 
-{/* The tasks live in the team-tasks store; Kunobi keeps a readable copy in data/tasks.json, which this page shows read-only where the store cannot open. The team is in data/team.json. The words below are the page's own, with `labels` naming projects, statuses and priorities as stored. Their translations, the team's and those of the starting tasks (data/tasks.start.json, by id) are in projects/locales/<lang>.json; a task still as it started shows translated. */}
+{/* The tasks live in the team-tasks store; Kunobi keeps a readable copy in data/tasks.json. The team is in data/team.json. The words below are the page's own, with `labels` naming projects, statuses and priorities as stored. Their translations, the team's and those of the starting tasks (by id) are in projects/locales/<lang>.json; a task that still reads as it started shows translated. */}
 
 export const WORDS = {
   projects: 'Projects', daysToOpening: 'days to opening', done: 'done',
@@ -31,7 +29,7 @@ export const WORDS = {
   high: 'High priority', aiHelps: 'An AI helps with this',
   id: 'ID', task: 'Task', project: 'Project', owner: 'Owner', status: 'Status', due: 'Due', priority: 'Priority', ai: 'AI help',
   moveTo: 'Move to', addTask: 'Add task', newTask: 'What needs doing?', add: 'Add', cancel: 'Cancel',
-  saving: 'Saving…', notSaved: 'Not saved',
+  saving: 'Saving…', notSaved: 'Not saved', loading: 'Loading…', unavailable: "This can't be opened right now.",
   keys: 'Arrow keys move it: left and right between columns, up and down within one.',
   hint: 'Drag a card to move it, or use ‹ › on the card. On a selected card, the arrow keys move it too.',
   howTitle: 'How to change this',
@@ -48,9 +46,9 @@ export const WORDS = {
 
 export const ProjectsPage = () => {
   const t = useI18n(WORDS, translations)
-  const localize = React.useCallback((live) => t.data('tasks', live, tasksStart), [t])
+  const localize = React.useCallback((live) => t.data('tasks', live), [t])
   const shown = React.useMemo(() => ({ ...t.data('team', team), labels: t.w.labels }), [t])
-  return <Projects seed={tasks} localize={localize} team={shown} w={t.w} locale={t.tag} />
+  return <Projects localize={localize} team={shown} w={t.w} locale={t.tag} />
 }
 
 <ProjectsPage />

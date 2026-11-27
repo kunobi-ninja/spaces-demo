@@ -18,5 +18,7 @@
   "words.mark": { "text": "既知にする", "from": "2bcfdfa5" },
   "words.unmark": { "text": "既知ではない", "from": "0c770638" },
   "words.known": { "text": "既知", "from": "5235ede1" },
-  "words.saving": { "text": "保存中…", "from": "53ca6040" }
+  "words.saving": { "text": "保存中…", "from": "53ca6040" },
+  "words.loading": { "text": "読み込み中…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "今は開けません。", "from": "d6285d4d" }
 }

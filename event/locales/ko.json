@@ -14,6 +14,8 @@
   "words.seatHere": { "text": "{{name}} 님을 여기 앉히기", "from": "4e660373" },
   "words.saving": { "text": "저장 중…", "from": "53ca6040" },
   "words.refused": { "text": "저장되지 않았어요. 다시 해 보세요.", "from": "438959f4" },
+  "words.loading": { "text": "불러오는 중…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "지금은 열 수 없습니다.", "from": "d6285d4d" },
   "words.answer": { "text": "답장", "from": "e2e1ac81" },
   "words.party": { "text": "인원", "from": "fcb6df42" },
   "words.noSeat": { "text": "자리 없음", "from": "b54f1163" },

@@ -30,6 +30,8 @@
   "words.cancel": { "text": "キャンセル", "from": "ef133eb7" },
   "words.saving": { "text": "保存中…", "from": "53ca6040" },
   "words.notSaved": { "text": "保存されていません", "from": "56f0acb2" },
+  "words.loading": { "text": "読み込み中…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "今は開けません。", "from": "d6285d4d" },
   "words.keys": { "text": "矢印キーで動かせます：左右で列を移動、上下で列の中を移動。", "from": "e45dbc7f" },
   "words.hint": { "text": "カードをドラッグするか、カードの ‹ › で動かせます。選択したカードは矢印キーでも動かせます。", "from": "bc2ddb63" },
   "words.howTitle": { "text": "変更のしかた", "from": "37c68600" },

@@ -5,8 +5,8 @@ import { useCluster, type Cluster, type Cond, type Snapshot, type Ev } from './l
 
 /*
  * The incident page. The header, timeline and follow-ups live in the `incident-timeline`
- * LiveStore (readable copy: data/timeline.json; data/timeline.start.json is shown read-only
- * where the store cannot open). Cluster facts come from src/live.ts: live from the cluster the
+ * LiveStore (readable copy: data/timeline.json); until it opens the page shows them empty.
+ * Cluster facts come from src/live.ts: live from the cluster the
  * person selected, in their own preview; from the sample in data/cluster.json everywhere else. The postmortem is
  * written from both, so it changes as the timeline does.
  */
@@ -26,6 +26,9 @@ const STATUS_COLOR: Record<IncStatus, string> = { investigating: C.coral, mitiga
 const KINDS: Kind[] = ['detect', 'finding', 'action', 'decision', 'note']
 const STATUSES: IncStatus[] = ['investigating', 'mitigated', 'resolved']
 const SEVERITIES = ['SEV1', 'SEV2', 'SEV3', 'SEV4'] as const
+
+/** The store's shape with nothing in it, shown until the store opens. */
+const EMPTY: Store = { commander: '', entries: [], followups: [], resolved: '', severity: null, started: '', status: null, title: '' }
 
 const ms = (iso?: string | null) => (iso ? Date.parse(iso) : NaN)
 const firstSentence = (s: string) => (s.match(/^.*?[.!?](\s|$)/)?.[0] ?? s).trim()
@@ -306,7 +309,7 @@ function detailOf(n: GNode, f: Facts): { detail: string; since: string } {
   return { detail: '', since: '' }
 }
 
-export function Incident({ snapshot, start, localize, w }: { snapshot: Snapshot; start: Store; localize: (data: Store) => Store; w: any }) {
+export function Incident({ snapshot, localize, w }: { snapshot: Snapshot; localize: (data: Store) => Store; w: any }) {
   const cl = useCluster(snapshot)
   const f = React.useMemo(() => facts(cl, snapshot.scope), [cl, snapshot.scope])
   const model = React.useMemo(() => graphModel(f, w), [f, w])
@@ -315,7 +318,10 @@ export function Incident({ snapshot, start, localize, w }: { snapshot: Snapshot;
   const st = (useStoreStatus(STORE) ?? {}) as St
   const open = st.status === 'open' && !!live
   // Seeded text shows in the reader's language until someone changes it; display only.
-  const data: Store = React.useMemo(() => localize((open || st.status === 'paused') && live ? live : start), [open, st.status, live, start, localize])
+  const shows = (open || st.status === 'paused') && !!live
+  const data: Store = React.useMemo(() => localize(shows ? live! : EMPTY), [shows, live, localize])
+  // While the store has nothing to show: opening, or it cannot open here.
+  const pending = shows ? null : st.status === 'refused' || st.status === 'closed' ? w.unavailable : w.loading
   const canEdit = open && !!st.canEdit
   const [refused, setRefused] = React.useState(false)
   const send = (change: (d: Store) => void) =>
@@ -475,7 +481,7 @@ export function Incident({ snapshot, start, localize, w }: { snapshot: Snapshot;
           <section className="inc-card inc-tl">
             <div className="inc-card-head">
               <h2>{w.timelineTitle}<small>{w.entriesN({ count: entries.length })}</small></h2>
-              {canEdit && st.saved === false ? <span className="inc-saving">{w.saving}</span> : null}
+              {canEdit && st.saved === false ? <span className="inc-saving">{w.saving}</span> : pending ? <span className="inc-saving">{pending}</span> : null}
             </div>
             <div className="inc-detail-wide">{detail}</div>
             <ol className="inc-timeline">
@@ -497,7 +503,7 @@ export function Incident({ snapshot, start, localize, w }: { snapshot: Snapshot;
                   </li>
                 )
               })}
-              {shown.length === 0 ? <li className="inc-muted">{w.noEntries}</li> : null}
+              {shown.length === 0 ? <li className="inc-muted">{pending ?? w.noEntries}</li> : null}
             </ol>
             {canEdit ? <AddEntry w={w} author={author} setAuthor={setAuthor} focus={focus} onAdd={(row) => send((d) => void d.entries.push({ id: `e-${uid()}`, time: new Date().toISOString(), ...row }))} /> : null}
           </section>

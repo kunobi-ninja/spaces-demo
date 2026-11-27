@@ -96,6 +96,8 @@
   "words.progress": { "text": "{{done}}/{{total}}", "from": "05d5ee64" },
   "words.readOnly": { "text": "읽기 전용", "from": "f3233551" },
   "words.saving": { "text": "저장 중…", "from": "53ca6040" },
+  "words.loading": { "text": "불러오는 중…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "지금은 열 수 없습니다.", "from": "d6285d4d" },
   "words.notSaved": { "text": "저장 안 됨: {{reason}}", "from": "c2dd8897" },
   "words.reviewed": { "text": "체크 또는 메모 있음", "from": "67fdd990" },
   "words.c.missing": { "text": "없음: 만들거나 참조 {{count}}개를 지우세요", "from": "2a90d563" },

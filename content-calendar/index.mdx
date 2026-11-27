@@ -16,15 +16,13 @@ import '@fontsource/parkinsans/600.css'
 import '@fontsource/parkinsans/800.css'
 import '@fontsource/figtree/400.css'
 import '@fontsource/figtree/600.css'
-import posts from './data/posts.json'
-import postsStart from './data/posts.start.json'
 import settings from './data/calendar.json'
 import { useStoreStatus } from 'kunobi'
 import { ContentCalendar, STORE } from './src/calendar'
 import { useI18n } from '../lib/i18n'
 import translations from './locales/index'
 
-{/* Every post lives in the content-calendar-posts store, saved to data/posts.json; the drafts are in drafts/. The team, colours and today's date are in data/calendar.json. Translations of the words below, the team, the starting posts (data/posts.start.json, by id) and the drafts are in locales/<lang>.json; a post still as it started shows translated. */}
+{/* Every post lives in the content-calendar-posts store, started from data/posts.start.json and saved to data/posts.json; the drafts are in drafts/. The team, colours and today's date are in data/calendar.json. Translations of the words below, the team, the starting posts (by id) and the drafts are in locales/<lang>.json; a post still as it started shows translated. */}
 
 export const WORDS = {
   eyebrow: 'Content calendar', month: 'Month', weeks: 'Weeks', board: 'Board', clear: 'Clear',
@@ -34,6 +32,8 @@ export const WORDS = {
   change: 'This page shows data/posts.json. Ask your AI:',
   changeEdit: 'Open a post to move it to another day or change its status, or ask your AI:',
   saving: 'Saving…',
+  loading: 'Loading…',
+  unavailable: "This can't be opened right now.",
   prompts: ['“Move P14 to Saturday and mark it in review.”', '“Plan three Instagram posts for the gift boxes in the last week.”'],
   status: { idea: 'Idea', drafting: 'Drafting', review: 'In review', scheduled: 'Scheduled', published: 'Published' },
 }
@@ -41,13 +41,15 @@ export const WORDS = {
 export const Page = ({ view }) => {
   const t = useI18n(WORDS, translations)
   const w = t.w
-  const localize = React.useCallback((live) => t.data('posts', live, postsStart), [t])
+  const localize = React.useCallback((live) => t.data('posts', live), [t])
   const calendar = React.useMemo(() => t.data('calendar', settings), [t])
   const store = useStoreStatus(STORE)
   const canEdit = store?.status === 'open' && Boolean(store?.canEdit)
+  const unavailable = store?.status === 'refused' || store?.status === 'closed'
+  const opening = !unavailable && store?.status !== 'open' && store?.status !== 'paused'
   return (
     <>
-      <ContentCalendar posts={posts} localize={localize} settings={calendar} words={w} locale={t.tag} initial={view} />
+      <ContentCalendar localize={localize} settings={calendar} words={w} locale={t.tag} initial={view} />
       <div className="cc-how">
         <style>{`
           .cc-how { width: min(var(--kunobi-prose-width, 1200px), 100%); margin: 0 auto; box-sizing: border-box; padding: 0 24px 40px; font-family: Figtree, system-ui, sans-serif; color: hsl(var(--muted-foreground)); font-size: 14px; line-height: 1.5; }
@@ -56,7 +58,7 @@ export const Page = ({ view }) => {
           .cc-how q::before, .cc-how q::after { content: none; }
         `}</style>
         <div>
-          <span>{canEdit ? w.changeEdit : w.change}</span>
+          <span>{canEdit ? w.changeEdit : unavailable ? w.unavailable : opening ? w.loading : w.change}</span>
           {w.prompts.map((p) => <q key={p}>{p}</q>)}
         </div>
       </div>

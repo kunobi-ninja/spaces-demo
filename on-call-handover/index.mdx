@@ -18,13 +18,11 @@ import '@fontsource/figtree/600.css'
 import '@fontsource/figtree/700.css'
 import snapshot from './data/cluster.json'
 import handover from './data/handover.json'
-import items from './data/items.json'
-import itemsStart from './data/items.start.json'
 import { Handover } from './src/Handover'
 import { useI18n } from '../lib/i18n'
 import translations from './locales/index'
 
-{/* The page's words. Their translations, and those of the summary and of the starting items (data/items.start.json, by id), are in locales/<lang>.json; an item still as it started shows translated. Cluster facts come from the cluster selected in your Kunobi tab once you allow it in your own preview, otherwise from the sample in data/cluster.json. The summary is in data/handover.json. The open items, who handed over and who took over live in the on-call-handover-items store, saved to data/items.json. */}
+{/* The page's words. Their translations, and those of the summary and of the starting items (by id), are in locales/<lang>.json; an item still as it started shows translated. Cluster facts come from the cluster selected in your Kunobi tab once you allow it in your own preview, otherwise from the sample in data/cluster.json. The summary is in data/handover.json. The open items, who handed over and who took over live in the on-call-handover-items store, saved to data/items.json. */}
 
 export const WORDS = {
   eyebrow: 'On-call handover',
@@ -55,6 +53,8 @@ export const WORDS = {
   ago: { min: '{{count}} min', h: '{{count}} h' },
   itemsTitle: 'Open items',
   saving: 'Saving…',
+  loading: 'Loading…',
+  unavailable: "This can't be opened right now.",
   progressLabel: '{{count}}/{{total}} acked',
   all: 'All',
   status: { open: 'Open', acked: 'Acked', done: 'Done' },
@@ -75,8 +75,8 @@ export const Page = () => {
   const t = useI18n(WORDS, translations)
   const w = React.useMemo(() => ({ ...t.w, locale: t.lang === 'en' ? 'en-GB' : t.tag }), [t])
   const text = React.useMemo(() => t.data('handover', handover), [t])
-  const localize = React.useCallback((live) => t.data('items', live, itemsStart), [t])
-  return <Handover snap={snapshot} text={text} start={items} localize={localize} w={w} />
+  const localize = React.useCallback((live) => t.data('items', live), [t])
+  return <Handover snap={snapshot} text={text} localize={localize} w={w} />
 }
 
 <Page />

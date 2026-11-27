@@ -96,13 +96,17 @@ const label = (t: Track, key: string | null, c: string) => {
   return t.instrument === 'chords' ? chordName(key, n) : noteName(key, n)
 }
 
-export function MusicJam({ saved, localize, words: w }: { saved: Pattern; localize: (pattern: Pattern) => Pattern; words: Words }) {
+/** The pattern until the store opens: no tracks yet. */
+const EMPTY: Pattern = { key: null, tempo: null, tracks: [] }
 
-  // The shared pattern while its store is open, otherwise the last saved copy. Starting track names show in the reader's language.
+export function MusicJam({ localize, words: w }: { localize: (pattern: Pattern) => Pattern; words: Words }) {
+
+  // The shared pattern from its store; paused or withdrawn, its last data, read-only. Starting track names show in the reader's language.
   const stored = usePattern(STORE)
   const status = usePatternStatus(STORE)
   const keeping = status.status === 'open' && !!stored
-  const pattern: Pattern = React.useMemo(() => localize(keeping ? stored! : saved), [keeping, stored, saved, localize])
+  const kept = keeping || ((status.status === 'paused' || status.status === 'revoked') && !!stored)
+  const pattern: Pattern = React.useMemo(() => localize(kept ? stored! : EMPTY), [kept, stored, localize])
   const canEdit = keeping && status.canEdit
   const tempo = clamp(pattern.tempo ?? 104, 60, 180)
   const key = pattern.key ?? 'A minor'
@@ -383,7 +387,7 @@ export function MusicJam({ saved, localize, words: w }: { saved: Pattern; locali
 
         <div className="mj-notes">
           <p className="mj-note">
-            <b>{keeping ? w.sharedTitle : w.savedTitle}</b> {keeping ? w.sharedBody : w.savedBody}
+            {kept ? <><b>{w.sharedTitle}</b> {w.sharedBody}</> : <b>{status.status === 'refused' || status.status === 'closed' ? w.unavailable : w.loading}</b>}
             {keeping && !status.saved && <span className="mj-saving"> {w.saving}</span>}
           </p>
           <p className="mj-note">

@@ -44,6 +44,8 @@
   "words.ago.h": { "text": "{{count}} h", "from": "c52adce8" },
   "words.itemsTitle": { "text": "Points ouverts", "from": "063f2027" },
   "words.saving": { "text": "Enregistrement…", "from": "53ca6040" },
+  "words.loading": { "text": "Chargement…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "Impossible de l’ouvrir pour le moment.", "from": "d6285d4d" },
   "words.progressLabel": { "text": "{{count}}/{{total}} acquittés", "from": "320d4b6a" },
   "words.all": { "text": "Tous", "from": "9a9877c8" },
   "words.status.open": { "text": "Ouvert", "from": "780d8a56" },

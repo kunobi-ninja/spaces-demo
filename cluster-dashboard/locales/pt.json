@@ -18,5 +18,7 @@
   "words.mark": { "text": "Marcar como conhecido", "from": "2bcfdfa5" },
   "words.unmark": { "text": "Desmarcar", "from": "0c770638" },
   "words.known": { "text": "Conhecidos", "from": "5235ede1" },
-  "words.saving": { "text": "Salvando…", "from": "53ca6040" }
+  "words.saving": { "text": "Salvando…", "from": "53ca6040" },
+  "words.loading": { "text": "Carregando…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "Não é possível abrir agora.", "from": "d6285d4d" }
 }

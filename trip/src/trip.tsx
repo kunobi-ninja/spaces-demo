@@ -58,8 +58,12 @@ function pixel(lat: number, lon: number, z: number) {
   return { x: ((lon + 180) / 360) * size, y: (0.5 - Math.log((1 + sin) / (1 - sin)) / (4 * Math.PI)) * size }
 }
 
+/** Where the map looks while there are no places to fit: central Lisbon. */
+const LISBON = { lat: 38.7139, lon: -9.1394 }
+
 /** The centre and the closest zoom that keeps every place inside a `width`×`height` map. */
 function fit(points: Place[], width: number, height: number) {
+  if (points.length === 0) return { center: LISBON, zoom: 13 }
   const lats = points.map((p) => p.lat)
   const lons = points.map((p) => p.lon)
   const center = { lat: (Math.min(...lats) + Math.max(...lats)) / 2, lon: (Math.min(...lons) + Math.max(...lons)) / 2 }
@@ -88,13 +92,16 @@ function useWidth(ref: React.RefObject<HTMLElement | null>) {
 
 const euro = (n: number) => `€${Math.round(n)}`
 
-export function TripPlanner({ start, localize, trip, words: w }: { start: TripPlacesStore; localize: (data: TripPlacesStore) => TripPlacesStore; trip: Trip; words: Record<string, any> }) {
+const EMPTY: TripPlacesStore = { places: {} }
+
+export function TripPlanner({ localize, trip, words: w }: { localize: (data: TripPlacesStore) => TripPlacesStore; trip: Trip; words: Record<string, any> }) {
   const live = useStore(STORE) as TripPlacesStore | undefined
   const status = useStoreStatus(STORE)
-  // Without the store (other builds, previews), show the last saved copy, read-only.
   const open = (status?.status === 'open' || status?.status === 'paused') && live !== undefined
   const canEdit = open && status?.status === 'open' && Boolean(status?.canEdit)
-  const places = React.useMemo(() => toPlaces(localize(open ? live : start)), [open, live, start, localize])
+  // Until the store opens there are no places yet: say so instead of an empty plan.
+  const waiting = open ? null : status?.status === 'refused' || status?.status === 'closed' ? w.unavailable : w.loading
+  const places = React.useMemo(() => toPlaces(localize(open ? live : EMPTY)), [open, live, localize])
   const setBooking = (id: string, booking: Place['booking']) =>
     edit(STORE, (d: TripPlacesStore) => {
       d.places[id].booking = booking
@@ -345,8 +352,9 @@ export function TripPlanner({ start, localize, trip, words: w }: { start: TripPl
           <h2>
             {w.stillToBook}
             {open && !status?.saved && <small className="saving">{w.saving}</small>}
+            {waiting && <small className="saving">{waiting}</small>}
           </h2>
-          {toBook.length === 0 && <div className="row">{w.allBooked}</div>}
+          {toBook.length === 0 && <div className="row">{waiting ?? w.allBooked}</div>}
           {toBook.map((p) => (
             <div className="row" key={p.id}>
               <span>

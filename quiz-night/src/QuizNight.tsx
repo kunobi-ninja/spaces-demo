@@ -22,7 +22,7 @@ const LETTERS = ['A', 'B', 'C', 'D']
 
 type Words = Record<string, any>
 
-/* Shared state, where this build has it. Builds and previews without it read the saved scores. */
+/* Shared state, where this build has it. Builds without it show no scores and say so. */
 interface Room {
   status: string
   state?: Record<string, unknown>
@@ -114,13 +114,18 @@ const today = () => {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 }
 
-export function QuizNight({ quiz, saved, words: w }: { quiz: Quiz; saved: Scores; words: Words }) {
+const NO_SCORES: Scores = { nights: {}, tonight: {}, total: {} }
 
-  // The lasting scores: the store while it is open, otherwise the last saved copy.
+export function QuizNight({ quiz, words: w }: { quiz: Quiz; words: Words }) {
+
+  // The lasting scores: the store while it is open; until then none, and a note saying why.
   const stored = useScores(game.STORE)
   const store = useScoresStatus(game.STORE)
   const keeping = store.status === 'open' && !!stored
-  const scores: Scores = keeping ? stored! : saved
+  // Paused or withdrawn, the store keeps its last scores readable.
+  const hasScores = !!stored && (keeping || store.status === 'paused' || store.status === 'revoked')
+  const pending = hasScores ? null : store.status === 'refused' || store.status === 'closed' ? w.unavailable : w.loading
+  const scores: Scores = hasScores ? stored! : NO_SCORES
   const tonight = scores.tonight ?? {}
   const total = scores.total ?? {}
 
@@ -428,6 +433,7 @@ export function QuizNight({ quiz, saved, words: w }: { quiz: Quiz; saved: Scores
                 <div className="qn-teams-head">
                   <h2>{canAct ? (mine ? w.yourTeam : w.pickTeam) : w.allNights}</h2>
                   {keeping && !store.saved && <span className="qn-saving">{w.saving}</span>}
+                  {pending && <span className="qn-saving">{pending}</span>}
                 </div>
                 {canAct && (
                   <label className="qn-name">
@@ -667,7 +673,13 @@ export function QuizNight({ quiz, saved, words: w }: { quiz: Quiz; saved: Scores
 
         <div className="qn-notes">
           <p className="qn-note">
-            <b>{keeping ? w.scoresTitle : w.savedTitle}</b> {keeping ? w.scoresBody : w.savedBody}
+            {keeping ? (
+              <>
+                <b>{w.scoresTitle}</b> {w.scoresBody}
+              </>
+            ) : (
+              pending && <b>{pending}</b>
+            )}
             {keeping && !store.saved && <span className="qn-saving"> {w.saving}</span>}
           </p>
           {live && (

@@ -15,6 +15,8 @@
   "words.boardHintEdit": { "text": "Clique sur un candidat pour le faire avancer.", "from": "400ae3e0" },
   "words.decline": { "text": "Refuser", "from": "cf19fd47" },
   "words.saving": { "text": "Enregistrement…", "from": "53ca6040" },
+  "words.loading": { "text": "Chargement…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "Impossible de l’ouvrir pour le moment.", "from": "d6285d4d" },
   "words.quickFor": { "text": "Avis rapide de {{name}}", "from": "1b6c02c1" },
   "words.quickTitle": { "text": "Avis rapide, grille à suivre", "from": "e064b308" },
   "words.stage.applied": { "text": "Candidature", "from": "704298a5" },

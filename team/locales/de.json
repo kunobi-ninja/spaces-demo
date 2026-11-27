@@ -11,6 +11,8 @@
   "words.weekNote": { "text": "Fällig in den nächsten 7 Tagen oder wartet auf jemanden", "from": "0c843a1c" },
   "words.doing": { "text": "In Arbeit", "from": "1752b74c" },
   "words.nothing": { "text": "Diese Woche ist nichts fällig.", "from": "99c2589e" },
+  "words.loading": { "text": "Wird geladen…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "Lässt sich gerade nicht öffnen.", "from": "d6285d4d" },
   "words.waiting": { "text": "Wartet", "from": "64b1aceb" },
   "words.due": { "text": "Fällig", "from": "02e6f7c8" },
   "words.projects": { "text": "Projekte", "from": "87d96b8b" },

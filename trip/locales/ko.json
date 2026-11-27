@@ -17,6 +17,8 @@
   "words.markBooked": { "text": "예약됨으로 표시", "from": "434120b1" },
   "words.unbook": { "text": "예약 안 됨", "from": "f7a77270" },
   "words.saving": { "text": "저장 중…", "from": "53ca6040" },
+  "words.loading": { "text": "불러오는 중…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "지금은 열 수 없습니다.", "from": "d6285d4d" },
   "words.addedBy": { "text": "추가한 사람", "from": "5138475a" },
   "words.close": { "text": "닫기", "from": "771bd904" },
   "words.free": { "text": "무료", "from": "01e78184" },

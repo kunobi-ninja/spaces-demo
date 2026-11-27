@@ -90,14 +90,17 @@ function ScoreCell({ value }: { value?: number }) {
   )
 }
 
-export function Hiring({ data, pipeline: start, w }: { data: HiringData; pipeline: HiringPipelineStore; w: any }) {
+const EMPTY: HiringPipelineStore = { candidates: {}, verdicts: {} }
+
+export function Hiring({ data, w }: { data: HiringData; w: any }) {
   const { today, stages, roles, interviewers } = data
   const stored = useStore(STORE) as HiringPipelineStore | undefined
   const status = useStoreStatus(STORE)
-  // Without the store (other builds, previews), show the last saved pipeline, read-only.
+  // Until the store opens, the board stays empty and its hint says why.
   const open = (status?.status === 'open' || status?.status === 'paused') && stored !== undefined
   const canEdit = open && status?.status === 'open' && Boolean(status?.canEdit)
-  const pipe = (open ? stored : start) ?? { candidates: {}, verdicts: {} }
+  const waiting = open ? null : status?.status === 'refused' || status?.status === 'closed' ? w.unavailable : w.loading
+  const pipe = (open && stored) || EMPTY
   const candidates: Candidate[] = React.useMemo(() => {
     const quick = Object.values(pipe.verdicts ?? {})
     return data.candidates.map((c) => {
@@ -441,12 +444,13 @@ export function Hiring({ data, pipeline: start, w }: { data: HiringData; pipelin
 
         <div className="hr-bar hr-pipe">
           <h2 className="hr-h2">{w.pipeline}</h2>
-          <span className="hr-hint">{open && !status?.saved ? w.saving : canEdit ? w.boardHintEdit : w.boardHint}</span>
+          <span className="hr-hint">{waiting ?? (open && !status?.saved ? w.saving : canEdit ? w.boardHintEdit : w.boardHint)}</span>
         </div>
 
         <div className="hr-board">
           {[...stages, 'declined' as const].map((st) => {
-            const list = shown.filter((c) => c.stage === st)
+            // No stages to place anyone in until the store opens.
+            const list = waiting ? [] : shown.filter((c) => c.stage === st)
             return (
               <section key={st} className={`hr-col${st === 'declined' ? ' out' : ''}`} aria-label={w.stage[st]}>
                 <div className="hr-colhead">{w.stage[st]} <small>{list.length}</small></div>

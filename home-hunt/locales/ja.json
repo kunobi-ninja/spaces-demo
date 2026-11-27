@@ -32,6 +32,8 @@
   "words.takeOf": { "text": "{{name}} の意見", "from": "b07d199f" },
   "words.notePh": { "text": "{{name}} のメモ", "from": "f0d1fab1" },
   "words.saving": { "text": "保存中…", "from": "53ca6040" },
+  "words.loading": { "text": "読み込み中…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "今は開けません。", "from": "d6285d4d" },
   "words.how": { "text": ["家の情報の元：", "2人それぞれの希望の元：", "ファイルを編集するか、AI に頼んでください：", "私たちの意見の保存先：", "家を開いて、あなたの意見を残してください。"], "from": "f482a677" },
   "words.prompts": { "text": ["14 Ashley Down Road, Horfield を追加して：£1,350、寝室3つ、庭の物置、自転車で13分、M32まで6分", "Alex は 18 Elgin Park が気に入っている：地下室に作業台が入る", "Maya は Cotham のフラットはイーゼルを置くには狭すぎると言っている：その理由で却下して"], "from": "73c0099b" },
   "words.say.both": { "text": "2人に合います。ただし：{{lacks}}。", "from": "e909feac" },

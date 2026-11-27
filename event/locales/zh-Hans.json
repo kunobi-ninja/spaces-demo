@@ -14,6 +14,8 @@
   "words.seatHere": { "text": "让 {{name}} 坐这里", "from": "4e660373" },
   "words.saving": { "text": "正在保存…", "from": "53ca6040" },
   "words.refused": { "text": "没有保存。请重试。", "from": "438959f4" },
+  "words.loading": { "text": "加载中…", "from": "0f7a1eab" },
+  "words.unavailable": { "text": "现在无法打开。", "from": "d6285d4d" },
   "words.answer": { "text": "回复", "from": "e2e1ac81" },
   "words.party": { "text": "人数", "from": "fcb6df42" },
   "words.noSeat": { "text": "没有座位", "from": "b54f1163" },
