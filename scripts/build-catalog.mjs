@@ -13,6 +13,9 @@
  * are published inside it (`trip/lib/i18n.ts`), with the imports pointing at
  * them, so the folder alone is the whole demo: "Make this mine" copies only the
  * folder into the person's space.
+ * Its `category` (front matter `category`, one of `CATEGORIES`) is the shelf it sits on, and must
+ * match its `kind` in `EXAMPLES`. A demo made for several people at once says how many in `players`
+ * (front matter `players: { min, max? }`); one without `players` is for one person.
  * `home` is the root `index.mdx` with the files it imports. Every file is
  * written once to `<out>/objects/<sha256>`; `<out>/catalog.json` lists them.
  *
@@ -40,7 +43,9 @@ const FONT_IMPORT = /['"](@fontsource\/[a-z0-9-]+\/[a-z0-9-]+\.css)['"]/g
 const RELATIVE_IMPORT = /(?:from|import)\s+['"](\.{1,2}\/[^'"]+)['"]/g
 /** How an import without an extension resolves, in order. */
 const IMPORT_SUFFIXES = ['', '.ts', '.tsx', '.d.ts', '.js', '.jsx', '.mdx', '.json', '/index.ts', '/index.tsx', '/index.js']
-const EXAMPLE = /\{\s*id:\s*'([^']+)',\s*href:\s*'([^']+)'/g
+const EXAMPLE = /\{\s*id:\s*'([^']+)',\s*href:\s*'([^']+)'([^}]*)/g
+/** The gallery shelves a demo belongs to, front matter `category`; the index's `EXAMPLES` `kind`. */
+export const CATEGORIES = ['life', 'work', 'ninja', 'play', 'film', 'study']
 
 const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex')
 const posix = (path) => path.split(sep).join('/')
@@ -226,20 +231,34 @@ function recorder(objects) {
   }
 }
 
-/** The demos to build, in catalog order: `{ id, entry, gallery }`. */
+/** The demos to build, in catalog order: `{ id, entry, gallery, kind? }` (`kind` from `EXAMPLES`). */
 async function listDemos(repo) {
   const picks = JSON.parse(await readFile(join(repo, 'gallery.json'), 'utf8'))
   if (!Array.isArray(picks) || picks.length === 0) throw new Error('gallery.json must list at least one demo id')
   const demos = picks.map((id) => ({ id, entry: `${id}/index.mdx`, gallery: true }))
   const index = await readFile(join(repo, 'index.mdx'), 'utf8')
-  for (const [, id, href] of index.matchAll(EXAMPLE)) {
-    if (demos.some((demo) => demo.id === id) || href.endsWith('.mdx/')) continue
-    demos.push({ id, entry: href.endsWith('/') ? `${href}index.mdx` : href, gallery: false })
+  for (const [, id, href, rest] of index.matchAll(EXAMPLE)) {
+    const kind = rest.match(/kind:\s*'([^']+)'/)?.[1]
+    const known = demos.find((demo) => demo.id === id)
+    if (known) known.kind = kind
+    if (known || href.endsWith('.mdx/')) continue
+    demos.push({ id, entry: href.endsWith('/') ? `${href}index.mdx` : href, gallery: false, kind })
   }
   return demos
 }
 
-async function buildDemo(repo, { id, entry, gallery }, objects) {
+/** A demo's `players` from its front matter: `{ min, max? }` with 2 ≤ min ≤ max, or undefined. */
+export function readPlayers(players, id) {
+  if (players === undefined) return undefined
+  const { min, max, ...rest } = players ?? {}
+  const count = (n) => Number.isInteger(n) && n >= 2
+  if (!count(min) || (max !== undefined && (!count(max) || max < min)) || Object.keys(rest).length) {
+    throw new Error(`${id}: players must be { min, max? } with 2 <= min <= max (leave it out for one person)`)
+  }
+  return max === undefined ? { min } : { min, max }
+}
+
+async function buildDemo(repo, { id, entry, gallery, kind }, objects) {
   const folder = join(repo, dirname(entry))
   const entryPath = join(repo, entry)
   if (!entry.endsWith('.mdx') || dirname(entry).endsWith('.mdx') || !(await stat(entryPath).catch(() => null))?.isFile()) {
@@ -256,6 +275,10 @@ async function buildDemo(repo, { id, entry, gallery }, objects) {
   const lang = meta.lang ?? 'en'
   if (typeof lang !== 'string' || !/^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$/.test(lang)) throw new Error(`${id}: lang must be a language tag`)
   const translations = await readTranslations(repo, entry, id)
+  const category = meta.category
+  if (!CATEGORIES.includes(category)) throw new Error(`${id}: front matter needs a category, one of ${CATEGORIES.join(', ')}`)
+  if (kind !== undefined && kind !== category) throw new Error(`${id}: category ${category} is not its kind ${kind} in index.mdx EXAMPLES`)
+  const players = readPlayers(meta.players, id)
 
   /** Repository-relative path → bytes. */
   const contents = new Map()
@@ -303,6 +326,8 @@ async function buildDemo(repo, { id, entry, gallery }, objects) {
     title: meta.title,
     description: meta.description,
     prompts: prompts.map(String),
+    category,
+    ...(players && { players }),
     ...(lang !== 'en' && { lang }),
     ...(translations && { translations }),
     entry,
